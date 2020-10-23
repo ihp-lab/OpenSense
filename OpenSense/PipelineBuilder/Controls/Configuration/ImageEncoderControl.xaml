@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="OpenSense.PipelineBuilder.Controls.Configuration.ImageEncoderControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:OpenSense.PipelineBuilder.Controls.Configuration"
+             xmlns:configurations="clr-namespace:OpenSense.PipelineBuilder.Configurations"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="b2v" />
+
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0">Built-in encoder</Label>
+        <WrapPanel Grid.Row="0" Grid.Column="1"
+                   Name="ContentControlEncoder"
+                   DataContextChanged="ContentControlEncoder_DataContextChanged">
+            <RadioButton Name="RadioButtonPng" 
+                         Tag="{x:Static configurations:PsiBuiltinImageToStreamEncoder.Png}"
+                         Checked="RadioButtonEncoder_Checked"
+                         >
+                PNG
+            </RadioButton>
+            <RadioButton Name="RadioButtonJpeg"
+                         Tag="{x:Static configurations:PsiBuiltinImageToStreamEncoder.Jpeg}"
+                         Checked="RadioButtonEncoder_Checked"
+                         >
+                JPEG
+            </RadioButton>
+        </WrapPanel>
+
+        <Label Grid.Row="1" 
+               Visibility="{Binding ElementName=RadioButtonJpeg, Path=IsChecked, Converter={StaticResource b2v}}"
+               >
+            Quality level
+        </Label>
+        <TextBox Grid.Row="1" Grid.Column="1" 
+                 Visibility="{Binding ElementName=RadioButtonJpeg, Path=IsChecked, Converter={StaticResource b2v}}"
+                 Text="{Binding QualityLevel}"/>
+
+    </Grid>
+</UserControl>

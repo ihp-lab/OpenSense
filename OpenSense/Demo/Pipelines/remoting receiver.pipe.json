@@ -1,0 +1,68 @@
+{
+	Guid: "9502a7d4-35d2-41f7-aab9-173e1ce1f9a9",
+	Name: "receiver",
+	DeliveryPolicy: {
+		InitialQueueSize: 1,
+		MaximumQueueSize: 1,
+		Name: "LatestMessage"
+	},
+	Instances: [
+		{
+			Host: "localhost",
+			Port: 11411,
+			AllowSequenceRestart: true,
+			Type: "OpenSense.PipelineBuilder.Configurations.RemoteImporterConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "d0e071c9-5027-402a-9db8-5487e6af2e88",
+			Name: "Remote Importer",
+			Inputs: []
+		},
+		{
+			Importer: "d0e071c9-5027-402a-9db8-5487e6af2e88",
+			StreamName: "webcam",
+			Type: "OpenSense.PipelineBuilder.Configurations.StreamReaderImplConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "3b8e27eb-c73a-4a23-a9a9-180eebad8346",
+			Name: "Stream Reader",
+			Inputs: []
+		},
+		{
+			Type: "OpenSense.PipelineBuilder.Configurations.ColorVideoVisualizerConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "aa24c28e-9c57-47bd-ab97-fac098b44591",
+			Name: "ColorVideoVisualizer",
+			Inputs: [
+				{
+					Input: {
+						PropertyName: "In"
+					},
+					Remote: "3b8e27eb-c73a-4a23-a9a9-180eebad8346",
+					Output: {
+						PropertyName: "Out"
+					}
+				}
+			]
+		},
+		{
+			Importer: "d0e071c9-5027-402a-9db8-5487e6af2e88",
+			StreamName: "microphone",
+			Type: "OpenSense.PipelineBuilder.Configurations.StreamReaderImplConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "87a35a9b-6a8d-490c-8c38-2b08cff81c21",
+			Name: "Stream Reader",
+			Inputs: []
+		},
+		{
+			Type: "OpenSense.PipelineBuilder.Configurations.AudioVisualizerConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "b3011705-3dba-417a-b155-b1cea959028d",
+			Name: "AudioVisualizer",
+			Inputs: [
+				{
+					Input: {
+						PropertyName: "In"
+					},
+					Remote: "87a35a9b-6a8d-490c-8c38-2b08cff81c21",
+					Output: {
+						PropertyName: "Out"
+					}
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{78196985-EE54-411F-822B-5A23EDF80642}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>MultiSenseCppInterop</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <ProjectName>OpenFaceInterop</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>true</CLRSupport>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>true</CLRSupport>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\Shared\prop\Output.props" />
+    <Import Project="OpenFaceDependency_Common.props" />
+    <Import Project="OpenFaceDependency_Debug.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\Shared\prop\Output.props" />
+    <Import Project="OpenFaceDependency_Common.props" />
+    <Import Project="OpenFaceDependency_Release.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\boost_1_68_0;$(SolutionDir)lib\dlib_19_15_0;$(SolutionDir)lib\openblas_0_3_7;$(SolutionDir)lib\opencv_3_4_2\opencv;$(SolutionDir)lib\opencv_3_4_2\opencv\opencv;$(SolutionDir)lib\tbb_18_5_0;$(SolutionDir)lib\openface_2_0_4\openface\CameraEnumerator;$(SolutionDir)lib\openface_2_0_4\openface\FaceAnalyser;$(SolutionDir)lib\openface_2_0_4\openface\GazeAnalyser;$(SolutionDir)lib\openface_2_0_4\openface\LandmarkDetector;$(SolutionDir)lib\openface_2_0_4\openface\Utilities;$(SolutionDir)lib\htk_3_4_1\htk\htklib;$(SolutionDir)lib\openfaceinterop_0_0_1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\boost_1_68_0\lib\x64\Debug;$(SolutionDir)lib\dlib_19_15_0\lib\x64\Debug;$(SolutionDir)lib\openblas_0_3_7\lib\x64\Debug;$(SolutionDir)lib\opencv_3_4_2\lib\x64\Debug;$(SolutionDir)lib\tbb_18_5_0\lib\x64\Debug;$(SolutionDir)lib\openface_2_0_4\lib\x64\Debug;$(SolutionDir)lib\htk_3_4_1\lib\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>
+      </FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\boost_1_68_0;$(SolutionDir)lib\dlib_19_15_0;$(SolutionDir)lib\openblas_0_3_7;$(SolutionDir)lib\opencv_3_4_2\opencv;$(SolutionDir)lib\opencv_3_4_2\opencv\opencv;$(SolutionDir)lib\tbb_18_5_0;$(SolutionDir)lib\openface_2_0_4\openface\CameraEnumerator;$(SolutionDir)lib\openface_2_0_4\openface\FaceAnalyser;$(SolutionDir)lib\openface_2_0_4\openface\GazeAnalyser;$(SolutionDir)lib\openface_2_0_4\openface\LandmarkDetector;$(SolutionDir)lib\openface_2_0_4\openface\Utilities;$(SolutionDir)lib\htk_3_4_1\htk\htklib;$(SolutionDir)lib\openfaceinterop_0_0_1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\boost_1_68_0\lib\x64\Release;$(SolutionDir)lib\dlib_19_15_0\lib\x64\Release;$(SolutionDir)lib\openblas_0_3_7\lib\x64\Release;$(SolutionDir)lib\opencv_3_4_2\lib\x64\Release;$(SolutionDir)lib\tbb_18_5_0\lib\x64\Release;$(SolutionDir)lib\openface_2_0_4\lib\x64\Release;$(SolutionDir)lib\htk_3_4_1\lib\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent />
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="WindowsBase">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\WindowsBase.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\AssemblyInfo.cpp" />
+    <ClCompile Include="source\OpenFaceInterop.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\FaceAnalyserInterop.h" />
+    <ClInclude Include="include\FaceDetectorInterop.h" />
+    <ClInclude Include="include\GazeAnalyserInterop.h" />
+    <ClInclude Include="include\ImageReaderInterop.h" />
+    <ClInclude Include="include\LandmarkDetectorInterop.h" />
+    <ClInclude Include="include\MethodsInterop.h" />
+    <ClInclude Include="include\RecorderInterop.h" />
+    <ClInclude Include="include\SequenceReaderInterop.h" />
+    <ClInclude Include="include\VisualizerInterop.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

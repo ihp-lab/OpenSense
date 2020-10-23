@@ -1,0 +1,291 @@
+﻿<Window x:Class="OpenSense.GazeToDisplayConverter.CalibratorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OpenSense.GazeToDisplayConverter"
+        mc:Ignorable="d"
+        Title="OpenSense GazeCalibrator" 
+        SizeToContent="WidthAndHeight"
+        FontSize="14"
+        Height="213" Width="516" Loaded="Window_Loaded">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="b2v" />
+        
+    </Window.Resources>
+    <TabControl Grid.Row="1">
+        <TabItem Header="Camera">
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0">Webcam</Label>
+                <ComboBox Grid.Row="0" Grid.Column="1"
+                          Name="ComboBoxWebcam" 
+                          SelectedIndex="0" 
+                          Loaded="ComboBoxWebcam_Loaded" 
+                          SelectionChanged="ComboBoxWebcam_SelectionChanged" 
+                          />
+
+                <Label Grid.Row="1" Grid.Column="0">Resolution</Label>
+                <ComboBox Grid.Row="1" Grid.Column="1"
+                          Name="ComboBoxResolution" 
+                          ItemsSource="{Binding ElementName=ComboBoxWebcam, Path=SelectedItem.Resolutions}" SelectedIndex="0" 
+                          />
+
+                <Label Grid.Row="2" Grid.Column="0">Flip image</Label>
+                <WrapPanel Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center">
+                    <CheckBox Name="CheckBoxFlipX">X</CheckBox>
+                    <CheckBox Name="CheckBoxFlipY" Margin="10,0,0,0">Y</CheckBox>
+                </WrapPanel>
+
+                <Label Grid.Row="3" Grid.Column="0">Calibration</Label>
+                <Grid Grid.Row="3" Grid.Column="1" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0">fx</TextBlock>
+                    <TextBox Grid.Column="1" Name="TextBoxCamFx">1057.58</TextBox>
+                    <!--Kinect V2 RGB Cam-->
+                    <TextBlock Grid.Column="2">fy</TextBlock>
+                    <TextBox Grid.Column="3" Name="TextBoxCamFy">1055.33</TextBox>
+                    <TextBlock Grid.Column="4">cx</TextBlock>
+                    <TextBox Grid.Column="5" Name="TextBoxCamCx">971.26</TextBox>
+                    <TextBlock Grid.Column="6">cy</TextBlock>
+                    <TextBox Grid.Column="7" Name="TextBoxCamCy">538.00</TextBox>
+                </Grid>
+
+            </Grid>
+        </TabItem>
+        <TabItem Header="Capture">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*" MinWidth="100"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0">One-way duration</Label>
+                <TextBox Grid.Row="0" Grid.Column="1" Name="TextBoxDuration" VerticalAlignment="Center">60</TextBox>
+                <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">seconds</TextBlock>
+
+                <Button Grid.Row="1" Grid.ColumnSpan="4" 
+                        Name="ButtonCapture" 
+                        IsDefault="True" 
+                        Click="ButtonCapture_Click"
+                        >Start</Button>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Train" Name="TabItemRegression">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*" MinWidth="200"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0"
+                       ># data points</Label>
+                <Grid Grid.Row="0" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Path=Count}" />
+                    <Button Grid.Column="1" Name="ButtonSaveDataPoints" Click="ButtonSaveDataPoints_Click" >Save</Button>
+                    <Button Grid.Column="2" Name="ButtonLoadDataPoints" Click="ButtonLoadDataPoints_Click" >Load</Button>
+                    <Button Grid.Column="3" Name="ButtonClearDataPoints" Click="ButtonClearDataPoints_Click">Clear</Button>
+                </Grid>
+
+                <Label Grid.Row="1" Grid.Column="0">Converter type</Label>
+                <ComboBox Grid.Row="1" Grid.Column="1"
+                          Name="ComboBoxTrainModelType"
+                          >
+                    <ComboBoxItem Name="ComboBoxItemTwoStage" IsSelected="True">2-stage</ComboBoxItem>
+                    <ComboBoxItem>End-to-end</ComboBoxItem>
+                </ComboBox>
+
+                <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                       Visibility="{Binding ElementName=ComboBoxItemTwoStage, Path=IsSelected, Converter={StaticResource b2v}}"
+                       >
+                    Special data points required
+                </Label>
+                
+                <!--
+                <Label Grid.Row="2" Grid.Column="0" 
+                       Visibility="{Binding ElementName=ComboBoxItemTwoStage, Path=IsSelected, Converter={StaticResource b2v}}"
+                       >Screen size</Label>
+                <Grid Grid.Row="2" Grid.Column="1" 
+                      Visibility="{Binding ElementName=ComboBoxItemTwoStage, Path=IsSelected, Converter={StaticResource b2v}}"
+                      >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" >width</TextBlock>
+                    <TextBox Grid.Column="1" Name="TextBoxScreenWidth" ToolTip="millimeter"/>
+                    <TextBlock Grid.Column="2" >height</TextBlock>
+                    <TextBox Grid.Column="3" Name="TextBoxScreenHeight" ToolTip="millimeter"/>
+                </Grid>
+
+                <Label Grid.Row="3" Grid.Column="0"
+                       Visibility="{Binding ElementName=ComboBoxItemTwoStage, Path=IsSelected, Converter={StaticResource b2v}}"
+                       >Screen origin offset</Label>
+                <Grid Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
+                      Visibility="{Binding ElementName=ComboBoxItemTwoStage, Path=IsSelected, Converter={StaticResource b2v}}"
+                      >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0">X</TextBlock>
+                    <TextBox Grid.Column="1" Name="TextBoxScreenOffsetX" ToolTip="millimeter"/>
+                    <TextBlock Grid.Column="2">Y</TextBlock>
+                    <TextBox Grid.Column="3" Name="TextBoxScreenOffsetY" ToolTip="millimeter"/>
+                    <TextBlock Grid.Column="4">Z</TextBlock>
+                    <TextBox Grid.Column="5" Name="TextBoxScreenOffsetZ" ToolTip="millimeter"/>
+                </Grid>
+
+                <Label Grid.Row="4" Grid.Column="0"
+                       Visibility="{Binding ElementName=ComboBoxItemTwoStage, Path=IsSelected, Converter={StaticResource b2v}}"
+                       >Screen rotation</Label>
+                <Grid Grid.Row="4" Grid.Column="1" 
+                      IsEnabled="False"
+                      Visibility="{Binding ElementName=ComboBoxItemTwoStage, Path=IsSelected, Converter={StaticResource b2v}}"
+                      >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0">Pitch</TextBlock>
+                    <TextBox Grid.Column="1" Name="TextBoxScreenPitch" ToolTip="radian"/>
+                    <TextBlock Grid.Column="2">Yaw</TextBlock>
+                    <TextBox Grid.Column="3" Name="TextBoxScreenYaw" ToolTip="radian"/>
+                    <TextBlock Grid.Column="4">Roll</TextBlock>
+                    <TextBox Grid.Column="5" Name="TextBoxScreenRoll" ToolTip="radian"/>
+                </Grid>
+                -->
+                <Label Grid.Row="5" Grid.Column="0"
+                       Visibility="{Binding ElementName=ComboBoxItemTwoStage, Path=IsSelected, Converter={StaticResource b2v}}"
+                       >Polynomial order</Label>
+                <TextBox Grid.Row="5" Grid.Column="1"
+                         Name="TextBoxPolyOrder"
+                         Visibility="{Binding ElementName=ComboBoxItemTwoStage, Path=IsSelected, Converter={StaticResource b2v}}"
+                         >2</TextBox>
+
+                <CheckBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
+                          Name="CheckBoxSaveConverter"
+                          IsChecked="False"
+                          >Save as</CheckBox>
+
+                <Label Grid.Row="7" Grid.Column="0"
+                       Visibility="{Binding ElementName=CheckBoxSaveConverter, Path=IsChecked, Converter={StaticResource b2v}}"
+                       >Save as</Label>
+                <Grid Grid.Row="7" Grid.Column="1"
+                      Visibility="{Binding ElementName=CheckBoxSaveConverter, Path=IsChecked, Converter={StaticResource b2v}}"
+                      >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Name="TextBoxConverterFilename"  >GazeConverter.gaze_conv.json</TextBox>
+                    <Button Grid.Column="1" Name="ButtonConverterFilename"  Click="ButtonConverterFilename_Click">Select</Button>
+                </Grid>
+                
+                <Button Grid.Row="8" Grid.ColumnSpan="2" 
+                        Name="ButtonRegression" 
+                        IsDefault="True" 
+                        Click="ButtonRegression_Click" 
+                        >Start</Button>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Test" Name="TabItemTest">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*" MinWidth="300"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0">Converter name</Label>
+
+                <Grid Grid.Row="0" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" 
+                           Name="TextBlockModel"
+                           Text="{Binding Name}"
+                           />
+                    <Button Grid.Column="1" Name="ButtonLoadModel" Click="ButtonLoadModel_Click">Load</Button>
+                </Grid>
+
+                <Button Grid.Row="1" Grid.ColumnSpan="4" 
+                        Name="ButtonPredict" 
+                        IsDefault="True" Click="ButtonPredict_Click" 
+                        >Start</Button>
+            </Grid>
+        </TabItem>
+        <TabItem Header="About" IsSelected="True">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <GroupBox Header="Direction">
+                        <StackPanel>
+                            <TextBlock>Capture: Click somewhere or press Enter to start and exit.</TextBlock>
+                            <TextBlock>Train: (X, Y) R-squared showed separately. The closer to 1.00, the better quality.</TextBlock>
+                            <TextBlock>Test: Click somewhere or press Enter to exit.</TextBlock>
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
+            </ScrollViewer>
+        </TabItem>
+    </TabControl>
+</Window>

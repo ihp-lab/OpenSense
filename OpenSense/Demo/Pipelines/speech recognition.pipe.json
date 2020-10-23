@@ -1,0 +1,197 @@
+{
+	Guid: "3b877b44-7911-43ea-8d35-0e4f0da91fac",
+	Name: "speech recgnition test",
+	DeliveryPolicy: {
+		InitialQueueSize: 16,
+		MaximumQueueSize: 2147483647,
+		Name: "Unlimited"
+	},
+	Instances: [
+		{
+			Type: "OpenSense.PipelineBuilder.Configurations.AudioCaptureConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "60261bfa-a966-4a3c-9e6b-214706e779f5",
+			Name: "AudioCapture",
+			Inputs: []
+		},
+		{
+			Raw: {
+				Language: "en-us",
+				BufferLengthInMs: 1000,
+				EndSilenceTimeoutMs: 150,
+				EndSilenceTimeoutAmbiguousMs: 500,
+				InputFormat: {
+					FormatTag: 1,
+					Channels: 1,
+					SamplesPerSec: 16000,
+					AvgBytesPerSec: 32000,
+					BlockAlign: 2,
+					BitsPerSample: 16
+				}
+			},
+			Type: "OpenSense.PipelineBuilder.Configurations.SystemSpeechRecognizerConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "a238f973-d7f9-4fdc-8ea6-816fc907d779",
+			Name: "SystemSpeechRecognizer",
+			Inputs: [
+				{
+					Input: {
+						PropertyName: "In"
+					},
+					Remote: "60261bfa-a966-4a3c-9e6b-214706e779f5",
+					Output: {
+						PropertyName: "Out"
+					}
+				}
+			]
+		},
+		{
+			Type: "OpenSense.PipelineBuilder.Configurations.AudioVisualizerConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "85a34aaa-c8a0-4d0b-be60-d619d3048991",
+			Name: "AudioVisualizer",
+			Inputs: [
+				{
+					Input: {
+						PropertyName: "In"
+					},
+					Remote: "60261bfa-a966-4a3c-9e6b-214706e779f5",
+					Output: {
+						PropertyName: "Out"
+					}
+				}
+			]
+		},
+		{
+			Type: "OpenSense.PipelineBuilder.Configurations.StreamingSpeechRecognitionVisualizerConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "bba867b1-8479-47fa-9c38-6a409b1e92a0",
+			Name: "SystemSpeechRecognizerResult",
+			Inputs: [
+				{
+					Input: {
+						PropertyName: "In"
+					},
+					Remote: "a238f973-d7f9-4fdc-8ea6-816fc907d779",
+					Output: {
+						PropertyName: "PartialRecognitionResults"
+					}
+				}
+			]
+		},
+		{
+			Raw: {
+				Language: "en-us",
+				BufferLengthInMs: 1000,
+				VoiceActivityStartOffsetMs: -150,
+				VoiceActivityEndOffsetMs: -150,
+				EndSilenceTimeoutMs: 150,
+				EndSilenceTimeoutAmbiguousMs: 500,
+				InputFormat: {
+					FormatTag: 1,
+					Channels: 1,
+					SamplesPerSec: 16000,
+					AvgBytesPerSec: 32000,
+					BlockAlign: 2,
+					BitsPerSample: 16
+				}
+			},
+			Type: "OpenSense.PipelineBuilder.Configurations.SystemVoiceActivityDetectorConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "18b90e61-d850-4fea-9fa9-1c17221b5b8e",
+			Name: "SystemVoiceActivityDetector",
+			Inputs: [
+				{
+					Input: {
+						PropertyName: "In"
+					},
+					Remote: "60261bfa-a966-4a3c-9e6b-214706e779f5",
+					Output: {
+						PropertyName: "Out"
+					}
+				}
+			]
+		},
+		{
+			Raw: {
+				Language: "en-us",
+				SubscriptionKey: "Required",
+				InputFormat: {
+					FormatTag: 1,
+					Channels: 1,
+					SamplesPerSec: 16000,
+					AvgBytesPerSec: 32000,
+					BlockAlign: 2,
+					BitsPerSample: 16
+				},
+				Region: "westus"
+			},
+			Type: "OpenSense.PipelineBuilder.Configurations.AzureSpeechRecognizerConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "753a06d7-d077-4e59-b33b-b7bced04d17a",
+			Name: "AzureSpeechRecognizer",
+			Inputs: [
+				{
+					Input: {
+						PropertyName: "In"
+					},
+					Remote: "1d4c75b4-189c-4366-a9df-2d8414234d4a",
+					Output: {
+						PropertyName: "Out"
+					}
+				}
+			]
+		},
+		{
+			Type: "OpenSense.PipelineBuilder.Configurations.JoinOperatorConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "1d4c75b4-189c-4366-a9df-2d8414234d4a",
+			Name: "Microsoft.Psi.Operators.Join",
+			Inputs: [
+				{
+					Input: {
+						PropertyName: "Primary"
+					},
+					Remote: "60261bfa-a966-4a3c-9e6b-214706e779f5",
+					Output: {
+						PropertyName: "Out"
+					}
+				},
+				{
+					Input: {
+						PropertyName: "Secondary"
+					},
+					Remote: "18b90e61-d850-4fea-9fa9-1c17221b5b8e",
+					Output: {
+						PropertyName: "Out"
+					}
+				}
+			]
+		},
+		{
+			Type: "OpenSense.PipelineBuilder.Configurations.StreamingSpeechRecognitionVisualizerConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "5951c0bf-dd17-4e2f-83ce-7c1e7f1d84de",
+			Name: "AzureSpeechRecognizerResult",
+			Inputs: [
+				{
+					Input: {
+						PropertyName: "In"
+					},
+					Remote: "753a06d7-d077-4e59-b33b-b7bced04d17a",
+					Output: {
+						PropertyName: "PartialRecognitionResults"
+					}
+				}
+			]
+		},
+		{
+			Type: "OpenSense.PipelineBuilder.Configurations.BooleanVisualizerConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "bfe11ca2-9ea4-42ee-8252-8af25a5fff63",
+			Name: "BooleanVisualizer",
+			Inputs: [
+				{
+					Input: {
+						PropertyName: "In"
+					},
+					Remote: "18b90e61-d850-4fea-9fa9-1c17221b5b8e",
+					Output: {
+						PropertyName: "Out"
+					}
+				}
+			]
+		}
+	]
+}

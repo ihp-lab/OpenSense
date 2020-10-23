@@ -1,0 +1,111 @@
+{
+	Guid: "2ed2af17-eba2-42c6-8dca-d171175ea06a",
+	Name: "emotion",
+	DeliveryPolicy: {
+		InitialQueueSize: 1,
+		MaximumQueueSize: 1,
+		Name: "LatestMessage"
+	},
+	Instances: [
+		{
+			Type: "OpenSense.PipelineBuilder.Configurations.MediaCaptureConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "9281024a-88d2-4831-92b3-906b4313b902",
+			Name: "MediaCapture",
+			Inputs: []
+		},
+		{
+			CameraCalibFx: 500.0,
+			CameraCalibFy: 500.0,
+			CameraCalibCx: 320.0,
+			CameraCalibCy: 240.0,
+			Draw: true,
+			Type: "OpenSense.PipelineBuilder.Configurations.OpenFaceConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "21b2a69a-0a21-41c6-9a29-2edaf9ab503e",
+			Name: "OpenFace",
+			Inputs: [
+				{
+					Input: {
+						PropertyName: "In"
+					},
+					Remote: "9281024a-88d2-4831-92b3-906b4313b902",
+					Output: {
+						PropertyName: "Video"
+					}
+				}
+			]
+		},
+		{
+			Type: "OpenSense.PipelineBuilder.Configurations.EmotionDetectorConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "992dc5b7-bf77-4128-b316-37742d9d426d",
+			Name: "EmotionDetector",
+			Inputs: [
+				{
+					Input: {
+						PropertyName: "ImageIn"
+					},
+					Remote: "9281024a-88d2-4831-92b3-906b4313b902",
+					Output: {
+						PropertyName: "Video"
+					}
+				},
+				{
+					Input: {
+						PropertyName: "HeadPoseIn"
+					},
+					Remote: "21b2a69a-0a21-41c6-9a29-2edaf9ab503e",
+					Output: {
+						PropertyName: "HeadPoseOut"
+					}
+				}
+			]
+		},
+		{
+			Type: "OpenSense.PipelineBuilder.Configurations.EmotionVisualizerConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "530d16ae-140b-4364-a235-4025fd038628",
+			Name: "EmotionVisualizer",
+			Inputs: [
+				{
+					Input: {
+						PropertyName: "In"
+					},
+					Remote: "992dc5b7-bf77-4128-b316-37742d9d426d",
+					Output: {
+						PropertyName: "Out"
+					}
+				}
+			]
+		},
+		{
+			Type: "OpenSense.PipelineBuilder.Configurations.HeadGestureDetectorConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "5c527401-40e1-43e2-9117-9ea2c11d5640",
+			Name: "HeadGestureDetector",
+			Inputs: [
+				{
+					Input: {
+						PropertyName: "In"
+					},
+					Remote: "21b2a69a-0a21-41c6-9a29-2edaf9ab503e",
+					Output: {
+						PropertyName: "HeadPoseOut"
+					}
+				}
+			]
+		},
+		{
+			Type: "OpenSense.PipelineBuilder.Configurations.HeadGestureVisualizerConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "0cad2864-cf3a-4033-9f68-e348ae983c26",
+			Name: "HeadGestureVisualizer",
+			Inputs: [
+				{
+					Input: {
+						PropertyName: "In"
+					},
+					Remote: "5c527401-40e1-43e2-9117-9ea2c11d5640",
+					Output: {
+						PropertyName: "Out"
+					}
+				}
+			]
+		}
+	]
+}

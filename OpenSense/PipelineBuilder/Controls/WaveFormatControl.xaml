@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="OpenSense.PipelineBuilder.Controls.WaveFormatControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:OpenSense.PipelineBuilder.Controls"
+             xmlns:audio="clr-namespace:Microsoft.Psi.Audio;assembly=Microsoft.Psi.Audio"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Label>Format tag</Label>
+        <ComboBox Grid.Column="1" ItemsSource="{Binding Source={local:EnumBindingSource {x:Type audio:WaveFormatTag }}, Mode=OneTime}"
+                  SelectedItem="{Binding FormatTag  }"/>
+
+        <Label Grid.Row="1">Channels</Label>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Channels}"/>
+
+        <Label Grid.Row="2">Sample rate</Label>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding SamplesPerSec}"/>
+
+        <Label Grid.Row="3">Bits per sample</Label>
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding BitsPerSample}"/>
+
+        <Label Grid.Row="4">Extra size</Label>
+        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding ExtraSize}"/>
+
+        <Label Grid.Row="5">Shortcuts</Label>
+        <StackPanel Grid.Row="5" Grid.Column="1">
+
+            <Button Name="ButtonCreate16kHz1Channel16BitPcm" Click="ButtonCreate16kHz1Channel16BitPcm_Click">
+                16 kHz 1 channel 16 bit PCM
+            </Button>
+            <Button Grid.Column="1" Name="ButtonCreate16kHz1ChannelIeeeFloat" Click="ButtonCreate16kHz1ChannelIeeeFloat_Click">
+                16 kHz 1 channel IEEE float
+            </Button>
+            
+            
+            <Button Grid.Row="1" Name="ButtonCreate16BitPcm" Click="ButtonCreate16BitPcm_Click">
+                16 bit PCM
+            </Button>
+            <Button Grid.Row="1" Grid.Column="1" Name="ButtonCreateIeeeFloat" Click="ButtonCreateIeeeFloat_Click">
+                IEEE float
+            </Button>
+
+            <Button Grid.Row="2" Name="ButtonCreatePcm" Click="ButtonCreatePcm_Click">
+                PCM
+            </Button>
+
+        </StackPanel>
+    </Grid>
+</UserControl>

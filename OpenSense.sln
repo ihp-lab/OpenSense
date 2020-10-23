@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30204.135
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenFaceInterop", "OpenFaceInterop\OpenFaceInterop.vcxproj", "{78196985-EE54-411F-822B-5A23EDF80642}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BiopacInterop", "BiopacInterop\BiopacInterop.vcxproj", "{FC200E98-DC12-4276-A7CD-588CD9E638A7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPosePInvoke", "OpenPosePInvoke\OpenPosePInvoke.csproj", "{39148FCD-A298-4080-B9DA-46D1A2E4E789}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenSmileInterop", "OpenSmileInterop\openSmileInterop.vcxproj", "{F7324168-9704-4996-BF61-546590F86614}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{59B873D6-5EB5-47B2-8242-C427367C736D}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenSense", "OpenSense\OpenSense.csproj", "{B1A06454-C346-44BB-B988-13855D99E5DD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{78196985-EE54-411F-822B-5A23EDF80642}.Debug|x64.ActiveCfg = Debug|x64
+		{78196985-EE54-411F-822B-5A23EDF80642}.Debug|x64.Build.0 = Debug|x64
+		{78196985-EE54-411F-822B-5A23EDF80642}.Release|x64.ActiveCfg = Release|x64
+		{78196985-EE54-411F-822B-5A23EDF80642}.Release|x64.Build.0 = Release|x64
+		{FC200E98-DC12-4276-A7CD-588CD9E638A7}.Debug|x64.ActiveCfg = Debug|x64
+		{FC200E98-DC12-4276-A7CD-588CD9E638A7}.Debug|x64.Build.0 = Debug|x64
+		{FC200E98-DC12-4276-A7CD-588CD9E638A7}.Release|x64.ActiveCfg = Release|x64
+		{FC200E98-DC12-4276-A7CD-588CD9E638A7}.Release|x64.Build.0 = Release|x64
+		{39148FCD-A298-4080-B9DA-46D1A2E4E789}.Debug|x64.ActiveCfg = Debug|x64
+		{39148FCD-A298-4080-B9DA-46D1A2E4E789}.Debug|x64.Build.0 = Debug|x64
+		{39148FCD-A298-4080-B9DA-46D1A2E4E789}.Release|x64.ActiveCfg = Release|x64
+		{39148FCD-A298-4080-B9DA-46D1A2E4E789}.Release|x64.Build.0 = Release|x64
+		{F7324168-9704-4996-BF61-546590F86614}.Debug|x64.ActiveCfg = Debug|x64
+		{F7324168-9704-4996-BF61-546590F86614}.Debug|x64.Build.0 = Debug|x64
+		{F7324168-9704-4996-BF61-546590F86614}.Release|x64.ActiveCfg = Release|x64
+		{F7324168-9704-4996-BF61-546590F86614}.Release|x64.Build.0 = Release|x64
+		{B1A06454-C346-44BB-B988-13855D99E5DD}.Debug|x64.ActiveCfg = Debug|x64
+		{B1A06454-C346-44BB-B988-13855D99E5DD}.Debug|x64.Build.0 = Debug|x64
+		{B1A06454-C346-44BB-B988-13855D99E5DD}.Release|x64.ActiveCfg = Release|x64
+		{B1A06454-C346-44BB-B988-13855D99E5DD}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4CB31E6C-64DF-499B-B990-0C72B1A2AF47}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="OpenSense.PipelineBuilder.Controls.Configuration.SystemVoiceActivityDetectorControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:OpenSense.PipelineBuilder.Controls.Configuration"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid DataContext="{Binding Raw}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        
+        <Label>Language</Label>
+        <TextBox Grid.Column="1" Text="{Binding Language}"/>
+
+        <Label Grid.Row="1">Grammars</Label>
+        <TextBlock Grid.Row="1" Grid.Column="1" Foreground="Red">TODO</TextBlock>
+
+        <Label Grid.Row="2">Buffer length in ms</Label>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding BufferLengthInMs}"/>
+
+        <Label Grid.Row="3">Voice activity start offset ms</Label>
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding VoiceActivityStartOffsetMs}"/>
+
+        <Label Grid.Row="4">Voice activity end offset ms</Label>
+        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding VoiceActivityEndOffsetMs}"/>
+
+        <Label Grid.Row="5">Initial silence timeout ms</Label>
+        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding InitialSilenceTimeoutMs}"/>
+
+        <Label Grid.Row="6">Babble timeout ms</Label>
+        <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding BabbleTimeoutMs}"/>
+
+        <Label Grid.Row="7">End silence timeout ms</Label>
+        <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding EndSilenceTimeoutMs}"/>
+
+        <Label Grid.Row="8">End silence timeout ambiguous ms</Label>
+        <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding EndSilenceTimeoutAmbiguousMs}"/>
+
+        <Label Grid.Row="9">Input format</Label>
+        <Grid Grid.Row="9" Grid.Column="1" Name="ContentControlInputFormat" Loaded="ContentControlInputFormat_Loaded"/>
+    </Grid>
+</UserControl>

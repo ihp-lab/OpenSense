@@ -1,0 +1,43 @@
+{
+	Guid: "70b6a07f-6d83-491a-bce3-357821e2c9a6",
+	Name: "player",
+	DeliveryPolicy: {
+		InitialQueueSize: 1,
+		MaximumQueueSize: 1,
+		Name: "LatestMessage"
+	},
+	Instances: [
+		{
+			StoreName: "replay",
+			RootPath: "Required",
+			Type: "OpenSense.PipelineBuilder.Configurations.LocalImporterConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "778187a6-a524-4a7b-be76-966c14a5f8ac",
+			Name: "Local Importer",
+			Inputs: []
+		},
+		{
+			Importer: "778187a6-a524-4a7b-be76-966c14a5f8ac",
+			StreamName: "webcam",
+			Type: "OpenSense.PipelineBuilder.Configurations.StreamReaderImplConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "c83a6b14-0cad-47c6-afaa-de519c60a769",
+			Name: "Stream Reader",
+			Inputs: []
+		},
+		{
+			Type: "OpenSense.PipelineBuilder.Configurations.ColorVideoVisualizerConfiguration, OpenSense, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null",
+			Guid: "abe97110-5a92-4d42-ba0b-1feebbdaee92",
+			Name: "ColorVideoVisualizer",
+			Inputs: [
+				{
+					Input: {
+						PropertyName: "In"
+					},
+					Remote: "c83a6b14-0cad-47c6-afaa-de519c60a769",
+					Output: {
+						PropertyName: "Out"
+					}
+				}
+			]
+		}
+	]
+}

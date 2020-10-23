@@ -1,0 +1,497 @@
+﻿<UserControl x:Class="OpenSense.PipelineBuilder.Controls.Configuration.OpenPoseControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:OpenSense.PipelineBuilder.Controls.Configuration"
+             xmlns:control="clr-namespace:OpenSense.PipelineBuilder.Controls"
+             xmlns:op="clr-namespace:OpenPose;assembly=OpenPosePInvoke"
+             mc:Ignorable="d" 
+             d:DesignHeight="1000" d:DesignWidth="800">
+    <StackPanel DataContext="{Binding Raw}" Grid.IsSharedSizeScope="True">
+        <Expander Header="Pose" DataContext="{Binding Pose}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" SharedSizeGroup="SizeGroupLabel"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                
+                <Label>Pose mode</Label>
+                <ComboBox Grid.Column="1" SelectedItem="{Binding PoseMode}" 
+                          ItemsSource="{Binding Source={control:EnumBindingSource {x:Type op:PoseMode }}, Mode=OneTime}"/>
+
+                <Label Grid.Row="1">Net resolution</Label>
+                <Grid Grid.Row="1" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0">X</TextBlock>
+                    <TextBox Grid.Column="1" Text="{Binding NetResolution.x}"/>
+                    <TextBlock Grid.Column="2">Y</TextBlock>
+                    <TextBox Grid.Column="3" Text="{Binding NetResolution.y}"/>
+                </Grid>
+
+                <Label Grid.Row="2">Output size</Label>
+                <Grid Grid.Row="2" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0">X</TextBlock>
+                    <TextBox Grid.Column="1" Text="{Binding OutputSize.x}"/>
+                    <TextBlock Grid.Column="2">Y</TextBlock>
+                    <TextBox Grid.Column="3" Text="{Binding OutputSize.y}"/>
+                </Grid>
+
+                <Label Grid.Row="3">Keypoint scale mode</Label>
+                <ComboBox Grid.Row="3" Grid.Column="1" SelectedItem="{Binding KeypointScaleMode}"
+                          ItemsSource="{Binding Source={control:EnumBindingSource {x:Type op:ScaleMode}}, Mode=OneTime}"/>
+
+                <Label Grid.Row="4">GPU number</Label>
+                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding GpuNumber}"/>
+
+                <Label Grid.Row="5">GPU number start</Label>
+                <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding GpuNumberStart}"/>
+
+                <Label Grid.Row="6">Scale gap</Label>
+                <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding ScaleGap}"/>
+
+                <Label Grid.Row="7">Render mode</Label>
+                <ComboBox Grid.Row="7" Grid.Column="1" SelectedItem="{Binding RenderMode}"
+                          ItemsSource="{Binding Source={control:EnumBindingSource {x:Type op:RenderMode}}, Mode=OneTime}"/>
+
+                <Label Grid.Row="8">Pose model</Label>
+                <ComboBox Grid.Row="8" Grid.Column="1" SelectedItem="{Binding PoseModel}"
+                          ItemsSource="{Binding Source={control:EnumBindingSource {x:Type op:PoseModel}}, Mode=OneTime}"/>
+
+                <Label Grid.Row="9">Blend original frame</Label>
+                <CheckBox Grid.Row="9" Grid.Column="1" IsChecked="{Binding BlendOriginalFrame}"/>
+
+                <Label Grid.Row="10">Alpha keypoint</Label>
+                <TextBox Grid.Row="10" Grid.Column="1" Text="{Binding AlphaKeypoint}"/>
+
+                <Label Grid.Row="11">Alpha heat map</Label>
+                <TextBox Grid.Row="11" Grid.Column="1" Text="{Binding AlphaHeatMap}"/>
+
+                <Label Grid.Row="12">Default part to render</Label>
+                <TextBox Grid.Row="12" Grid.Column="1" Text="{Binding DefaultPartToRender}"/>
+
+                <Label Grid.Row="13">Model folder</Label>
+                <TextBox Grid.Row="13" Grid.Column="1" Text="{Binding ModelFolder}"/>
+
+                <Label Grid.Row="14">Heat map types</Label>
+                <ComboBox Grid.Row="14" Grid.Column="1" SelectedItem="{Binding HeatMapTypes}"
+                          ItemsSource="{Binding Source={control:EnumBindingSource {x:Type op:HeatMapType}}, Mode=OneTime}"/>
+
+                <Label Grid.Row="15">Heat map scale mode</Label>
+                <ComboBox Grid.Row="15" Grid.Column="1" SelectedItem="{Binding HeatMapScaleMode}"
+                          ItemsSource="{Binding Source={control:EnumBindingSource {x:Type op:ScaleMode}}, Mode=OneTime}"/>
+
+                <Label Grid.Row="16">Add part candidates</Label>
+                <CheckBox Grid.Row="16" Grid.Column="1" IsChecked="{Binding AddPartCandidates}"/>
+
+                <Label Grid.Row="17">Render threshold</Label>
+                <TextBox Grid.Row="17" Grid.Column="1" Text="{Binding RenderThreshold}"/>
+
+                <Label Grid.Row="18">Number people max</Label>
+                <TextBox Grid.Row="18" Grid.Column="1" Text="{Binding NumberPeopleMax}"/>
+
+                <Label Grid.Row="19">Maximize positives</Label>
+                <CheckBox Grid.Row="19" Grid.Column="1" IsChecked="{Binding MaximizePositives}"/>
+
+                <Label Grid.Row="20">FPS max</Label>
+                <TextBox Grid.Row="20" Grid.Column="1" Text="{Binding FpsMax}"/>
+
+                <Label Grid.Row="21">Proto txt path</Label>
+                <TextBox Grid.Row="21" Grid.Column="1" Text="{Binding ProtoTxtPath}"/>
+
+                <Label Grid.Row="22">Caffe model path</Label>
+                <TextBox Grid.Row="22" Grid.Column="1" Text="{Binding CaffeModelPath}"/>
+
+                <Label Grid.Row="23">Up-sampling ratio</Label>
+                <TextBox Grid.Row="23" Grid.Column="1" Text="{Binding UpsamplingRatio}"/>
+
+            </Grid>
+        </Expander>
+        <Expander Header="Hand" DataContext="{Binding Hand}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" SharedSizeGroup="SizeGroupLabel"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0">Enable</Label>
+                <CheckBox Grid.Row="0" Grid.Column="1" IsChecked="{Binding Enable}"/>
+
+                <Label Grid.Row="1">Detector</Label>
+                <ComboBox Grid.Row="1" Grid.Column="1" SelectedItem="{Binding Detector}"
+                          ItemsSource="{Binding Source={control:EnumBindingSource {x:Type op:Detector}}, Mode=OneTime}"/>
+
+                <Label Grid.Row="2">Input resolution</Label>
+                <Grid Grid.Row="2" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0">X</TextBlock>
+                    <TextBox Grid.Column="1" Text="{Binding InputResolution.x}"/>
+                    <TextBlock Grid.Column="2">Y</TextBlock>
+                    <TextBox Grid.Column="3" Text="{Binding InputResolution.y}"/>
+                </Grid>
+
+                <Label Grid.Row="3">Scales number</Label>
+                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ScalesNumber}"/>
+
+                <Label Grid.Row="4">Scale range</Label>
+                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding ScaleRange}"/>
+
+                <Label Grid.Row="5">Render mode</Label>
+                <ComboBox Grid.Row="5" Grid.Column="1" SelectedItem="{Binding RenderMode}"
+                          ItemsSource="{Binding Source={control:EnumBindingSource {x:Type op:RenderMode}}, Mode=OneTime}"/>
+
+                <Label Grid.Row="6">Alpha keypoint</Label>
+                <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding AlphaKeypoint}"/>
+
+                <Label Grid.Row="7">Alpha heat map</Label>
+                <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding AlphaHeatMap}"/>
+
+                <Label Grid.Row="8">Render threshold</Label>
+                <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding RenderThreshold}"/>
+            </Grid>
+        </Expander>
+        <Expander Header="Face" DataContext="{Binding Face}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" SharedSizeGroup="SizeGroupLabel"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0">Enable</Label>
+                <CheckBox Grid.Row="0" Grid.Column="1" IsChecked="{Binding Enable}"/>
+
+                <Label Grid.Row="1">Detector</Label>
+                <ComboBox Grid.Row="1" Grid.Column="1" SelectedItem="{Binding Detector}"
+                          ItemsSource="{Binding Source={control:EnumBindingSource {x:Type op:Detector}}, Mode=OneTime}"/>
+
+                <Label Grid.Row="2">Input resolution</Label>
+                <Grid Grid.Row="2" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0">X</TextBlock>
+                    <TextBox Grid.Column="1" Text="{Binding InputResolution.x}"/>
+                    <TextBlock Grid.Column="2">Y</TextBlock>
+                    <TextBox Grid.Column="3" Text="{Binding InputResolution.y}"/>
+                </Grid>
+
+                <Label Grid.Row="3">Render mode</Label>
+                <ComboBox Grid.Row="3" Grid.Column="1" SelectedItem="{Binding RenderMode}"
+                          ItemsSource="{Binding Source={control:EnumBindingSource {x:Type op:RenderMode}}, Mode=OneTime}"/>
+
+                <Label Grid.Row="4">Alpha keypoint</Label>
+                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding AlphaKeypoint}"/>
+
+                <Label Grid.Row="5">Alpha heat map</Label>
+                <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding AlphaHeatMap}"/>
+
+                <Label Grid.Row="6">Render threshold</Label>
+                <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding RenderThreshold}"/>
+            </Grid>
+        </Expander>
+        <Expander Header="Extra" DataContext="{Binding Extra}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" SharedSizeGroup="SizeGroupLabel"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0">Reconstruct 3D</Label>
+                <CheckBox Grid.Row="0" Grid.Column="1" IsChecked="{Binding Reconstruct3d}"/>
+
+                <Label Grid.Row="1">Min views 3D</Label>
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MinViews3d}"/>
+
+                <Label Grid.Row="2">Identification</Label>
+                <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding Identification}"/>
+
+                <Label Grid.Row="3">Tracking</Label>
+                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Tracking}"/>
+
+                <Label Grid.Row="4">IK threads</Label>
+                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding IkThreads}"/>
+            </Grid>
+        </Expander>
+        <Expander Header="Input" DataContext="{Binding Input}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" SharedSizeGroup="SizeGroupLabel"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <!--
+                <Label Grid.Row="0">Input type</Label>
+                <ComboBox Grid.Row="0" Grid.Column="1" SelectedItem="{Binding InputType}"
+                          ItemsSource="{Binding Source={control:EnumBindingSource {x:Type op:ProducerType}}, Mode=OneTime}"/>
+
+                <Label Grid.Row="1">Producer string</Label>
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ProducerString}"/>
+                -->
+
+                <Label Grid.Row="2">Frame first</Label>
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding FrameFirst}"/>
+
+                <Label Grid.Row="3">Frame step</Label>
+                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding FrameStep}"/>
+
+                <Label Grid.Row="4">Frame last</Label>
+                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding FrameLast}"/>
+
+                <Label Grid.Row="5">Real-time processing</Label>
+                <CheckBox Grid.Row="5" Grid.Column="1" IsChecked="{Binding RealTimeProcessing}"/>
+
+                <Label Grid.Row="6">Frame flip</Label>
+                <CheckBox Grid.Row="6" Grid.Column="1" IsChecked="{Binding FrameFlip}"/>
+
+                <Label Grid.Row="7">Frame rotate</Label>
+                <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding FrameRotate}"/>
+
+                <Label Grid.Row="8">Frames repeat</Label>
+                <CheckBox Grid.Row="8" Grid.Column="1" IsChecked="{Binding FramesRepeat}"/>
+
+                <Label Grid.Row="9">Camera resolution</Label>
+                <Grid Grid.Row="9" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0">X</TextBlock>
+                    <TextBox Grid.Column="1" Text="{Binding CameraResolution.x}"/>
+                    <TextBlock Grid.Column="2">Y</TextBlock>
+                    <TextBox Grid.Column="3" Text="{Binding CameraResolution.y}"/>
+                </Grid>
+
+                <Label Grid.Row="10">Camera parameter path</Label>
+                <TextBox Grid.Row="10" Grid.Column="1" Text="{Binding CameraParameterPath}"/>
+
+                <Label Grid.Row="11">Undistort image</Label>
+                <CheckBox Grid.Row="11" Grid.Column="1" IsChecked="{Binding UndistortImage}"/>
+
+                <Label Grid.Row="12">Number views</Label>
+                <TextBox Grid.Row="12" Grid.Column="1" Text="{Binding NumberViews}"/>
+            </Grid>
+        </Expander>
+        <Expander Header="Output" DataContext="{Binding Output}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" SharedSizeGroup="SizeGroupLabel"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0">Verbose</Label>
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Verbose}"/>
+
+                <Label Grid.Row="1">Write keypoint</Label>
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding WriteKeypoint}"/>
+
+                <Label Grid.Row="2">Write keypoint format</Label>
+                <ComboBox Grid.Row="2" Grid.Column="1" SelectedItem="{Binding WriteKeypointFormat}"
+                          ItemsSource="{Binding Source={control:EnumBindingSource {x:Type op:DataFormat}}, Mode=OneTime}"/>
+
+                <Label Grid.Row="3">Write JSON</Label>
+                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding WriteJson}"/>
+
+                <Label Grid.Row="4">Write CoCo JSON</Label>
+                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding WriteCocoJson}"/>
+
+                <Label Grid.Row="5">Write CoCo JSON variants</Label>
+                <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding WriteCocoJsonVariants}"/>
+
+                <Label Grid.Row="6">Write CoCo JSON variant</Label>
+                <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding WriteCocoJsonVariant}"/>
+
+                <Label Grid.Row="7">Write images</Label>
+                <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding WriteImages}"/>
+
+                <Label Grid.Row="8">Write images format</Label>
+                <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding WriteImagesFormat}"/>
+
+                <Label Grid.Row="9">Write video</Label>
+                <TextBox Grid.Row="9" Grid.Column="1" Text="{Binding WriteVideo}"/>
+
+                <Label Grid.Row="10">Write video FPS</Label>
+                <TextBox Grid.Row="10" Grid.Column="1" Text="{Binding WriteVideoFps}"/>
+
+                <Label Grid.Row="11">Write video with audio</Label>
+                <CheckBox Grid.Row="11" Grid.Column="1" IsChecked="{Binding WriteVideoWithAudio}"/>
+
+                <Label Grid.Row="12">Write heat maps</Label>
+                <TextBox Grid.Row="12" Grid.Column="1" Text="{Binding WriteHeatMaps}"/>
+
+                <Label Grid.Row="13">Write heat maps format</Label>
+                <TextBox Grid.Row="13" Grid.Column="1" Text="{Binding WriteHeatMapsFormat}"/>
+
+                <Label Grid.Row="14">Write video 3D</Label>
+                <TextBox Grid.Row="14" Grid.Column="1" Text="{Binding WriteVideo3D}"/>
+
+                <Label Grid.Row="15">Write video Adam</Label>
+                <TextBox Grid.Row="15" Grid.Column="1" Text="{Binding WriteVideoAdam}"/>
+
+                <Label Grid.Row="16">Write BVH</Label>
+                <TextBox Grid.Row="16" Grid.Column="1" Text="{Binding WriteBvh}"/>
+
+                <Label Grid.Row="17">UDP host</Label>
+                <TextBox Grid.Row="17" Grid.Column="1" Text="{Binding UdpHost}"/>
+
+                <Label Grid.Row="18">UDP port</Label>
+                <TextBox Grid.Row="18" Grid.Column="1" Text="{Binding UdpPort}"/>
+            </Grid>
+        </Expander>
+        <Expander Header="GUI" DataContext="{Binding Gui}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" SharedSizeGroup="SizeGroupLabel"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0">Display mode</Label>
+                <ComboBox Grid.Row="0" Grid.Column="1" SelectedItem="{Binding DisplayMode}"
+                          ItemsSource="{Binding Source={control:EnumBindingSource {x:Type op:DisplayMode}}, Mode=OneTime}"/>
+
+                <Label Grid.Row="1">GUI verbose</Label>
+                <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding GuiVerbose}"/>
+
+                <Label Grid.Row="2">Full screen</Label>
+                <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding FullScreen}"/>
+            </Grid>
+        </Expander>
+        <Expander Header="Debug" DataContext="{Binding Debug}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" SharedSizeGroup="SizeGroupLabel"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0">Log priority</Label>
+                <ComboBox Grid.Row="0" Grid.Column="1" SelectedItem="{Binding LogPriority}"
+                          ItemsSource="{Binding Source={control:EnumBindingSource {x:Type op:Priority}}, Mode=OneTime}"/>
+
+                <Label Grid.Row="1">Disable multi-thread</Label>
+                <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding DisableMultiThread}"/>
+
+                <Label Grid.Row="2">Profile speed</Label>
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ProfileSpeed}"/>
+            </Grid>
+        </Expander>
+    </StackPanel>
+</UserControl>

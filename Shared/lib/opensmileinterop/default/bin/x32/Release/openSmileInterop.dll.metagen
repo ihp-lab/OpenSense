@@ -1,0 +1,778 @@
+ImageRuntimeVersion: v4.0.30319
+Assembly openSmileInterop, Version=1.0.*, Culture=固定语言(固定国家/地区): 
+	hash=SHA1, flags=PublicKey
+Assembly mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Class openSmileInterop.InstanceConfiguration: AutoLayout, AnsiClass, Class, Public, Abstract, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Fields:
+    System.String InstanceName : Public
+  Properties:
+    System.String ComponentTypeName 'get ' : 
+  Methods:
+    get_ComponentTypeName(): PrivateScope, Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName
+    SetInstanceValues(ConfigInstance*, cConfigManager*): PrivateScope, Public, Virtual, HideBySig, VtableLayoutMask, Abstract
+Class openSmileInterop.Configuration: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Fields:
+    System.Collections.Generic.List`1[openSmileInterop.InstanceConfiguration] InstanceConfigurations : Public
+    Boolean UseConfigFile : Public
+    System.String ConfigFilename : Public
+    Boolean PrintLogToFile : Public
+    System.String LogFilename : Public
+    Boolean AppendLogFile : Public
+    Boolean PrintLogToConsole : Public
+    Int32 OverallLogLevel : Public
+Class openSmileInterop.SmileComponentInstanceConfiguration: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :openSmileInterop.InstanceConfiguration
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    System.String ComponentTypeName 'get ' : 
+  Methods:
+    get_ComponentTypeName(): PrivateScope, Public, Virtual, HideBySig, SpecialName
+    SetInstanceValues(ConfigInstance*, cConfigManager*): PrivateScope, Public, Final, Virtual, HideBySig
+    SetInstanceValuesWithFullFieldName(String, ConfigInstance*, cConfigManager*): PrivateScope, Public, Virtual, HideBySig, VtableLayoutMask
+Class openSmileInterop.ComponentManagerInstInstanceConfiguration: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :openSmileInterop.SmileComponentInstanceConfiguration
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    System.String ComponentTypeName 'get ' : 
+    Boolean threadId_Enabled 'get ' : 
+    Boolean threadId_IsSet 'get ' : 
+    Int32 threadId 'get set' : 
+    Boolean type_Enabled 'get ' : 
+    Boolean type_IsSet 'get ' : 
+    System.String type 'get set' : 
+  Methods:
+    get_type(): PrivateScope, Public, HideBySig, SpecialName
+    set_type(String): PrivateScope, Public, HideBySig, SpecialName
+    get_type_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_type_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_threadId(): PrivateScope, Public, HideBySig, SpecialName
+    set_threadId(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_threadId_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_threadId_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_ComponentTypeName(): PrivateScope, Public, Virtual, HideBySig, SpecialName
+    SetInstanceValuesWithFullFieldName(String, ConfigInstance*, cConfigManager*): PrivateScope, Public, Virtual, HideBySig
+Class openSmileInterop.ComponentManagerInstanceConfiguration: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :openSmileInterop.SmileComponentInstanceConfiguration
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Fields:
+    System.Collections.Generic.List`1[System.Tuple`2[System.String,openSmileInterop.ComponentManagerInstInstanceConfiguration]] instance : Public
+  Properties:
+    Boolean oldSingleIterationTickLoop_Enabled 'get ' : 
+    Boolean oldSingleIterationTickLoop_IsSet 'get ' : 
+    Boolean oldSingleIterationTickLoop 'get set' : 
+    Boolean execDebug_Enabled 'get ' : 
+    Boolean execDebug_IsSet 'get ' : 
+    Boolean execDebug 'get set' : 
+    Boolean threadPriority_Enabled 'get ' : 
+    Boolean threadPriority_IsSet 'get ' : 
+    Int32 threadPriority 'get set' : 
+    Boolean nThreads_Enabled 'get ' : 
+    Boolean nThreads_IsSet 'get ' : 
+    Int32 nThreads 'get set' : 
+    Boolean profiling_Enabled 'get ' : 
+    Boolean profiling_IsSet 'get ' : 
+    Boolean profiling 'get set' : 
+    Boolean printLevelStats_Enabled 'get ' : 
+    Boolean printLevelStats_IsSet 'get ' : 
+    Int32 printLevelStats 'get set' : 
+  Methods:
+    get_printLevelStats(): PrivateScope, Public, HideBySig, SpecialName
+    set_printLevelStats(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_printLevelStats_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_printLevelStats_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_profiling(): PrivateScope, Public, HideBySig, SpecialName
+    set_profiling(Boolean(HasFieldMarshal)): PrivateScope, Public, HideBySig, SpecialName
+    get_profiling_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_profiling_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_nThreads(): PrivateScope, Public, HideBySig, SpecialName
+    set_nThreads(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_nThreads_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_nThreads_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_threadPriority(): PrivateScope, Public, HideBySig, SpecialName
+    set_threadPriority(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_threadPriority_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_threadPriority_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_execDebug(): PrivateScope, Public, HideBySig, SpecialName
+    set_execDebug(Boolean(HasFieldMarshal)): PrivateScope, Public, HideBySig, SpecialName
+    get_execDebug_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_execDebug_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_oldSingleIterationTickLoop(): PrivateScope, Public, HideBySig, SpecialName
+    set_oldSingleIterationTickLoop(Boolean(HasFieldMarshal)): PrivateScope, Public, HideBySig, SpecialName
+    get_oldSingleIterationTickLoop_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_oldSingleIterationTickLoop_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    SetInstanceValuesWithFullFieldName(String, ConfigInstance*, cConfigManager*): PrivateScope, Public, Virtual, HideBySig
+Class openSmileInterop.DataMemoryLevelInstanceConfiguration: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :openSmileInterop.SmileComponentInstanceConfiguration
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    Boolean noHang_Enabled 'get ' : 
+    Boolean noHang_IsSet 'get ' : 
+    Boolean noHang 'get set' : 
+    Boolean growDyn_Enabled 'get ' : 
+    Boolean growDyn_IsSet 'get ' : 
+    Boolean growDyn 'get set' : 
+    Boolean frameSizeSec_Enabled 'get ' : 
+    Boolean frameSizeSec_IsSet 'get ' : 
+    Double frameSizeSec 'get set' : 
+    Boolean lenSec_Enabled 'get ' : 
+    Boolean lenSec_IsSet 'get ' : 
+    Double lenSec 'get set' : 
+    Boolean T_Enabled 'get ' : 
+    Boolean T_IsSet 'get ' : 
+    Double T   'get set' : 
+    Boolean nT_Enabled 'get ' : 
+    Boolean nT_IsSet 'get ' : 
+    Int32 nT   'get set' : 
+    Boolean isRb_Enabled 'get ' : 
+    Boolean isRb_IsSet 'get ' : 
+    Boolean isRb 'get set' : 
+    Boolean type_Enabled 'get ' : 
+    Boolean type_IsSet 'get ' : 
+    System.String type 'get set' : 
+    Boolean name_Enabled 'get ' : 
+    Boolean name_IsSet 'get ' : 
+    System.String name 'get set' : 
+  Methods:
+    get_name(): PrivateScope, Public, HideBySig, SpecialName
+    set_name(String): PrivateScope, Public, HideBySig, SpecialName
+    get_name_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_name_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_type(): PrivateScope, Public, HideBySig, SpecialName
+    set_type(String): PrivateScope, Public, HideBySig, SpecialName
+    get_type_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_type_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_isRb(): PrivateScope, Public, HideBySig, SpecialName
+    set_isRb(Boolean(HasFieldMarshal)): PrivateScope, Public, HideBySig, SpecialName
+    get_isRb_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_isRb_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_nT(): PrivateScope, Public, HideBySig, SpecialName
+    set_nT(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_nT_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_nT_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_T(): PrivateScope, Public, HideBySig, SpecialName
+    set_T(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_T_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_T_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_lenSec(): PrivateScope, Public, HideBySig, SpecialName
+    set_lenSec(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_lenSec_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_lenSec_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_frameSizeSec(): PrivateScope, Public, HideBySig, SpecialName
+    set_frameSizeSec(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_frameSizeSec_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_frameSizeSec_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_growDyn(): PrivateScope, Public, HideBySig, SpecialName
+    set_growDyn(Boolean(HasFieldMarshal)): PrivateScope, Public, HideBySig, SpecialName
+    get_growDyn_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_growDyn_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_noHang(): PrivateScope, Public, HideBySig, SpecialName
+    set_noHang(Boolean(HasFieldMarshal)): PrivateScope, Public, HideBySig, SpecialName
+    get_noHang_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_noHang_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    SetInstanceValuesWithFullFieldName(String, ConfigInstance*, cConfigManager*): PrivateScope, Public, Virtual, HideBySig
+Class openSmileInterop.DataMemoryInstanceConfiguration: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :openSmileInterop.SmileComponentInstanceConfiguration
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    Boolean nT_Enabled 'get ' : 
+    Boolean nT_IsSet 'get ' : 
+    Int32 nT   'get set' : 
+    Boolean isRb_Enabled 'get ' : 
+    Boolean isRb_IsSet 'get ' : 
+    Int32 isRb 'get set' : 
+  Methods:
+    get_isRb(): PrivateScope, Public, HideBySig, SpecialName
+    set_isRb(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_isRb_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_isRb_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_nT(): PrivateScope, Public, HideBySig, SpecialName
+    set_nT(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_nT_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_nT_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    SetInstanceValuesWithFullFieldName(String, ConfigInstance*, cConfigManager*): PrivateScope, Public, Virtual, HideBySig
+Class openSmileInterop.DataWriterInstanceConfiguration: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :openSmileInterop.SmileComponentInstanceConfiguration
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    Boolean levelconf_Enabled 'get ' : 
+    Boolean levelconf_IsSet 'get ' : 
+    openSmileInterop.DataMemoryLevelInstanceConfiguration levelconf 'get set' : 
+    Boolean dmLevel_Enabled 'get ' : 
+    Boolean dmLevel_IsSet 'get ' : 
+    System.String dmLevel 'get set' : 
+    Boolean dmInstance_Enabled 'get ' : 
+    Boolean dmInstance_IsSet 'get ' : 
+    System.String dmInstance 'get set' : 
+  Methods:
+    get_dmInstance(): PrivateScope, Public, HideBySig, SpecialName
+    set_dmInstance(String): PrivateScope, Public, HideBySig, SpecialName
+    get_dmInstance_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_dmInstance_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_dmLevel(): PrivateScope, Public, HideBySig, SpecialName
+    set_dmLevel(String): PrivateScope, Public, HideBySig, SpecialName
+    get_dmLevel_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_dmLevel_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_levelconf(): PrivateScope, Public, HideBySig, SpecialName
+    set_levelconf(DataMemoryLevelInstanceConfiguration): PrivateScope, Public, HideBySig, SpecialName
+    get_levelconf_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_levelconf_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    SetInstanceValuesWithFullFieldName(String, ConfigInstance*, cConfigManager*): PrivateScope, Public, Virtual, HideBySig
+Class openSmileInterop.DataSourceInstanceConfiguration: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :openSmileInterop.SmileComponentInstanceConfiguration
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    Boolean basePeriod_Enabled 'get ' : 
+    Boolean basePeriod_IsSet 'get ' : 
+    Double basePeriod 'get set' : 
+    Boolean period_Enabled 'get ' : 
+    Boolean period_IsSet 'get ' : 
+    Double period 'get set' : 
+    Boolean blocksizeW_sec_Enabled 'get ' : 
+    Boolean blocksizeW_sec_IsSet 'get ' : 
+    Double blocksizeW_sec 'get set' : 
+    Boolean blocksize_sec_Enabled 'get ' : 
+    Boolean blocksize_sec_IsSet 'get ' : 
+    Double blocksize_sec 'get set' : 
+    Boolean blocksizeW_Enabled 'get ' : 
+    Boolean blocksizeW_IsSet 'get ' : 
+    Int32 blocksizeW 'get set' : 
+    Boolean blocksize_Enabled 'get ' : 
+    Boolean blocksize_IsSet 'get ' : 
+    Int32 blocksize 'get set' : 
+    Boolean buffersize_sec_Enabled 'get ' : 
+    Boolean buffersize_sec_IsSet 'get ' : 
+    Double buffersize_sec 'get set' : 
+    Boolean buffersize_Enabled 'get ' : 
+    Boolean buffersize_IsSet 'get ' : 
+    Int32 buffersize 'get set' : 
+    Boolean writer_Enabled 'get ' : 
+    Boolean writer_IsSet 'get ' : 
+    openSmileInterop.DataWriterInstanceConfiguration writer 'get set' : 
+  Methods:
+    get_writer(): PrivateScope, Public, HideBySig, SpecialName
+    set_writer(DataWriterInstanceConfiguration): PrivateScope, Public, HideBySig, SpecialName
+    get_writer_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_writer_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_buffersize(): PrivateScope, Public, HideBySig, SpecialName
+    set_buffersize(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_buffersize_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_buffersize_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_buffersize_sec(): PrivateScope, Public, HideBySig, SpecialName
+    set_buffersize_sec(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_buffersize_sec_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_buffersize_sec_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksize(): PrivateScope, Public, HideBySig, SpecialName
+    set_blocksize(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksize_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksize_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeW(): PrivateScope, Public, HideBySig, SpecialName
+    set_blocksizeW(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeW_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeW_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksize_sec(): PrivateScope, Public, HideBySig, SpecialName
+    set_blocksize_sec(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksize_sec_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksize_sec_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeW_sec(): PrivateScope, Public, HideBySig, SpecialName
+    set_blocksizeW_sec(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeW_sec_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeW_sec_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_period(): PrivateScope, Public, HideBySig, SpecialName
+    set_period(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_period_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_period_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_basePeriod(): PrivateScope, Public, HideBySig, SpecialName
+    set_basePeriod(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_basePeriod_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_basePeriod_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    SetInstanceValuesWithFullFieldName(String, ConfigInstance*, cConfigManager*): PrivateScope, Public, Virtual, HideBySig
+Class openSmileInterop.DataReaderInstanceConfiguration: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :openSmileInterop.SmileComponentInstanceConfiguration
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    Boolean errorOnFullInputIncomplete_Enabled 'get ' : 
+    Boolean errorOnFullInputIncomplete_IsSet 'get ' : 
+    Boolean errorOnFullInputIncomplete 'get set' : 
+    Boolean forceAsyncMerge_Enabled 'get ' : 
+    Boolean forceAsyncMerge_IsSet 'get ' : 
+    Boolean forceAsyncMerge 'get set' : 
+    Boolean dmLevel_Enabled 'get ' : 
+    Boolean dmLevel_IsSet 'get ' : 
+    System.Collections.Generic.List`1[System.String] dmLevel 'get set' : 
+    Boolean dmInstance_Enabled 'get ' : 
+    Boolean dmInstance_IsSet 'get ' : 
+    System.String dmInstance 'get set' : 
+  Methods:
+    get_dmInstance(): PrivateScope, Public, HideBySig, SpecialName
+    set_dmInstance(String): PrivateScope, Public, HideBySig, SpecialName
+    get_dmInstance_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_dmInstance_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_dmLevel(): PrivateScope, Public, HideBySig, SpecialName
+    set_dmLevel(List`1): PrivateScope, Public, HideBySig, SpecialName
+    get_dmLevel_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_dmLevel_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_forceAsyncMerge(): PrivateScope, Public, HideBySig, SpecialName
+    set_forceAsyncMerge(Boolean(HasFieldMarshal)): PrivateScope, Public, HideBySig, SpecialName
+    get_forceAsyncMerge_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_forceAsyncMerge_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_errorOnFullInputIncomplete(): PrivateScope, Public, HideBySig, SpecialName
+    set_errorOnFullInputIncomplete(Boolean(HasFieldMarshal)): PrivateScope, Public, HideBySig, SpecialName
+    get_errorOnFullInputIncomplete_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_errorOnFullInputIncomplete_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    SetInstanceValuesWithFullFieldName(String, ConfigInstance*, cConfigManager*): PrivateScope, Public, Virtual, HideBySig
+Class openSmileInterop.DataSinkInstanceConfiguration: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :openSmileInterop.SmileComponentInstanceConfiguration
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    Boolean errorOnNoOutput_Enabled 'get ' : 
+    Boolean errorOnNoOutput_IsSet 'get ' : 
+    Boolean errorOnNoOutput 'get set' : 
+    Boolean blocksizeR_sec_Enabled 'get ' : 
+    Boolean blocksizeR_sec_IsSet 'get ' : 
+    Double blocksizeR_sec 'get set' : 
+    Boolean blocksize_sec_Enabled 'get ' : 
+    Boolean blocksize_sec_IsSet 'get ' : 
+    Double blocksize_sec 'get set' : 
+    Boolean blocksizeR_Enabled 'get ' : 
+    Boolean blocksizeR_IsSet 'get ' : 
+    Int32 blocksizeR 'get set' : 
+    Boolean blocksize_Enabled 'get ' : 
+    Boolean blocksize_IsSet 'get ' : 
+    Int32 blocksize 'get set' : 
+    Boolean reader_Enabled 'get ' : 
+    Boolean reader_IsSet 'get ' : 
+    openSmileInterop.DataReaderInstanceConfiguration reader 'get set' : 
+  Methods:
+    get_reader(): PrivateScope, Public, HideBySig, SpecialName
+    set_reader(DataReaderInstanceConfiguration): PrivateScope, Public, HideBySig, SpecialName
+    get_reader_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_reader_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksize(): PrivateScope, Public, HideBySig, SpecialName
+    set_blocksize(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksize_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksize_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeR(): PrivateScope, Public, HideBySig, SpecialName
+    set_blocksizeR(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeR_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeR_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksize_sec(): PrivateScope, Public, HideBySig, SpecialName
+    set_blocksize_sec(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksize_sec_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksize_sec_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeR_sec(): PrivateScope, Public, HideBySig, SpecialName
+    set_blocksizeR_sec(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeR_sec_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeR_sec_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_errorOnNoOutput(): PrivateScope, Public, HideBySig, SpecialName
+    set_errorOnNoOutput(Boolean(HasFieldMarshal)): PrivateScope, Public, HideBySig, SpecialName
+    get_errorOnNoOutput_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_errorOnNoOutput_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    SetInstanceValuesWithFullFieldName(String, ConfigInstance*, cConfigManager*): PrivateScope, Public, Virtual, HideBySig
+Class openSmileInterop.DataProcessorInstanceConfiguration: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :openSmileInterop.SmileComponentInstanceConfiguration
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    Boolean EOIlevel_Enabled 'get ' : 
+    Boolean EOIlevel_IsSet 'get ' : 
+    Int32 EOIlevel 'get set' : 
+    Boolean copyInputName_Enabled 'get ' : 
+    Boolean copyInputName_IsSet 'get ' : 
+    Boolean copyInputName 'get set' : 
+    Boolean nameAppend_Enabled 'get ' : 
+    Boolean nameAppend_IsSet 'get ' : 
+    System.String nameAppend 'get set' : 
+    Boolean blocksizeW_sec_Enabled 'get ' : 
+    Boolean blocksizeW_sec_IsSet 'get ' : 
+    Double blocksizeW_sec 'get set' : 
+    Boolean blocksizeR_sec_Enabled 'get ' : 
+    Boolean blocksizeR_sec_IsSet 'get ' : 
+    Double blocksizeR_sec 'get set' : 
+    Boolean blocksize_sec_Enabled 'get ' : 
+    Boolean blocksize_sec_IsSet 'get ' : 
+    Double blocksize_sec 'get set' : 
+    Boolean blocksizeW_Enabled 'get ' : 
+    Boolean blocksizeW_IsSet 'get ' : 
+    Int32 blocksizeW 'get set' : 
+    Boolean blocksizeR_Enabled 'get ' : 
+    Boolean blocksizeR_IsSet 'get ' : 
+    Int32 blocksizeR 'get set' : 
+    Boolean blocksize_Enabled 'get ' : 
+    Boolean blocksize_IsSet 'get ' : 
+    Int32 blocksize 'get set' : 
+    Boolean buffersize_sec_Enabled 'get ' : 
+    Boolean buffersize_sec_IsSet 'get ' : 
+    Double buffersize_sec 'get set' : 
+    Boolean buffersize_Enabled 'get ' : 
+    Boolean buffersize_IsSet 'get ' : 
+    Int32 buffersize 'get set' : 
+    Boolean writer_Enabled 'get ' : 
+    Boolean writer_IsSet 'get ' : 
+    openSmileInterop.DataWriterInstanceConfiguration writer 'get set' : 
+    Boolean reader_Enabled 'get ' : 
+    Boolean reader_IsSet 'get ' : 
+    openSmileInterop.DataReaderInstanceConfiguration reader 'get set' : 
+  Methods:
+    get_reader(): PrivateScope, Public, HideBySig, SpecialName
+    set_reader(DataReaderInstanceConfiguration): PrivateScope, Public, HideBySig, SpecialName
+    get_reader_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_reader_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_writer(): PrivateScope, Public, HideBySig, SpecialName
+    set_writer(DataWriterInstanceConfiguration): PrivateScope, Public, HideBySig, SpecialName
+    get_writer_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_writer_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_buffersize(): PrivateScope, Public, HideBySig, SpecialName
+    set_buffersize(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_buffersize_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_buffersize_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_buffersize_sec(): PrivateScope, Public, HideBySig, SpecialName
+    set_buffersize_sec(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_buffersize_sec_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_buffersize_sec_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksize(): PrivateScope, Public, HideBySig, SpecialName
+    set_blocksize(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksize_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksize_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeR(): PrivateScope, Public, HideBySig, SpecialName
+    set_blocksizeR(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeR_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeR_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeW(): PrivateScope, Public, HideBySig, SpecialName
+    set_blocksizeW(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeW_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeW_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksize_sec(): PrivateScope, Public, HideBySig, SpecialName
+    set_blocksize_sec(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksize_sec_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksize_sec_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeR_sec(): PrivateScope, Public, HideBySig, SpecialName
+    set_blocksizeR_sec(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeR_sec_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeR_sec_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeW_sec(): PrivateScope, Public, HideBySig, SpecialName
+    set_blocksizeW_sec(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeW_sec_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_blocksizeW_sec_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_nameAppend(): PrivateScope, Public, HideBySig, SpecialName
+    set_nameAppend(String): PrivateScope, Public, HideBySig, SpecialName
+    get_nameAppend_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_nameAppend_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_copyInputName(): PrivateScope, Public, HideBySig, SpecialName
+    set_copyInputName(Boolean(HasFieldMarshal)): PrivateScope, Public, HideBySig, SpecialName
+    get_copyInputName_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_copyInputName_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_EOIlevel(): PrivateScope, Public, HideBySig, SpecialName
+    set_EOIlevel(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_EOIlevel_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_EOIlevel_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    SetInstanceValuesWithFullFieldName(String, ConfigInstance*, cConfigManager*): PrivateScope, Public, Virtual, HideBySig
+Class openSmileInterop.WinToVecProcessorInstanceConfiguration: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :openSmileInterop.DataProcessorInstanceConfiguration
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    Boolean noPostEOIprocessing_Enabled 'get ' : 
+    Boolean noPostEOIprocessing_IsSet 'get ' : 
+    Boolean noPostEOIprocessing 'get set' : 
+    Boolean frameCenterSpecial_Enabled 'get ' : 
+    Boolean frameCenterSpecial_IsSet 'get ' : 
+    System.String frameCenterSpecial 'get set' : 
+    Boolean frameCenterFrames_Enabled 'get ' : 
+    Boolean frameCenterFrames_IsSet 'get ' : 
+    Int32 frameCenterFrames 'get set' : 
+    Boolean frameCenter_Enabled 'get ' : 
+    Boolean frameCenter_IsSet 'get ' : 
+    Int32 frameCenter 'get set' : 
+    Boolean frameStepFrames_Enabled 'get ' : 
+    Boolean frameStepFrames_IsSet 'get ' : 
+    Int32 frameStepFrames 'get set' : 
+    Boolean frameSizeFrames_Enabled 'get ' : 
+    Boolean frameSizeFrames_IsSet 'get ' : 
+    Int32 frameSizeFrames 'get set' : 
+    Boolean frameStep_Enabled 'get ' : 
+    Boolean frameStep_IsSet 'get ' : 
+    Double frameStep 'get set' : 
+    Boolean frameSize_Enabled 'get ' : 
+    Boolean frameSize_IsSet 'get ' : 
+    Double frameSize 'get set' : 
+    Boolean frameList_Enabled 'get ' : 
+    Boolean frameList_IsSet 'get ' : 
+    System.String frameList 'get set' : 
+    Boolean frameListFile_Enabled 'get ' : 
+    Boolean frameListFile_IsSet 'get ' : 
+    System.String frameListFile 'get set' : 
+    Boolean frameMode_Enabled 'get ' : 
+    Boolean frameMode_IsSet 'get ' : 
+    System.String frameMode 'get set' : 
+    Boolean allowLastFrameIncomplete_Enabled 'get ' : 
+    Boolean allowLastFrameIncomplete_IsSet 'get ' : 
+    Boolean allowLastFrameIncomplete 'get set' : 
+  Methods:
+    get_allowLastFrameIncomplete(): PrivateScope, Public, HideBySig, SpecialName
+    set_allowLastFrameIncomplete(Boolean(HasFieldMarshal)): PrivateScope, Public, HideBySig, SpecialName
+    get_allowLastFrameIncomplete_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_allowLastFrameIncomplete_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_frameMode(): PrivateScope, Public, HideBySig, SpecialName
+    set_frameMode(String): PrivateScope, Public, HideBySig, SpecialName
+    get_frameMode_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_frameMode_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_frameListFile(): PrivateScope, Public, HideBySig, SpecialName
+    set_frameListFile(String): PrivateScope, Public, HideBySig, SpecialName
+    get_frameListFile_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_frameListFile_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_frameList(): PrivateScope, Public, HideBySig, SpecialName
+    set_frameList(String): PrivateScope, Public, HideBySig, SpecialName
+    get_frameList_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_frameList_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_frameSize(): PrivateScope, Public, HideBySig, SpecialName
+    set_frameSize(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_frameSize_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_frameSize_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_frameStep(): PrivateScope, Public, HideBySig, SpecialName
+    set_frameStep(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_frameStep_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_frameStep_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_frameSizeFrames(): PrivateScope, Public, HideBySig, SpecialName
+    set_frameSizeFrames(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_frameSizeFrames_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_frameSizeFrames_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_frameStepFrames(): PrivateScope, Public, HideBySig, SpecialName
+    set_frameStepFrames(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_frameStepFrames_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_frameStepFrames_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_frameCenter(): PrivateScope, Public, HideBySig, SpecialName
+    set_frameCenter(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_frameCenter_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_frameCenter_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_frameCenterFrames(): PrivateScope, Public, HideBySig, SpecialName
+    set_frameCenterFrames(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_frameCenterFrames_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_frameCenterFrames_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_frameCenterSpecial(): PrivateScope, Public, HideBySig, SpecialName
+    set_frameCenterSpecial(String): PrivateScope, Public, HideBySig, SpecialName
+    get_frameCenterSpecial_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_frameCenterSpecial_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_noPostEOIprocessing(): PrivateScope, Public, HideBySig, SpecialName
+    set_noPostEOIprocessing(Boolean(HasFieldMarshal)): PrivateScope, Public, HideBySig, SpecialName
+    get_noPostEOIprocessing_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_noPostEOIprocessing_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    SetInstanceValuesWithFullFieldName(String, ConfigInstance*, cConfigManager*): PrivateScope, Public, Virtual, HideBySig
+Class openSmileInterop.VectorProcessorInstanceConfiguration: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :openSmileInterop.DataProcessorInstanceConfiguration
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    Boolean preserveFieldNames_Enabled 'get ' : 
+    Boolean preserveFieldNames_IsSet 'get ' : 
+    Boolean preserveFieldNames 'get set' : 
+    Boolean includeSingleElementFields_Enabled 'get ' : 
+    Boolean includeSingleElementFields_IsSet 'get ' : 
+    Boolean includeSingleElementFields 'get set' : 
+    Boolean processArrayFields_Enabled 'get ' : 
+    Boolean processArrayFields_IsSet 'get ' : 
+    Boolean processArrayFields 'get set' : 
+  Methods:
+    get_processArrayFields(): PrivateScope, Public, HideBySig, SpecialName
+    set_processArrayFields(Boolean(HasFieldMarshal)): PrivateScope, Public, HideBySig, SpecialName
+    get_processArrayFields_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_processArrayFields_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_includeSingleElementFields(): PrivateScope, Public, HideBySig, SpecialName
+    set_includeSingleElementFields(Boolean(HasFieldMarshal)): PrivateScope, Public, HideBySig, SpecialName
+    get_includeSingleElementFields_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_includeSingleElementFields_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_preserveFieldNames(): PrivateScope, Public, HideBySig, SpecialName
+    set_preserveFieldNames(Boolean(HasFieldMarshal)): PrivateScope, Public, HideBySig, SpecialName
+    get_preserveFieldNames_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_preserveFieldNames_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    SetInstanceValuesWithFullFieldName(String, ConfigInstance*, cConfigManager*): PrivateScope, Public, Virtual, HideBySig
+Class openSmileInterop.FramerInstanceConfiguration: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :openSmileInterop.WinToVecProcessorInstanceConfiguration
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Methods:
+    SetInstanceValuesWithFullFieldName(String, ConfigInstance*, cConfigManager*): PrivateScope, Public, Virtual, HideBySig
+Class openSmileInterop.EnergyInstanceConfiguration: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :openSmileInterop.VectorProcessorInstanceConfiguration
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    Boolean ebiasSquare_Enabled 'get ' : 
+    Boolean ebiasSquare_IsSet 'get ' : 
+    Double ebiasSquare 'get set' : 
+    Boolean ebiasRms_Enabled 'get ' : 
+    Boolean ebiasRms_IsSet 'get ' : 
+    Double ebiasRms 'get set' : 
+    Boolean ebiasLog_Enabled 'get ' : 
+    Boolean ebiasLog_IsSet 'get ' : 
+    Double ebiasLog 'get set' : 
+    Boolean escaleSquare_Enabled 'get ' : 
+    Boolean escaleSquare_IsSet 'get ' : 
+    Double escaleSquare 'get set' : 
+    Boolean escaleRms_Enabled 'get ' : 
+    Boolean escaleRms_IsSet 'get ' : 
+    Double escaleRms 'get set' : 
+    Boolean escaleLog_Enabled 'get ' : 
+    Boolean escaleLog_IsSet 'get ' : 
+    Double escaleLog 'get set' : 
+    Boolean log_Enabled 'get ' : 
+    Boolean log_IsSet 'get ' : 
+    Boolean log 'get set' : 
+    Boolean energy2_Enabled 'get ' : 
+    Boolean energy2_IsSet 'get ' : 
+    Boolean energy2 'get set' : 
+    Boolean rms_Enabled 'get ' : 
+    Boolean rms_IsSet 'get ' : 
+    Boolean rms 'get set' : 
+    Boolean htkcompatible_Enabled 'get ' : 
+    Boolean htkcompatible_IsSet 'get ' : 
+    Boolean htkcompatible 'get set' : 
+  Methods:
+    get_htkcompatible(): PrivateScope, Public, HideBySig, SpecialName
+    set_htkcompatible(Boolean(HasFieldMarshal)): PrivateScope, Public, HideBySig, SpecialName
+    get_htkcompatible_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_htkcompatible_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_rms(): PrivateScope, Public, HideBySig, SpecialName
+    set_rms(Boolean(HasFieldMarshal)): PrivateScope, Public, HideBySig, SpecialName
+    get_rms_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_rms_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_energy2(): PrivateScope, Public, HideBySig, SpecialName
+    set_energy2(Boolean(HasFieldMarshal)): PrivateScope, Public, HideBySig, SpecialName
+    get_energy2_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_energy2_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_log(): PrivateScope, Public, HideBySig, SpecialName
+    set_log(Boolean(HasFieldMarshal)): PrivateScope, Public, HideBySig, SpecialName
+    get_log_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_log_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_escaleLog(): PrivateScope, Public, HideBySig, SpecialName
+    set_escaleLog(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_escaleLog_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_escaleLog_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_escaleRms(): PrivateScope, Public, HideBySig, SpecialName
+    set_escaleRms(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_escaleRms_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_escaleRms_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_escaleSquare(): PrivateScope, Public, HideBySig, SpecialName
+    set_escaleSquare(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_escaleSquare_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_escaleSquare_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_ebiasLog(): PrivateScope, Public, HideBySig, SpecialName
+    set_ebiasLog(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_ebiasLog_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_ebiasLog_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_ebiasRms(): PrivateScope, Public, HideBySig, SpecialName
+    set_ebiasRms(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_ebiasRms_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_ebiasRms_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_ebiasSquare(): PrivateScope, Public, HideBySig, SpecialName
+    set_ebiasSquare(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_ebiasSquare_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_ebiasSquare_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    SetInstanceValuesWithFullFieldName(String, ConfigInstance*, cConfigManager*): PrivateScope, Public, Virtual, HideBySig
+Class openSmileInterop.Field: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(FieldMetaInfo*): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    Int32 Length 'get set' : 
+    System.String Name 'get set' : 
+  Methods:
+    get_Name(): PrivateScope, Public, HideBySig, SpecialName
+    set_Name(String): PrivateScope, Public, HideBySig, SpecialName
+    get_Length(): PrivateScope, Public, HideBySig, SpecialName
+    set_Length(Int32): PrivateScope, Public, HideBySig, SpecialName
+Class openSmileInterop.Time: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(TimeMetaInfo*): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    Double RealStartTimeInSeconds 'get set' : 
+  Methods:
+    get_RealStartTimeInSeconds(): PrivateScope, Public, HideBySig, SpecialName
+    set_RealStartTimeInSeconds(Double): PrivateScope, Public, HideBySig, SpecialName
+Class openSmileInterop.Vector: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(cVector*): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    Byte[] Data 'get set' : 
+    openSmileInterop.Field[] FieldInfo 'get set' : 
+    System.Type DataType 'get set' : 
+    openSmileInterop.Time TimeInfo 'get set' : 
+  Methods:
+    get_TimeInfo(): PrivateScope, Public, HideBySig, SpecialName
+    set_TimeInfo(Time): PrivateScope, Public, HideBySig, SpecialName
+    get_DataType(): PrivateScope, Public, HideBySig, SpecialName
+    set_DataType(Type): PrivateScope, Public, HideBySig, SpecialName
+    get_FieldInfo(): PrivateScope, Public, HideBySig, SpecialName
+    set_FieldInfo(Field[]): PrivateScope, Public, HideBySig, SpecialName
+    get_Data(): PrivateScope, Public, HideBySig, SpecialName
+    set_Data(Byte[]): PrivateScope, Public, HideBySig, SpecialName
+Class openSmileInterop.RawDataHandler: AutoLayout, AnsiClass, Class, Public, Sealed, BeforeFieldInit
+  :System.MulticastDelegate
+    Void .ctor(System.Object, IntPtr): PrivateScope, Public, SpecialName, RTSpecialName
+  Methods:
+    Invoke(Vector): PrivateScope, Public, Final, Virtual, VtableLayoutMask
+    BeginInvoke(Vector, AsyncCallback, Object): PrivateScope, Public, Final, Virtual, VtableLayoutMask
+    EndInvoke(IAsyncResult): PrivateScope, Public, Final, Virtual, VtableLayoutMask
+Class openSmileInterop.RawDataSinkInstanceConfiguration: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :openSmileInterop.DataSinkInstanceConfiguration
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Methods:
+    SetInstanceValuesWithFullFieldName(String, ConfigInstance*, cConfigManager*): PrivateScope, Public, Virtual, HideBySig
+Class openSmileInterop.RawWaveSourceInstanceConfiguration: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :openSmileInterop.DataSourceInstanceConfiguration
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    Boolean outFieldName_Enabled 'get ' : 
+    Boolean outFieldName_IsSet 'get ' : 
+    System.String outFieldName 'get set' : 
+    Boolean channels_Enabled 'get ' : 
+    Boolean channels_IsSet 'get ' : 
+    Int32 channels 'get set' : 
+    Boolean sampleSize_Enabled 'get ' : 
+    Boolean sampleSize_IsSet 'get ' : 
+    Int32 sampleSize 'get set' : 
+    Boolean sampleRate_Enabled 'get ' : 
+    Boolean sampleRate_IsSet 'get ' : 
+    Int32 sampleRate 'get set' : 
+    Boolean monoMixdown_Enabled 'get ' : 
+    Boolean monoMixdown_IsSet 'get ' : 
+    Boolean monoMixdown 'get set' : 
+  Methods:
+    get_monoMixdown(): PrivateScope, Public, HideBySig, SpecialName
+    set_monoMixdown(Boolean(HasFieldMarshal)): PrivateScope, Public, HideBySig, SpecialName
+    get_monoMixdown_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_monoMixdown_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_sampleRate(): PrivateScope, Public, HideBySig, SpecialName
+    set_sampleRate(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_sampleRate_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_sampleRate_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_sampleSize(): PrivateScope, Public, HideBySig, SpecialName
+    set_sampleSize(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_sampleSize_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_sampleSize_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_channels(): PrivateScope, Public, HideBySig, SpecialName
+    set_channels(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_channels_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_channels_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    get_outFieldName(): PrivateScope, Public, HideBySig, SpecialName
+    set_outFieldName(String): PrivateScope, Public, HideBySig, SpecialName
+    get_outFieldName_IsSet(): PrivateScope, Public, HideBySig, SpecialName
+    get_outFieldName_Enabled(): PrivateScope, Public, HideBySig, SpecialName
+    SetInstanceValuesWithFullFieldName(String, ConfigInstance*, cConfigManager*): PrivateScope, Public, Virtual, HideBySig
+Class openSmileInterop.SMILExtract: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+    Void .ctor(System.String[]): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Methods:
+    Execute(String[]): PrivateScope, Public, Static, HideBySig
+    Execute(): PrivateScope, Public, HideBySig
+Class openSmileInterop.Environment: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(openSmileInterop.Configuration): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.IDisposable
+  Methods:
+    InstanceNames(): PrivateScope, Public, HideBySig
+    RawWaveSourceInstanceNames(): PrivateScope, Public, HideBySig
+    RawDataSinkInstanceNames(): PrivateScope, Public, HideBySig
+    Hook(String, RawDataHandler): PrivateScope, Public, HideBySig
+    Feed(String, Byte[]): PrivateScope, Public, HideBySig
+    Run(): PrivateScope, Public, HideBySig
+    Dispose(): PrivateScope, Public, Final, Virtual, HideBySig

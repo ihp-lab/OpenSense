@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="OpenSense.PipelineBuilder.Controls.Configuration.WaveFileAudioSourceControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:OpenSense.PipelineBuilder.Controls.Configuration"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0">Filename</Label>
+        <Grid Grid.Row="0" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Name="TextBoxFilename" Text="{Binding Filename}"/>
+            <Button Grid.Column="1" Name="ButtonOpenFile" Click="ButtonOpenFile_Click">Open</Button>
+        </Grid>
+
+        <Label Grid.Row="1">Audio start time</Label>
+        <TextBlock Grid.Row="1" Grid.Column="1" Foreground="Red">TODO: a DateTime picker is needed, now the default value is null</TextBlock>
+
+        <Label Grid.Row="2">Target latency ms</Label>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding TargetLatencyMs}"/>
+
+    </Grid>
+</UserControl>
