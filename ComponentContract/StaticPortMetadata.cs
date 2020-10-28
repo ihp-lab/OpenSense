@@ -9,21 +9,26 @@ using Microsoft.Psi;
 namespace OpenSense.Component.Contract {
     public sealed class StaticPortMetadata : IPortMetadata {
 
-        public StaticPortMetadata(string name, PropertyInfo property) {
-            _name = name;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="name">Name of the port. If set to null, the name of property will be used instead.</param>
+        /// <param name="description">Description of this port.</param>
+        public StaticPortMetadata(PropertyInfo property, string name = null, string description = "") {
             if (property is null) {
                 throw new ArgumentNullException(nameof(property));
             }
             Property = property;
+            _name = name;
+            Description = description;
         }
-
-        public StaticPortMetadata(PropertyInfo property) : this(null, property) {}
 
         public PropertyInfo Property { get; private set; }
 
         public object Identifier => Property.Name;
 
-        public string Description { get; set; } = "";
+        public string Description { get; private set; }
 
         private string _name;
 
