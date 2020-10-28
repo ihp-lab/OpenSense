@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>OpenSense.Component.Contract</RootNamespace>
+    <LangVersion>8.0</LangVersion>
+    <AssemblyName>OpenSense.Component.Contract</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Psi.Runtime" Version="0.13.38.2-beta" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>OpenSense.Wpf</RootNamespace>
+    <LangVersion>8.0</LangVersion>
+    <ApplicationIcon>Resource\Icon\usc.ico</ApplicationIcon>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <Version>2.0.0</Version>
+    <Authors />
+    <PackageId />
+    <Company />
+    <AssemblyName>OpenSense.Wpf</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resource\Icon\about.ico" />
+    <None Remove="Resource\Icon\devices.ico" />
+    <None Remove="Resource\Icon\exit.ico" />
+    <None Remove="Resource\Icon\export.ico" />
+    <None Remove="Resource\Icon\hflip.ico" />
+    <None Remove="Resource\Icon\import.ico" />
+    <None Remove="Resource\Icon\local.ico" />
+    <None Remove="Resource\Icon\remote.ico" />
+    <None Remove="Resource\Icon\reset.ico" />
+    <None Remove="Resource\Icon\usc.ico" />
+    <None Remove="Resource\Icon\vflip.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Utility\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
+    <ProjectReference Include="..\Pipeline\Pipeline.csproj" />
+    <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resource\Icon\about.ico" />
+    <Resource Include="Resource\Icon\devices.ico" />
+    <Resource Include="Resource\Icon\exit.ico" />
+    <Resource Include="Resource\Icon\export.ico" />
+    <Resource Include="Resource\Icon\hflip.ico" />
+    <Resource Include="Resource\Icon\import.ico" />
+    <Resource Include="Resource\Icon\local.ico" />
+    <Resource Include="Resource\Icon\remote.ico" />
+    <Resource Include="Resource\Icon\reset.ico" />
+    <Resource Include="Resource\Icon\usc.ico" />
+    <Resource Include="Resource\Icon\vflip.ico" />
+  </ItemGroup>
+
+</Project>
