@@ -88,7 +88,11 @@ jump:
                 inputDataTypeName = "Any";
             } else {
                 var inputPortDataType = inputMetadata.GetTransmissionDataType(null, localOutputs, localInputs);
-                inputDataTypeName = inputPortDataType.FullName;
+                if (inputPortDataType is null) {
+                    inputDataTypeName = "Unknown";
+                } else {
+                    inputDataTypeName = inputPortDataType.FullName;
+                }
             }
             TextBlockPortDataType.Text = inputDataTypeName;
 
