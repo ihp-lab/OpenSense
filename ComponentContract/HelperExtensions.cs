@@ -79,7 +79,7 @@ namespace OpenSense.Component.Contract {
         }
 
         #region data type finder
-        public static Type FindInputPortDataType(this ComponentConfiguration config, IPortMetadata portMetadata, IReadOnlyList<ComponentConfiguration> configs) {
+        public static Type FindInputPortDataType(this ComponentConfiguration config, IPortMetadata portMetadata, IReadOnlyList<ComponentConfiguration> configs, params Tuple<ComponentConfiguration, IPortMetadata>[] exclude) {
             var dataType = portMetadata.GetTransmissionDataType(null, Array.Empty<Type>(), Array.Empty<Type>());
             if (dataType is null) {
                 var i = config.Inputs.FirstOrDefault(c => Equals(c.LocalPort.Identifier, portMetadata.Identifier));
@@ -88,9 +88,12 @@ namespace OpenSense.Component.Contract {
                 }
                 foreach (var other in configs) {
                     if (Equals(i.RemoteId, other.Id)) {
+                        var newExclude = new Tuple<ComponentConfiguration, IPortMetadata>[exclude.Length + 1];
+                        Array.Copy(exclude, newExclude, exclude.Length);
                         var oMetadata = other.GetMetadata().FindPortMetadata(i.RemotePort);
-                        var otherInput = FindInputPortDataTypes(other, configs);
-                        var otherOutput = FindOutputPortDataTypes(other, configs);
+                        newExclude[exclude.Length] = new Tuple<ComponentConfiguration, IPortMetadata>(other, oMetadata);
+                        var otherInput = FindInputPortDataTypes(other, configs, newExclude);
+                        var otherOutput = FindOutputPortDataTypes(other, configs, newExclude);
                         var otherEnd = oMetadata.GetTransmissionDataType(null, otherInput, otherOutput);
                         if (otherEnd != null) {
                             var selfOutput = FindOutputPortDataTypes(config, configs);
@@ -98,7 +101,8 @@ namespace OpenSense.Component.Contract {
                             if (dataType != null) {
                                 goto jump;
                             }
-                            var selfInput = FindInputPortDataTypes(config, configs, portMetadata);
+                            newExclude[exclude.Length] = new Tuple<ComponentConfiguration, IPortMetadata>(config, portMetadata);
+                            var selfInput = FindInputPortDataTypes(config, configs, newExclude);
                             dataType = portMetadata.GetTransmissionDataType(otherEnd, selfOutput, selfInput);
                             if (dataType != null) {
                                 goto jump;
@@ -112,16 +116,16 @@ jump:;
             return dataType;
         }
 
-        public static IList<Type> FindInputPortDataTypes(this ComponentConfiguration config, IReadOnlyList<ComponentConfiguration> configs, IPortMetadata except = null) {
+        public static IList<Type> FindInputPortDataTypes(this ComponentConfiguration config, IReadOnlyList<ComponentConfiguration> configs, params Tuple<ComponentConfiguration, IPortMetadata>[] exclude) {
             var inputPorts = config.GetMetadata().InputPorts().ToArray();
             var result = new Type[inputPorts.Length];
             var idx = 0;
             foreach (var iMetadata in inputPorts) {
                 Type dataType;
-                if (except != null && Equals(except.Identifier, iMetadata.Identifier)) {
+                if (exclude != null && exclude.Any(ex => ex.Item1.Id == config.Id && Equals(ex.Item2.Identifier, iMetadata.Identifier))) {
                     dataType = null;
                 } else {
-                    dataType = FindInputPortDataType(config, iMetadata, configs);
+                    dataType = FindInputPortDataType(config, iMetadata, configs, exclude);
                 }
                 result[idx] = dataType;
                 idx++;
@@ -129,15 +133,22 @@ jump:;
             return result;
         }
 
-        public static Type FindOutputPortDataType(this ComponentConfiguration config, IPortMetadata portMetadata, IReadOnlyList<ComponentConfiguration> configs) {
+        public static IList<Type> FindInputPortDataTypes(this ComponentConfiguration config, IReadOnlyList<ComponentConfiguration> configs, IPortMetadata exclude) {
+            return FindInputPortDataTypes(config, configs, new Tuple<ComponentConfiguration, IPortMetadata>(config, exclude));
+        }
+
+        public static Type FindOutputPortDataType(this ComponentConfiguration config, IPortMetadata portMetadata, IReadOnlyList<ComponentConfiguration> configs, params Tuple<ComponentConfiguration, IPortMetadata>[] exclude) {
             var dataType = portMetadata.GetTransmissionDataType(null, Array.Empty<Type>(), Array.Empty<Type>());
             if (dataType is null) {
                 foreach (var other in configs) {
                     foreach (var i in other.Inputs) {
                         var iMetadata = other.GetMetadata().FindPortMetadata(i.LocalPort);
                         if (Equals(i.RemoteId, config.Id) && Equals(i.RemotePort.Identifier, portMetadata.Identifier)) {
-                            var otherOutput = FindOutputPortDataTypes(other, configs);
-                            var otherInput = FindInputPortDataTypes(other, configs);
+                            var newExclude = new Tuple<ComponentConfiguration, IPortMetadata>[exclude.Length + 1];
+                            Array.Copy(exclude, newExclude, exclude.Length);
+                            newExclude[exclude.Length] = new Tuple<ComponentConfiguration, IPortMetadata>(other, iMetadata);
+                            var otherOutput = FindOutputPortDataTypes(other, configs, newExclude);
+                            var otherInput = FindInputPortDataTypes(other, configs, newExclude);
                             var otherEnd = iMetadata.GetTransmissionDataType(null, otherOutput, otherInput);
                             if (otherEnd != null) {
                                 var selfInput = FindInputPortDataTypes(config, configs);
@@ -145,7 +156,8 @@ jump:;
                                 if (dataType != null) {
                                     goto jump;
                                 }
-                                var selfOutput = FindOutputPortDataTypes(config, configs, portMetadata);
+                                newExclude[exclude.Length] = new Tuple<ComponentConfiguration, IPortMetadata>(config, portMetadata);
+                                var selfOutput = FindOutputPortDataTypes(config, configs, newExclude);
                                 dataType = portMetadata.GetTransmissionDataType(otherEnd, selfInput, selfOutput);
                                 if (dataType != null) {
                                     goto jump;
@@ -159,21 +171,25 @@ jump:;
             return dataType;
         }
 
-        public static IList<Type> FindOutputPortDataTypes(this ComponentConfiguration config, IReadOnlyList<ComponentConfiguration> configs, IPortMetadata except = null) {
+        public static IList<Type> FindOutputPortDataTypes(this ComponentConfiguration config, IReadOnlyList<ComponentConfiguration> configs, params Tuple<ComponentConfiguration, IPortMetadata>[] exclude) {
             var outputPorts = config.GetMetadata().OutputPorts().ToArray();
             var result = new Type[outputPorts.Length];
             var idx = 0;
             foreach (var oMetadata in outputPorts) {
                 Type dataType;
-                if (except != null && Equals(except.Identifier, oMetadata.Identifier)) {
+                if (exclude != null && exclude.Any(ex => ex.Item1.Id == config.Id && Equals(ex.Item2.Identifier, oMetadata.Identifier))) {
                     dataType = null;
                 } else {
-                    dataType = FindOutputPortDataType(config, oMetadata, configs);
+                    dataType = FindOutputPortDataType(config, oMetadata, configs, exclude);
                 }
                 result[idx] = dataType;
                 idx++;
             }
             return result;
+        }
+
+        public static IList<Type> FindOutputPortDataTypes(this ComponentConfiguration config, IReadOnlyList<ComponentConfiguration> configs, IPortMetadata exclude) {
+            return FindOutputPortDataTypes(config, configs, new Tuple<ComponentConfiguration, IPortMetadata>(config, exclude));
         }
         #endregion
     }

@@ -83,16 +83,14 @@ jump:
             var inputMetadata = configuration.GetMetadata().FindPortMetadata(inputConfiguration.LocalPort);
             var localOutputs = configuration.FindOutputPortDataTypes(configurations);
             var localInputs = configuration.FindInputPortDataTypes(configurations, inputMetadata);
-            var inputPortDataType = inputMetadata.GetTransmissionDataType(null, localOutputs, localInputs);
-            string inputDataType;
-            if (inputPortDataType is null) {
-                inputDataType = "Unknown";
-            } else if (inputMetadata.CanConnectDataType(null, localOutputs, localInputs)) {
-                inputDataType = "Any";
+            string inputDataTypeName;
+            if (inputMetadata.CanConnectDataType(null, localOutputs, localInputs)) {
+                inputDataTypeName = "Any";
             } else {
-                inputDataType = inputPortDataType.FullName;
+                var inputPortDataType = inputMetadata.GetTransmissionDataType(null, localOutputs, localInputs);
+                inputDataTypeName = inputPortDataType.FullName;
             }
-            TextBlockPortDataType.Text = inputDataType;
+            TextBlockPortDataType.Text = inputDataTypeName;
 
             var selections = LegalOutputSelections(configuration, inputConfiguration, configurations);
             ListBoxOutputs.ItemsSource = selections;
