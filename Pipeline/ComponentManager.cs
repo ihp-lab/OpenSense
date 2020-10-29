@@ -1,36 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
+using System.Composition;
+using System.Composition.Hosting;
+using System.IO;
 using System.Reflection;
 using OpenSense.Component.Contract;
 
 namespace OpenSense.Pipeline {
-    public class ComponentManager: IDisposable {
+    public class ComponentManager {
 
-        private CompositionContainer container;
-
-        [ImportMany(typeof(IComponentMetadata))]
-        private IComponentMetadata[] components;
+        [ImportMany]
+        private IComponentMetadata[] components { get; set; }
 
         public IReadOnlyList<IComponentMetadata> Components => components;
 
-        private ComponentManager() {
-            var catalog = new AggregateCatalog();
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ComponentManager).Assembly));
-            catalog.Catalogs.Add(new AssemblyCatalog(Assembly.GetEntryAssembly()));
-            catalog.Catalogs.Add(new DirectoryCatalog(AppDomain.CurrentDomain.BaseDirectory));
-            container = new CompositionContainer(catalog);
-            container.ComposeParts(this);
+        public ComponentManager() {
+            var assemblies = new List<Assembly>() {
+                typeof(ComponentManager).Assembly,
+                Assembly.GetEntryAssembly(),
+            };
+            var files = Directory.EnumerateFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
+            foreach (var file in files) {
+                var asm = Assembly.LoadFrom(file);
+                assemblies.Add(asm);
+            }
+            var configuration = new ContainerConfiguration()
+                .WithAssemblies(assemblies);//note: Fluent interface
+            using var container = configuration.CreateContainer();
+            container.SatisfyImports(this);
         }
-
-        public void Dispose() {
-            container?.Dispose();
-            container = null;
-        }
-
-        private static Lazy<ComponentManager> instance = new Lazy<ComponentManager>(() => new ComponentManager());
-
-        public static ComponentManager Instance => instance.Value;
     }
 }

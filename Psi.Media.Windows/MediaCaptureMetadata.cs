@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.Composition;
+using System.Composition;
 using Microsoft.Psi;
 using Microsoft.Psi.Media;
 using OpenSense.Component.Contract;

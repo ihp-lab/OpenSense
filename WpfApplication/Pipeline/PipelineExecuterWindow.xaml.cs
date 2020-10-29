@@ -157,7 +157,7 @@ namespace OpenSense.Wpf.Pipeline {
             var graph = new PipelineConnectionGraph(Env);
             var positions = graph.CalcPositions();
             foreach (var compEnv in Env.Instances) {
-                var control = InstanceControlCreatorManager.Instance.Create(compEnv.Instance);
+                var control = new InstanceControlCreatorManager().Create(compEnv.Instance);
                 var container = new InstanceContainerControl(compEnv.Configuration.Name, control);
                 var position = positions[compEnv.Configuration.Id];
                 AddControl(container, position.Hierachy, position.Offset);

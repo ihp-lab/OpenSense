@@ -7,7 +7,7 @@ namespace OpenSense.Wpf.Pipeline {
     public partial class CreateComponentConfigurationWindow : Window {
         public CreateComponentConfigurationWindow() {
             InitializeComponent();
-            var components = ComponentManager.Instance.Components.OrderBy(c => c.Name);
+            var components = new ComponentManager().Components.OrderBy(c => c.Name);
             DataGridComponents.ItemsSource = components;
         }
 

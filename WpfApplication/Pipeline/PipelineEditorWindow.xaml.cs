@@ -91,7 +91,7 @@ namespace OpenSense.Wpf.Pipeline {
                 ContentControlComponentBasics.Content = new InstanceBasicInformationControl(configuration);
                 var connection = new InstanceConnectionControl(configuration, configurations);
                 ContentControlConnection.Children.Add(connection);
-                var control = ConfigurationControlCreatorManager.Instance.Create(configuration);
+                var control = new ConfigurationControlCreatorManager().Create(configuration);
                 if (control is null) {
                     control = new DefaultConfigurationControl();
                 }

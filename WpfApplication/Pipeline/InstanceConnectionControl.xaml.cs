@@ -21,7 +21,7 @@ namespace OpenSense.Wpf.Pipeline {
 
         private void ButtonAdd_Click(object sender, RoutedEventArgs e) {
             var metadata = Configuration.GetMetadata();
-            var filteredInputs = metadata.InputPorts().Where(p => p.Aggregation != PortAggregation.Object || Configuration.Inputs.All(c => Equals(c.LocalPort.Identifier, p.Identifier))).ToList();
+            var filteredInputs = metadata.InputPorts().Where(p => p.Aggregation != PortAggregation.Object || Configuration.Inputs.All(c => !Equals(c.LocalPort.Identifier, p.Identifier))).ToList();
             if (filteredInputs.Count == 0) {
                 MessageBox.Show("No floating input port");
                 return;

@@ -1,12 +1,9 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using OpenSense.Component.Contract;
-using OpenSense.Component.Contract.SpecialPortDataTypeIdentifiers;
-using static OpenSense.Wpf.Pipeline.PortDataTypeFinder;
 
 namespace OpenSense.Wpf.Pipeline {
     public partial class OutputSelectionControl : UserControl {
@@ -45,25 +42,14 @@ namespace OpenSense.Wpf.Pipeline {
                                }
                             )
                         );
-            var localDataType = FindInputPortDataType(configuration, inputMetadata, configurations);
-            if (typeof(Any).IsAssignableFrom(localDataType)) {
-                return selections.ToArray();
-            }
+            var localOutputs = configuration.FindOutputPortDataTypes(configurations);
+            var localInputs = configuration.FindInputPortDataTypes(configurations, inputMetadata);
+            var localDataType = configuration.FindInputPortDataType(inputMetadata, configurations);
             return selections.Where(sel => {
-                var remoteInputs = FindInputPortDataTypes(sel.Configuration, configurations);
-                var remoteOutputs = FindOutputPortDataTypes(sel.Configuration, configurations, sel.PortMetadata);
-                var remoteDataType = sel.PortMetadata.DataType(localDataType, remoteInputs, remoteOutputs);
-                Type tempLocalDataType;
-                if (localDataType != null) {
-                    tempLocalDataType = localDataType;
-                } else if (remoteDataType != null){
-                    var localOutputs = FindOutputPortDataTypes(configuration, configurations);
-                    var localInputs = FindInputPortDataTypes(configuration, configurations, inputMetadata);
-                    tempLocalDataType = inputMetadata.DataType(remoteDataType, localOutputs, localInputs);
-                } else {
-                    tempLocalDataType = null;
-                }
-                return remoteDataType != null && tempLocalDataType != null && tempLocalDataType.IsAssignableFrom(remoteDataType);
+                var remoteInputs = sel.Configuration.FindInputPortDataTypes(configurations);
+                var remoteOutputs = sel.Configuration.FindOutputPortDataTypes(configurations, sel.PortMetadata);
+                var remoteDataType = sel.PortMetadata.GetTransmissionDataType(localDataType, remoteInputs, remoteOutputs);//try connect
+                return inputMetadata.CanConnectDataType(remoteDataType, localOutputs, localInputs);
             }).ToArray();
         }
 
@@ -95,13 +81,13 @@ jump:
             Configurations = configurations;
 
             var inputMetadata = configuration.GetMetadata().FindPortMetadata(inputConfiguration.LocalPort);
-            var localOutputs = FindOutputPortDataTypes(configuration, configurations);
-            var localInputs = FindInputPortDataTypes(configuration, configurations, inputMetadata);
-            var inputPortDataType = inputMetadata.DataType(null, localOutputs, localInputs);
+            var localOutputs = configuration.FindOutputPortDataTypes(configurations);
+            var localInputs = configuration.FindInputPortDataTypes(configurations, inputMetadata);
+            var inputPortDataType = inputMetadata.GetTransmissionDataType(null, localOutputs, localInputs);
             string inputDataType;
             if (inputPortDataType is null) {
                 inputDataType = "Unknown";
-            } else if (typeof(Any).IsAssignableFrom(inputPortDataType)) {
+            } else if (inputMetadata.CanConnectDataType(null, localOutputs, localInputs)) {
                 inputDataType = "Any";
             } else {
                 inputDataType = inputPortDataType.FullName;

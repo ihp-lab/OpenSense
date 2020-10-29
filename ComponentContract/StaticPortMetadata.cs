@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Microsoft.Psi;
 
 namespace OpenSense.Component.Contract {
@@ -16,10 +15,7 @@ namespace OpenSense.Component.Contract {
         /// <param name="name">Name of the port. If set to null, the name of property will be used instead.</param>
         /// <param name="description">Description of this port.</param>
         public StaticPortMetadata(PropertyInfo property, string name = null, string description = "") {
-            if (property is null) {
-                throw new ArgumentNullException(nameof(property));
-            }
-            Property = property;
+            Property = property ?? throw new ArgumentNullException(nameof(property));
             _name = name;
             Description = description;
         }
@@ -32,9 +28,7 @@ namespace OpenSense.Component.Contract {
 
         private string _name;
 
-        public string Name { 
-            get => _name ?? Property.Name;
-        }
+        public string Name => _name ?? Property.Name;
 
         public PortAggregation Aggregation {
             get {
@@ -95,6 +89,8 @@ namespace OpenSense.Component.Contract {
             }
         }
 
+        public bool AcceptAnyDataType => false;
+
         public Type DataType {
             get {
                 var propType = Property.PropertyType;
@@ -119,8 +115,17 @@ namespace OpenSense.Component.Contract {
             }
         }
 
-        Type IPortMetadata.DataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes) {
-            return DataType;
+        public bool CanConnectDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes) {
+            switch (Direction) {
+                case PortDirection.Input:
+                    return remoteEndPointDataType != null && DataType.IsAssignableFrom(remoteEndPointDataType);
+                case PortDirection.Output:
+                    return remoteEndPointDataType != null && remoteEndPointDataType.IsAssignableFrom(DataType);
+                default:
+                    throw new InvalidOperationException();
+            }
         }
+
+        Type IPortMetadata.GetTransmissionDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes) => DataType;
     }
 }

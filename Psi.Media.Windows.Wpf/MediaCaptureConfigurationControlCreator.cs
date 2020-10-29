@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Composition;
+﻿using System.Composition;
 using System.Windows;
 using OpenSense.Component.Contract;
 using OpenSense.Component.Psi.Media;

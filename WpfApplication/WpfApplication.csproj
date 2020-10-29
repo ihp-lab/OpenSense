@@ -34,6 +34,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Composition" Version="1.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
     <ProjectReference Include="..\Pipeline\Pipeline.csproj" />
     <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />

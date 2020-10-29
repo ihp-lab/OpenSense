@@ -20,6 +20,8 @@ namespace OpenSense.Component.Contract {
 
         PortAggregation Aggregation { get; }
 
+        bool CanConnectDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes);
+
         /// <summary>
         /// The data type that this dynamic port transmitts, inferenced by already exsited connections.
         /// </summary>
@@ -27,6 +29,6 @@ namespace OpenSense.Component.Contract {
         /// <param name="localOtherDirectionPortsDataTypes">element will be null if the data type of the sepcific port is not known</param>
         /// <param name="localSameDirectionPortsDataTypes">element will be null if the data type of the sepcific port is not known.</param>
         /// <returns>null if the port type can not be determined</returns>
-        Type DataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes);
+        Type GetTransmissionDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes);
     }
 }
