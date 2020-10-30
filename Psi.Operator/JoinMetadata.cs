@@ -21,7 +21,7 @@ namespace OpenSense.Component.Psi.Operator {
 
         public ComponentConfiguration CreateConfiguration() => new JoinConfiguration();
 
-        public object GetOutputConnector<T>(object instance, PortConfiguration portConfiguration) {
+        public object GetConnector<T>(object instance, PortConfiguration portConfiguration) {
             Debug.Assert(Equals(this.OutputPorts().Single().Identifier, portConfiguration.Identifier));
             Debug.Assert(instance != null && typeof(IProducer<T>).IsAssignableFrom(instance.GetType()));
             return instance;

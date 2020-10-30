@@ -1,34 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using OpenSense.Component.Contract;
 
 namespace OpenSense.Component.Psi.Operator {
-    public class FusionOperatorPortMetadata : PsiPortMetadata {
+    public class FusionOperatorPortMetadata : IPortMetadata {
 
         public FusionOperatorPortMetadata(string name, PortDirection direction, string description = "") {
-            _name = name ?? throw new ArgumentNullException(nameof(name));
-            _description = description;
-            _direction = direction;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Direction = direction;
         }
 
-        public override object Identifier => Name;
+        public object Identifier => Name;
 
-        private string _name;
+        public string Name { get; private set; }
 
-        public override string Name => _name;
+        public string Description { get; private set; }
 
-        private string _description;
+        public PortDirection Direction { get; private set; }
 
-        public override string Description => _description;
+        public PortAggregation Aggregation => PortAggregation.Object;
 
-        private PortDirection _direction;
-
-        public override PortDirection Direction => _direction;
-
-        public override PortAggregation Aggregation => PortAggregation.Object;
-
-        public override bool CanConnectDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes) {
+        public bool CanConnectDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes) {
             switch (Direction) {
                 case PortDirection.Input:
                     return true;
@@ -40,7 +34,7 @@ namespace OpenSense.Component.Psi.Operator {
             }
         }
 
-        public override Type GetTransmissionDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes) {
+        public Type GetTransmissionDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes) {
             switch (Direction) {
                 case PortDirection.Input:
                     return remoteEndPointDataType;

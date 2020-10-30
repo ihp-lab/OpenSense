@@ -23,6 +23,6 @@ namespace OpenSense.Component.Contract {
 
         public abstract ComponentConfiguration CreateConfiguration();
 
-        public object GetOutputConnector<T>(object instance, PortConfiguration portConfiguration) => this.GetStaticPortOutputProducer<T>(instance, portConfiguration);
+        public object GetConnector<T>(object instance, PortConfiguration portConfiguration) => this.GetStaticProducer<T>(instance, portConfiguration);
     }
 }

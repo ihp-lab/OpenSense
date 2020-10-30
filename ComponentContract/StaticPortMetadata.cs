@@ -6,7 +6,7 @@ using System.Reflection;
 using Microsoft.Psi;
 
 namespace OpenSense.Component.Contract {
-    public sealed class StaticPortMetadata : PsiPortMetadata {
+    public sealed class StaticPortMetadata : IPortMetadata {
 
         /// <summary>
         /// 
@@ -17,27 +17,25 @@ namespace OpenSense.Component.Contract {
         public StaticPortMetadata(PropertyInfo property, string name = null, string description = "") {
             Property = property ?? throw new ArgumentNullException(nameof(property));
             _name = name;
-            _description = description;
+            Description = description;
         }
 
         public PropertyInfo Property { get; private set; }
 
-        public override object Identifier => Property.Name;
+        public object Identifier => Property.Name;
 
-        private string _description;
-
-        public override string Description => _description;
+        public string Description { get; private set; }
 
         private string _name;
 
-        public override string Name => _name ?? Property.Name;
+        public string Name => _name ?? Property.Name;
 
-        public override PortAggregation Aggregation {
+        public PortAggregation Aggregation {
             get {
                 var interfaces = Property.PropertyType.GetInterfaces();
                 if (interfaces.Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IReadOnlyList<>))) {
                     return PortAggregation.List;
-                } 
+                }
                 if (interfaces.Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IReadOnlyDictionary<,>))) {
                     return PortAggregation.Dictionary;
                 }
@@ -45,7 +43,7 @@ namespace OpenSense.Component.Contract {
             }
         }
 
-        public override PortDirection Direction {
+        public PortDirection Direction {
             get {
                 var propType = Property.PropertyType;
                 static PortDirection byConsumerOrProducer(Type propType) {
@@ -74,6 +72,8 @@ namespace OpenSense.Component.Contract {
             }
         }
 
+        public bool AcceptAnyDataType => false;
+
         public Type DataType {
             get {
                 var propType = Property.PropertyType;
@@ -98,7 +98,7 @@ namespace OpenSense.Component.Contract {
             }
         }
 
-        public override bool CanConnectDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes) {
+        public bool CanConnectDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes) {
             switch (Direction) {
                 case PortDirection.Input:
                     return remoteEndPointDataType != null && DataType.IsAssignableFrom(remoteEndPointDataType);
@@ -109,6 +109,6 @@ namespace OpenSense.Component.Contract {
             }
         }
 
-        public override Type GetTransmissionDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes) => DataType;
+        Type IPortMetadata.GetTransmissionDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes) => DataType;
     }
 }

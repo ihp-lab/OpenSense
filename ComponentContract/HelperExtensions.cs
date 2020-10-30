@@ -19,22 +19,26 @@ namespace OpenSense.Component.Contract {
             return componentMetadata.Ports.Single(p => Equals(p.Identifier, port.Identifier));
         }
 
-        public static IProducer<T> GetStaticPortOutputProducer<T>(this IComponentMetadata componentMetadata, object instance, PortConfiguration portConfiguration) {
+        public static IProducer<T> GetStaticProducer<T>(this IComponentMetadata componentMetadata, object instance, PortConfiguration portConfiguration) {
             var portMetadata = componentMetadata.FindPortMetadata(portConfiguration);
             Debug.Assert(portMetadata.Direction == PortDirection.Output);
             Debug.Assert(portMetadata is StaticPortMetadata);
             var portStaticMetadata = (StaticPortMetadata)portMetadata;
-            return portStaticMetadata.GetStaticOutputProducer<T>(portConfiguration, instance);
+            return portStaticMetadata.GetStaticProducer<T>(portConfiguration, instance);
         }
 
-        public static object GetOutputConnector<T>(this ComponentEnvironment componentEnvironment, PortConfiguration port) {
-            return componentEnvironment.Configuration.GetMetadata().GetOutputConnector<T>(componentEnvironment.Instance, port);
+        private static object GetConnector<T>(this ComponentEnvironment componentEnvironment, PortConfiguration port) {
+            return componentEnvironment.Configuration.GetMetadata().GetConnector<T>(componentEnvironment.Instance, port);
         }
 
-        public static IProducer<T> GetOutputProducer<T>(this ComponentEnvironment componentEnvironment, PortConfiguration port) {
-            var connector = GetOutputConnector<T>(componentEnvironment, port);
-            Debug.Assert(typeof(IProducer<T>).IsAssignableFrom(connector.GetType()));
+        public static IProducer<T> GetProducer<T>(this ComponentEnvironment componentEnvironment, PortConfiguration port) {
+            var connector = GetConnector<T>(componentEnvironment, port);
             return (IProducer<T>)connector;
+        }
+
+        public static IConsumer<T> GetConsumer<T>(this ComponentEnvironment componentEnvironment, PortConfiguration port) {
+            var connector = GetConnector<T>(componentEnvironment, port);
+            return (IConsumer<T>)connector;
         }
 
         private static dynamic GetStaticConnector(this object instance, StaticPortMetadata portMetadata, PortConfiguration portConfiguration) {
@@ -52,12 +56,12 @@ namespace OpenSense.Component.Contract {
             }
         }
 
-        public static IProducer<T> GetStaticOutputProducer<T>(this StaticPortMetadata portMetadata, PortConfiguration portConfiguration, object instance) {
+        public static IProducer<T> GetStaticProducer<T>(this StaticPortMetadata portMetadata, PortConfiguration portConfiguration, object instance) {
             dynamic obj = GetStaticConnector(instance, portMetadata, portConfiguration);
             return (IProducer<T>)obj;
         }
 
-        public static IConsumer<T> GetStaticInputConsumer<T>(this StaticPortMetadata portMetadata, PortConfiguration portConfiguration, object instance) {
+        public static IConsumer<T> GetStaticConsumer<T>(this StaticPortMetadata portMetadata, PortConfiguration portConfiguration, object instance) {
             dynamic obj = GetStaticConnector(instance, portMetadata, portConfiguration);
             return (IConsumer<T>)obj;
         }
@@ -77,14 +81,13 @@ namespace OpenSense.Component.Contract {
                     continue;
                 }
                 var dataType = inputStaticMetadata.DataType;
-                var getConsumerFunc = typeof(HelperExtensions).GetMethod(nameof(GetStaticInputConsumer)).MakeGenericMethod(dataType);
+                var getConsumerFunc = typeof(HelperExtensions).GetMethod(nameof(GetStaticConsumer)).MakeGenericMethod(dataType);
                 dynamic consumer = getConsumerFunc.Invoke(null, new object[] { inputStaticMetadata, inputConfig.LocalPort, instance });
 
                 var remoteEnvironment = instantiatedComponents.Single(e => Equals(inputConfig.RemoteId, e.Configuration.Id));
                 var remoteOutputMetadata = remoteEnvironment.Configuration.GetMetadata().FindPortMetadata(inputConfig.RemotePort);
                 Debug.Assert(remoteOutputMetadata.Direction == PortDirection.Output);
-                Debug.Assert(inputStaticMetadata.CanConnectConnectorType(remoteOutputMetadata.ConnectorType));
-                var getProducerFunc = typeof(HelperExtensions).GetMethod(nameof(GetOutputProducer)).MakeGenericMethod(dataType);
+                var getProducerFunc = typeof(HelperExtensions).GetMethod(nameof(GetProducer)).MakeGenericMethod(dataType);
                 dynamic producer = getProducerFunc.Invoke(null, new object[] { remoteEnvironment, inputConfig.RemotePort});
 
                 Operators.PipeTo(producer, consumer, inputConfig.DeliveryPolicy);

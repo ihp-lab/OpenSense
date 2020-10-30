@@ -41,9 +41,7 @@ namespace OpenSense.Wpf.Pipeline {
                                    Index = AssignIndexer(d, inputConfiguration.RemotePort),
                                }
                             )
-                        )
-                        .Where(sel => inputMetadata.CanConnectConnectorType(sel.PortMetadata.ConnectorType))
-                        ;
+                        );
             var localOutputs = configuration.FindOutputPortDataTypes(configurations);
             var localInputs = configuration.FindInputPortDataTypes(configurations, inputMetadata);
             var localDataType = configuration.FindInputPortDataType(inputMetadata, configurations);

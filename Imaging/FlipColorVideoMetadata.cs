@@ -1,23 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Composition;
 using Microsoft.Psi;
 using OpenSense.Component.Contract;
 
 namespace OpenSense.Component.Imaging {
     [Export(typeof(IComponentMetadata))]
-    public class FlipColorVideoMetadata : IComponentMetadata {
+    public class FlipColorVideoMetadata : ConventionalComponentMetadata {
 
-        public string Name => typeof(FlipColorVideo).FullName;
+        public override string Description => "Flip color images.";
 
-        public string Description => "";
+        protected override Type ComponentType => typeof(FlipColorVideo);
 
-        public IReadOnlyList<IPortMetadata> Ports => new[] { 
-            new StaticPortMetadata(typeof(FlipColorVideo).GetProperty(nameof(FlipColorVideo.In))),
-            new StaticPortMetadata(typeof(FlipColorVideo).GetProperty(nameof(FlipColorVideo.Out))),
-        };
-
-        public ComponentConfiguration CreateConfiguration() => new FlipColorVideoConfiguration();
-
-        public IProducer<T> GetOutput<T>(object instance, PortConfiguration portConfiguration) => this.GetStaticPortOutputProducer<T>(instance, portConfiguration);
+        public override ComponentConfiguration CreateConfiguration() => new FlipColorVideoConfiguration();
     }
 }

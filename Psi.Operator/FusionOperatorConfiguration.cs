@@ -17,7 +17,7 @@ namespace OpenSense.Component.Psi.Operator {
                 var remotePortMeta = remoteEnv.Configuration.GetMetadata().FindPortMetadata(inputConfig.RemotePort);
                 var remoteDataType = remoteEnv.Configuration.FindOutputPortDataType(remotePortMeta, configurations);
                 Debug.Assert(remoteDataType != null);
-                var getRemoteProducerFunc = typeof(HelperExtensions).GetMethod(nameof(HelperExtensions.GetOutputProducer)).MakeGenericMethod(remoteDataType);
+                var getRemoteProducerFunc = typeof(HelperExtensions).GetMethod(nameof(HelperExtensions.GetProducer)).MakeGenericMethod(remoteDataType);
                 dynamic producer = getRemoteProducerFunc.Invoke(null, new object[] { remoteEnv, inputConfig.RemotePort });
                 result.Add(producer);
             }
