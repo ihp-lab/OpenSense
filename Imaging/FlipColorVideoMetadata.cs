@@ -18,6 +18,6 @@ namespace OpenSense.Component.Imaging {
 
         public ComponentConfiguration CreateConfiguration() => new FlipColorVideoConfiguration();
 
-        public IProducer<T> GetOutputProducer<T>(object instance, PortConfiguration portConfiguration) => this.GetOutputProducerOfStaticPort<T>(instance, portConfiguration);
+        public IProducer<T> GetOutput<T>(object instance, PortConfiguration portConfiguration) => this.GetStaticPortOutputProducer<T>(instance, portConfiguration);
     }
 }

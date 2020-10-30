@@ -41,7 +41,9 @@ namespace OpenSense.Wpf.Pipeline {
                                    Index = AssignIndexer(d, inputConfiguration.RemotePort),
                                }
                             )
-                        );
+                        )
+                        .Where(sel => inputMetadata.CanConnectConnectorType(sel.PortMetadata.ConnectorType))
+                        ;
             var localOutputs = configuration.FindOutputPortDataTypes(configurations);
             var localInputs = configuration.FindInputPortDataTypes(configurations, inputMetadata);
             var localDataType = configuration.FindInputPortDataType(inputMetadata, configurations);
@@ -98,7 +100,8 @@ jump:
 
             var selections = LegalOutputSelections(configuration, inputConfiguration, configurations);
             ListBoxOutputs.ItemsSource = selections;
-            ListBoxOutputs.SelectedItem = selections.SingleOrDefault(sel => inputConfiguration.RemoteId == sel.Configuration.Id && Equals(inputConfiguration.RemotePort.Identifier, sel.PortMetadata.Identifier));
+            var previousSelection = selections.SingleOrDefault(sel => inputConfiguration.RemoteId == sel.Configuration.Id && Equals(inputConfiguration.RemotePort.Identifier, sel.PortMetadata.Identifier));
+            ListBoxOutputs.SelectedItem = previousSelection;
         }
 
         private void ListBoxOutputs_SelectionChanged(object sender, RoutedEventArgs e) {

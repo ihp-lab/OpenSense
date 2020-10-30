@@ -20,12 +20,12 @@ namespace OpenSense.Component.Contract {
         ComponentConfiguration CreateConfiguration();
 
         /// <summary>
-        /// Method to get an IProducer<T> given the configuration of the port.
+        /// Method to get an output connector (such as IProducer<T>) given the configuration of the port.
         /// </summary>
         /// <typeparam name="T">Data type that a consumer will accept.</typeparam>
         /// <param name="instance"></param>
         /// <param name="portConfiguration"></param>
         /// <returns></returns>
-        IProducer<T> GetOutputProducer<T>(object instance, PortConfiguration portConfiguration);
+        object GetOutputConnector<T>(object instance, PortConfiguration portConfiguration);
     }
 }

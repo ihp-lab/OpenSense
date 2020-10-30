@@ -19,6 +19,6 @@ namespace OpenSense.Component.Psi.Media {
 
         public ComponentConfiguration CreateConfiguration() => new MediaCaptureConfiguration();
 
-        public IProducer<T> GetOutputProducer<T>(object instance, PortConfiguration portConfiguration) => this.GetOutputProducerOfStaticPort<T>(instance, portConfiguration);
+        public object GetOutputConnector<T>(object instance, PortConfiguration portConfiguration) => this.GetStaticPortOutputProducer<T>(instance, portConfiguration);
     }
 }

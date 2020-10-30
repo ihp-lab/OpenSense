@@ -17,6 +17,6 @@ namespace OpenSense.Component.Imaging.Visualizer {
 
         public ComponentConfiguration CreateConfiguration() => new ColorVideoVisualizerConfiguration();
 
-        public IProducer<T> GetOutputProducer<T>(object instance, PortConfiguration portConfiguration) => this.GetOutputProducerOfStaticPort<T>(instance, portConfiguration);
+        public object GetOutputConnector<T>(object instance, PortConfiguration portConfiguration) => this.GetStaticPortOutputProducer<T>(instance, portConfiguration);
     }
 }

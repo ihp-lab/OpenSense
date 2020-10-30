@@ -20,6 +20,10 @@ namespace OpenSense.Component.Contract {
 
         PortAggregation Aggregation { get; }
 
+        Type ConnectorType { get; }
+
+        bool CanConnectConnectorType(Type remoteEndConnectorType);
+
         bool CanConnectDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes);
 
         /// <summary>
