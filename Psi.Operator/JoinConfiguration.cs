@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Psi;
 using OpenSense.Component.Contract;
 
 namespace OpenSense.Component.Psi.Operator {
 
+    [Serializable]
     public class JoinConfiguration : FusionOperatorConfiguration {
 
         public override IComponentMetadata GetMetadata() => new JoinMetadata();

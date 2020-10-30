@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.Psi;
 using OpenSense.Component.Contract;
 
 namespace OpenSense.Component.Psi.Operator {
+    [Serializable]
     public abstract class FusionOperatorConfiguration : ComponentConfiguration {
 
         protected IReadOnlyList<dynamic> GetRemoteProducers(IReadOnlyList<ComponentEnvironment> instantiatedComponents) {

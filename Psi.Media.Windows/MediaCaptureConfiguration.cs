@@ -1,7 +1,9 @@
-﻿using Microsoft.Psi.Media;
+﻿using System;
+using Microsoft.Psi.Media;
 using OpenSense.Component.Contract;
 
 namespace OpenSense.Component.Psi.Media {
+    [Serializable]
     public class MediaCaptureConfiguration : ConventionalComponentConfiguration {
 
         private Microsoft.Psi.Media.MediaCaptureConfiguration raw = new Microsoft.Psi.Media.MediaCaptureConfiguration();

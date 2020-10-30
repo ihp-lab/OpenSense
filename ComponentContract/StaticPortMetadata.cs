@@ -45,31 +45,14 @@ namespace OpenSense.Component.Contract {
             }
         }
 
-        private static bool IsAssignableToGenericType(Type givenType, Type genericType) {
-            var interfaceTypes = givenType.GetInterfaces();
-            foreach (var it in interfaceTypes) {
-                if (it.IsGenericType && it.GetGenericTypeDefinition() == genericType) {
-                    return true;
-                }
-            }
-            if (givenType.IsGenericType && givenType.GetGenericTypeDefinition() == genericType) {
-                return true;
-            }
-            var baseType = givenType.BaseType;
-            if (baseType == null) {
-                return false;
-            }
-            return IsAssignableToGenericType(baseType, genericType);
-        }
-
         public override PortDirection Direction {
             get {
                 var propType = Property.PropertyType;
                 static PortDirection byConsumerOrProducer(Type propType) {
-                    if (IsAssignableToGenericType(propType, typeof(IConsumer<>))) {
+                    if (propType.IsAssignableToGenericType(typeof(IConsumer<>))) {
                         return PortDirection.Input;
                     }
-                    if (IsAssignableToGenericType(propType, typeof(IProducer<>))) {
+                    if (propType.IsAssignableToGenericType(typeof(IProducer<>))) {
                         return PortDirection.Output;
                     }
                     throw new InvalidOperationException();
@@ -95,7 +78,7 @@ namespace OpenSense.Component.Contract {
             get {
                 var propType = Property.PropertyType;
                 static Type getProducerOrEmitterNestedDataType(Type propType) {
-                    Debug.Assert(new[] { typeof(IConsumer<>), typeof(IProducer<>) }.Any(t => IsAssignableToGenericType(propType.GetGenericTypeDefinition(), t)));
+                    Debug.Assert(new[] { typeof(IConsumer<>), typeof(IProducer<>) }.Any(t => propType.IsAssignableToGenericType(t)));
                     return propType.GetGenericArguments().Single();
                 }
                 switch (Aggregation) {

@@ -1,22 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Composition;
 using Microsoft.Psi;
 using OpenSense.Component.Contract;
 
 namespace OpenSense.Component.Imaging.Visualizer {
     [Export(typeof(IComponentMetadata))]
-    public class ColorVideoVisualizerMetadata : IComponentMetadata {
+    public class ColorVideoVisualizerMetadata : ConventionalComponentMetadata {
 
-        public string Name => typeof(ColorVideoVisualizer).FullName;
+        public override string Description => "Visualize color images.";
 
-        public string Description => "Visualize color images.";
+        protected override Type ComponentType => typeof(ColorVideoVisualizer);
 
-        public IReadOnlyList<IPortMetadata> Ports => new[] {
-            new StaticPortMetadata(typeof(ColorVideoVisualizer).GetProperty(nameof(ColorVideoVisualizer.In))),
-        };
-
-        public ComponentConfiguration CreateConfiguration() => new ColorVideoVisualizerConfiguration();
-
-        public object GetOutputConnector<T>(object instance, PortConfiguration portConfiguration) => this.GetStaticPortOutputProducer<T>(instance, portConfiguration);
+        public override ComponentConfiguration CreateConfiguration() => new ColorVideoVisualizerConfiguration();
     }
 }

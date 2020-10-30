@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>OpenSense.Component.Psi.Data</RootNamespace>
+    <AssemblyName>OpenSense.Component.Psi.Data</AssemblyName>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+
+</Project>
