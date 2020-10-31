@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using Microsoft.Psi;
 using OpenSense.Component.Contract;
 
@@ -33,9 +29,9 @@ namespace OpenSense.Component.Psi {
             set => SetProperty(ref createSubdirectory, value);
         }
 
-        private ObservableCollection<Guid> largeMessageInputs = new ObservableCollection<Guid>();
+        private List<Guid> largeMessageInputs = new List<Guid>();
         
-        public ObservableCollection<Guid> LargeMessageInputs {
+        public List<Guid> LargeMessageInputs {
             get => largeMessageInputs;
             set => SetProperty(ref largeMessageInputs, value);
         }

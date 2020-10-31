@@ -22,11 +22,12 @@
                     <Button Name="ButtonDelete" Click="ButtonDelete_Click" >Delete</Button>
                 </WrapPanel>
                 <ListBox DockPanel.Dock="Bottom" 
-                             Name="ListBoxInputs" 
-                             HorizontalContentAlignment="Stretch"
-                             SelectedIndex="0"
-                             ItemsSource="{Binding Inputs}" 
-                             SelectionChanged="ListBoxInputs_SelectionChanged">
+                         Name="ListBoxInputs" 
+                         HorizontalContentAlignment="Stretch"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         SelectedIndex="0"
+                         ItemsSource="{Binding Inputs}" 
+                         SelectionChanged="ListBoxInputs_SelectionChanged">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid>
@@ -45,7 +46,7 @@
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
-                                <TextBox Grid.Column="1" Text="{Binding LocalPort.Index}">
+                                <TextBox Grid.Column="1" Text="{Binding LocalPort.Index, UpdateSourceTrigger=PropertyChanged}">
                                     <TextBox.Style>
                                         <Style TargetType="TextBox">
                                             <Style.Triggers>

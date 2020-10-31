@@ -92,14 +92,15 @@ jump:
 
         private void ListBoxOutputs_SelectionChanged(object sender, RoutedEventArgs e) {
             var selection = (Selection)ListBoxOutputs.SelectedItem;
-            if (selection != null) {
-                InputConfiguration.RemoteId = selection.Configuration.Id;
-                InputConfiguration.RemotePort = new PortConfiguration() {
-                    Identifier = selection.PortMetadata.Identifier,
-                    Index = selection.Index,
-                };
-                RemoveIllegalInputs(Configurations);
+            if (selection is null) {
+                return;
             }
+            InputConfiguration.RemoteId = selection.Configuration.Id;
+            InputConfiguration.RemotePort = new PortConfiguration() {
+                Identifier = selection.PortMetadata.Identifier,
+                Index = selection.Index,
+            };
+            RemoveIllegalInputs(Configurations);
         }
     }
 }

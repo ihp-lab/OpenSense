@@ -58,9 +58,10 @@ namespace OpenSense.Wpf.Pipeline {
 
         private void ComboBoxDeliveryPolicy_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             var config = (InputConfiguration)ListBoxInputs.SelectedItem;
-            if (config != null) {
-                config.DeliveryPolicy = ((DeliveryPolicy)((ComboBoxItem)ComboBoxDeliveryPolicy.SelectedItem).Tag);
+            if (config is null) {
+                return;
             }
+            config.DeliveryPolicy = ((DeliveryPolicy)((ComboBoxItem)ComboBoxDeliveryPolicy.SelectedItem).Tag);
         }
     }
 }
