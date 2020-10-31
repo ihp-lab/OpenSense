@@ -56,10 +56,14 @@
 
                 <GroupBox Grid.Column="0" Header="Instances">
                     <DockPanel  >
-                        <WrapPanel DockPanel.Dock="Top">
-                            <Button Name="ButtonAdd" Click="ButtonAdd_Click">Add</Button>
-                            <Button Name="ButtonDelete" Click="ButtonDelete_Click" >Delete</Button>
-                        </WrapPanel>
+                        <Grid DockPanel.Dock="Top">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Name="ButtonAdd" Click="ButtonAdd_Click">Add</Button>
+                            <Button Grid.Column="1" Name="ButtonDelete" Click="ButtonDelete_Click" >Delete</Button>
+                        </Grid>
                         <ListBox DockPanel.Dock="Bottom" Name="ListBoxInstances" SelectionChanged="ListBoxInstances_SelectionChanged">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>

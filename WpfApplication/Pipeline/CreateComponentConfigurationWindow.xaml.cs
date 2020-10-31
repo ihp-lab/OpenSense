@@ -17,7 +17,7 @@ namespace OpenSense.Wpf.Pipeline {
             if (DataGridComponents.SelectedItem is IComponentMetadata metadata) {
                 var config = metadata.CreateConfiguration();
                 config.Name = metadata.Name;
-                config.Description = metadata.Description;
+                config.Description = "";
                 Result = config;
                 DialogResult = true;
             }

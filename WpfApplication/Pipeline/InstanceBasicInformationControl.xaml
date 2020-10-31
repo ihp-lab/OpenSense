@@ -16,6 +16,7 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0" Grid.Column="0">Component</Label>
@@ -27,7 +28,8 @@
             <Label Grid.Row="2" Grid.Column="0">Name</Label>
             <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Name}"/>
 
-
+            <Label Grid.Row="3" Grid.Column="0">Memo</Label>
+            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Description}"/>
         </Grid>
     </DockPanel>
 </UserControl>
