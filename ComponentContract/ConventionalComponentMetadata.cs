@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Microsoft.Psi;
 
 namespace OpenSense.Component.Contract {
     public abstract class ConventionalComponentMetadata : IComponentMetadata {
 
         protected abstract Type ComponentType { get; }
+
+        protected virtual PropertyInfo[] IgnoreProperties => Array.Empty<PropertyInfo>();
 
         public virtual string Name => ComponentType.FullName;
 
@@ -18,6 +19,7 @@ namespace OpenSense.Component.Contract {
                     .GetProperties(BindingFlags.Public | BindingFlags.Instance)
                     .Where(p => p.CanRead)
                     .Where(p => new Type[] { typeof(IConsumer<>), typeof(IProducer<>) }.Any(t => p.PropertyType.IsAssignableToGenericType(t)))
+                    .Except(IgnoreProperties)
                     .Select(p => new StaticPortMetadata(p))
                     .ToArray();
 

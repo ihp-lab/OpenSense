@@ -32,7 +32,7 @@ namespace OpenSense.Wpf.Pipeline {
                 var config = new InputConfiguration() {
                     LocalPort = new PortConfiguration() {
                         Identifier = portMetadata.Identifier,
-                        Index = null,
+                        Index = portMetadata.Aggregation.DefaultPortIndex(),
                     },
                 };
                 Configuration.Inputs.Add(config);

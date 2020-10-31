@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.Psi;
 using OpenSense.Component.Contract;
 
-namespace OpenSense.Component.Psi.Operator {
+namespace OpenSense.Component.Psi {
     [Serializable]
     public abstract class FusionOperatorConfiguration : ComponentConfiguration {
 

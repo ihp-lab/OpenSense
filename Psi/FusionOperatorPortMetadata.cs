@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using OpenSense.Component.Contract;
 
-namespace OpenSense.Component.Psi.Operator {
+namespace OpenSense.Component.Psi {
     public class FusionOperatorPortMetadata : IPortMetadata {
 
         public FusionOperatorPortMetadata(string name, PortDirection direction, string description = "") {

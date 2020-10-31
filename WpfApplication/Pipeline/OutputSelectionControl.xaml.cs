@@ -17,18 +17,6 @@ namespace OpenSense.Wpf.Pipeline {
             public object Index { get; set; }
         }
 
-        private static object AssignIndexer(IPortMetadata metadata, PortConfiguration configuration) {
-            switch (metadata.Aggregation) {
-                case PortAggregation.List:
-                case PortAggregation.Dictionary:
-                    return configuration?.Index ?? null;
-                case PortAggregation.Object:
-                    return null;
-                default:
-                    throw new InvalidOperationException();
-            }
-        }
-
         private static IList<Selection> LegalOutputSelections(ComponentConfiguration configuration, InputConfiguration inputConfiguration, IReadOnlyList<ComponentConfiguration> configurations) {
             var inputMetadata = configuration.GetMetadata().FindPortMetadata(inputConfiguration.LocalPort);
             var selections = configurations
@@ -38,7 +26,7 @@ namespace OpenSense.Wpf.Pipeline {
                                new Selection {
                                    Configuration = i,
                                    PortMetadata = d,
-                                   Index = AssignIndexer(d, inputConfiguration.RemotePort),
+                                   Index = inputConfiguration.RemotePort?.Index ?? d.Aggregation.DefaultPortIndex(),
                                }
                             )
                         );
@@ -80,7 +68,7 @@ jump:
             InputConfiguration = inputConfiguration;
             Configurations = configurations;
 
-            var inputMetadata = configuration.GetMetadata().FindPortMetadata(inputConfiguration.LocalPort);
+            var inputMetadata = configuration.FindPortMetadata(inputConfiguration.LocalPort);
             var localOutputs = configuration.FindOutputPortDataTypes(configurations);
             var localInputs = configuration.FindInputPortDataTypes(configurations, inputMetadata);
             string inputDataTypeName;

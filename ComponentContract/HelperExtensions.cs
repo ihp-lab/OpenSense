@@ -19,6 +19,14 @@ namespace OpenSense.Component.Contract {
             return componentMetadata.Ports.Single(p => Equals(p.Identifier, port.Identifier));
         }
 
+        public static IPortMetadata FindPortMetadata(this ComponentConfiguration componentConfiguration, PortConfiguration port) {
+            return componentConfiguration.GetMetadata().FindPortMetadata(port);
+        }
+
+        public static IPortMetadata FindPortMetadata(this ComponentEnvironment componentEnvironment, PortConfiguration port) {
+            return componentEnvironment.Configuration.FindPortMetadata(port);
+        }
+
         public static IProducer<T> GetStaticProducer<T>(this IComponentMetadata componentMetadata, object instance, PortConfiguration portConfiguration) {
             var portMetadata = componentMetadata.FindPortMetadata(portConfiguration);
             Debug.Assert(portMetadata.Direction == PortDirection.Output);
@@ -74,7 +82,7 @@ namespace OpenSense.Component.Contract {
         /// <param name="instantiatedComponents"></param>
         public static void ConnectAllStaticInputs(this ComponentConfiguration componentConfiguration, object instance, IReadOnlyList<ComponentEnvironment> instantiatedComponents) {
             foreach (var inputConfig in componentConfiguration.Inputs) {
-                var inputMetadata = componentConfiguration.GetMetadata().FindPortMetadata(inputConfig.LocalPort);
+                var inputMetadata = componentConfiguration.FindPortMetadata(inputConfig.LocalPort);
                 Debug.Assert(inputMetadata.Direction == PortDirection.Input);
                 var inputStaticMetadata = inputMetadata as StaticPortMetadata;
                 if (inputStaticMetadata is null) {
@@ -85,7 +93,7 @@ namespace OpenSense.Component.Contract {
                 dynamic consumer = getConsumerFunc.Invoke(null, new object[] { inputStaticMetadata, inputConfig.LocalPort, instance });
 
                 var remoteEnvironment = instantiatedComponents.Single(e => Equals(inputConfig.RemoteId, e.Configuration.Id));
-                var remoteOutputMetadata = remoteEnvironment.Configuration.GetMetadata().FindPortMetadata(inputConfig.RemotePort);
+                var remoteOutputMetadata = remoteEnvironment.FindPortMetadata(inputConfig.RemotePort);
                 Debug.Assert(remoteOutputMetadata.Direction == PortDirection.Output);
                 var getProducerFunc = typeof(HelperExtensions).GetMethod(nameof(GetProducer)).MakeGenericMethod(dataType);
                 dynamic producer = getProducerFunc.Invoke(null, new object[] { remoteEnvironment, inputConfig.RemotePort});
@@ -111,6 +119,19 @@ namespace OpenSense.Component.Contract {
             return IsAssignableToGenericType(baseType, genericType);
         }
 
+        public static object DefaultPortIndex(this PortAggregation aggregation) {
+            switch (aggregation) {
+                case PortAggregation.Object:
+                    return null;
+                case PortAggregation.List:
+                    return 0.ToString();
+                case PortAggregation.Dictionary:
+                    return string.Empty;
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
+
         #region data type finder
         public static Type FindInputPortDataType(this ComponentConfiguration config, IPortMetadata portMetadata, IReadOnlyList<ComponentConfiguration> configs, params Tuple<ComponentConfiguration, IPortMetadata>[] exclude) {
             var dataType = portMetadata.GetTransmissionDataType(null, Array.Empty<Type>(), Array.Empty<Type>());
@@ -123,7 +144,7 @@ namespace OpenSense.Component.Contract {
                     if (Equals(i.RemoteId, other.Id)) {
                         var newExclude = new Tuple<ComponentConfiguration, IPortMetadata>[exclude.Length + 1];
                         Array.Copy(exclude, newExclude, exclude.Length);
-                        var oMetadata = other.GetMetadata().FindPortMetadata(i.RemotePort);
+                        var oMetadata = other.FindPortMetadata(i.RemotePort);
                         newExclude[exclude.Length] = new Tuple<ComponentConfiguration, IPortMetadata>(other, oMetadata);
                         var otherInput = FindInputPortDataTypes(other, configs, newExclude);
                         var otherOutput = FindOutputPortDataTypes(other, configs, newExclude);
@@ -175,7 +196,7 @@ jump:;
             if (dataType is null) {
                 foreach (var other in configs) {
                     foreach (var i in other.Inputs) {
-                        var iMetadata = other.GetMetadata().FindPortMetadata(i.LocalPort);
+                        var iMetadata = other.FindPortMetadata(i.LocalPort);
                         if (Equals(i.RemoteId, config.Id) && Equals(i.RemotePort.Identifier, portMetadata.Identifier)) {
                             var newExclude = new Tuple<ComponentConfiguration, IPortMetadata>[exclude.Length + 1];
                             Array.Copy(exclude, newExclude, exclude.Length);

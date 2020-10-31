@@ -4,7 +4,7 @@ using System.Diagnostics;
 using Microsoft.Psi;
 using OpenSense.Component.Contract;
 
-namespace OpenSense.Component.Psi.Operator {
+namespace OpenSense.Component.Psi {
 
     [Serializable]
     public class JoinConfiguration : FusionOperatorConfiguration {
