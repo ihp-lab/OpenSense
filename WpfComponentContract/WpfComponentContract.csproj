@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <UseWPF>true</UseWPF>
-    <RootNamespace>OpenSense.Wpf.Component.Contract</RootNamespace>
+    <RootNamespace>OpenSense.Wpf.Component</RootNamespace>
     <LangVersion>8.0</LangVersion>
     <AssemblyName>OpenSense.Wpf.Component.Contract</AssemblyName>
   </PropertyGroup>

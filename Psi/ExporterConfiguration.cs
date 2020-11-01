@@ -2,41 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Psi;
+using Microsoft.Psi.Data;
 using OpenSense.Component.Contract;
 
 namespace OpenSense.Component.Psi {
     [Serializable]
-    public class LocalExporterConfiguration : ComponentConfiguration {
-
-        private string storeName = string.Empty;
-
-        public string StoreName {
-            get => storeName;
-            set => SetProperty(ref storeName, value);
-        }
-
-        private string rootPath;
-
-        public string RootPath {
-            get => rootPath;
-            set => SetProperty(ref rootPath, value);
-        }
-
-        private bool createSubdirectory;
-
-        public bool CreateSubdirectory {
-            get => createSubdirectory;
-            set => SetProperty(ref createSubdirectory, value);
-        }
+    public abstract class ExporterConfiguration : ComponentConfiguration {
 
         private List<Guid> largeMessageInputs = new List<Guid>();
-        
+
         public List<Guid> LargeMessageInputs {
             get => largeMessageInputs;
             set => SetProperty(ref largeMessageInputs, value);
         }
 
-        public override IComponentMetadata GetMetadata() => new LocalExporterMetadata();
+        protected abstract Exporter CreateExporter(Pipeline pipeline, out object instance);
 
         public override object Instantiate(Pipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents) {
             if (Inputs.Any(i => i.LocalPort?.Index is null)) {
@@ -45,7 +25,7 @@ namespace OpenSense.Component.Psi {
             if (Inputs.Select(i => i.LocalPort.Index).Distinct().Count() != Inputs.Count()) {
                 throw new Exception("duplicate exporter stream name");
             }
-            var exporter = PsiStore.Create(pipeline, StoreName, RootPath, CreateSubdirectory);
+            var exporter = CreateExporter(pipeline, out var instance);
             var configurations = instantiatedComponents.Select(i => i.Configuration).ToArray();
             foreach (var inputConfig in Inputs) {
                 var remoteEnv = instantiatedComponents.Single(e => inputConfig.RemoteId == e.Configuration.Id);
@@ -57,10 +37,10 @@ namespace OpenSense.Component.Psi {
                 var getProducerFunc = typeof(HelperExtensions).GetMethod(nameof(HelperExtensions.GetProducer)).MakeGenericMethod(dataType);
                 dynamic producer = getProducerFunc.Invoke(null, new object[] { remoteEnv, inputConfig.RemotePort });
                 var largeMessage = LargeMessageInputs.Contains(inputConfig.Id);
-                var streamName = (string)inputConfig.LocalPort.Identifier;
+                var streamName = (string)inputConfig.LocalPort.Index;
                 exporter.Write(producer, streamName, largeMessage, inputConfig.DeliveryPolicy);
             }
-            return exporter;
+            return instance;
         }
     }
 }

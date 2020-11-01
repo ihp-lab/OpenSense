@@ -40,6 +40,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
     <ProjectReference Include="..\Pipeline\Pipeline.csproj" />
+    <ProjectReference Include="..\Psi.Wpf\Psi.Wpf.csproj" />
     <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
   </ItemGroup>
 

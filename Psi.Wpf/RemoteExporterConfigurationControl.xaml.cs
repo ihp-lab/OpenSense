@@ -7,10 +7,10 @@ using OpenSense.Component.Contract;
 using OpenSense.Component.Psi;
 
 namespace OpenSense.Wpf.Component.Psi {
-    public partial class LocalExporterConfigurationControl : UserControl {
-        private LocalExporterConfiguration Configuration;
+    public partial class RemoteExporterConfigurationControl : UserControl {
+        private RemoteExporterConfiguration Configuration;
 
-        public LocalExporterConfigurationControl(LocalExporterConfiguration configuration) {
+        public RemoteExporterConfigurationControl(RemoteExporterConfiguration configuration) {
             InitializeComponent();
             Configuration = configuration;
             DataContext = Configuration;
@@ -53,7 +53,5 @@ namespace OpenSense.Wpf.Component.Psi {
             var config = (InputConfiguration)((CheckBox)sender).Tag;
             Configuration.LargeMessageInputs.Remove(config.Id);
         }
-
-
     }
 }

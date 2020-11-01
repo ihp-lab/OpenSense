@@ -52,6 +52,9 @@ namespace OpenSense.Component.Contract {
         private static dynamic GetStaticConnector(this object instance, StaticPortMetadata portMetadata, PortConfiguration portConfiguration) {
             Debug.Assert(Equals(portMetadata.Identifier, portConfiguration.Identifier));
             dynamic prop = portMetadata.Property.GetValue(instance);
+            if (prop is null) {
+                throw new Exception("instance connector is null");
+            }
             switch (portMetadata.Aggregation) {
                 case PortAggregation.Object:
                     return prop;

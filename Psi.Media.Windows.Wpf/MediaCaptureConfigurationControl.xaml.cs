@@ -42,8 +42,8 @@ namespace OpenSense.Wpf.Component.Psi.Media.Windows {
                 ComboBoxCamera.SelectedItem = item;
                 return;
             }
-            //note: do not assign a default value for this field
             Debug.Assert(ComboBoxCamera.SelectedItem is null);
+            ComboBoxCamera.SelectedItem = ComboBoxCamera.Items.Cast<ComboBoxItem>().FirstOrDefault();
             ComboBoxCamera_SelectionChanged(sender, e);
         }
 
