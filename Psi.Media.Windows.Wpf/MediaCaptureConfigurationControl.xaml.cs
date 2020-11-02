@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using Microsoft.Psi.Media_Interop;
 using OpenSense.Component.Psi.Media;
 
-namespace OpenSense.Wpf.Component.Psi.Media.Windows {
+namespace OpenSense.Wpf.Component.Psi.Media {
     public partial class MediaCaptureConfigurationControl : UserControl {
 
         private MediaCaptureConfiguration Config;
