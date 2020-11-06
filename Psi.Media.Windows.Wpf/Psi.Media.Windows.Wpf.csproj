@@ -18,4 +18,16 @@
     <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="MediaSourceConfigurationControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="MediaSourceConfigurationControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
 </Project>

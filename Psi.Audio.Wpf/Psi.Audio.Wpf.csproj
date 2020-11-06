@@ -3,28 +3,24 @@
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <UseWPF>true</UseWPF>
+    <AssemblyName>OpenSense.Wpf.Component.Psi.Audio</AssemblyName>
+    <RootNamespace>OpenSense.Wpf.Component.Psi.Audio</RootNamespace>
     <LangVersion>8.0</LangVersion>
-    <AssemblyName>OpenSense.Wpf.Component.Psi.Audio.Windows</AssemblyName>
-    <RootNamespace>OpenSense.Wpf.Component.Psi.Audio.Windows</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Composition" Version="1.4.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Psi.Audio.Windows\Psi.Audio.Windows.csproj" />
+    <ProjectReference Include="..\Psi.Audio\Psi.Audio.csproj" />
     <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="AudioPlayerConfigurationControl.xaml.cs">
+    <Compile Update="WaveFileAudioSourceConfigurationControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="AudioPlayerConfigurationControl.xaml">
+    <Page Update="WaveFileAudioSourceConfigurationControl.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
