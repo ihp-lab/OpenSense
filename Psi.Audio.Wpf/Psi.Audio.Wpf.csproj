@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
@@ -17,10 +17,16 @@
     <Compile Update="WaveFileAudioSourceConfigurationControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="WaveFileWriterConfigurationControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <Page Update="WaveFileAudioSourceConfigurationControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="WaveFileWriterConfigurationControl.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
