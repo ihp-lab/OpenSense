@@ -3,7 +3,7 @@ using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
 using OpenSense.Component.Contract;
 
-namespace OpenSense.Component.Psi.Audio {
+namespace OpenSense.Component.Psi.Imaging {
     [Serializable]
     public class ImageDecoderConfiguration : ConventionalComponentConfiguration {
 

@@ -3,7 +3,7 @@ using System.Composition;
 using Microsoft.Psi.Imaging;
 using OpenSense.Component.Contract;
 
-namespace OpenSense.Component.Psi.Audio {
+namespace OpenSense.Component.Psi.Imaging {
     [Export(typeof(IComponentMetadata))]
     public class ImageDecoderMetadata : ConventionalComponentMetadata {
 
