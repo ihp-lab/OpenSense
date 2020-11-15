@@ -2,7 +2,7 @@
 using System.Composition;
 using OpenSense.Component.Contract;
 
-namespace OpenSense.Component.AzureKinect.Visualizer {
+namespace OpenSense.Component.Psi.AzureKinect.Visualizer {
     [Export(typeof(IComponentMetadata))]
     public class AzureKinectBodyTrackerVisualizerMetadata : ConventionalComponentMetadata {
 

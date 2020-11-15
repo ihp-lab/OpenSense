@@ -82,7 +82,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.CognitiveServices.Face.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Builtin.Visualizer.Wpf", "Builtin.Visualizer.Wpf\Builtin.Visualizer.Wpf.csproj", "{06E36699-5A12-4BEA-A7DE-DA59BE921AAB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureKinect.Visualizer.Wpf", "AzureKinect.Visualizer.Wpf\AzureKinect.Visualizer.Wpf.csproj", "{36605049-7FF6-4FFB-AEC1-DDA12278F520}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.AzureKinect.Visualizer.Wpf", "Psi.AzureKinect.Visualizer.Wpf\Psi.AzureKinect.Visualizer.Wpf.csproj", "{36605049-7FF6-4FFB-AEC1-DDA12278F520}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imaging.Visualizer.Wpf.Common", "Imaging.Visualizer.Wpf.Common\Imaging.Visualizer.Wpf.Common.csproj", "{577E31CE-3C09-4C71-9DE8-7F52BF116135}"
 EndProject
