@@ -11,10 +11,16 @@
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <WrapPanel>
+        
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
             <Label>Frame Rate:</Label>
-            <TextBlock Text="{Binding FrameRate}"/>
-        </WrapPanel>
+            <TextBlock Grid.Column="1" Text="{Binding FrameRate}"/>
+        </Grid>
+        
         <Image Grid.Row="1" Source="{Binding Path=Image}" />
     </Grid>
 </UserControl>

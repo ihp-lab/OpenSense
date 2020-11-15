@@ -1,7 +1,9 @@
-﻿using Microsoft.Psi;
+﻿using System;
+using Microsoft.Psi;
 using OpenSense.Component.Contract;
 
 namespace OpenSense.Component.Imaging {
+    [Serializable]
     public class FlipColorVideoConfiguration : ConventionalComponentConfiguration {
 
         private bool flipHorizontal = false;

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Composition;
-using Microsoft.Psi;
 using OpenSense.Component.Contract;
 
 namespace OpenSense.Component.Imaging {
