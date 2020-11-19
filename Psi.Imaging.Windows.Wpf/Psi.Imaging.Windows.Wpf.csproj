@@ -4,7 +4,7 @@
     <TargetFramework>net48</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>OpenSense.Wpf.Component.Psi.Imaging.Windows</AssemblyName>
-    <RootNamespace>OpenSense.Wpf.Component.Psi.Imaging.Windows</RootNamespace>
+    <RootNamespace>OpenSense.Wpf.Component.Psi.Imaging</RootNamespace>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 

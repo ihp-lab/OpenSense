@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <UseWPF>true</UseWPF>
     <LangVersion>8.0</LangVersion>
     <AssemblyName>OpenSense.Wpf.Component.Psi.Audio.Windows</AssemblyName>
-    <RootNamespace>OpenSense.Wpf.Component.Psi.Audio.Windows</RootNamespace>
+    <RootNamespace>OpenSense.Wpf.Component.Psi.Audio</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Psi.Audio.Windows\Psi.Audio.Windows.csproj" />
+    <ProjectReference Include="..\Psi.Audio.Wpf.Common\Psi.Audio.Wpf.Common.csproj" />
     <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
   </ItemGroup>
 

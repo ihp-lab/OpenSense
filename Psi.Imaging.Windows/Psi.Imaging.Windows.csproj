@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <AssemblyName>OpenSense.Component.Psi.Imaging.Windows</AssemblyName>
-    <RootNamespace>OpenSense.Component.Psi.Imaging.Windows</RootNamespace>
-  <LangVersion>8.0</LangVersion>
+    <RootNamespace>OpenSense.Component.Psi.Imaging</RootNamespace>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

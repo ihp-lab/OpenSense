@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-    <RootNamespace>OpenSense.Component.Psi.Media.Windows</RootNamespace>
     <AssemblyName>OpenSense.Component.Psi.Media.Windows</AssemblyName>
+    <RootNamespace>OpenSense.Component.Psi.Media</RootNamespace>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 

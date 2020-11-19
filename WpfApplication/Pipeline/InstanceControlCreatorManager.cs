@@ -21,8 +21,11 @@ namespace OpenSense.Wpf.Pipeline {
             };
             var files = Directory.EnumerateFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
             foreach (var file in files) {
-                var asm = Assembly.LoadFrom(file);
-                assemblies.Add(asm);
+                try {
+                    var asm = Assembly.LoadFrom(file);
+                    assemblies.Add(asm);
+                } catch (BadImageFormatException) {
+                }
             }
             var configuration = new ContainerConfiguration()
                 .WithAssemblies(assemblies);//note: Fluent interface

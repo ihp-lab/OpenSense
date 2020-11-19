@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>OpenSense.Component.Psi.AzureKinect</AssemblyName>
+    <RootNamespace>OpenSense.Component.Psi.AzureKinect</RootNamespace>
+    <LangVersion>8.0</LangVersion>
+    <Platforms>x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Psi.AzureKinect.x64" Version="0.13.38.2-beta" />
+    <PackageReference Include="System.Composition" Version="1.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
+  </ItemGroup>
+
+</Project>

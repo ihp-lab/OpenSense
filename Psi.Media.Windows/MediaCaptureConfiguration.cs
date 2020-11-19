@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Psi;
 using Microsoft.Psi.Media;
 using OpenSense.Component.Contract;
 
@@ -15,6 +16,6 @@ namespace OpenSense.Component.Psi.Media {
 
         public override IComponentMetadata GetMetadata() => new MediaCaptureMetadata();
 
-        protected override object Instantiate(Microsoft.Psi.Pipeline pipeline) => new MediaCapture(pipeline, Raw);
+        protected override object Instantiate(Pipeline pipeline) => new MediaCapture(pipeline, Raw);
     }
 }

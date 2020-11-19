@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using Microsoft.Psi;
 
-namespace OpenSense.Wpf.Pipeline {
+namespace OpenSense.Wpf.Component.Psi.Common {
     public class DeliveryPolicyComboBox : ComboBox {
 
         public DeliveryPolicyComboBox() {

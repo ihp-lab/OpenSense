@@ -10,12 +10,10 @@ using OpenSense.Component.Psi.Media;
 namespace OpenSense.Wpf.Component.Psi.Media {
     public partial class MediaCaptureConfigurationControl : UserControl {
 
-        private MediaCaptureConfiguration Config;
+        private MediaCaptureConfiguration Config => DataContext as MediaCaptureConfiguration;
 
-        public MediaCaptureConfigurationControl(MediaCaptureConfiguration config) {
-            Config = config;
+        public MediaCaptureConfigurationControl() {
             InitializeComponent();
-            DataContext = config;
         }
 
         private void ComboBoxCamera_Loaded(object sender, RoutedEventArgs e) {

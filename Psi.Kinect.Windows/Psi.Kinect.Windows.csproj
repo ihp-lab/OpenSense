@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <AssemblyName>OpenSense.Component.Psi.Kinect.Windows</AssemblyName>
+    <RootNamespace>OpenSense.Component.Psi.Kinect</RootNamespace>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Psi.Kinect.Windows" Version="0.13.38.2-beta" />
+    <PackageReference Include="System.Composition" Version="1.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
+  </ItemGroup>
+
+</Project>

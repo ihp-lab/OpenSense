@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OpenSense.Wpf.Pipeline"
-        xmlns:psi="clr-namespace:Microsoft.Psi;assembly=Microsoft.Psi"
+        xmlns:common="clr-namespace:OpenSense.Wpf.Component.Psi.Common;assembly=OpenSense.Wpf.Component.Psi.Common"
         mc:Ignorable="d"
         Title="Pipeline Editor" 
         Height="600" Width="1000" 
@@ -44,7 +44,7 @@
                 <TextBox Grid.Column="1" Text="{Binding Name}"/>
 
                 <Label Grid.Row="1" >Delivery policy</Label>
-                <local:DeliveryPolicyComboBox Grid.Row="1" Grid.Column="1" x:Name="ComboBoxDeliveryPolicy" SelectionChanged="ComboBoxDeliveryPolicy_SelectionChanged"/>
+                <common:DeliveryPolicyComboBox Grid.Row="1" Grid.Column="1" x:Name="ComboBoxDeliveryPolicy" SelectionChanged="ComboBoxDeliveryPolicy_SelectionChanged"/>
             </Grid>
 
             <Grid Grid.Row="1">

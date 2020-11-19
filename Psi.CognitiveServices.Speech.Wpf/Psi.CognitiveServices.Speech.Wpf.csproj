@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <LangVersion>8.0</LangVersion>
+    <AssemblyName>OpenSense.Wpf.Component.Psi.CognitiveServices.Speech</AssemblyName>
+    <RootNamespace>OpenSense.Wpf.Component.Psi.CognitiveServices.Speech</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Composition" Version="1.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Psi.Audio.Wpf.Common\Psi.Audio.Wpf.Common.csproj" />
+    <ProjectReference Include="..\Psi.CognitiveServices.Speech\Psi.CognitiveServices.Speech.csproj" />
+    <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="AzureSpeechRecognizerConfigurationControl.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+  </ItemGroup>
+
+</Project>

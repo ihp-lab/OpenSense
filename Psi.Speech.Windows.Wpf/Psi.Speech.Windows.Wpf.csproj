@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>OpenSense.Wpf.Component.Psi.Speech.Windows</AssemblyName>
+    <RootNamespace>OpenSense.Wpf.Component.Psi.Speech</RootNamespace>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Composition" Version="1.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Psi.Audio.Wpf.Common\Psi.Audio.Wpf.Common.csproj" />
+    <ProjectReference Include="..\Psi.Speech.Windows\Psi.Speech.Windows.csproj" />
+    <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="SystemSpeechRecognizerConfigurationControl.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="SystemVoiceActivityDetectorConfigurationControl.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+  </ItemGroup>
+
+</Project>

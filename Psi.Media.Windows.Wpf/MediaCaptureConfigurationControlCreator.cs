@@ -10,6 +10,6 @@ namespace OpenSense.Wpf.Component.Psi.Media {
 
         public bool CanCreate(ComponentConfiguration configuration) => configuration is MediaCaptureConfiguration;
 
-        public UIElement Create(ComponentConfiguration configuration) => new MediaCaptureConfigurationControl((MediaCaptureConfiguration)configuration);
+        public UIElement Create(ComponentConfiguration configuration) => new MediaCaptureConfigurationControl() { DataContext = configuration };
     }
 }

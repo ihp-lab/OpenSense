@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>OpenSense.Component.Psi.Audio.Windows</RootNamespace>
     <AssemblyName>OpenSense.Component.Psi.Audio.Windows</AssemblyName>
+    <RootNamespace>OpenSense.Component.Psi.Audio</RootNamespace>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 

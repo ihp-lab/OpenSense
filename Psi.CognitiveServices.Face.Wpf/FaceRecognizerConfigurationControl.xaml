@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="OpenSense.Wpf.Component.Psi.CognitiveServices.Face.FaceRecognizerConfigurationControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:OpenSense.Wpf.Component.Psi.CognitiveServices.Face"
+             xmlns:util="clr-namespace:OpenSense.Wpf.Component.Utility;assembly=OpenSense.Wpf.Component.Contract"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid DataContext="{Binding Raw}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0">Subscription key</Label>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SubscriptionKey}"/>
+
+        <Label Grid.Row="1">Endpoint</Label>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Endpoint}"/>
+
+        <Label Grid.Row="2">Person group id</Label>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding PersonGroupId}"/>
+
+        <Label Grid.Row="3">Recognition model name</Label>
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding RecognitionModelName}"/>
+    </Grid>
+</UserControl>
