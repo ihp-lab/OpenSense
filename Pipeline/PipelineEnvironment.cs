@@ -20,6 +20,10 @@ namespace OpenSense.Pipeline {
                 if (dataType is null) {
                     return false;
                 }
+                //check whether remote is instantiated
+                if (!instantiatedEnvs.Any(e => e.Configuration.Id == inputConfig.RemoteId)) {
+                    return false;
+                }
             }
             //check output
             foreach (var remote in instantiatedConfigs) {

@@ -95,7 +95,7 @@ namespace OpenSense.Component.Contract {
                 var getConsumerFunc = typeof(HelperExtensions).GetMethod(nameof(GetStaticConsumer)).MakeGenericMethod(dataType);
                 dynamic consumer = getConsumerFunc.Invoke(null, new object[] { inputStaticMetadata, inputConfig.LocalPort, instance });
 
-                var remoteEnvironment = instantiatedComponents.Single(e => Equals(inputConfig.RemoteId, e.Configuration.Id));
+                var remoteEnvironment = instantiatedComponents.Single(e => inputConfig.RemoteId == e.Configuration.Id);
                 var remoteOutputMetadata = remoteEnvironment.FindPortMetadata(inputConfig.RemotePort);
                 Debug.Assert(remoteOutputMetadata.Direction == PortDirection.Output);
                 var getProducerFunc = typeof(HelperExtensions).GetMethod(nameof(GetProducer)).MakeGenericMethod(dataType);
