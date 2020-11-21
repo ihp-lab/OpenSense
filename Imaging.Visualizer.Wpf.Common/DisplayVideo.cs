@@ -6,11 +6,11 @@ using System.Windows.Media.Imaging;
 using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
 
-namespace OpenSense.Component.Imaging.Visualizer {
+namespace OpenSense.Component.Imaging.Visualizer.Common {
     /// <summary>
     /// DisplayVideo class.
     /// </summary>
-    internal class DisplayVideo : INotifyPropertyChanged {
+    public class DisplayVideo : INotifyPropertyChanged {
         private Shared<Image> psiImage;
         private Image psiDecodedImage;
         private WriteableBitmap bmpImage;

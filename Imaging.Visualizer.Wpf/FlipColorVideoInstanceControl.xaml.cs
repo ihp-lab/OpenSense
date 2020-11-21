@@ -1,8 +1,8 @@
 ﻿using System.Windows.Controls;
 
 namespace OpenSense.Wpf.Component.Imaging.Visualizer {
-    public partial class ColorVideoVisualizerInstanceControl : UserControl {
-        public ColorVideoVisualizerInstanceControl() {
+    public partial class FlipColorVideoInstanceControl : UserControl {
+        public FlipColorVideoInstanceControl() {
             InitializeComponent();
         }
     }

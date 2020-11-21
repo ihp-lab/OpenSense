@@ -3,30 +3,21 @@
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <UseWPF>true</UseWPF>
-    <RootNamespace>OpenSense.Wpf.Component.Imaging.Visualizer</RootNamespace>
-    <AssemblyName>OpenSense.Wpf.Component.Imaging.Visualizer</AssemblyName>
+    <AssemblyName>OpenSense.Wpf.Component.AzureKinect.Visualizer</AssemblyName>
+    <RootNamespace>OpenSense.Wpf.Component.AzureKinect.Visualizer</RootNamespace>
     <LangVersion>8.0</LangVersion>
+    <Platforms>x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Psi.AzureKinect.x64" Version="0.13.38.2-beta" />
     <PackageReference Include="System.Composition" Version="1.4.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
     <ProjectReference Include="..\Imaging.Visualizer.Wpf.Common\Imaging.Visualizer.Wpf.Common.csproj" />
-    <ProjectReference Include="..\Imaging\Imaging.csproj" />
     <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="FlipColorVideoInstanceControl.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="FlipColorVideoConfigurationControl.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
   </ItemGroup>
 
 </Project>

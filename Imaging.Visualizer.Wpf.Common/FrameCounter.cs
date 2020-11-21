@@ -7,12 +7,12 @@
 using System.ComponentModel;
 using System.Diagnostics;
 
-namespace OpenSense.Component.Imaging.Visualizer {
+namespace OpenSense.Component.Imaging.Visualizer.Common {
     
     /// <summary>
     /// FrameCounter is a simple class for determining the frame rate of the playback.
     /// </summary>
-    internal class FrameCounter : INotifyPropertyChanged {
+    public class FrameCounter : INotifyPropertyChanged {
         private readonly Stopwatch stopwatch = new Stopwatch();
         private long lastTicks;
         private long averageTicksPerFrame;

@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
 using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
+using OpenSense.Component.Imaging.Visualizer.Common;
 
 namespace OpenSense.Component.Imaging.Visualizer {
     public class ColorVideoVisualizer : IConsumer<Shared<Image>>, INotifyPropertyChanged {
@@ -44,6 +45,7 @@ namespace OpenSense.Component.Imaging.Visualizer {
         private void PipelineCompleted(object sender, PipelineCompletedEventArgs e) {
             display.Clear();
         }
+
         private DisplayVideo display = new DisplayVideo();
 
         public WriteableBitmap Image {

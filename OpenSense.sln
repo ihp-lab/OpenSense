@@ -76,9 +76,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Speech.Windows", "Psi.S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Speech.Windows.Wpf", "Psi.Speech.Windows.Wpf\Psi.Speech.Windows.Wpf.csproj", "{70E37B3C-C697-41B2-8D31-7B9DE6D8EDDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Psi.CognitiveServices.Face", "Psi.CognitiveServices.Face\Psi.CognitiveServices.Face.csproj", "{C42708A1-D995-4439-B191-F2D72917E298}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.CognitiveServices.Face", "Psi.CognitiveServices.Face\Psi.CognitiveServices.Face.csproj", "{C42708A1-D995-4439-B191-F2D72917E298}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Psi.CognitiveServices.Face.Wpf", "Psi.CognitiveServices.Face.Wpf\Psi.CognitiveServices.Face.Wpf.csproj", "{0D736F2A-DB20-40F5-AF8F-8C21742D3037}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.CognitiveServices.Face.Wpf", "Psi.CognitiveServices.Face.Wpf\Psi.CognitiveServices.Face.Wpf.csproj", "{0D736F2A-DB20-40F5-AF8F-8C21742D3037}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Builtin.Visualizer.Wpf", "Builtin.Visualizer.Wpf\Builtin.Visualizer.Wpf.csproj", "{06E36699-5A12-4BEA-A7DE-DA59BE921AAB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureKinect.Visualizer.Wpf", "AzureKinect.Visualizer.Wpf\AzureKinect.Visualizer.Wpf.csproj", "{36605049-7FF6-4FFB-AEC1-DDA12278F520}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imaging.Visualizer.Wpf.Common", "Imaging.Visualizer.Wpf.Common\Imaging.Visualizer.Wpf.Common.csproj", "{577E31CE-3C09-4C71-9DE8-7F52BF116135}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -342,6 +348,30 @@ Global
 		{0D736F2A-DB20-40F5-AF8F-8C21742D3037}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0D736F2A-DB20-40F5-AF8F-8C21742D3037}.Release|x64.ActiveCfg = Release|Any CPU
 		{0D736F2A-DB20-40F5-AF8F-8C21742D3037}.Release|x64.Build.0 = Release|Any CPU
+		{06E36699-5A12-4BEA-A7DE-DA59BE921AAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06E36699-5A12-4BEA-A7DE-DA59BE921AAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06E36699-5A12-4BEA-A7DE-DA59BE921AAB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{06E36699-5A12-4BEA-A7DE-DA59BE921AAB}.Debug|x64.Build.0 = Debug|Any CPU
+		{06E36699-5A12-4BEA-A7DE-DA59BE921AAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06E36699-5A12-4BEA-A7DE-DA59BE921AAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06E36699-5A12-4BEA-A7DE-DA59BE921AAB}.Release|x64.ActiveCfg = Release|Any CPU
+		{06E36699-5A12-4BEA-A7DE-DA59BE921AAB}.Release|x64.Build.0 = Release|Any CPU
+		{36605049-7FF6-4FFB-AEC1-DDA12278F520}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36605049-7FF6-4FFB-AEC1-DDA12278F520}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36605049-7FF6-4FFB-AEC1-DDA12278F520}.Debug|x64.ActiveCfg = Debug|x64
+		{36605049-7FF6-4FFB-AEC1-DDA12278F520}.Debug|x64.Build.0 = Debug|x64
+		{36605049-7FF6-4FFB-AEC1-DDA12278F520}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36605049-7FF6-4FFB-AEC1-DDA12278F520}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36605049-7FF6-4FFB-AEC1-DDA12278F520}.Release|x64.ActiveCfg = Release|Any CPU
+		{36605049-7FF6-4FFB-AEC1-DDA12278F520}.Release|x64.Build.0 = Release|Any CPU
+		{577E31CE-3C09-4C71-9DE8-7F52BF116135}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{577E31CE-3C09-4C71-9DE8-7F52BF116135}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{577E31CE-3C09-4C71-9DE8-7F52BF116135}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{577E31CE-3C09-4C71-9DE8-7F52BF116135}.Debug|x64.Build.0 = Debug|Any CPU
+		{577E31CE-3C09-4C71-9DE8-7F52BF116135}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{577E31CE-3C09-4C71-9DE8-7F52BF116135}.Release|Any CPU.Build.0 = Release|Any CPU
+		{577E31CE-3C09-4C71-9DE8-7F52BF116135}.Release|x64.ActiveCfg = Release|Any CPU
+		{577E31CE-3C09-4C71-9DE8-7F52BF116135}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -376,6 +406,9 @@ Global
 		{70E37B3C-C697-41B2-8D31-7B9DE6D8EDDE} = {5C411F31-BF09-4976-95CD-8748327C8478}
 		{C42708A1-D995-4439-B191-F2D72917E298} = {5C411F31-BF09-4976-95CD-8748327C8478}
 		{0D736F2A-DB20-40F5-AF8F-8C21742D3037} = {5C411F31-BF09-4976-95CD-8748327C8478}
+		{06E36699-5A12-4BEA-A7DE-DA59BE921AAB} = {5C411F31-BF09-4976-95CD-8748327C8478}
+		{36605049-7FF6-4FFB-AEC1-DDA12278F520} = {5C411F31-BF09-4976-95CD-8748327C8478}
+		{577E31CE-3C09-4C71-9DE8-7F52BF116135} = {5C411F31-BF09-4976-95CD-8748327C8478}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4CB31E6C-64DF-499B-B990-0C72B1A2AF47}
