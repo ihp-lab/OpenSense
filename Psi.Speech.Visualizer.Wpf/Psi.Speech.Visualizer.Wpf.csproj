@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>OpenSense.Wpf.Component.Psi.Speech.Visualizer</AssemblyName>
+    <RootNamespace>OpenSense.Wpf.Component.Psi.Speech.Visualizer</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Psi.Speech" Version="0.13.38.2-beta" />
+    <PackageReference Include="System.Composition" Version="1.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
+    <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="StreamingSpeechRecognitionVisualizerInstanceControl.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+  </ItemGroup>
+
+</Project>
