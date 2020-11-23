@@ -92,7 +92,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biopac", "Biopac\Biopac.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Audio.Visualizer.Wpf.Common", "Audio.Visualizer.Wpf.Common\Audio.Visualizer.Wpf.Common.csproj", "{724A96B1-0070-43EF-87A0-F6B53E754912}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Audio.Visualizer.Windows.Wpf", "Audio.Visualizer.Windows.Wpf\Audio.Visualizer.Windows.Wpf.csproj", "{F0D0145C-9C22-41F1-AFBB-9BA04D43B40E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Audio.Visualizer.Windows.Wpf", "Audio.Visualizer.Windows.Wpf\Audio.Visualizer.Windows.Wpf.csproj", "{F0D0145C-9C22-41F1-AFBB-9BA04D43B40E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Head.Common", "Head.Common\Head.Common.csproj", "{4D223CCD-F0E9-4695-89C9-6D6FA684B53D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emotion.Common", "Emotion.Common\Emotion.Common.csproj", "{D212FBA5-E203-4C9D-BBA3-15F47FE88273}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -412,6 +416,22 @@ Global
 		{F0D0145C-9C22-41F1-AFBB-9BA04D43B40E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F0D0145C-9C22-41F1-AFBB-9BA04D43B40E}.Release|x64.ActiveCfg = Release|Any CPU
 		{F0D0145C-9C22-41F1-AFBB-9BA04D43B40E}.Release|x64.Build.0 = Release|Any CPU
+		{4D223CCD-F0E9-4695-89C9-6D6FA684B53D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D223CCD-F0E9-4695-89C9-6D6FA684B53D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D223CCD-F0E9-4695-89C9-6D6FA684B53D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4D223CCD-F0E9-4695-89C9-6D6FA684B53D}.Debug|x64.Build.0 = Debug|Any CPU
+		{4D223CCD-F0E9-4695-89C9-6D6FA684B53D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D223CCD-F0E9-4695-89C9-6D6FA684B53D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D223CCD-F0E9-4695-89C9-6D6FA684B53D}.Release|x64.ActiveCfg = Release|Any CPU
+		{4D223CCD-F0E9-4695-89C9-6D6FA684B53D}.Release|x64.Build.0 = Release|Any CPU
+		{D212FBA5-E203-4C9D-BBA3-15F47FE88273}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D212FBA5-E203-4C9D-BBA3-15F47FE88273}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D212FBA5-E203-4C9D-BBA3-15F47FE88273}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D212FBA5-E203-4C9D-BBA3-15F47FE88273}.Debug|x64.Build.0 = Debug|Any CPU
+		{D212FBA5-E203-4C9D-BBA3-15F47FE88273}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D212FBA5-E203-4C9D-BBA3-15F47FE88273}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D212FBA5-E203-4C9D-BBA3-15F47FE88273}.Release|x64.ActiveCfg = Release|Any CPU
+		{D212FBA5-E203-4C9D-BBA3-15F47FE88273}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -453,6 +473,8 @@ Global
 		{81FC9860-16CD-4014-8275-3ED10882455A} = {5C411F31-BF09-4976-95CD-8748327C8478}
 		{724A96B1-0070-43EF-87A0-F6B53E754912} = {5C411F31-BF09-4976-95CD-8748327C8478}
 		{F0D0145C-9C22-41F1-AFBB-9BA04D43B40E} = {5C411F31-BF09-4976-95CD-8748327C8478}
+		{4D223CCD-F0E9-4695-89C9-6D6FA684B53D} = {5C411F31-BF09-4976-95CD-8748327C8478}
+		{D212FBA5-E203-4C9D-BBA3-15F47FE88273} = {5C411F31-BF09-4976-95CD-8748327C8478}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4CB31E6C-64DF-499B-B990-0C72B1A2AF47}
