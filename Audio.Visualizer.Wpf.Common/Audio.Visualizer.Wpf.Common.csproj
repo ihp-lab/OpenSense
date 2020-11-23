@@ -5,6 +5,7 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>OpenSense.Wpf.Component.Audio.Visualizer.Common</AssemblyName>
     <RootNamespace>OpenSense.Wpf.Component.Audio.Visualizer.Common</RootNamespace>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
