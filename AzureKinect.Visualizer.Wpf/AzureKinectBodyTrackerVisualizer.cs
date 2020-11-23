@@ -14,7 +14,7 @@ using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using OpenSense.Component.Imaging.Visualizer.Common;
 
-namespace OpenSense.Component.Psi.AzureKinect.Visualizer {
+namespace OpenSense.Component.AzureKinect.Visualizer {
     public class AzureKinectBodyTrackerVisualizer : Subpipeline, IProducer<Shared<Image>>, INotifyPropertyChanged {
 
         #region INotifyPropertyChanged
