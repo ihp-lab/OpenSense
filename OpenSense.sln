@@ -88,6 +88,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imaging.Visualizer.Wpf.Comm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Psi.Speech.Visualizer.Wpf", "Psi.Speech.Visualizer.Wpf\Psi.Speech.Visualizer.Wpf.csproj", "{9384C4B6-BC0F-4237-966B-B9FF3A3911B7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biopac", "Biopac\Biopac.csproj", "{81FC9860-16CD-4014-8275-3ED10882455A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -382,6 +384,14 @@ Global
 		{9384C4B6-BC0F-4237-966B-B9FF3A3911B7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9384C4B6-BC0F-4237-966B-B9FF3A3911B7}.Release|x64.ActiveCfg = Release|Any CPU
 		{9384C4B6-BC0F-4237-966B-B9FF3A3911B7}.Release|x64.Build.0 = Release|Any CPU
+		{81FC9860-16CD-4014-8275-3ED10882455A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81FC9860-16CD-4014-8275-3ED10882455A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81FC9860-16CD-4014-8275-3ED10882455A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{81FC9860-16CD-4014-8275-3ED10882455A}.Debug|x64.Build.0 = Debug|Any CPU
+		{81FC9860-16CD-4014-8275-3ED10882455A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81FC9860-16CD-4014-8275-3ED10882455A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81FC9860-16CD-4014-8275-3ED10882455A}.Release|x64.ActiveCfg = Release|Any CPU
+		{81FC9860-16CD-4014-8275-3ED10882455A}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -420,6 +430,7 @@ Global
 		{36605049-7FF6-4FFB-AEC1-DDA12278F520} = {5C411F31-BF09-4976-95CD-8748327C8478}
 		{577E31CE-3C09-4C71-9DE8-7F52BF116135} = {5C411F31-BF09-4976-95CD-8748327C8478}
 		{9384C4B6-BC0F-4237-966B-B9FF3A3911B7} = {5C411F31-BF09-4976-95CD-8748327C8478}
+		{81FC9860-16CD-4014-8275-3ED10882455A} = {5C411F31-BF09-4976-95CD-8748327C8478}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4CB31E6C-64DF-499B-B990-0C72B1A2AF47}
