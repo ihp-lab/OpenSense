@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>OpenSense.Wpf.Component.OpenPose.Visualizer</AssemblyName>
+    <RootNamespace>OpenSense.Wpf.Component.OpenPose.Visualizer</RootNamespace>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Psi.Imaging" Version="0.13.38.2-beta" />
+    <PackageReference Include="OpenCvSharp4" Version="4.5.0.20201013" />
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.5.0.20201013" />
+    <PackageReference Include="System.Composition" Version="1.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Imaging.Visualizer.Wpf.Common\Imaging.Visualizer.Wpf.Common.csproj" />
+    <ProjectReference Include="..\OpenPose.Common\OpenPose.Common.csproj" />
+    <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="OpenPoseVisualizerConfigurationControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="OpenPoseVisualizerInstanceControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="OpenPoseVisualizerConfigurationControl.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="OpenPoseVisualizerInstanceControl.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
+</Project>

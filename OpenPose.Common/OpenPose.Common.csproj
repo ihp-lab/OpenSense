@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>OpenSense.Component.OpenPose.Common</AssemblyName>
+    <RootNamespace>OpenSense.Component.OpenPose.Common</RootNamespace>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+
+</Project>
