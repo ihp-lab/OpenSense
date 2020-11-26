@@ -13,26 +13,26 @@ namespace OpenSense.Component.AzureKinect.Visualizer {
             set => SetProperty(ref mute, value);
         }
 
-        private int jointRadius = 3;
+        private int circleRadius = 3;
 
-        public int JointRadius {
-            get => jointRadius;
-            set => SetProperty(ref jointRadius, value);
+        public int CircleRadius {
+            get => circleRadius;
+            set => SetProperty(ref circleRadius, value);
         }
 
-        private int boneThickness = 1;
+        private int lineThickness = 1;
 
-        public int BoneThickness {
-            get => boneThickness;
-            set => SetProperty(ref boneThickness, value);
+        public int LineThickness {
+            get => lineThickness;
+            set => SetProperty(ref lineThickness, value);
         }
 
         public override IComponentMetadata GetMetadata() => new AzureKinectBodyTrackerVisualizerMetadata();
 
         protected override object Instantiate(Pipeline pipeline) => new AzureKinectBodyTrackerVisualizer(pipeline) {
             Mute = Mute,
-            BoneThickness = BoneThickness,
-            JointRadius = JointRadius,
+            LineThickness = LineThickness,
+            CircleRadius = CircleRadius,
         };
     }
 }

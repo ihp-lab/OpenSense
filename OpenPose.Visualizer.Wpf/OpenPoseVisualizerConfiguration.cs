@@ -13,26 +13,50 @@ namespace OpenSense.Component.OpenPose.Visualizer {
             set => SetProperty(ref mute, value);
         }
 
-        private int jointRadius = 3;
+        private bool drawPose = true;
 
-        public int JointRadius {
-            get => jointRadius;
-            set => SetProperty(ref jointRadius, value);
+        public bool DrawPose {
+            get => drawPose;
+            set => SetProperty(ref drawPose, value);
         }
 
-        private int boneThickness = 1;
+        private bool drawFace = true;
 
-        public int BoneThickness {
-            get => boneThickness;
-            set => SetProperty(ref boneThickness, value);
+        public bool DrawFace {
+            get => drawFace;
+            set => SetProperty(ref drawFace, value);
+        }
+
+        private bool drawHand = true;
+
+        public bool DrawHand {
+            get => drawHand;
+            set => SetProperty(ref drawHand, value);
+        }
+
+        private int circleRadius = 3;
+
+        public int CircleRadius {
+            get => circleRadius;
+            set => SetProperty(ref circleRadius, value);
+        }
+
+        private int lineThickness = 1;
+
+        public int LineThickness {
+            get => lineThickness;
+            set => SetProperty(ref lineThickness, value);
         }
 
         public override IComponentMetadata GetMetadata() => new OpenPoseVisualizerMetadata();
 
         protected override object Instantiate(Pipeline pipeline) => new OpenPoseVisualizer(pipeline) {
             Mute = Mute,
-            BoneThickness = BoneThickness,
-            JointRadius = JointRadius,
+            DrawPose = DrawPose,
+            DrawFace = DrawFace,
+            DrawHand = DrawHand,
+            LineThickness = LineThickness,
+            CircleRadius = CircleRadius,
         };
     }
 }

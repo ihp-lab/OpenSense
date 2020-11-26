@@ -118,6 +118,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPose.Visualizer.Wpf", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPose.Wpf", "OpenPose.Wpf\OpenPose.Wpf.csproj", "{94D99E12-8CAB-44B2-9A76-C50F2067E5B5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imaging.Wpf", "Imaging.Wpf\Imaging.Wpf.csproj", "{22D8CC85-CEBF-4A8A-8E8B-5ABEB7B8A5DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -532,6 +534,14 @@ Global
 		{94D99E12-8CAB-44B2-9A76-C50F2067E5B5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{94D99E12-8CAB-44B2-9A76-C50F2067E5B5}.Release|x64.ActiveCfg = Release|Any CPU
 		{94D99E12-8CAB-44B2-9A76-C50F2067E5B5}.Release|x64.Build.0 = Release|Any CPU
+		{22D8CC85-CEBF-4A8A-8E8B-5ABEB7B8A5DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22D8CC85-CEBF-4A8A-8E8B-5ABEB7B8A5DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22D8CC85-CEBF-4A8A-8E8B-5ABEB7B8A5DD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{22D8CC85-CEBF-4A8A-8E8B-5ABEB7B8A5DD}.Debug|x64.Build.0 = Debug|Any CPU
+		{22D8CC85-CEBF-4A8A-8E8B-5ABEB7B8A5DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22D8CC85-CEBF-4A8A-8E8B-5ABEB7B8A5DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22D8CC85-CEBF-4A8A-8E8B-5ABEB7B8A5DD}.Release|x64.ActiveCfg = Release|Any CPU
+		{22D8CC85-CEBF-4A8A-8E8B-5ABEB7B8A5DD}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -584,6 +594,7 @@ Global
 		{43E3CBB1-31F9-461D-BED0-02986AF5AA4C} = {5C411F31-BF09-4976-95CD-8748327C8478}
 		{047DFF36-B0CD-4A95-AD19-08B2FB211FA9} = {5C411F31-BF09-4976-95CD-8748327C8478}
 		{94D99E12-8CAB-44B2-9A76-C50F2067E5B5} = {5C411F31-BF09-4976-95CD-8748327C8478}
+		{22D8CC85-CEBF-4A8A-8E8B-5ABEB7B8A5DD} = {5C411F31-BF09-4976-95CD-8748327C8478}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4CB31E6C-64DF-499B-B990-0C72B1A2AF47}

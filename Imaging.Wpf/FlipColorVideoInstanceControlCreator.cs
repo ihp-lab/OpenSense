@@ -3,7 +3,7 @@ using System.Windows;
 using OpenSense.Component.Imaging;
 using OpenSense.Wpf.Component.Contract;
 
-namespace OpenSense.Wpf.Component.Imaging.Visualizer {
+namespace OpenSense.Wpf.Component.Imaging {
     [Export(typeof(IInstanceControlCreator))]
     public class FlipColorVideoInstanceControlCreator : IInstanceControlCreator {
 

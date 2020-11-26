@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
-using OpenCvSharp.Extensions;
 
 namespace OpenSense.Component.Imaging {
 
@@ -54,19 +53,13 @@ namespace OpenSense.Component.Imaging {
             }
             //Note: do not use Shared<Image>.Resource.Flip, because it will change image format from 24bpp to 32bpp
             var bitmap = frame.Resource.ToBitmap(makeCopy:true);
-            try {//native opencv
-                var mat = bitmap.ToMat();//data copied
-                mat = flip switch {
-                    (true, true) => mat.Flip(OpenCvSharp.FlipMode.XY),
-                    (true, false) => mat.Flip(OpenCvSharp.FlipMode.Y),
-                    (false, true) => mat.Flip(OpenCvSharp.FlipMode.X),
-                    _ => throw new InvalidOperationException("This statement should not be executed"),
-                };
-                mat.ToBitmap(bitmap);
-            } catch (Exception ex) {
-                (FlipHorizontal, FlipVertical) = (false, false);
-                throw;
-            }
+            var op = flip switch {
+                (true, true) => System.Drawing.RotateFlipType.RotateNoneFlipXY,
+                (true, false) => System.Drawing.RotateFlipType.RotateNoneFlipX,
+                (false, true) => System.Drawing.RotateFlipType.RotateNoneFlipY,
+                _ => throw new InvalidOperationException("This statement should not be executed"),
+            };
+            bitmap.RotateFlip(op);
             using var result = ImagePool.GetOrCreate(frame.Resource.Width, frame.Resource.Height, frame.Resource.PixelFormat);
             result.Resource.CopyFrom(bitmap);
             Debug.Assert(result.Resource.PixelFormat == frame.Resource.PixelFormat);
