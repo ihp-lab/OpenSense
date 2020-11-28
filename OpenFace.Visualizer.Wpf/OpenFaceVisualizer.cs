@@ -9,10 +9,10 @@ using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
 using OpenSense.Component.Head.Common;
 using OpenSense.Component.Imaging.Visualizer.Common;
-using PsiImage = Microsoft.Psi.Imaging.Image;
+using Image = Microsoft.Psi.Imaging.Image;
 
 namespace OpenSense.Component.OpenFace.Visualizer {
-    public class OpenFaceVisualizer : Subpipeline, IProducer<Shared<PsiImage>>, INotifyPropertyChanged {
+    public class OpenFaceVisualizer : Subpipeline, IProducer<Shared<Image>>, INotifyPropertyChanged {
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -27,13 +27,13 @@ namespace OpenSense.Component.OpenFace.Visualizer {
 
         private Connector<HeadPoseAndGaze> DataInConnector;
 
-        private Connector<Shared<PsiImage>> ImageInConnector;
+        private Connector<Shared<Image>> ImageInConnector;
 
         public Receiver<HeadPoseAndGaze> DataIn => DataInConnector.In;
 
-        public Receiver<Shared<PsiImage>> ImageIn => ImageInConnector.In;
+        public Receiver<Shared<Image>> ImageIn => ImageInConnector.In;
 
-        public Emitter<Shared<PsiImage>> Out { get; private set; }
+        public Emitter<Shared<Image>> Out { get; private set; }
 
         private bool mute = false;
 
@@ -68,10 +68,10 @@ namespace OpenSense.Component.OpenFace.Visualizer {
 
         public OpenFaceVisualizer(Pipeline pipeline) : base(pipeline) {
             DataInConnector = CreateInputConnectorFrom<HeadPoseAndGaze>(pipeline, nameof(DataIn));
-            ImageInConnector = CreateInputConnectorFrom<Shared<PsiImage>>(pipeline, nameof(ImageIn));
-            Out = pipeline.CreateEmitter<Shared<PsiImage>>(this, nameof(Out));
+            ImageInConnector = CreateInputConnectorFrom<Shared<Image>>(pipeline, nameof(ImageIn));
+            Out = pipeline.CreateEmitter<Shared<Image>>(this, nameof(Out));
 
-            var joined = DataInConnector.Out.Join(ImageInConnector.Out, Reproducible.Exact<Shared<PsiImage>>());
+            var joined = DataInConnector.Out.Join(ImageInConnector.Out, Reproducible.Exact<Shared<Image>>());
             joined.Do(Process);
 
             pipeline.PipelineCompleted += OnPipelineCompleted;
@@ -88,7 +88,7 @@ namespace OpenSense.Component.OpenFace.Visualizer {
             };
         }
 
-        private void Process(ValueTuple<HeadPoseAndGaze, Shared<PsiImage>> data, Envelope envelope) {
+        private void Process(ValueTuple<HeadPoseAndGaze, Shared<Image>> data, Envelope envelope) {
             if (Mute) {
                 return;
             }

@@ -12,10 +12,10 @@ using Microsoft.Psi.Calibration;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
 using OpenSense.Component.Imaging.Visualizer.Common;
-using PsiImage = Microsoft.Psi.Imaging.Image;
+using Image = Microsoft.Psi.Imaging.Image;
 
 namespace OpenSense.Component.AzureKinect.Visualizer {
-    public class AzureKinectBodyTrackerVisualizer : Subpipeline, IProducer<Shared<PsiImage>>, INotifyPropertyChanged {
+    public class AzureKinectBodyTrackerVisualizer : Subpipeline, IProducer<Shared<Image>>, INotifyPropertyChanged {
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -32,15 +32,15 @@ namespace OpenSense.Component.AzureKinect.Visualizer {
 
         private Connector<IDepthDeviceCalibrationInfo> CalibrationInConnector;
 
-        private Connector<Shared<PsiImage>> ColorImageInConnector;
+        private Connector<Shared<Image>> ColorImageInConnector;
 
         public Receiver<List<AzureKinectBody>> BodiesIn => BodiesInConnector.In;
 
         public Receiver<IDepthDeviceCalibrationInfo> CalibrationIn => CalibrationInConnector.In;
 
-        public Receiver<Shared<PsiImage>> ColorImageIn => ColorImageInConnector.In;
+        public Receiver<Shared<Image>> ColorImageIn => ColorImageInConnector.In;
 
-        public Emitter<Shared<PsiImage>> Out { get; private set; }
+        public Emitter<Shared<Image>> Out { get; private set; }
 
         private DisplayVideo display = new DisplayVideo();
 
@@ -76,11 +76,11 @@ namespace OpenSense.Component.AzureKinect.Visualizer {
         public AzureKinectBodyTrackerVisualizer(Pipeline pipeline) : base(pipeline) {
             BodiesInConnector = CreateInputConnectorFrom<List<AzureKinectBody>>(pipeline, nameof(BodiesIn));
             CalibrationInConnector = CreateInputConnectorFrom<IDepthDeviceCalibrationInfo>(pipeline, nameof(CalibrationIn));
-            ColorImageInConnector = CreateInputConnectorFrom<Shared<PsiImage>>(pipeline, nameof(ColorImageIn));
-            Out = pipeline.CreateEmitter<Shared<PsiImage>>(this, nameof(Out));
+            ColorImageInConnector = CreateInputConnectorFrom<Shared<Image>>(pipeline, nameof(ColorImageIn));
+            Out = pipeline.CreateEmitter<Shared<Image>>(this, nameof(Out));
 
             var joined1 = BodiesInConnector.Out.Fuse(CalibrationInConnector.Out, Available.Nearest<IDepthDeviceCalibrationInfo>());//Note: Calibration only given once, Join is not aplicable here
-            var joined2 = joined1.Join(ColorImageInConnector.Out, Reproducible.Nearest<Shared<PsiImage>>());
+            var joined2 = joined1.Join(ColorImageInConnector.Out, Reproducible.Nearest<Shared<Image>>());
             joined2.Do(Process);
 
             pipeline.PipelineCompleted += OnPipelineCompleted;
@@ -97,7 +97,7 @@ namespace OpenSense.Component.AzureKinect.Visualizer {
             };
         }
 
-        private void Process(ValueTuple<List<AzureKinectBody>, IDepthDeviceCalibrationInfo, Shared<PsiImage>> data, Envelope envelope) {
+        private void Process(ValueTuple<List<AzureKinectBody>, IDepthDeviceCalibrationInfo, Shared<Image>> data, Envelope envelope) {
             if (Mute) {
                 return;
             }

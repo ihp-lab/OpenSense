@@ -6,7 +6,7 @@ namespace OpenSense.Component.OpenFace {
     [Export(typeof(IComponentMetadata))]
     public class OpenFaceMetadata : ConventionalComponentMetadata {
 
-        public override string Description => "OpenFace by MultiComp-Lab.";
+        public override string Description => "OpenFace by MultiComp Lab.";
 
         protected override Type ComponentType => typeof(OpenFace);
 

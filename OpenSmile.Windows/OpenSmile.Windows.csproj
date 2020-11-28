@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>OpenSense.Component.OpenSmile.Windows</AssemblyName>
+    <RootNamespace>OpenSense.Component.OpenSmile</RootNamespace>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Psi.Audio" Version="0.13.38.2-beta" />
+    <PackageReference Include="System.Composition" Version="1.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
+    <ProjectReference Include="..\OpenSmile.Common\OpenSmile.Common.csproj" />
+    <ProjectReference Include="..\OpenSmileInterop\OpenSmileInterop.vcxproj" />
+  </ItemGroup>
+
+</Project>
