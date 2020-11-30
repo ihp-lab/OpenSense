@@ -19,10 +19,9 @@
 
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="3*"/>
-                <RowDefinition Height="3*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
 
             <Grid.Resources>
@@ -55,23 +54,22 @@
                 Pipeline Executer
             </Button>
 
-            <Button Grid.Row="2" 
-                    Name="ButtonGazeCalibrator" 
-                    Style="{StaticResource StyleSmallButton}"
-                    ToolTip="Train a gaze detector model."
-                    Click="ButtonGazeCalibrator_Click"
-                    >
-                Gaze Calibrator
-            </Button>
-
-            <Button Grid.Row="3" 
-                    Name="ButtonOpenSmileConfigurationConverter" 
-                    Style="{StaticResource StyleSmallButton}"
-                    ToolTip="Convert openSmile configurations to an OpenSense-compatable version."
-                    Click="ButtonOpenSmileConfigurationConverter_Click"
-                    >
-                OpenSmile Converter
-            </Button>
+            <ItemsControl Grid.Row="2"
+                            Name="ItemsControlWidgets"
+                            Initialized="ItemsControlWidgets_Initialized"
+                            >
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button  
+                                Style="{StaticResource StyleSmallButton}"
+                                Content="{Binding Name}"
+                                ToolTip="{Binding Description}"
+                                Click="WidgetItem_Click"
+                                Padding="10"
+                                />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </Grid>
     </Grid>
 </Window>

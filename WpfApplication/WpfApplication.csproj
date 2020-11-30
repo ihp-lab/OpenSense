@@ -16,6 +16,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Utility\**" />
+    <EmbeddedResource Remove="Utility\**" />
+    <None Remove="Utility\**" />
+    <Page Remove="Utility\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Resource\Icon\about.ico" />
     <None Remove="Resource\Icon\devices.ico" />
     <None Remove="Resource\Icon\exit.ico" />
@@ -30,10 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Utility\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="System.Composition" Version="1.4.1" />
   </ItemGroup>
 
@@ -42,6 +45,7 @@
     <ProjectReference Include="..\Pipeline\Pipeline.csproj" />
     <ProjectReference Include="..\Psi.Wpf.Common\Psi.Wpf.Common.csproj" />
     <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+    <ProjectReference Include="..\WpfWidgetContract\WpfWidgetContract.csproj" />
   </ItemGroup>
 
   <ItemGroup>

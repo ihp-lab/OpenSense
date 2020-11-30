@@ -4,22 +4,23 @@ using System.Composition;
 using System.Composition.Hosting;
 using System.IO;
 using System.Reflection;
-using OpenSense.Component.Contract;
+using OpenSense.Wpf.Widget.Contract;
 
-namespace OpenSense.Pipeline {
-    public class ComponentManager {
+namespace OpenSense.Wpf.Widget {
+    public class WidgetManager {
 
         [ImportMany]
-        private IComponentMetadata[] components { get; set; }
+        private IWidgetMetadata[] weidgets { get; set; }
 
-        public IReadOnlyList<IComponentMetadata> Components => components;
+        public IReadOnlyList<IWidgetMetadata> Widgets => weidgets;
 
-        public ComponentManager() {
+        public WidgetManager() {
             var assemblies = new List<Assembly>() {
-                typeof(ComponentManager).Assembly,
+                typeof(WidgetManager).Assembly,
                 Assembly.GetEntryAssembly(),
             };
-            var files = Directory.EnumerateFiles(AppDomain.CurrentDomain.BaseDirectory, "*Component*.dll");
+            //filter dll name with "Widget". Otherwise, when loading OpenFaceInterop, an exception from (Diagnose Errors with Managed Debugging Assistants) will be thrown
+            var files = Directory.EnumerateFiles(AppDomain.CurrentDomain.BaseDirectory, "*Widget*.dll");
             foreach (var file in files) {
                 try {
                     var asm = Assembly.LoadFrom(file);

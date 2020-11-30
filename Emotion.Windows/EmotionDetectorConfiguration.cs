@@ -6,8 +6,8 @@ namespace OpenSense.Component.Emotion {
     [Serializable]
     public class EmotionDetectorConfiguration : ConventionalComponentConfiguration {
 
-    public override IComponentMetadata GetMetadata() => new EmotionDetectorMetadata();
+        public override IComponentMetadata GetMetadata() => new EmotionDetectorMetadata();
 
-    protected override object Instantiate(Pipeline pipeline) => new EmotionDetector(pipeline);
-}
+        protected override object Instantiate(Pipeline pipeline) => new EmotionDetector(pipeline);
+    }
 }

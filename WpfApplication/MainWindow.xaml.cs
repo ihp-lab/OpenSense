@@ -1,5 +1,7 @@
 ﻿using System.Windows;
 using OpenSense.Wpf.Pipeline;
+using OpenSense.Wpf.Widget;
+using OpenSense.Wpf.Widget.Contract;
 
 namespace OpenSense.Wpf {
 
@@ -18,14 +20,20 @@ namespace OpenSense.Wpf {
             executor.Show();
         }
 
-        private void ButtonGazeCalibrator_Click(object sender, RoutedEventArgs e) {
-            //var calibrator = new CalibratorWindow();
-            //calibrator.ShowDialog();
+
+        #region widgets
+        private void ItemsControlWidgets_Initialized(object sender, System.EventArgs e) {
+            ItemsControlWidgets.ItemsSource = new WidgetManager().Widgets;
         }
 
-        private void ButtonOpenSmileConfigurationConverter_Click(object sender, RoutedEventArgs e) {
-            //var converter = new OpenSmileConfigurationConverter.ConverterWindow();
-            //converter.ShowDialog();
+        private void WidgetItem_Click(object sender, RoutedEventArgs e) {
+            var fe = (FrameworkElement)sender;
+            var widgetMetadata = (IWidgetMetadata)fe.DataContext;
+            var win = widgetMetadata.Create();
+            win.ShowDialog();
         }
+        #endregion
+
+
     }
 }
