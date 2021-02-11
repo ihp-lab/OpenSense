@@ -43,7 +43,6 @@ namespace OpenSense.Component.Psi {
 
         public override object Instantiate(Pipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents) {
             var remoteImporter = new RemoteImporter(pipeline, Replay, Host, Port, AllowSequenceRestart);
-            pipeline.ComponentCompleted += (s, e) => remoteImporter.Dispose();
             var connected = remoteImporter.Connected.WaitOne(TimeSpan.FromSeconds(ConnectionTimeoutSeconds));//otherwise the Importer field will be empty
             if (!connected) {
                 throw new TimeoutException($"connection with {Host}:{Port} timed out");

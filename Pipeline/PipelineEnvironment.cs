@@ -5,7 +5,7 @@ using OpenSense.Component.Contract;
 using PsiPipeline = Microsoft.Psi.Pipeline;
 
 namespace OpenSense.Pipeline {
-    public class PipelineEnvironment {
+    public class PipelineEnvironment : IDisposable {
 
         public readonly PsiPipeline Pipeline;
 
@@ -60,6 +60,22 @@ namespace OpenSense.Pipeline {
                 var env = new ComponentEnvironment(compConfig, instance);
                 instEnvs.Add(env);
             }
+        }
+
+        private bool disposed;
+
+        public void Dispose() {
+            if (disposed) {
+                return;
+            }
+            Pipeline.Dispose();
+            foreach (var inst in Instances.OfType<IDisposable>()) {
+                //Pipeline components are already disposed when Pipeline.Dispose() is called, 
+                //but Instances here may not be the same object as the corresponding pipeline component,
+                //so this call of Dispose is necessary
+                inst.Dispose();
+            }
+            disposed = true;
         }
     }
 }

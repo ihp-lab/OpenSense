@@ -65,25 +65,12 @@ namespace OpenSense.Wpf.Pipeline {
         }
 
         private void Stop() {
-            if (Env != null) {
-                try {
-                    Env.Pipeline.Dispose();
-                    /*
-                    foreach (var inst in Env.Instances) {
-                        if (inst.Instance is IDisposable disposable) {
-                            try {
-                                disposable.Dispose();
-                            } catch (Exception ex) {
-                                Debug.WriteLine(ex.ToString());
-                            }
-                        }
-                    }
-                    */
-                } catch (Exception ex) {
-                    Debug.WriteLine(ex.ToString());
-                }
-                Env = null;
+            try {
+                Env?.Dispose();
+            } catch (Exception ex) {
+                Debug.WriteLine(ex.ToString());
             }
+            Env = null;
         }
 
         private void Load(PipelineConfiguration config) {

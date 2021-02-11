@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Microsoft.Psi;
 using Microsoft.Psi.Data;
 using OpenSense.Component.Contract;
@@ -9,23 +10,18 @@ namespace OpenSense.Component.Psi {
     [Serializable]
     public abstract class ExporterConfiguration : ComponentConfiguration {
 
-        private List<Guid> largeMessageInputs = new List<Guid>();
+        protected abstract object CreateInstance(Pipeline pipeline);
 
-        public List<Guid> LargeMessageInputs {
-            get => largeMessageInputs;
-            set => SetProperty(ref largeMessageInputs, value);
-        }
+        protected abstract void ConnectInput<T>(object instance, InputConfiguration inputConfiguration, IProducer<T> remoteEndProducer);
 
-        protected abstract Exporter CreateExporter(Pipeline pipeline, out object instance);
-
-        public override object Instantiate(Pipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents) {
+        public override sealed object Instantiate(Pipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents) {
             if (Inputs.Any(i => i.LocalPort?.Index is null)) {
                 throw new Exception("exporter stream name not set");
             }
             if (Inputs.Select(i => i.LocalPort.Index).Distinct().Count() != Inputs.Count()) {
                 throw new Exception("duplicate exporter stream name");
             }
-            var exporter = CreateExporter(pipeline, out var instance);
+            var instance = CreateInstance(pipeline);
             var configurations = instantiatedComponents.Select(i => i.Configuration).ToArray();
             foreach (var inputConfig in Inputs) {
                 var remoteEnv = instantiatedComponents.Single(e => inputConfig.RemoteId == e.Configuration.Id);
@@ -36,9 +32,8 @@ namespace OpenSense.Component.Psi {
                 }
                 var getProducerFunc = typeof(HelperExtensions).GetMethod(nameof(HelperExtensions.GetProducer)).MakeGenericMethod(dataType);
                 dynamic producer = getProducerFunc.Invoke(null, new object[] { remoteEnv, inputConfig.RemotePort });
-                var largeMessage = LargeMessageInputs.Contains(inputConfig.Id);
-                var streamName = (string)inputConfig.LocalPort.Index;
-                exporter.Write(producer, streamName, largeMessage, inputConfig.DeliveryPolicy);
+                var connectInputFunc = GetType().GetMethod(nameof(ConnectInput), BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(dataType);
+                connectInputFunc.Invoke(this, new object[] { instance, inputConfig, producer });
             }
             return instance;
         }

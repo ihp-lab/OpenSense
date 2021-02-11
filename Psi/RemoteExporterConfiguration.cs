@@ -6,7 +6,7 @@ using OpenSense.Component.Contract;
 
 namespace OpenSense.Component.Psi {
     [Serializable]
-    public class RemoteExporterConfiguration : ExporterConfiguration {
+    public class RemoteExporterConfiguration : PsiExporterConfiguration {
 
         private int port = 11411;
 
@@ -40,7 +40,6 @@ namespace OpenSense.Component.Psi {
 
         protected override Exporter CreateExporter(Pipeline pipeline, out object instance) {
             var remoteExporter = new RemoteExporter(pipeline, Port, Transport, MaxBytesPerSecond, BytesPerSecondSmoothingWindowSeconds);
-            pipeline.PipelineCompleted += (s, e) => remoteExporter.Dispose();
             instance = remoteExporter;
             return remoteExporter.Exporter;
         }

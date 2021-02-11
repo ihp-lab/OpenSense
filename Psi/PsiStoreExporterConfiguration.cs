@@ -7,7 +7,7 @@ using OpenSense.Component.Contract;
 
 namespace OpenSense.Component.Psi {
     [Serializable]
-    public class PsiStoreExporterConfiguration : ExporterConfiguration {
+    public class PsiStoreExporterConfiguration : PsiExporterConfiguration {
 
         private string storeName = string.Empty;
 
