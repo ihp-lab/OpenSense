@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Psi;
-using Microsoft.Psi.Data;
 using OpenSense.Component.Contract;
 
 namespace OpenSense.Component.Psi {
