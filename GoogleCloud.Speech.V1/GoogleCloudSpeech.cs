@@ -15,7 +15,7 @@ using Microsoft.Psi.Speech;
 
 namespace OpenSense.Component.GoogleCloud.Speech.V1 {
 
-    public class GoogleCloudSpeech : IConsumerProducer<AudioBuffer, IStreamingSpeechRecognitionResult> {
+    public class GoogleCloudSpeech : IConsumerProducer<(AudioBuffer, bool), IStreamingSpeechRecognitionResult> {
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -28,7 +28,7 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
         }
         #endregion
 
-        public Receiver<AudioBuffer> In { get; private set; }
+        public Receiver<(AudioBuffer, bool)> In { get; private set; }
 
         public Emitter<IStreamingSpeechRecognitionResult> Out { get; private set; }
 
@@ -76,7 +76,7 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
 
         public GoogleCloudSpeech(Pipeline pipeline, string jsonCredentials) {
             // psi pipeline
-            In = pipeline.CreateReceiver<AudioBuffer>(this, PorcessFrames, nameof(In));
+            In = pipeline.CreateReceiver<(AudioBuffer, bool)>(this, PorcessFrames, nameof(In));
             Out = pipeline.CreateEmitter<IStreamingSpeechRecognitionResult>(this, nameof(Out));
 
             pipeline.PipelineRun += OnPipeRun;
@@ -125,26 +125,32 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
 
         private void Stop() {
             stream?.WriteCompleteAsync().Wait();
+            stream = null;
             streamCancellationTokenSource?.Cancel();
+            streamCancellationTokenSource = null;
             responseTask?.Wait();
+            responseTask = null;
+            client = null;
         }
 
-        private void PorcessFrames(AudioBuffer frame, Envelope envelope) {
-            if (Mute) {
+        private void PorcessFrames((AudioBuffer, bool) frame, Envelope envelope) {
+            var (audio, active) = frame;
+            if (Mute || !active) {
+                Stop();
                 return;
             }
-            if (frame.Data.Length == 0) {
+            if (audio.Data.Length == 0) {
                 return;
             }
             if (!ClientInitialized) {
                 InitializeClient();
             }
-            Trace.Assert(frame.Format.FormatTag == WaveFormatTag.WAVE_FORMAT_PCM && frame.Format.BitsPerSample == 16);//TODO: convert format silently
+            Trace.Assert(audio.Format.FormatTag == WaveFormatTag.WAVE_FORMAT_PCM && audio.Format.BitsPerSample == 16);//TODO: convert format silently
             if (!FormatInitialized) {
-                InitializeFormat(frame, envelope);
+                InitializeFormat(audio, envelope);
             }
             var request = new StreamingRecognizeRequest() {
-                AudioContent = ByteString.CopyFrom(frame.Data, 0, frame.Data.Length),
+                AudioContent = ByteString.CopyFrom(audio.Data, 0, audio.Data.Length),
             };
             stream.WriteAsync(request).Wait();
         }
