@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>OpenSense.Component.GoogleCloud.Speech.V1</AssemblyName>
+    <RootNamespace>OpenSense.Component.GoogleCloud.Speech.V1</RootNamespace>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Psi.Speech" Version="0.13.38.2-beta" />
+    <PackageReference Include="Google.Cloud.Speech.V1" Version="2.1.0" />
+    <PackageReference Include="System.Composition" Version="1.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
+  </ItemGroup>
+
+</Project>

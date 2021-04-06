@@ -16,10 +16,12 @@ namespace OpenSense.Component.Psi.Speech.Visualizer {
 
         private void Porcess(IStreamingSpeechRecognitionResult speech, Envelope envelope) {
             Speech = speech.Text;
+            Final = speech.IsFinal;
         }
 
         private void PipelineCompleted(object sender, PipelineCompletedEventArgs e) {
             Speech = string.Empty;
+            Final = false;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -36,6 +38,13 @@ namespace OpenSense.Component.Psi.Speech.Visualizer {
         public string Speech {
             get => speech;
             set => SetProperty(ref speech, value);
+        }
+
+        private bool final = false;
+
+        public bool Final {
+            get => final;
+            set => SetProperty(ref final, value);
         }
     }
 }

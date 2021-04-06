@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="OpenSense.Wpf.Component.GoogleCloud.Speech.V1.GoogleCloudSpeechConfigurationControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:OpenSense.Wpf.Component.GoogleCloud.Speech.V1"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <Label>Mute</Label>
+        <CheckBox Grid.Column="1" IsChecked="{Binding Mute}"/>
+
+        <Label Grid.Row="1">Credentials path</Label>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CredentialsPath}"/>
+
+        <Label Grid.Row="2">Language code</Label>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding LanguageCode}"/>
+
+        <Label Grid.Row="3">Separate recognition per channel</Label>
+        <CheckBox Grid.Row="3" Grid.Column="1" IsChecked="{Binding SeparateRecognitionPerChannel}"/>
+
+        <Label Grid.Row="4">Post interim results</Label>
+        <CheckBox Grid.Row="4" Grid.Column="1" IsChecked="{Binding PostInterimResults}"/>
+    </Grid>
+</UserControl>
