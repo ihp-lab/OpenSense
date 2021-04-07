@@ -153,12 +153,16 @@ namespace OpenSense.Component.Contract {
                         var otherOutput = FindOutputPortDataTypes(other, configs, newExclude);
                         var otherEnd = oMetadata.GetTransmissionDataType(null, otherInput, otherOutput);
                         if (otherEnd != null) {
-                            var selfOutput = FindOutputPortDataTypes(config, configs);
-                            dataType = portMetadata.GetTransmissionDataType(otherEnd, selfOutput, Array.Empty<Type>());
+                            dataType = portMetadata.GetTransmissionDataType(otherEnd, Array.Empty<Type>(), Array.Empty<Type>());
                             if (dataType != null) {
                                 goto jump;
                             }
                             newExclude[exclude.Length] = new Tuple<ComponentConfiguration, IPortMetadata>(config, portMetadata);
+                            var selfOutput = FindOutputPortDataTypes(config, configs, newExclude);
+                            dataType = portMetadata.GetTransmissionDataType(otherEnd, selfOutput, Array.Empty<Type>());
+                            if (dataType != null) {
+                                goto jump;
+                            }
                             var selfInput = FindInputPortDataTypes(config, configs, newExclude);
                             dataType = portMetadata.GetTransmissionDataType(otherEnd, selfOutput, selfInput);
                             if (dataType != null) {
@@ -208,12 +212,16 @@ jump:;
                             var otherInput = FindInputPortDataTypes(other, configs, newExclude);
                             var otherEnd = iMetadata.GetTransmissionDataType(null, otherOutput, otherInput);
                             if (otherEnd != null) {
-                                var selfInput = FindInputPortDataTypes(config, configs);
-                                dataType = portMetadata.GetTransmissionDataType(otherEnd, selfInput, Array.Empty<Type>());
+                                dataType = portMetadata.GetTransmissionDataType(otherEnd, Array.Empty<Type>(), Array.Empty<Type>());
                                 if (dataType != null) {
                                     goto jump;
                                 }
                                 newExclude[exclude.Length] = new Tuple<ComponentConfiguration, IPortMetadata>(config, portMetadata);
+                                var selfInput = FindInputPortDataTypes(config, configs, newExclude);
+                                dataType = portMetadata.GetTransmissionDataType(otherEnd, selfInput, Array.Empty<Type>());
+                                if (dataType != null) {
+                                    goto jump;
+                                }
                                 var selfOutput = FindOutputPortDataTypes(config, configs, newExclude);
                                 dataType = portMetadata.GetTransmissionDataType(otherEnd, selfInput, selfOutput);
                                 if (dataType != null) {
