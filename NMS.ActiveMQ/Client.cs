@@ -109,9 +109,9 @@ namespace OpenSense.NMS.ActiveMQ {
             connection.Start();
             session = connection.CreateSession(AcknowledgementMode.AutoAcknowledge);
             if (Topic) {
-                destination = session.GetTopic(scope);
+                destination = session.GetTopic(Scope);
             } else {
-                destination = session.GetQueue(scope);
+                destination = session.GetQueue(Scope);
             }
             producer = session.CreateProducer(destination);
             producer.DeliveryMode = MsgDeliveryMode.NonPersistent;
@@ -135,11 +135,6 @@ namespace OpenSense.NMS.ActiveMQ {
             producer.Send(rawMessage);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="messageSelector"></param>
-        /// <param name="messageHandler"></param>
         /// <returns>An <see cref="IDisposable""/> object for unsubscribe and clean up.</returns>
         public IDisposable Subscribe(string messageSelector, EventHandler<Message> messageHandler) {
             ThrowIfNotInitialized();
