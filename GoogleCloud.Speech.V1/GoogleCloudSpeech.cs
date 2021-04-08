@@ -32,6 +32,8 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
 
         public Emitter<IStreamingSpeechRecognitionResult> Out { get; private set; }
 
+        public Emitter<AudioBuffer> Audio { get; private set; }
+
         private bool mute = false;
 
         public bool Mute {
@@ -78,6 +80,7 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
             // psi pipeline
             In = pipeline.CreateReceiver<(AudioBuffer, bool)>(this, PorcessFrames, nameof(In));
             Out = pipeline.CreateEmitter<IStreamingSpeechRecognitionResult>(this, nameof(Out));
+            Audio = pipeline.CreateEmitter<AudioBuffer>(this, nameof(Audio));
 
             pipeline.PipelineRun += OnPipeRun;
             pipeline.PipelineCompleted += OnPipeCompleted;
@@ -86,7 +89,7 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
         }
 
         private void OnPipeRun(object sender, PipelineRunEventArgs e) {
-            
+
         }
 
         private void OnPipeCompleted(object sender, PipelineCompletedEventArgs e) {
@@ -125,10 +128,10 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
 
         private void Stop() {
             stream?.WriteCompleteAsync().Wait();
-            stream = null;
             streamCancellationTokenSource?.Cancel();
-            streamCancellationTokenSource = null;
             responseTask?.Wait();
+            stream = null;
+            streamCancellationTokenSource = null;
             responseTask = null;
             client = null;
         }
@@ -153,13 +156,14 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
                 AudioContent = ByteString.CopyFrom(audio.Data, 0, audio.Data.Length),
             };
             stream.WriteAsync(request).Wait();
+            Audio.Post(audio, envelope.OriginatingTime);
         }
 
         private async Task ProcessResponses() {//Note: do not use ValueTask
             try {
                 var responseStream = stream.GetResponseStream();
                 while (!streamCancellationTokenSource.Token.IsCancellationRequested) {
-                    while (await responseStream.MoveNextAsync(streamCancellationTokenSource.Token)) {
+                    while (await responseStream.MoveNextAsync(/*streamCancellationTokenSource.Token*/)) {
                         var response = responseStream.Current;
                         var mostStablePortion = response.Results.FirstOrDefault();
                         if (mostStablePortion is null) {
@@ -177,18 +181,18 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
                             postTime = maxPostTime + TimeSpan.FromMilliseconds(1);//TimeSpan.MinValue too small
                             Debug.Assert(postTime > maxPostTime);
                         }
-                        Console.WriteLine(postTime.ToString());
                         Out.Post(result, postTime);//Note: time may be inaccurate
                         maxPostTime = postTime;
                     }
                 }
-            } catch (Grpc.Core.RpcException ex1) when (ex1.StatusCode == Grpc.Core.StatusCode.OutOfRange){
-                //when google cloud does not receiving data continually
+            } catch (Grpc.Core.RpcException ex1) when (ex1.StatusCode == Grpc.Core.StatusCode.OutOfRange) {
+                ;//when google cloud does not receiving data continually
             } catch (Grpc.Core.RpcException ex2) when (ex2.StatusCode == Grpc.Core.StatusCode.Cancelled) {
-                
+                ;
             } catch (Exception ex) {
                 Console.WriteLine(ex.ToString());
             }
+            ;//for debug
         }
     }
 }
