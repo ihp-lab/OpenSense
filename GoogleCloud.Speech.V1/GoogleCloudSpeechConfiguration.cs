@@ -14,6 +14,13 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
             set => SetProperty(ref mute, value);
         }
 
+        private bool atMostOneFinalResultEachVadSession = false;
+
+        public bool AtMostOneFinalResultEachVadSession {
+            get => atMostOneFinalResultEachVadSession;
+            set => SetProperty(ref atMostOneFinalResultEachVadSession, value);
+        }
+
         private string credentialsPath = "set_your_google_cloud_credentials.json";
 
         public string CredentialsPath {
@@ -49,6 +56,7 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
 
         protected override object Instantiate(Pipeline pipeline) => new GoogleCloudSpeech(pipeline, File.ReadAllText(CredentialsPath)) { 
             Mute = Mute,
+            AtMostOneFinalResultEachVadSession = AtMostOneFinalResultEachVadSession,
             LanguageCode = LanguageCode,
             SeparateRecognitionPerChannel = SeparateRecognitionPerChannel,
             PostInterimResults = PostInterimResults,

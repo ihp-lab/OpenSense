@@ -17,21 +17,25 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
         <Label>Mute</Label>
         <CheckBox Grid.Column="1" IsChecked="{Binding Mute}"/>
 
-        <Label Grid.Row="1">Credentials path</Label>
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CredentialsPath}"/>
+        <Label Grid.Row="1">At most one final result each VAD session</Label>
+        <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding AtMostOneFinalResultEachVadSession}"/>
 
-        <Label Grid.Row="2">Language code</Label>
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding LanguageCode}"/>
+        <Label Grid.Row="2">Credentials path</Label>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CredentialsPath}"/>
 
-        <Label Grid.Row="3">Separate recognition per channel</Label>
-        <CheckBox Grid.Row="3" Grid.Column="1" IsChecked="{Binding SeparateRecognitionPerChannel}"/>
+        <Label Grid.Row="3">Language code</Label>
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding LanguageCode}"/>
 
-        <Label Grid.Row="4">Post interim results</Label>
-        <CheckBox Grid.Row="4" Grid.Column="1" IsChecked="{Binding PostInterimResults}"/>
+        <Label Grid.Row="4">Separate recognition per channel</Label>
+        <CheckBox Grid.Row="4" Grid.Column="1" IsChecked="{Binding SeparateRecognitionPerChannel}"/>
+
+        <Label Grid.Row="5">Post interim results</Label>
+        <CheckBox Grid.Row="5" Grid.Column="1" IsChecked="{Binding PostInterimResults}"/>
     </Grid>
 </UserControl>
