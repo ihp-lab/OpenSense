@@ -14,9 +14,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace OpenSense.Wpf.Component.GoogleCloud.Speech.V1 {
-    /// <summary>
-    /// GoogleCloudSpeechInstanceControl.xaml 的交互逻辑
-    /// </summary>
     public partial class GoogleCloudSpeechInstanceControl : UserControl {
         public GoogleCloudSpeechInstanceControl() {
             InitializeComponent();

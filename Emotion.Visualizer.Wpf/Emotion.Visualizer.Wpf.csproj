@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>OpenSense.Wpf.Component.Emotion.Visualizer</AssemblyName>
     <RootNamespace>OpenSense.Wpf.Component.Emotion.Visualizer</RootNamespace>

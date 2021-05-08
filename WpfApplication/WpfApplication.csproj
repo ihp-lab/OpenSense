@@ -40,7 +40,7 @@
     <PackageReference Include="System.Composition" Version="1.4.1" />
   </ItemGroup>
 
-  <!--Minimal Project References：You may add project references to make this app shipping with components. If you want a clean version of app, just copy and paste these reference.
+  <!--Minimal Project References: If you want a clean version of app, just copy and paste these reference. You may add additional project references to make this app shipping with components. 
   <ItemGroup>
     <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
     <ProjectReference Include="..\Pipeline\Pipeline.csproj" />
@@ -50,20 +50,43 @@
   </ItemGroup>
   -->
 
+  <!--All-In-One Project References: All available components are added as dependencies-->
   <ItemGroup>
-    <ProjectReference Include="..\Audio.Visualizer.Wpf\Audio.Visualizer.Wpf.csproj" />
+    <!--Minimal project references: Cannot run without these-->
     <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
-    <ProjectReference Include="..\Imaging.Visualizer.Wpf\Imaging.Visualizer.Wpf.csproj" />
-    <ProjectReference Include="..\OpenFace.Visualizer.Wpf\OpenFace.Visualizer.Wpf.csproj" />
-    <ProjectReference Include="..\OpenFace.Windows.Wpf\OpenFace.Windows.Wpf.csproj" />
-    <ProjectReference Include="..\OpenSmile.Visualizer.Wpf\OpenSmile.Visualizer.Wpf.csproj" />
-    <ProjectReference Include="..\OpenSmile.Windows.Wpf\OpenSmile.Windows.Wpf.csproj" />
     <ProjectReference Include="..\Pipeline\Pipeline.csproj" />
-    <ProjectReference Include="..\Psi.Audio.Windows.Wpf\Psi.Audio.Windows.Wpf.csproj" />
-    <ProjectReference Include="..\Psi.Media.Windows.Wpf\Psi.Media.Windows.Wpf.csproj" />
     <ProjectReference Include="..\Psi.Wpf.Common\Psi.Wpf.Common.csproj" />
     <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
     <ProjectReference Include="..\WpfWidgetContract\WpfWidgetContract.csproj" />
+
+    <!--Additional references: All project names ending with ".Wpf"-->
+    <ProjectReference Include="..\Audio.Visualizer.Wpf\Audio.Visualizer.Wpf.csproj" />
+    <ProjectReference Include="..\AzureKinect.Visualizer.Wpf\AzureKinect.Visualizer.Wpf.csproj" />
+    <ProjectReference Include="..\Biopac.Visualizer.Wpf\Biopac.Visualizer.Wpf.csproj" />
+    <ProjectReference Include="..\Builtin.Visualizer.Wpf\Builtin.Visualizer.Wpf.csproj" />
+    <ProjectReference Include="..\DisplayPoiEstimatorBuilder.Wpf\DisplayPoiEstimatorBuilder.Wpf.csproj" />
+    <ProjectReference Include="..\Emotion.Visualizer.Wpf\Emotion.Visualizer.Wpf.csproj" />
+    <ProjectReference Include="..\EyePointOfInterest.Visualizer.Wpf\EyePointOfInterest.Visualizer.Wpf.csproj" />
+    <ProjectReference Include="..\GoogleCloud.Speech.V1.Wpf\GoogleCloud.Speech.V1.Wpf.csproj" />
+    <ProjectReference Include="..\HeadGesture.Visualizer.Wpf\HeadGesture.Visualizer.Wpf.csproj" />
+    <ProjectReference Include="..\Imaging.Visualizer.Wpf\Imaging.Visualizer.Wpf.csproj" />
+    <ProjectReference Include="..\Imaging.Wpf\Imaging.Wpf.csproj" />
+    <ProjectReference Include="..\OpenFace.Visualizer.Wpf\OpenFace.Visualizer.Wpf.csproj" />
+    <ProjectReference Include="..\OpenFace.Windows.Wpf\OpenFace.Windows.Wpf.csproj" />
+    <ProjectReference Include="..\OpenPose.Visualizer.Wpf\OpenPose.Visualizer.Wpf.csproj" />
+    <ProjectReference Include="..\OpenPose.Wpf\OpenPose.Wpf.csproj" />
+    <ProjectReference Include="..\OpenSmile.Visualizer.Wpf\OpenSmile.Visualizer.Wpf.csproj" />
+    <ProjectReference Include="..\OpenSmile.Windows.Wpf\OpenSmile.Windows.Wpf.csproj" />
+    <ProjectReference Include="..\Psi.Audio.Windows.Wpf\Psi.Audio.Windows.Wpf.csproj" />
+    <ProjectReference Include="..\Psi.Audio.Wpf\Psi.Audio.Wpf.csproj" />
+    <ProjectReference Include="..\Psi.AzureKinect.Wpf\Psi.AzureKinect.Wpf.csproj" />
+    <ProjectReference Include="..\Psi.CognitiveServices.Face.Wpf\Psi.CognitiveServices.Face.Wpf.csproj" />
+    <ProjectReference Include="..\Psi.CognitiveServices.Speech.Wpf\Psi.CognitiveServices.Speech.Wpf.csproj" />
+    <ProjectReference Include="..\Psi.Imaging.Windows.Wpf\Psi.Imaging.Windows.Wpf.csproj" />
+    <ProjectReference Include="..\Psi.Kinect.Windows.Wpf\Psi.Kinect.Windows.Wpf.csproj" />
+    <ProjectReference Include="..\Psi.Media.Windows.Wpf\Psi.Media.Windows.Wpf.csproj" />
+    <ProjectReference Include="..\Psi.Speech.Visualizer.Wpf\Psi.Speech.Visualizer.Wpf.csproj" />
+    <ProjectReference Include="..\Psi.Speech.Windows.Wpf\Psi.Speech.Windows.Wpf.csproj" />
   </ItemGroup>
 
   <ItemGroup>
