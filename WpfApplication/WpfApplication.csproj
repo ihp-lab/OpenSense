@@ -51,8 +51,16 @@
   -->
 
   <ItemGroup>
+    <ProjectReference Include="..\Audio.Visualizer.Wpf\Audio.Visualizer.Wpf.csproj" />
     <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
+    <ProjectReference Include="..\Imaging.Visualizer.Wpf\Imaging.Visualizer.Wpf.csproj" />
+    <ProjectReference Include="..\OpenFace.Visualizer.Wpf\OpenFace.Visualizer.Wpf.csproj" />
+    <ProjectReference Include="..\OpenFace.Windows.Wpf\OpenFace.Windows.Wpf.csproj" />
+    <ProjectReference Include="..\OpenSmile.Visualizer.Wpf\OpenSmile.Visualizer.Wpf.csproj" />
+    <ProjectReference Include="..\OpenSmile.Windows.Wpf\OpenSmile.Windows.Wpf.csproj" />
     <ProjectReference Include="..\Pipeline\Pipeline.csproj" />
+    <ProjectReference Include="..\Psi.Audio.Windows.Wpf\Psi.Audio.Windows.Wpf.csproj" />
+    <ProjectReference Include="..\Psi.Media.Windows.Wpf\Psi.Media.Windows.Wpf.csproj" />
     <ProjectReference Include="..\Psi.Wpf.Common\Psi.Wpf.Common.csproj" />
     <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
     <ProjectReference Include="..\WpfWidgetContract\WpfWidgetContract.csproj" />
