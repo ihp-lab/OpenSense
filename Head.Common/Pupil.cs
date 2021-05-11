@@ -1,23 +1,27 @@
 ﻿using System;
-using MathNet.Spatial.Euclidean;
+using System.Numerics;
 using Newtonsoft.Json;
 
 namespace OpenSense.Component.Head.Common {
     [Serializable]
     public class Pupil : IEquatable<Pupil> {
 
-        public readonly Point3D Left;
+        public readonly Vector3 Left;
 
-        public readonly Point3D Right;
+        public readonly Vector3 Right;
 
         [JsonConstructor]
-        public Pupil(Point3D left, Point3D right) {
+        public Pupil(Vector3 left, Vector3 right) {
             Left = left;
             Right = right;
         }
 
         public bool Equals(Pupil other) {
             return Left.Equals(other.Left) && Right.Equals(other.Right);
+        }
+
+        public override int GetHashCode() {
+            return HashCode.Combine(Left.GetHashCode(), Right.GetHashCode());
         }
 
         public override bool Equals(object obj) {

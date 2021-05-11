@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using MathNet.Spatial.Euclidean;
+using System.Numerics;
 using Newtonsoft.Json;
 
 namespace OpenSense.Component.Head.Common {
@@ -17,28 +17,28 @@ namespace OpenSense.Component.Head.Common {
         /// Absolute gaze angle to camera in radian、
         /// mean of eyes
         /// </summary>
-        public readonly Point2D Angle;
+        public readonly Vector2 Angle;
 
-        public readonly ImmutableArray<Point2D> Landmarks;
+        public readonly ImmutableArray<Vector2> Landmarks;
 
-        public readonly ImmutableArray<Point3D> Landmarks3D;
-
-        [JsonIgnore]
-        public readonly ImmutableArray<Point2D> VisiableLandmarks;
+        public readonly ImmutableArray<Vector3> Landmarks3D;
 
         [JsonIgnore]
-        public readonly ImmutableArray<Tuple<Point2D, Point2D>> IndicatorLines;
+        public readonly ImmutableArray<Vector2> VisiableLandmarks;
+
+        [JsonIgnore]
+        public readonly ImmutableArray<ValueTuple<Vector2, Vector2>> IndicatorLines;
 
         [JsonConstructor]
-        public Gaze(Pupil gazeVector, Point2D angle, IEnumerable<Point2D> landmarks, IEnumerable<Point3D> landmarks3D) : this(gazeVector, angle, landmarks, Array.Empty<Point2D>(), landmarks3D, Array.Empty<Tuple<Point2D, Point2D>>()) { }
+        public Gaze(Pupil gazeVector, Vector2 angle, IEnumerable<Vector2> landmarks, IEnumerable<Vector3> landmarks3D) : this(gazeVector, angle, landmarks, Array.Empty<Vector2>(), landmarks3D, Array.Empty<ValueTuple<Vector2, Vector2>>()) { }
 
         public Gaze(
             Pupil gazeVector, 
-            Point2D angle,
-            IEnumerable<Point2D> landmarks,
-            IEnumerable<Point2D> visiableLandmarks,
-            IEnumerable<Point3D> landmarks3D,
-            IEnumerable<Tuple<Point2D, Point2D>> indicatorLines
+            Vector2 angle,
+            IEnumerable<Vector2> landmarks,
+            IEnumerable<Vector2> visiableLandmarks,
+            IEnumerable<Vector3> landmarks3D,
+            IEnumerable<ValueTuple<Vector2, Vector2>> indicatorLines
             ) {
             IndicatorLines = indicatorLines.ToImmutableArray();
             Landmarks = landmarks.ToImmutableArray();
@@ -51,8 +51,12 @@ namespace OpenSense.Component.Head.Common {
         [JsonIgnore]
         public Pupil PupilPosition {
             get {
-                var left = Point3D.Centroid(Landmarks3D.Skip(0).Take(8));
-                var right = Point3D.Centroid(Landmarks3D.Skip(28).Take(8));
+                var leftLandmarks = Landmarks3D.Skip(0).Take(8).ToList();
+                var leftSum = leftLandmarks.Aggregate((a, b) => a + b);
+                var left = leftSum / leftLandmarks.Count;
+                var rightLandmarks = Landmarks3D.Skip(28).Take(8).ToList();
+                var rightSum = rightLandmarks.Aggregate((a, b) => a + b);
+                var right = rightSum / rightLandmarks.Count;
                 return new Pupil(left, right);
             }
         }

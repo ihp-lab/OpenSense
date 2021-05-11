@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using MathNet.Spatial.Euclidean;
+using System.Numerics;
 using Newtonsoft.Json;
 
 namespace OpenSense.Component.Head.Common {
@@ -13,29 +13,29 @@ namespace OpenSense.Component.Head.Common {
         /// <summary>
         /// Absolute head postion to camera in millimeter
         /// </summary>
-        public readonly Point3D Position;
+        public readonly Vector3 Position;
 
         /// <summary>
         /// Absolute head rotation to camera in radian
         /// </summary>
-        public readonly Point3D Angle;
+        public readonly Vector3 Angle;
 
-        public readonly ImmutableArray<Point2D> Landmarks;
+        public readonly ImmutableArray<Vector2> Landmarks;
 
-        public readonly ImmutableArray<Point2D> VisiableLandmarks;
+        public readonly ImmutableArray<Vector2> VisiableLandmarks;
 
-        public readonly ImmutableArray<Point3D> Landmarks3D;
+        public readonly ImmutableArray<Vector3> Landmarks3D;
 
-        public readonly ImmutableArray<Tuple<Point2D, Point2D>> IndicatorLines;
+        public readonly ImmutableArray<ValueTuple<Vector2, Vector2>> IndicatorLines;
 
         [JsonConstructor]
         public HeadPose(
-            Point3D position,
-            Point3D angle,
-            ImmutableArray<Point2D> landmarks,
-            ImmutableArray<Point2D> visiableLandmarks,
-            ImmutableArray<Point3D> landmarks3D,
-            ImmutableArray<Tuple<Point2D, Point2D>> indicatorLines
+            Vector3 position,
+            Vector3 angle,
+            ImmutableArray<Vector2> landmarks,
+            ImmutableArray<Vector2> visiableLandmarks,
+            ImmutableArray<Vector3> landmarks3D,
+            ImmutableArray<ValueTuple<Vector2, Vector2>> indicatorLines
             ) {
             IndicatorLines = indicatorLines;
             Landmarks = landmarks;
@@ -47,13 +47,13 @@ namespace OpenSense.Component.Head.Common {
 
         public HeadPose(
             IList<float> data, 
-            IEnumerable<Point2D> landmarks,
-            IEnumerable<Point2D> visiableLandmarks,
-            IEnumerable<Point3D> landmarks3D,
-            IEnumerable<Tuple<Point2D, Point2D>> indicatorLines
+            IEnumerable<Vector2> landmarks,
+            IEnumerable<Vector2> visiableLandmarks,
+            IEnumerable<Vector3> landmarks3D,
+            IEnumerable<ValueTuple<Vector2, Vector2>> indicatorLines
             ) : this(
-                new Point3D(data[0], data[1], data[2]), 
-                new Point3D(data[3], data[4], data[5]), 
+                new Vector3(data[0], data[1], data[2]), 
+                new Vector3(data[3], data[4], data[5]), 
                 landmarks.ToImmutableArray(), 
                 visiableLandmarks.ToImmutableArray(), 
                 landmarks3D.ToImmutableArray(),
@@ -61,7 +61,7 @@ namespace OpenSense.Component.Head.Common {
                 ) {}
 
         [JsonIgnore]
-        public Point3D NoseTip3D => Landmarks3D[30];
+        public Vector3 NoseTip3D => Landmarks3D[30];
 
         #region To accommodate old code
         public double this[int index] {

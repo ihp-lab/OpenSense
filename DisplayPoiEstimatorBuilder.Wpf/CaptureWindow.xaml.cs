@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
@@ -13,7 +14,6 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using MathNet.Spatial.Euclidean;
 using Microsoft.Psi;
 using Microsoft.Psi.Media;
 using OpenSense.Component.EyePointOfInterest.Common;
@@ -253,20 +253,20 @@ namespace OpenSense.Wpf.Widget.DisplayPoiEstimatorBuilder {
             var openface = new OpenFace(pipeline) { CameraCalibFx = WebcamFx, CameraCalibFy = WebcamFy, CameraCalibCx = WebcamCx, CameraCalibCy = WebcamCy };
             flip.PipeTo(openface.In, DeliveryPolicy.SynchronousOrThrottle);
             generator = new DisplayCoordianteGenerator(pipeline);
-            var record = openface.HeadPoseAndGazeOut.Join(generator.Out, Reproducible.Nearest<Point2D>(), (gp, display) => new GazeToDisplayCoordinateMappingRecord(gp, display), DeliveryPolicy.SynchronousOrThrottle, DeliveryPolicy.SynchronousOrThrottle);
+            var record = openface.HeadPoseAndGazeOut.Join(generator.Out, Reproducible.Nearest<Vector2>(), (gp, display) => new GazeToDisplayCoordinateMappingRecord(gp, display), DeliveryPolicy.SynchronousOrThrottle, DeliveryPolicy.SynchronousOrThrottle);
             record.Do((d, e) => {
                 AddRecord(d, e);
             }, DeliveryPolicy.SynchronousOrThrottle);
         }
 
-        private class DisplayCoordianteGenerator : IProducer<Point2D> {
+        private class DisplayCoordianteGenerator : IProducer<Vector2> {
 
-            public Emitter<Point2D> Out { get; private set; }
+            public Emitter<Vector2> Out { get; private set; }
 
             private DateTime lastTime;
 
             public DisplayCoordianteGenerator(Pipeline pipeline) {
-                Out = pipeline.CreateEmitter<Point2D>(this, nameof(Out));
+                Out = pipeline.CreateEmitter<Vector2>(this, nameof(Out));
             }
 
             public void Post(EllipseGeometry ellipse, FrameworkElement frameworkElement) {
@@ -276,7 +276,9 @@ namespace OpenSense.Wpf.Widget.DisplayPoiEstimatorBuilder {
                 }
                 lastTime = now;
                 var raw = ellipse.Center;
-                var relative = new Point2D(raw.X / frameworkElement.ActualWidth, raw.Y / frameworkElement.ActualHeight);
+                var relativeX = (float)(raw.X / frameworkElement.ActualWidth);
+                var relativeY = (float)(raw.Y / frameworkElement.ActualHeight);
+                var relative = new Vector2(relativeX, relativeY);
                 Out.Post(relative, now);
             }
         }

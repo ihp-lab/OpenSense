@@ -1,5 +1,5 @@
 ﻿using System;
-using MathNet.Spatial.Euclidean;
+using System.Numerics;
 using Newtonsoft.Json;
 using OpenSense.Component.Head.Common;
 
@@ -15,16 +15,16 @@ namespace OpenSense.Component.EyePointOfInterest.Common {
         /// <summary>
         /// 0 - 1 relative coordinate
         /// </summary>
-        public readonly Point2D Display;
+        public readonly Vector2 Display;
 
         [JsonConstructor]
-        public GazeToDisplayCoordinateMappingRecord(Gaze gaze, HeadPose headPose, Point2D display) {
+        public GazeToDisplayCoordinateMappingRecord(Gaze gaze, HeadPose headPose, Vector2 display) {
             Gaze = gaze;
             HeadPose = headPose;
             Display = display;
         }
 
-        public GazeToDisplayCoordinateMappingRecord(HeadPoseAndGaze headPoseAndGaze, Point2D display) : this(headPoseAndGaze.Gaze, headPoseAndGaze.HeadPose, display) {}
+        public GazeToDisplayCoordinateMappingRecord(HeadPoseAndGaze headPoseAndGaze, Vector2 display) : this(headPoseAndGaze.Gaze, headPoseAndGaze.HeadPose, display) {}
 
         [JsonIgnore]
         public HeadPoseAndGaze HeadPoseAndGaze => new HeadPoseAndGaze(HeadPose, Gaze);

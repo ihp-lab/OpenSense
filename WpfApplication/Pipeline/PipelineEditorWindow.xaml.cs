@@ -91,13 +91,19 @@ namespace OpenSense.Wpf.Pipeline {
                 ContentControlComponentBasics.Content = new InstanceBasicInformationControl(configuration);
                 var connection = new InstanceConnectionControl(configuration, configurations);
                 ContentControlConnection.Children.Add(connection);
-                var control = new ConfigurationControlCreatorManager().Create(configuration);
-                if (control is null) {
-                    control = new DefaultConfigurationControl();
+                try {
+                    var manager = new ConfigurationControlCreatorManager();//throws ReflectionTypeLoadException
+                    var control = manager.Create(configuration);
+                    if (control is null) {
+                        control = new DefaultConfigurationControl();
+                    }
+                    ContentControlSettings.Children.Add(control);
+                } catch (System.Reflection.ReflectionTypeLoadException refEx) {
+                    var errorMessage = "Unable to load the following assemblies. \nThis is because versions of assemblies mismatched. \nPlease verify versions and signatures of the following assemblies:\n\n"
+                        + string.Join("\n", refEx.LoaderExceptions.Cast<FileLoadException>().Select(ex => ex.FileName));
+                    MessageBox.Show(this, errorMessage, "Failed to load assemblies", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-                ContentControlSettings.Children.Add(control);
             }
-
         }
 
         private void ButtonLoad_Click(object sender, RoutedEventArgs e) {

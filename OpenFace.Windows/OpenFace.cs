@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
-using MathNet.Spatial.Euclidean;
 using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
 using OpenFaceInterop;
@@ -158,31 +158,31 @@ namespace OpenSense.Component.OpenFace {
                             //Dictionary<string, double> aus = faceAnalyser.GetCurrentAUsReg();
 
                             // Pose.
-                            var landmarks = landmarkDetector.CalculateAllLandmarks().Select(m => new Point2D(m.Item1, m.Item2));
-                            var visiableLandmarks = landmarkDetector.CalculateVisibleLandmarks().Select(m => new Point2D(m.Item1, m.Item2));
-                            var landmarks3D = landmarkDetector.Calculate3DLandmarks(CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy).Select(m => new Point3D(m.Item1, m.Item2, m.Item3));
+                            var landmarks = landmarkDetector.CalculateAllLandmarks().Select(m => new Vector2(m.Item1, m.Item2));
+                            var visiableLandmarks = landmarkDetector.CalculateVisibleLandmarks().Select(m => new Vector2(m.Item1, m.Item2));
+                            var landmarks3D = landmarkDetector.Calculate3DLandmarks(CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy).Select(m => new Vector3(m.Item1, m.Item2, m.Item3));
                             var poseData = new List<float>();
                             landmarkDetector.GetPose(poseData, CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy);
                             var box = landmarkDetector.CalculateBox(CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy);
-                            var boxConverted = box.Select(line => new Tuple<Point2D, Point2D>(new Point2D((float)line.Item1.X, (float)line.Item1.Y), new Point2D((float)line.Item2.X, (float)line.Item2.Y)));
+                            var boxConverted = box.Select(line => (new Vector2((float)line.Item1.X, (float)line.Item1.Y), new Vector2((float)line.Item2.X, (float)line.Item2.Y)));
                             var headPose = new HeadPose(poseData, landmarks, visiableLandmarks, landmarks3D, boxConverted);
                             HeadPoseOut.Post(headPose, envelope.OriginatingTime);
 
                             // Gaze.
                             gazeAnalyser.AddNextFrame(landmarkDetector, true, CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy);
-                            var eyeLandmarks = landmarkDetector.CalculateAllEyeLandmarks().Select(m => new Point2D(m.Item1, m.Item2));
-                            var visiableEyeLandmarks = landmarkDetector.CalculateVisibleEyeLandmarks().Select(m => new Point2D(m.Item1, m.Item2));
-                            var eyeLandmarks3D = landmarkDetector.CalculateAllEyeLandmarks3D(CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy).Select(m => new Point3D(m.Item1, m.Item2, m.Item3));
+                            var eyeLandmarks = landmarkDetector.CalculateAllEyeLandmarks().Select(m => new Vector2(m.Item1, m.Item2));
+                            var visiableEyeLandmarks = landmarkDetector.CalculateVisibleEyeLandmarks().Select(m => new Vector2(m.Item1, m.Item2));
+                            var eyeLandmarks3D = landmarkDetector.CalculateAllEyeLandmarks3D(CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy).Select(m => new Vector3(m.Item1, m.Item2, m.Item3));
                             var (leftPupil, rightPupil) = gazeAnalyser.GetGazeCamera();
                             var (angleX, angleY) = gazeAnalyser.GetGazeAngle();//Not accurate
                             var gazeLines = gazeAnalyser.CalculateGazeLines(CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy);
-                            var gazeLinesConverted = gazeLines.Select(line => new Tuple<Point2D, Point2D>(new Point2D((float)line.Item1.X, (float)line.Item1.Y), new Point2D((float)line.Item2.X, (float)line.Item2.Y)));
+                            var gazeLinesConverted = gazeLines.Select(line => (new Vector2((float)line.Item1.X, (float)line.Item1.Y), new Vector2((float)line.Item2.X, (float)line.Item2.Y)));
                             var gaze = new Gaze(
                                     new Pupil(
-                                            new Point3D(leftPupil.Item1, leftPupil.Item2, leftPupil.Item3),
-                                            new Point3D(rightPupil.Item1, rightPupil.Item2, rightPupil.Item3)
+                                            new Vector3(leftPupil.Item1, leftPupil.Item2, leftPupil.Item3),
+                                            new Vector3(rightPupil.Item1, rightPupil.Item2, rightPupil.Item3)
                                         ),
-                                    new Point2D(angleX, angleY),
+                                    new Vector2(angleX, angleY),
                                     eyeLandmarks,
                                     visiableEyeLandmarks,
                                     eyeLandmarks3D,

@@ -1,4 +1,4 @@
-﻿using MathNet.Spatial.Euclidean;
+﻿using System.Numerics;
 using Microsoft.ML.Data;
 using OpenSense.Component.EyePointOfInterest.Common;
 using OpenSense.Component.Head.Common;
@@ -36,7 +36,7 @@ namespace OpenSense.Component.EyePointOfInterest.Regression {
             DisplayY = (float)record.Display.Y;
         }
 
-        public RegressionRecord(HeadPoseAndGaze headPoseAndGaze) :this(new GazeToDisplayCoordinateMappingRecord(headPoseAndGaze, new Point2D())) {}
+        public RegressionRecord(HeadPoseAndGaze headPoseAndGaze) :this(new GazeToDisplayCoordinateMappingRecord(headPoseAndGaze, new Vector2())) {}
     }
 
     public class RegressionPrediction {

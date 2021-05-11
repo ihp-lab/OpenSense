@@ -11,8 +11,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="1.5.2" />
     <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="1.5.2" />
-    <PackageReference Include="Microsoft.Psi.Imaging" Version="0.13.38.2-beta" />
-    <PackageReference Include="System.Composition" Version="1.4.1" />
+    <PackageReference Include="Microsoft.Psi.Imaging" Version="0.15.49.1-beta" />
+    <PackageReference Include="System.Composition" Version="5.0.1" />
   </ItemGroup>
 
   <ItemGroup>

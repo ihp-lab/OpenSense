@@ -8,7 +8,6 @@ using MathNet.Spatial.Units;
 using OpenSense.Component.EyePointOfInterest.Common;
 using OpenSense.Component.Head.Common;
 using static System.Math;
-using Plane = MathNet.Spatial.Euclidean.Plane;
 
 namespace OpenSense.Component.EyePointOfInterest.SpatialTracking {
 
@@ -51,7 +50,7 @@ namespace OpenSense.Component.EyePointOfInterest.SpatialTracking {
         }
 
         private Vector2D PupilCornerDistance(Gaze gaze, HeadPose headPose) {
-            var leftPupilCornerVector = gaze.PupilPosition.Left - gaze.InnerEyeCornerPosition.Left;
+            var leftPupilCornerVector = gaze.PupilPosition.Left.ToMathNetPoint3D() - gaze.InnerEyeCornerPosition.Left.ToMathNetPoint3D();
             
             var headAngel = headPose.Angle;
             var headPitch = Angle.FromRadians(headAngel.X);
@@ -82,8 +81,8 @@ namespace OpenSense.Component.EyePointOfInterest.SpatialTracking {
             Samples = data.ToArray();
 
             var predict = data.Select(r => Predict(new HeadPoseAndGaze(r.HeadPose, r.Gaze))).ToArray();
-            var rSquaredX = GoodnessOfFit.RSquared(predict.Select(p => (double)p.X), data.Select(d => d.Display.X));
-            var rSquaredY = GoodnessOfFit.RSquared(predict.Select(p => (double)p.Y), data.Select(d => d.Display.Y));
+            var rSquaredX = GoodnessOfFit.RSquared(predict.Select(p => (double)p.X), data.Select(d => d.Display.X).Select(d => (double)d));
+            var rSquaredY = GoodnessOfFit.RSquared(predict.Select(p => (double)p.Y), data.Select(d => d.Display.Y).Select(d => (double)d));
             return new Vector2((float)rSquaredX, (float)rSquaredY);
         }
 
@@ -93,9 +92,9 @@ namespace OpenSense.Component.EyePointOfInterest.SpatialTracking {
             var displayNormRealign = UnitVector3D.YAxis;
             var displayXPositiveRealign = UnitVector3D.XAxis;
 
-            var refHeadPositionRaw = Point3D.Centroid(Samples.Select(r => r.HeadPose.Position));
+            var refHeadPositionRaw = Point3D.Centroid(Samples.Select(r => r.HeadPose.Position).Select(r => r.ToMathNetPoint3D()));
             var refHeadPosition = ConvertPointFromOpenFaceSpaceToMathNetSpace(refHeadPositionRaw);
-            var refHeadRotationRaw = Point3D.Centroid(Samples.Select(r => r.HeadPose.Angle));
+            var refHeadRotationRaw = Point3D.Centroid(Samples.Select(r => r.HeadPose.Angle).Select(r => r.ToMathNetPoint3D()));
             var refHeadRotation = ConvertAngelFromOpenFaceSpaceToMathNetSpace(refHeadRotationRaw);
             var refHeadRotationCoord = camera
                 .RotateCoordSysAroundVector(UnitVector3D.XAxis, Angle.FromRadians(refHeadRotation.X))
@@ -111,10 +110,10 @@ namespace OpenSense.Component.EyePointOfInterest.SpatialTracking {
             var refDisplayNorm = displayNormRealign.TransformBy(refHeadRotationUnalign).Normalize();
             var refDisplayXPositive = displayXPositiveRealign.TransformBy(refHeadRotationUnalign).Normalize();
             var refDisplayCentroid = refHeadPosition + HeadDisplayDistance * refDisplayNorm;
-            var refDisplayPlane = new Plane(refDisplayCentroid, refDisplayNorm);
+            var refDisplayPlane = new MathNet.Spatial.Euclidean.Plane(refDisplayCentroid, refDisplayNorm);
 
-            var headPosition = ConvertPointFromOpenFaceSpaceToMathNetSpace(data.HeadPose.Position);
-            var headRotation = ConvertAngelFromOpenFaceSpaceToMathNetSpace(data.HeadPose.Angle);
+            var headPosition = ConvertPointFromOpenFaceSpaceToMathNetSpace(data.HeadPose.Position.ToMathNetPoint3D());
+            var headRotation = ConvertAngelFromOpenFaceSpaceToMathNetSpace(data.HeadPose.Angle.ToMathNetPoint3D());
             var headRotationCoord = camera
                 .RotateCoordSysAroundVector(UnitVector3D.XAxis, Angle.FromRadians(headRotation.X))
                 .RotateCoordSysAroundVector(UnitVector3D.ZAxis, Angle.FromRadians(headRotation.Z))
@@ -125,9 +124,9 @@ namespace OpenSense.Component.EyePointOfInterest.SpatialTracking {
             var displayNorm = displayNormRealign.TransformBy(headRotationUnalign).Normalize();
             var displayXPositive = displayXPositiveRealign.TransformBy(headRotationUnalign).Normalize();
             var displayCentroid = headPosition + HeadDisplayDistance * displayNorm;
-            var displayPlane = new Plane(displayCentroid, displayNorm);
+            var displayPlane = new MathNet.Spatial.Euclidean.Plane(displayCentroid, displayNorm);
 
-            var calibPoints = Samples.Select(r => CalibPointOnDisplay(displayCentroid, displayNorm, displayXPositive, displaySize, r.Display)).ToArray();
+            var calibPoints = Samples.Select(r => CalibPointOnDisplay(displayCentroid, displayNorm, displayXPositive, displaySize, r.Display.ToMathNetPoint2D())).ToArray();
             var calibRays = calibPoints.Select(p => new Ray3D(headPosition, p - headPosition)).ToArray();
             var transformedCalibPoints = calibRays.Select(r => (Point3D)r.IntersectionWith(refDisplayPlane)).ToArray();
             var transformedRelatives = transformedCalibPoints.Select(p => RelativeToDisplay(refDisplayCentroid, refDisplayNorm, refDisplayXPositive, displaySize, p)).ToArray();

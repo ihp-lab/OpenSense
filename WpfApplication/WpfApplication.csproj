@@ -37,7 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Composition" Version="1.4.1" />
+    <PackageReference Include="System.Composition" Version="5.0.1" />
   </ItemGroup>
 
   <!--Minimal Project References: If you want a clean version of app, just copy and paste these reference. You may add additional project references to make this app shipping with components. 
@@ -60,11 +60,11 @@
     <ProjectReference Include="..\WpfWidgetContract\WpfWidgetContract.csproj" />
 
     <!--Additional references: All project names ending with ".Wpf"-->
+    <!--Components-->
     <ProjectReference Include="..\Audio.Visualizer.Wpf\Audio.Visualizer.Wpf.csproj" />
     <ProjectReference Include="..\AzureKinect.Visualizer.Wpf\AzureKinect.Visualizer.Wpf.csproj" />
     <ProjectReference Include="..\Biopac.Visualizer.Wpf\Biopac.Visualizer.Wpf.csproj" />
     <ProjectReference Include="..\Builtin.Visualizer.Wpf\Builtin.Visualizer.Wpf.csproj" />
-    <ProjectReference Include="..\DisplayPoiEstimatorBuilder.Wpf\DisplayPoiEstimatorBuilder.Wpf.csproj" />
     <ProjectReference Include="..\Emotion.Visualizer.Wpf\Emotion.Visualizer.Wpf.csproj" />
     <ProjectReference Include="..\EyePointOfInterest.Visualizer.Wpf\EyePointOfInterest.Visualizer.Wpf.csproj" />
     <ProjectReference Include="..\GoogleCloud.Speech.V1.Wpf\GoogleCloud.Speech.V1.Wpf.csproj" />
@@ -87,6 +87,9 @@
     <ProjectReference Include="..\Psi.Media.Windows.Wpf\Psi.Media.Windows.Wpf.csproj" />
     <ProjectReference Include="..\Psi.Speech.Visualizer.Wpf\Psi.Speech.Visualizer.Wpf.csproj" />
     <ProjectReference Include="..\Psi.Speech.Windows.Wpf\Psi.Speech.Windows.Wpf.csproj" />
+    <!--Widgets-->
+    <ProjectReference Include="..\DisplayPoiEstimatorBuilder.Wpf\DisplayPoiEstimatorBuilder.Wpf.csproj" />
+    <ProjectReference Include="..\OpenSmileConfigurationConverter.Wpf\OpenSmileConfigurationConverter.Wpf.csproj" />
   </ItemGroup>
 
   <ItemGroup>
