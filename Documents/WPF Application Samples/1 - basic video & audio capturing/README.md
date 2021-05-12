@@ -29,3 +29,7 @@ This sample is for introducing basic UI usage for building and exectuing a pipel
 + Add a new instance of the component with name `OpenSense.Component.Audio.Visualizer.AudioVisualizer`.
 + Connect the `In` input of `AudioVisualizer` to the `Audio` output of `MediaCapture`.
 + Click the `File` -> `Save as` menu button to save this pipeline configuration.
+
+## Tips
+
++ Use `Microsoft.Psi.Audio.AudioCapture` to capture audio only.
