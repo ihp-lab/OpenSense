@@ -16,7 +16,7 @@ namespace OpenSense.Component.EyePointOfInterest.Common {
 
         PoiOnDisplayEstimatorConfiguration Save();
 
-        Vector2 Predict(HeadPoseAndGaze data);
+        Vector2 Predict(PoseAndGaze data);
     }
 
     

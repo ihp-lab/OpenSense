@@ -7,7 +7,7 @@ using Microsoft.Psi.Components;
 using OpenSense.Component.Head.Common;
 
 namespace OpenSense.Component.HeadGesture {
-    internal class HeadposeRNN : IConsumerProducer<HeadPose, float> {
+    internal class HeadposeRNN : IConsumerProducer<Pose, float> {
         private string modelFilePath;
         private OnnxRNNScorer modelScorer;
         private MLContext mlContext;
@@ -21,7 +21,7 @@ namespace OpenSense.Component.HeadGesture {
         public HeadposeRNN(Pipeline pipeline, string modelNameFile, ModelSettings modelSetting) {
 
             // Create the receiver.
-            In = pipeline.CreateReceiver<HeadPose>(this, ReceiveData, nameof(In));
+            In = pipeline.CreateReceiver<Pose>(this, ReceiveData, nameof(In));
 
             // Create the emitter.
             Out = pipeline.CreateEmitter<float>(this, nameof(Out));
@@ -42,7 +42,7 @@ namespace OpenSense.Component.HeadGesture {
         /// <summary>
         /// Receiver that encapsulates the data input stream.
         /// </summary>
-        public Receiver<HeadPose> In {
+        public Receiver<Pose> In {
             get;
             private set;
         }
@@ -62,7 +62,7 @@ namespace OpenSense.Component.HeadGesture {
             }
             return output;
         }
-        private void ReceiveData(HeadPose input, Envelope envelope) {
+        private void ReceiveData(Pose input, Envelope envelope) {
             // input: T_x, T_y, T_z, R_x, R_y, R_z
             List<float> inputTRTRTransDiff = new List<float>(); //T_x, T_y, T_z, R_x, R_y, R_z, diff_Tx, diff_Ty, diff_Tz, diff_Rx, diff_Ry, diff_Rz
             List<float> inputTRTRDiffDiff2 = new List<float>(); //diff_Tx, diff_Ty, diff_Tz, diff_Rx, diff_Ry, diff_Rz, diff2_Tx, diff2_Ty, diff2_Tz, diff2_Rx, diff2_Ry, diff2_Rz

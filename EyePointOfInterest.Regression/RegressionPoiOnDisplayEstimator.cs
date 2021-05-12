@@ -65,7 +65,7 @@ namespace OpenSense.Component.EyePointOfInterest.Regression {
             return new Vector2((float)evalX.RSquared, (float)evalY.RSquared);
         }
 
-        public Vector2 Predict(HeadPoseAndGaze data) {
+        public Vector2 Predict(PoseAndGaze data) {
             var record = new RegressionRecord(data);
             var predX = predictorX.Predict(record);
             var predY = predictorY.Predict(record);

@@ -49,7 +49,7 @@ namespace OpenSense.Component.EyePointOfInterest.SpatialTracking {
             return new Point3D(openFaceAngel.X, openFaceAngel.Z, openFaceAngel.Y);
         }
 
-        private Vector2D PupilCornerDistance(Gaze gaze, HeadPose headPose) {
+        private Vector2D PupilCornerDistance(Gaze gaze, Pose headPose) {
             var leftPupilCornerVector = gaze.PupilPosition.Left.ToMathNetPoint3D() - gaze.InnerEyeCornerPosition.Left.ToMathNetPoint3D();
             
             var headAngel = headPose.Angle;
@@ -80,13 +80,13 @@ namespace OpenSense.Component.EyePointOfInterest.SpatialTracking {
         public Vector2 Train(IList<GazeToDisplayCoordinateMappingRecord> data) {
             Samples = data.ToArray();
 
-            var predict = data.Select(r => Predict(new HeadPoseAndGaze(r.HeadPose, r.Gaze))).ToArray();
+            var predict = data.Select(r => Predict(new PoseAndGaze(r.HeadPose, r.Gaze))).ToArray();
             var rSquaredX = GoodnessOfFit.RSquared(predict.Select(p => (double)p.X), data.Select(d => d.Display.X).Select(d => (double)d));
             var rSquaredY = GoodnessOfFit.RSquared(predict.Select(p => (double)p.Y), data.Select(d => d.Display.Y).Select(d => (double)d));
             return new Vector2((float)rSquaredX, (float)rSquaredY);
         }
 
-        public Vector2 Predict(HeadPoseAndGaze data) {
+        public Vector2 Predict(PoseAndGaze data) {
 
             var camera = new CoordinateSystem();
             var displayNormRealign = UnitVector3D.YAxis;

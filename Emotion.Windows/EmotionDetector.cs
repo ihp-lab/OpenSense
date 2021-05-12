@@ -43,9 +43,9 @@ namespace OpenSense.Component.Emotion {
 
         public Receiver<Shared<Image>> ImageIn => ImageInConnector.In;
 
-        private Connector<HeadPose> HeadPoseInConnector;
+        private Connector<Pose> HeadPoseInConnector;
 
-        public Receiver<HeadPose> HeadPoseIn => HeadPoseInConnector.In;
+        public Receiver<Pose> HeadPoseIn => HeadPoseInConnector.In;
 
         public Emitter<Emotions> Out { get; private set; }
 
@@ -69,7 +69,7 @@ namespace OpenSense.Component.Emotion {
 
         public EmotionDetector(Pipeline pipeline) : base(pipeline) {
             ImageInConnector = CreateInputConnectorFrom<Shared<Image>>(pipeline, nameof(ImageIn));
-            HeadPoseInConnector = CreateInputConnectorFrom<HeadPose>(pipeline, nameof(HeadPoseIn));
+            HeadPoseInConnector = CreateInputConnectorFrom<Pose>(pipeline, nameof(HeadPoseIn));
             Out = pipeline.CreateEmitter<Emotions>(this, nameof(Out));
             PipelineCompleted += OnPipelineCompleted;
 
@@ -96,7 +96,7 @@ namespace OpenSense.Component.Emotion {
         private void OnPipelineCompleted(object sender, PipelineCompletedEventArgs e) {
         }
 
-        private void Process(ValueTuple<HeadPose, Shared<Image>> data, Envelope envelope) {
+        private void Process(ValueTuple<Pose, Shared<Image>> data, Envelope envelope) {
             if (Mute) {
                 return;
             }
@@ -125,7 +125,7 @@ namespace OpenSense.Component.Emotion {
             }
         }
 
-        private static Rect FaceRegion(HeadPose headPose) {
+        private static Rect FaceRegion(Pose headPose) {
             var minX = double.PositiveInfinity;
             var maxX = double.NegativeInfinity;
             var minY = double.PositiveInfinity;

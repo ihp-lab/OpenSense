@@ -1,5 +1,5 @@
 ﻿namespace OpenSense.Component.Head.Common {
-    public enum HeadGesture {
+    public enum Gesture {
         None,
         Nod,
         Shake,

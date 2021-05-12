@@ -1,10 +1,10 @@
 ﻿using Microsoft.Psi;
 using Microsoft.Psi.Components;
 using OpenSense.Component.Head.Common;
-using HeadGestureData = OpenSense.Component.Head.Common.HeadGesture;
+using HeadGestureData = OpenSense.Component.Head.Common.Gesture;
 
 namespace OpenSense.Component.HeadGesture {
-    public class HeadGestureDetector : Subpipeline, IConsumerProducer<HeadPose, HeadGestureData> {
+    public class HeadGestureDetector : Subpipeline, IConsumerProducer<Pose, HeadGestureData> {
         private const string INPUT_NAME = "masking_1_input";
         private const string OUTPUT_NAME = "time_distributed_1";
         private const string SHAKE_MODEL_NAME = "final_4comb_shake_32ws_12f_8u.onnx";
@@ -12,12 +12,12 @@ namespace OpenSense.Component.HeadGesture {
         private const string TILT_MODEL_NAME = "final_4comb_tilt_32ws_12f_16u.onnx";
 
         // Connector for the string input
-        private Connector<HeadPose> dataIn;
+        private Connector<Pose> dataIn;
 
         // Constructor
         public HeadGestureDetector(Pipeline pipeline) : base(pipeline, nameof(HeadGestureDetector)) {
             // Create the connectors
-            dataIn = CreateInputConnectorFrom<HeadPose>(pipeline, nameof(In));
+            dataIn = CreateInputConnectorFrom<Pose>(pipeline, nameof(In));
 
             // Define the outputs
             var enumOut = CreateOutputConnectorTo<HeadGestureData>(pipeline, nameof(Out));
@@ -40,7 +40,7 @@ namespace OpenSense.Component.HeadGesture {
         }
 
         // Receiver for string input
-        public Receiver<HeadPose> In => dataIn.In;
+        public Receiver<Pose> In => dataIn.In;
 
         // Emitter for string output
         public Emitter<HeadGestureData> Out { get; private set; }

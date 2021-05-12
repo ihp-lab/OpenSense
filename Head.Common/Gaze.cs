@@ -19,15 +19,15 @@ namespace OpenSense.Component.Head.Common {
         /// </summary>
         public readonly Vector2 Angle;
 
-        public readonly ImmutableArray<Vector2> Landmarks;
+        public readonly IReadOnlyList<Vector2> Landmarks;
 
-        public readonly ImmutableArray<Vector3> Landmarks3D;
-
-        [JsonIgnore]
-        public readonly ImmutableArray<Vector2> VisiableLandmarks;
+        public readonly IReadOnlyList<Vector3> Landmarks3D;
 
         [JsonIgnore]
-        public readonly ImmutableArray<ValueTuple<Vector2, Vector2>> IndicatorLines;
+        public readonly IReadOnlyList<Vector2> VisiableLandmarks;
+
+        [JsonIgnore]
+        public readonly IReadOnlyList<ValueTuple<Vector2, Vector2>> IndicatorLines;
 
         [JsonConstructor]
         public Gaze(Pupil gazeVector, Vector2 angle, IEnumerable<Vector2> landmarks, IEnumerable<Vector3> landmarks3D) : this(gazeVector, angle, landmarks, Array.Empty<Vector2>(), landmarks3D, Array.Empty<ValueTuple<Vector2, Vector2>>()) { }

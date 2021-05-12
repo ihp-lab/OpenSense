@@ -12,7 +12,7 @@ using OpenSense.Component.Head.Common;
 using OpenSense.DataWriter.Contract;
 
 namespace OpenSense.Component.OpenFace {
-    public class OpenFace : IConsumer<Shared<Image>>, INotifyPropertyChanged {
+    public class OpenFace : IConsumer<Shared<Image>>, IProducer<PoseAndGaze>, INotifyPropertyChanged {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -39,12 +39,14 @@ namespace OpenSense.Component.OpenFace {
             In = pipeline.CreateReceiver<Shared<Image>>(this, ReceiveImage, nameof(In));
 
             // Pose data emitter.
-            HeadPoseOut = pipeline.CreateEmitter<HeadPose>(this, nameof(HeadPoseOut));
+            PoseOut = pipeline.CreateEmitter<Pose>(this, nameof(PoseOut));
 
             // Gaze data emitter.
             GazeOut = pipeline.CreateEmitter<Gaze>(this, nameof(GazeOut));
 
-            HeadPoseAndGazeOut = pipeline.CreateEmitter<HeadPoseAndGaze>(this, nameof(HeadPoseAndGazeOut));
+            FaceOut = pipeline.CreateEmitter<Face>(this, nameof(FaceOut));
+
+            Out = pipeline.CreateEmitter<PoseAndGaze>(this, nameof(Out));
 
             pipeline.PipelineRun += Initialize;
             pipeline.PipelineCompleted += OnPipelineCompleted;
@@ -63,7 +65,7 @@ namespace OpenSense.Component.OpenFace {
             }
 
             landmarkDetector = new CLNF(faceModelParameters);
-            faceAnalyser = new FaceAnalyser(rootDirectory, true, 112, true);
+            faceAnalyser = new FaceAnalyser(rootDirectory, dynamic: true, output_width: 112, mask_aligned: true);
             gazeAnalyser = new GazeAnalyser();
 
             landmarkDetector.Reset();
@@ -105,9 +107,9 @@ namespace OpenSense.Component.OpenFace {
             set => SetProperty(ref cameraCalibCy, value);
         }
 
-        private IDataWriter<HeadPoseAndGaze> dataWriter;
+        private IDataWriter<PoseAndGaze> dataWriter;
 
-        public IDataWriter<HeadPoseAndGaze> DataWriter {
+        public IDataWriter<PoseAndGaze> DataWriter {
             get => dataWriter;
             set => SetProperty(ref dataWriter, value);
         }
@@ -120,14 +122,19 @@ namespace OpenSense.Component.OpenFace {
         /// <summary>
         /// Gets. Emitter that encapsulates the pose data output stream.
         /// </summary>
-        public Emitter<HeadPose> HeadPoseOut { get; private set; }
+        public Emitter<Pose> PoseOut { get; private set; }
 
         /// <summary>
         /// Gets. Emitter that encapsulates the gaze data output stream.
         /// </summary>
         public Emitter<Gaze> GazeOut { get; private set; }
 
-        public Emitter<HeadPoseAndGaze> HeadPoseAndGazeOut { get; private set; }
+        /// <summary>
+        /// Gets. Emitter that encapsulates the face data output stream.
+        /// </summary>
+        public Emitter<Face> FaceOut { get; private set; }
+
+        public Emitter<PoseAndGaze> Out { get; private set; }
 
         /// <summary>
         /// The receive method for the ImageIn receiver.
@@ -149,6 +156,8 @@ namespace OpenSense.Component.OpenFace {
                     using (var grayRawImage = Methods.ToRaw(grayImageBuffer)) {
                         if (landmarkDetector.DetectLandmarksInVideo(colorRawImage, faceModelParameters, grayRawImage)) {
 
+                            var rawAllLandmarks = landmarkDetector.CalculateAllLandmarks();
+
                             //double confidence = landmarkDetector.GetConfidence();
                             //float scale = landmarkDetector.GetRigidParams()[0];
 
@@ -158,18 +167,18 @@ namespace OpenSense.Component.OpenFace {
                             //Dictionary<string, double> aus = faceAnalyser.GetCurrentAUsReg();
 
                             // Pose.
-                            var landmarks = landmarkDetector.CalculateAllLandmarks().Select(m => new Vector2(m.Item1, m.Item2));
+                            var allLandmarks = rawAllLandmarks.Select(m => new Vector2(m.Item1, m.Item2));
                             var visiableLandmarks = landmarkDetector.CalculateVisibleLandmarks().Select(m => new Vector2(m.Item1, m.Item2));
                             var landmarks3D = landmarkDetector.Calculate3DLandmarks(CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy).Select(m => new Vector3(m.Item1, m.Item2, m.Item3));
                             var poseData = new List<float>();
                             landmarkDetector.GetPose(poseData, CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy);
                             var box = landmarkDetector.CalculateBox(CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy);
                             var boxConverted = box.Select(line => (new Vector2((float)line.Item1.X, (float)line.Item1.Y), new Vector2((float)line.Item2.X, (float)line.Item2.Y)));
-                            var headPose = new HeadPose(poseData, landmarks, visiableLandmarks, landmarks3D, boxConverted);
-                            HeadPoseOut.Post(headPose, envelope.OriginatingTime);
+                            var headPose = new Pose(poseData, allLandmarks, visiableLandmarks, landmarks3D, boxConverted);
+                            PoseOut.Post(headPose, envelope.OriginatingTime);
 
                             // Gaze.
-                            gazeAnalyser.AddNextFrame(landmarkDetector, true, CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy);
+                            gazeAnalyser.AddNextFrame(landmarkDetector, success: true, CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy);
                             var eyeLandmarks = landmarkDetector.CalculateAllEyeLandmarks().Select(m => new Vector2(m.Item1, m.Item2));
                             var visiableEyeLandmarks = landmarkDetector.CalculateVisibleEyeLandmarks().Select(m => new Vector2(m.Item1, m.Item2));
                             var eyeLandmarks3D = landmarkDetector.CalculateAllEyeLandmarks3D(CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy).Select(m => new Vector3(m.Item1, m.Item2, m.Item3));
@@ -190,10 +199,18 @@ namespace OpenSense.Component.OpenFace {
                                 );
                             GazeOut.Post(gaze, envelope.OriginatingTime);
 
-                            var headPoseAndGaze = new HeadPoseAndGaze(headPose.DeepClone(), gaze.DeepClone());
-                            DataWriter?.Write(headPoseAndGaze, envelope);
-                            HeadPoseAndGazeOut.Post(headPoseAndGaze, envelope.OriginatingTime);
+                            //Face
+                            var (actionUnitIntensities, actionUnitOccurences) = faceAnalyser.PredictStaticAUsAndComputeFeatures(colorRawImage, rawAllLandmarks);//image mode, so not using faceAnalyser.AddNextFrame()
+                            var actionUnits = actionUnitIntensities
+                                .Select(kv => new KeyValuePair<string, ActionUnit>(kv.Key, new ActionUnit { Intensity = kv.Value, Presence = actionUnitOccurences[kv.Key] }))
+                                .ToDictionary(kv => kv.Key, kv => kv.Value);
+                            var face = new Face(actionUnits);
+                            FaceOut.Post(face, envelope.OriginatingTime);
 
+                            //All
+                            var headPoseAndGaze = new PoseAndGaze(headPose.DeepClone(), gaze.DeepClone());
+                            DataWriter?.Write(headPoseAndGaze, envelope);
+                            Out.Post(headPoseAndGaze, envelope.OriginatingTime);
                         }
                     }
                 }

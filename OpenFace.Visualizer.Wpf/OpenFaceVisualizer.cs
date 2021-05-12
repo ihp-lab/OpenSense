@@ -25,11 +25,11 @@ namespace OpenSense.Component.OpenFace.Visualizer {
         }
         #endregion
 
-        private Connector<HeadPoseAndGaze> DataInConnector;
+        private Connector<PoseAndGaze> DataInConnector;
 
         private Connector<Shared<Image>> ImageInConnector;
 
-        public Receiver<HeadPoseAndGaze> DataIn => DataInConnector.In;
+        public Receiver<PoseAndGaze> DataIn => DataInConnector.In;
 
         public Receiver<Shared<Image>> ImageIn => ImageInConnector.In;
 
@@ -67,7 +67,7 @@ namespace OpenSense.Component.OpenFace.Visualizer {
         }
 
         public OpenFaceVisualizer(Pipeline pipeline) : base(pipeline) {
-            DataInConnector = CreateInputConnectorFrom<HeadPoseAndGaze>(pipeline, nameof(DataIn));
+            DataInConnector = CreateInputConnectorFrom<PoseAndGaze>(pipeline, nameof(DataIn));
             ImageInConnector = CreateInputConnectorFrom<Shared<Image>>(pipeline, nameof(ImageIn));
             Out = pipeline.CreateEmitter<Shared<Image>>(this, nameof(Out));
 
@@ -88,7 +88,7 @@ namespace OpenSense.Component.OpenFace.Visualizer {
             };
         }
 
-        private void Process(ValueTuple<HeadPoseAndGaze, Shared<Image>> data, Envelope envelope) {
+        private void Process(ValueTuple<PoseAndGaze, Shared<Image>> data, Envelope envelope) {
             if (Mute) {
                 return;
             }

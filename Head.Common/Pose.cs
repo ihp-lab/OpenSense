@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace OpenSense.Component.Head.Common {
     [JsonObject]
-    public class HeadPose : IEnumerable<double>, IEquatable<HeadPose> {
+    public class Pose : IEnumerable<double>, IEquatable<Pose> {
 
         /// <summary>
         /// Absolute head postion to camera in millimeter
@@ -29,7 +29,7 @@ namespace OpenSense.Component.Head.Common {
         public readonly ImmutableArray<ValueTuple<Vector2, Vector2>> IndicatorLines;
 
         [JsonConstructor]
-        public HeadPose(
+        public Pose(
             Vector3 position,
             Vector3 angle,
             ImmutableArray<Vector2> landmarks,
@@ -45,7 +45,7 @@ namespace OpenSense.Component.Head.Common {
             Angle = angle;
         }
 
-        public HeadPose(
+        public Pose(
             IList<float> data, 
             IEnumerable<Vector2> landmarks,
             IEnumerable<Vector2> visiableLandmarks,
@@ -99,7 +99,7 @@ namespace OpenSense.Component.Head.Common {
 
         #endregion
 
-        public bool Equals(HeadPose other) {
+        public bool Equals(Pose other) {
             return Landmarks.SequenceEqual(other.Landmarks)
                 && VisiableLandmarks.SequenceEqual(other.VisiableLandmarks)
                 && Landmarks3D.SequenceEqual(other.Landmarks3D)

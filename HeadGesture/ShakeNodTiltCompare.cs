@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Psi;
-using HeadGestureData = OpenSense.Component.Head.Common.HeadGesture;
+using HeadGestureData = OpenSense.Component.Head.Common.Gesture;
 
 namespace OpenSense.Component.HeadGesture {
     /// <summary>
