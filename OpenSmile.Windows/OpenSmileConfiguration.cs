@@ -22,7 +22,7 @@ namespace OpenSense.Component.OpenSmile {
 
         public override IComponentMetadata GetMetadata() => new OpenSmileMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new OpenSmile(pipeline, Raw) { 
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new OpenSmile(pipeline, Raw) { 
             Mute = Mute,
         };
     }

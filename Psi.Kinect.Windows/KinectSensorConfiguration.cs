@@ -16,6 +16,6 @@ namespace OpenSense.Component.Psi.Kinect {
 
         public override IComponentMetadata GetMetadata() => new KinectSensorMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new KinectSensor(pipeline, Raw);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new KinectSensor(pipeline, Raw);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using OpenSense.Component.Contract;
 using PsiPipeline = Microsoft.Psi.Pipeline;
@@ -38,10 +39,11 @@ namespace OpenSense.Pipeline {
             return true;
         }
 
-        public PipelineEnvironment(PipelineConfiguration configuration) {
+        public PipelineEnvironment(PipelineConfiguration configuration, IServiceProvider serviceProvider = null) {
             if (configuration is null) {
                 throw new ArgumentNullException(nameof(configuration));
             }
+            Debug.WriteLineIf(serviceProvider is null, "no IServiceProvider is provided to the pipeline environment");
             Pipeline = PsiPipeline.Create(configuration.Name, configuration.DeliveryPolicy);
             var instEnvs = new List<ComponentEnvironment>();
             Instances = instEnvs;
@@ -56,7 +58,7 @@ namespace OpenSense.Pipeline {
                     break;
                 }
                 pending.Remove(compConfig);
-                var instance = compConfig.Instantiate(Pipeline, instEnvs);
+                var instance = compConfig.Instantiate(Pipeline, instEnvs, serviceProvider);
                 var env = new ComponentEnvironment(compConfig, instance);
                 instEnvs.Add(env);
             }

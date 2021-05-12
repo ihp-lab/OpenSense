@@ -54,7 +54,7 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
 
         public override IComponentMetadata GetMetadata() => new GoogleCloudSpeechMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new GoogleCloudSpeech(pipeline, File.ReadAllText(CredentialsPath)) { 
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new GoogleCloudSpeech(pipeline, File.ReadAllText(CredentialsPath)) { 
             Mute = Mute,
             AtMostOneFinalResultEachVadSession = AtMostOneFinalResultEachVadSession,
             LanguageCode = LanguageCode,

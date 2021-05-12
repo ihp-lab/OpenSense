@@ -9,6 +9,8 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using OpenSense.Pipeline;
 
@@ -85,7 +87,10 @@ namespace OpenSense.Wpf.Pipeline {
 
         private void Instantiate() {
             try {
-                Env = new PipelineEnvironment(Configuration);
+                var collection = new ServiceCollection();
+                //collection.AddSingleton<ILoggerProvider, >();//TODO: add a default logger provider
+                var serviceProvider = collection.BuildServiceProvider();
+                Env = new PipelineEnvironment(Configuration, serviceProvider);
                 GenerateControls();
             } catch (Exception ex) {
                 Stop();

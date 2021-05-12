@@ -29,7 +29,7 @@ namespace OpenSense.Component.OpenFace.Visualizer {
 
         public override IComponentMetadata GetMetadata() => new OpenFaceVisualizerMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new OpenFaceVisualizer(pipeline) {
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new OpenFaceVisualizer(pipeline) {
             Mute = Mute,
             LineThickness = LineThickness,
             CircleRadius = CircleRadius,

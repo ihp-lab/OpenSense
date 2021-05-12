@@ -8,6 +8,6 @@ namespace OpenSense.Component.Imaging.Visualizer {
 
         public override IComponentMetadata GetMetadata() => new DepthVideoVisualizerMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new DepthVideoVisualizer(pipeline);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new DepthVideoVisualizer(pipeline);
     }
 }

@@ -22,6 +22,6 @@ namespace OpenSense.Component.Imaging {
 
         public override IComponentMetadata GetMetadata() => new FlipColorVideoMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new FlipColorVideo(pipeline) { FlipHorizontal = FlipHorizontal, FlipVertical = FlipVertical };
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new FlipColorVideo(pipeline) { FlipHorizontal = FlipHorizontal, FlipVertical = FlipVertical };
     }
 }

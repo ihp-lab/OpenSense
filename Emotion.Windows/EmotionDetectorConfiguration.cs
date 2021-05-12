@@ -8,6 +8,6 @@ namespace OpenSense.Component.Emotion {
 
         public override IComponentMetadata GetMetadata() => new EmotionDetectorMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new EmotionDetector(pipeline);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new EmotionDetector(pipeline);
     }
 }

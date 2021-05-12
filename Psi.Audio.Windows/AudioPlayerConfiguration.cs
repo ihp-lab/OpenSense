@@ -16,6 +16,6 @@ namespace OpenSense.Component.Psi.Audio {
 
         public override IComponentMetadata GetMetadata() => new AudioPlayerMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new AudioPlayer(pipeline, Raw);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new AudioPlayer(pipeline, Raw);
     }
 }

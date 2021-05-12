@@ -41,7 +41,7 @@ namespace OpenSense.Component.Psi {
 
         public override IComponentMetadata GetMetadata() => new RemoteImporterMetadata();
 
-        public override object Instantiate(Pipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents) {
+        public override object Instantiate(Pipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents, IServiceProvider serviceProvider) {
             var remoteImporter = new RemoteImporter(pipeline, Replay, Host, Port, AllowSequenceRestart);
             var connected = remoteImporter.Connected.WaitOne(TimeSpan.FromSeconds(ConnectionTimeoutSeconds));//otherwise the Importer field will be empty
             if (!connected) {

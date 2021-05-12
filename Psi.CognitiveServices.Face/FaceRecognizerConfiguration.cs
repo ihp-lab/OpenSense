@@ -20,6 +20,6 @@ namespace OpenSense.Component.Psi.CognitiveServices.Face {
 
         public override IComponentMetadata GetMetadata() => new FaceRecognizerMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new FaceRecognizer(pipeline, Raw);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new FaceRecognizer(pipeline, Raw);
     }
 }

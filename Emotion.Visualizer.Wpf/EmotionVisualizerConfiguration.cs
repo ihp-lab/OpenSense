@@ -8,6 +8,6 @@ namespace OpenSense.Component.Emotion.Visualizer {
 
         public override IComponentMetadata GetMetadata() => new EmotionVisualizerMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new EmotionVisualizer(pipeline);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new EmotionVisualizer(pipeline);
     }
 }

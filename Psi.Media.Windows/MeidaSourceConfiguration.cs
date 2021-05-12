@@ -22,6 +22,6 @@ namespace OpenSense.Component.Psi.Media {
 
         public override IComponentMetadata GetMetadata() => new MediaSourceMetadata();
 
-        protected override object Instantiate(Microsoft.Psi.Pipeline pipeline) => new MediaSource(pipeline, Filename, DropOutOfOrderPackets);
+        protected override object Instantiate(Microsoft.Psi.Pipeline pipeline, IServiceProvider serviceProvider) => new MediaSource(pipeline, Filename, DropOutOfOrderPackets);
     }
 }

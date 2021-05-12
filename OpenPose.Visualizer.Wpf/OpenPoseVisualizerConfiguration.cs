@@ -50,7 +50,7 @@ namespace OpenSense.Component.OpenPose.Visualizer {
 
         public override IComponentMetadata GetMetadata() => new OpenPoseVisualizerMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new OpenPoseVisualizer(pipeline) {
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new OpenPoseVisualizer(pipeline) {
             Mute = Mute,
             DrawPose = DrawPose,
             DrawFace = DrawFace,

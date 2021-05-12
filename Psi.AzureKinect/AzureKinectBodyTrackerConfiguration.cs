@@ -16,6 +16,6 @@ namespace OpenSense.Component.Psi.AzureKinect {
 
         public override IComponentMetadata GetMetadata() => new AzureKinectBodyTrackerMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new AzureKinectBodyTracker(pipeline, Raw);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new AzureKinectBodyTracker(pipeline, Raw);
     }
 }

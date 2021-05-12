@@ -8,6 +8,6 @@ namespace OpenSense.Component.Builtin.Visualizer {
 
         public override IComponentMetadata GetMetadata() => new BooleanVisualizerMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new BooleanVisualizer(pipeline);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new BooleanVisualizer(pipeline);
     }
 }

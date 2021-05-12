@@ -22,6 +22,6 @@ namespace OpenSense.Component.Psi.Media {
 
         public override IComponentMetadata GetMetadata() => new Mpeg4WriterMetadata();
 
-        protected override object Instantiate(Microsoft.Psi.Pipeline pipeline) => new Mpeg4Writer(pipeline, Filename, Raw);
+        protected override object Instantiate(Microsoft.Psi.Pipeline pipeline, IServiceProvider serviceProvider) => new Mpeg4Writer(pipeline, Filename, Raw);
     }
 }

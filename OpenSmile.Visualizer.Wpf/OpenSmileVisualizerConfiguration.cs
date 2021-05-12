@@ -8,6 +8,6 @@ namespace OpenSense.Component.OpenSmile.Visualizer {
 
         public override IComponentMetadata GetMetadata() => new OpenSmileVisualizerMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new OpenSmileVisualizer(pipeline);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new OpenSmileVisualizer(pipeline);
     }
 }

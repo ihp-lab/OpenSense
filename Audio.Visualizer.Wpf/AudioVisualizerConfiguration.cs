@@ -8,6 +8,6 @@ namespace OpenSense.Component.Audio.Visualizer {
 
         public override IComponentMetadata GetMetadata() => new AudioVisualizerMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new AudioVisualizer(pipeline);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new AudioVisualizer(pipeline);
     }
 }

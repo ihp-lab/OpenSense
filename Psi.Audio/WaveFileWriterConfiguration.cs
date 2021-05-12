@@ -16,6 +16,6 @@ namespace OpenSense.Component.Psi.Audio {
 
         public override IComponentMetadata GetMetadata() => new WaveFileWriterMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new WaveFileWriter(pipeline, Filename);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new WaveFileWriter(pipeline, Filename);
     }
 }

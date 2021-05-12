@@ -8,6 +8,6 @@ namespace OpenSense.Component.EyePointOfInterest.Visualizer {
 
         public override IComponentMetadata GetMetadata() => new DisplayPoiVisualizerMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new DisplayPoiVisualizer(pipeline);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new DisplayPoiVisualizer(pipeline);
     }
 }

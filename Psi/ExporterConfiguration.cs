@@ -13,7 +13,7 @@ namespace OpenSense.Component.Psi {
 
         protected abstract void ConnectInput<T>(object instance, InputConfiguration inputConfiguration, IProducer<T> remoteEndProducer);
 
-        public override sealed object Instantiate(Pipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents) {
+        public override sealed object Instantiate(Pipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents, IServiceProvider serviceProvider) {
             if (Inputs.Any(i => i.LocalPort?.Index is null)) {
                 throw new Exception("exporter stream name not set");
             }

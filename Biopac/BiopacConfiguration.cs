@@ -8,6 +8,6 @@ namespace OpenSense.Component.Biopac {
 
         public override IComponentMetadata GetMetadata() => new BiopacMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new Biopac(pipeline);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new Biopac(pipeline);
     }
 }

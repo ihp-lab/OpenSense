@@ -16,6 +16,6 @@ namespace OpenSense.Component.Psi.Media {
 
         public override IComponentMetadata GetMetadata() => new MediaCaptureMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new MediaCapture(pipeline, Raw);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new MediaCapture(pipeline, Raw);
     }
 }

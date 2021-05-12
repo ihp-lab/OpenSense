@@ -8,6 +8,6 @@ namespace OpenSense.Component.Biopac.Visualizer {
 
         public override IComponentMetadata GetMetadata() => new BiopacVisualizerMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new BiopacVisualizer(pipeline);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new BiopacVisualizer(pipeline);
     }
 }

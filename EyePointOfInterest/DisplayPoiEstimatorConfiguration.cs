@@ -16,7 +16,7 @@ namespace OpenSense.Component.EyePointOfInterest {
 
         public override IComponentMetadata GetMetadata() => new DisplayPoiEstimatorMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new DisplayPoiEstimator(pipeline) { 
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new DisplayPoiEstimator(pipeline) { 
             Estimator = string.IsNullOrEmpty(EstimatorConfigurationFilename) ? null : PoiOnDisplayEstimatorHelper.LoadEstimator(EstimatorConfigurationFilename),
         };
     }

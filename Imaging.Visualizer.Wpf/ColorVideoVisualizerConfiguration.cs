@@ -8,6 +8,6 @@ namespace OpenSense.Component.Imaging.Visualizer {
 
         public override IComponentMetadata GetMetadata() => new ColorVideoVisualizerMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new ColorVideoVisualizer(pipeline);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new ColorVideoVisualizer(pipeline);
     }
 }

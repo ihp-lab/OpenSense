@@ -30,6 +30,6 @@ namespace OpenSense.Component.Psi.Audio {
 
         public override IComponentMetadata GetMetadata() => new WaveFileAudioSourceMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new WaveFileAudioSource(pipeline, Filename, AudioStartTime, TargetLatencyMs);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new WaveFileAudioSource(pipeline, Filename, AudioStartTime, TargetLatencyMs);
     }
 }

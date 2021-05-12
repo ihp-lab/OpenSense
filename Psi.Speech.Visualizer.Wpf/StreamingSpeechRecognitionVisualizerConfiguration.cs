@@ -8,6 +8,6 @@ namespace OpenSense.Component.Psi.Speech.Visualizer {
 
         public override IComponentMetadata GetMetadata() => new StreamingSpeechRecognitionVisualizerMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new StreamingSpeechRecognitionVisualizer(pipeline);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new StreamingSpeechRecognitionVisualizer(pipeline);
     }
 }

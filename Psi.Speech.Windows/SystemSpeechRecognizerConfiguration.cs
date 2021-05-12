@@ -16,6 +16,6 @@ namespace OpenSense.Component.Psi.Speech {
 
         public override IComponentMetadata GetMetadata() => new SystemSpeechRecognizerMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new SystemSpeechRecognizer(pipeline, Raw);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new SystemSpeechRecognizer(pipeline, Raw);
     }
 }

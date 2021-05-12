@@ -34,6 +34,6 @@ namespace OpenSense.Component.Psi.Imaging {
 
         public override IComponentMetadata GetMetadata() => new ImageEncoderMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new ImageEncoder(pipeline, CreateEncoder());
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new ImageEncoder(pipeline, CreateEncoder());
     }
 }

@@ -29,7 +29,7 @@ namespace OpenSense.Component.AzureKinect.Visualizer {
 
         public override IComponentMetadata GetMetadata() => new AzureKinectBodyTrackerVisualizerMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new AzureKinectBodyTrackerVisualizer(pipeline) {
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new AzureKinectBodyTrackerVisualizer(pipeline) {
             Mute = Mute,
             LineThickness = LineThickness,
             CircleRadius = CircleRadius,

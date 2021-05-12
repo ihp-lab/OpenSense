@@ -8,6 +8,6 @@ namespace OpenSense.Component.HeadGesture.Visualizer {
 
         public override IComponentMetadata GetMetadata() => new HeadGestureVisualizerMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new HeadGestureVisualizer(pipeline);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new HeadGestureVisualizer(pipeline);
     }
 }

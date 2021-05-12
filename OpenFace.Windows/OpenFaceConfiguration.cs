@@ -44,7 +44,7 @@ namespace OpenSense.Component.OpenFace {
 
         public override IComponentMetadata GetMetadata() => new OpenFaceMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new OpenFace(pipeline) {
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new OpenFace(pipeline) {
             Mute = Mute,
             CameraCalibFx = CameraCalibFx,
             CameraCalibFy = CameraCalibFy,

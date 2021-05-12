@@ -16,6 +16,6 @@ namespace OpenSense.Component.Psi.CognitiveServices.Speech {
 
         public override IComponentMetadata GetMetadata() => new AzureSpeechRecognizerMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new AzureSpeechRecognizer(pipeline, Raw);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new AzureSpeechRecognizer(pipeline, Raw);
     }
 }

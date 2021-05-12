@@ -16,6 +16,6 @@ namespace OpenSense.Component.OpenPose {
 
         public override IComponentMetadata GetMetadata() => new OpenPoseMetadata();
 
-        protected override object Instantiate(Pipeline pipeline) => new OpenPose(pipeline, Raw);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new OpenPose(pipeline, Raw);
     }
 }

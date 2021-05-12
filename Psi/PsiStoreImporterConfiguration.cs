@@ -23,6 +23,6 @@ namespace OpenSense.Component.Psi {
 
         public override IComponentMetadata GetMetadata() => new PsiStoreImporterMetadata();
 
-        public override object Instantiate(Pipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents) => PsiStore.Open(pipeline, StoreName, RootPath);
+        public override object Instantiate(Pipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents, IServiceProvider serviceProvider) => PsiStore.Open(pipeline, StoreName, RootPath);
     }
 }

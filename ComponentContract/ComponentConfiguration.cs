@@ -59,12 +59,13 @@ namespace OpenSense.Component.Contract {
         public abstract IComponentMetadata GetMetadata();
 
         /// <summary>
-        /// Instantiate a component. Inputs should be connected.
+        /// This method is called to initialize an instance. Inputs should be connected.
         /// </summary>
-        /// <param name="pipeline"></param>
-        /// <param name="instantiatedComponents"></param>
-        /// <returns>Instantiated component object. Can be null.</returns>
-        public abstract object Instantiate(PsiPipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents);
+        /// <param name="pipeline">The pipeline will be connected to.</param>
+        /// <param name="instantiatedComponents">Other instances that are already instantiated.</param>
+        /// <param name="serviceProvider">A <see cref="IServiceProvider"/> can be used as needed. Can be <see cref="null"/>.</param>
+        /// <returns>An instance of the component initialized using the current configuration. Can be <see cref="null"/>.</returns>
+        public abstract object Instantiate(PsiPipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents, IServiceProvider serviceProvider);
 
     }
 }
