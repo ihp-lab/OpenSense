@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using Microsoft.Extensions.Logging;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Transforms.Onnx;
@@ -48,6 +49,8 @@ namespace OpenSense.Component.Emotion {
         public Receiver<Pose> HeadPoseIn => HeadPoseInConnector.In;
 
         public Emitter<Emotions> Out { get; private set; }
+
+        public ILogger Logger { protected get; set; }
 
         private bool mute = false;
 
@@ -120,7 +123,7 @@ namespace OpenSense.Component.Emotion {
                     }
                 }
             } catch (Exception ex) {
-                Console.WriteLine(ex.ToString());
+                Logger?.LogError("EmotionDetector exception: {exception}", ex);
                 Mute = true;
             }
         }

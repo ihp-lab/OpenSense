@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using OpenSense.Component.Contract;
 
@@ -8,6 +10,8 @@ namespace OpenSense.Component.Emotion {
 
         public override IComponentMetadata GetMetadata() => new EmotionDetectorMetadata();
 
-        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new EmotionDetector(pipeline);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new EmotionDetector(pipeline) {
+            Logger = serviceProvider?.GetService<ILoggerProvider>()?.CreateLogger(Name),
+        };
     }
 }
