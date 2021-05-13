@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
 using OpenSense.Component.OpenPose.Common;
@@ -28,6 +29,8 @@ namespace OpenSense.Component.OpenPose {
 
         public Emitter<Datum> Out { get; private set; }
 
+        public ILogger Logger { protected get; set; }
+
         private bool mute = false;
 
         public bool Mute {
@@ -42,7 +45,7 @@ namespace OpenSense.Component.OpenPose {
             //openpose configuration
             Session.StaticConfiguration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             if (Session.StaticConfiguration.Input.InputType != ProducerType.None) {
-                Console.WriteLine("For OpenPose to work, only input type None is supported");
+                Logger?.LogWarning("for OpenPose to work, only input type None is supported");
                 Session.StaticConfiguration.Input.InputType = ProducerType.None;
             }
             
@@ -96,7 +99,7 @@ namespace OpenSense.Component.OpenPose {
                 } while (!Session.GetOutput(out datum));
                 Out.Post(datum, envelope.OriginatingTime);
             } catch (Exception ex) {
-                Console.Error.WriteLine($"An exception is raised in {GetType().Name}: {ex.ToString()}");
+                Logger?.LogError("OpenPose exception: {exception}", ex);
                 Mute = true;
             }
         }
