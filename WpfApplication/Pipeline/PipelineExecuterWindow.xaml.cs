@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using OpenSense.Pipeline;
+using Serilog.Extensions.Logging;
 
 namespace OpenSense.Wpf.Pipeline {
     public partial class PipelineExecuterWindow : Window, INotifyPropertyChanged {
@@ -88,7 +89,7 @@ namespace OpenSense.Wpf.Pipeline {
         private void Instantiate() {
             try {
                 var collection = new ServiceCollection();
-                //collection.AddSingleton<ILoggerProvider, >();//TODO: add a default logger provider
+                collection.AddSingleton<ILoggerProvider, SerilogLoggerProvider>();//use the static serilog logger
                 var serviceProvider = collection.BuildServiceProvider();
                 Env = new PipelineEnvironment(Configuration, serviceProvider);
                 GenerateControls();
