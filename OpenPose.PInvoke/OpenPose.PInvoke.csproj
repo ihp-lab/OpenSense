@@ -11,4 +11,23 @@
     <ProjectReference Include="..\OpenPose.Common\OpenPose.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup Condition="$(Configuration) == 'Debug'">
+    <Content Include="$(ProjectDir)\OpenPoseLib\models\**\*">
+      <Link>models\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(ProjectDir)\OpenPoseLib\bin\x64\Common\*.dll">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(ProjectDir)\OpenPoseLib\bin\x64\$(ConfigurationName)\*.dll">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(ProjectDir)\OpenPoseLib\bin\x64\$(ConfigurationName)\*.pdb">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
