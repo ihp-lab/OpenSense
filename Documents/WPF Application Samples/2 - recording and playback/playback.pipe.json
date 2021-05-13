@@ -1,0 +1,63 @@
+{
+	Name: "",
+	Id: "82b5be42-6306-432b-aef2-0a132aafb65e",
+	Description: "",
+	DeliveryPolicy: {
+		InitialQueueSize: 1,
+		MaximumQueueSize: 1,
+		Name: "LatestMessage"
+	},
+	Instances: [
+		{
+			ComponentType: "OpenSense.Component.Psi.PsiStoreImporterConfiguration, OpenSense.Component.Psi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			Name: "Psi Store Importer",
+			Description: "",
+			Inputs: [],
+			StoreName: "sample",
+			RootPath: "{path_to_save_data}",
+			Id: "08a48dbd-6244-46db-a564-27605c2a6915"
+		},
+		{
+			ComponentType: "OpenSense.Component.Imaging.Visualizer.ColorVideoVisualizerConfiguration, OpenSense.Wpf.Component.Imaging.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			Name: "OpenSense.Component.Imaging.Visualizer.ColorVideoVisualizer",
+			Description: "",
+			Inputs: [
+				{
+					Id: "ecb7974f-d18d-413e-9d24-b0a203a6e7a8",
+					LocalPort: {
+						Identifier: "In",
+						Index: null
+					},
+					RemoteId: "08a48dbd-6244-46db-a564-27605c2a6915",
+					RemotePort: {
+						Identifier: "Out",
+						Index: "video"
+					},
+					DeliveryPolicy: null
+				}
+			],
+			Id: "55a9df83-a68e-483d-a22e-22e3eb6cd16c"
+		},
+		{
+			ComponentType: "OpenSense.Component.Audio.Visualizer.AudioVisualizerConfiguration, OpenSense.Wpf.Component.Audio.Visualizer.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			Name: "OpenSense.Component.Audio.Visualizer.AudioVisualizer",
+			Description: "",
+			Inputs: [
+				{
+					Id: "d136bd83-3d5e-4d44-b9fc-5dbe2ebc7664",
+					LocalPort: {
+						Identifier: "In",
+						Index: null
+					},
+					RemoteId: "08a48dbd-6244-46db-a564-27605c2a6915",
+					RemotePort: {
+						Identifier: "Out",
+						Index: "audio"
+					},
+					DeliveryPolicy: null
+				}
+			],
+			Id: "08184aea-5236-428c-8a54-665329bca8fb"
+		}
+	]
+}

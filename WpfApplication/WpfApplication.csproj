@@ -92,6 +92,7 @@
     <ProjectReference Include="..\Psi.Media.Windows.Wpf\Psi.Media.Windows.Wpf.csproj" />
     <ProjectReference Include="..\Psi.Speech.Visualizer.Wpf\Psi.Speech.Visualizer.Wpf.csproj" />
     <ProjectReference Include="..\Psi.Speech.Windows.Wpf\Psi.Speech.Windows.Wpf.csproj" />
+    <ProjectReference Include="..\Psi.Wpf\Psi.Wpf.csproj" />
     <!--Widgets-->
     <ProjectReference Include="..\DisplayPoiEstimatorBuilder.Wpf\DisplayPoiEstimatorBuilder.Wpf.csproj" />
     <ProjectReference Include="..\OpenSmileConfigurationConverter.Wpf\OpenSmileConfigurationConverter.Wpf.csproj" />
