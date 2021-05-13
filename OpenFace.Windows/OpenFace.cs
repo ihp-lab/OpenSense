@@ -5,6 +5,7 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
+using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
 using OpenFaceInterop;
@@ -71,6 +72,8 @@ namespace OpenSense.Component.OpenFace {
             landmarkDetector.Reset();
             faceAnalyser.Reset();
         }
+
+        public ILogger Logger { protected get; set; }
 
         private bool mute = false;
 
@@ -215,7 +218,7 @@ namespace OpenSense.Component.OpenFace {
                     }
                 }
             } catch (Exception ex) {
-                Console.Error.WriteLine($"An exception is raised in {GetType().Name}: {ex.ToString()}");
+                Logger?.LogError("OpenFace exception: {exception}", ex);
                 Mute = true;
             }
         }

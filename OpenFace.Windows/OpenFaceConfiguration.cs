@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using OpenSense.Component.Contract;
 
@@ -45,6 +47,7 @@ namespace OpenSense.Component.OpenFace {
         public override IComponentMetadata GetMetadata() => new OpenFaceMetadata();
 
         protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new OpenFace(pipeline) {
+            Logger = serviceProvider?.GetService<ILoggerProvider>()?.CreateLogger(Name),
             Mute = Mute,
             CameraCalibFx = CameraCalibFx,
             CameraCalibFy = CameraCalibFy,
