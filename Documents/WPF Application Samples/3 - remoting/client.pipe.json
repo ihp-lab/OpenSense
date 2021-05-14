@@ -1,0 +1,44 @@
+{
+	Name: "client",
+	Id: "37a1147f-a151-46c4-837f-fbe261a83b2a",
+	Description: "",
+	DeliveryPolicy: {
+		InitialQueueSize: 1,
+		MaximumQueueSize: 1,
+		Name: "LatestMessage"
+	},
+	Instances: [
+		{
+			ComponentType: "OpenSense.Component.Psi.RemoteImporterConfiguration, OpenSense.Component.Psi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			Name: "Remote Importer",
+			Description: "",
+			Inputs: [],
+			Host: "localhost",
+			Port: 11411,
+			AllowSequenceRestart: true,
+			ConnectionTimeoutSeconds: 60,
+			Id: "47f40226-67e3-4eb8-bc5b-c4145e20fdc9"
+		},
+		{
+			ComponentType: "OpenSense.Component.Imaging.Visualizer.ColorVideoVisualizerConfiguration, OpenSense.Wpf.Component.Imaging.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			Name: "OpenSense.Component.Imaging.Visualizer.ColorVideoVisualizer",
+			Description: "",
+			Inputs: [
+				{
+					RemoteId: "47f40226-67e3-4eb8-bc5b-c4145e20fdc9",
+					LocalPort: {
+						Index: null,
+						Identifier: "In"
+					},
+					Id: "306a7d1e-3ce0-489f-9c61-5104e1e9d192",
+					RemotePort: {
+						Index: "video",
+						Identifier: "Out"
+					},
+					DeliveryPolicy: null
+				}
+			],
+			Id: "d77c5f65-5568-4057-a171-4822cf6e8848"
+		}
+	]
+}
