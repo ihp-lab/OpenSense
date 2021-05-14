@@ -2,7 +2,7 @@
 
 ## Description
 
-This sample contains a pipeline for sending video to remote clinet pipelines and a pipeline for receving that data from the host pipeline.
+This sample contains a pipeline for sending video to remote client pipelines and a pipeline for receiving that data from the host pipeline.
 
 ## How to use
 
@@ -25,7 +25,7 @@ This sample contains a pipeline for sending video to remote clinet pipelines and
 
 + Add a `Remote Importer` instance.
 + Change the `Connection timeout seconds` option as needed.
-+ Add a `OpenSense.Component.Imaging.Visualizer.ColorVideoVisualizer` isntance to visualize the received video stream.
++ Add a `OpenSense.Component.Imaging.Visualizer.ColorVideoVisualizer` instance to visualize the received video stream.
 + Add the `In` input and connect it to the `Out` output of `Remote Importer` instance.
 + Fill-in the video stream name to select the stream.
 + Save this pipeline configuration.
