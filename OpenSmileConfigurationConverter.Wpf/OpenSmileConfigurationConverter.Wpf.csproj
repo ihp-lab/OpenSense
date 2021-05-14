@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>OpenSense.Wpf.Widget.OpenSmileConfigurationConverter</AssemblyName>
+    <RootNamespace>OpenSense.Wpf.Widget.OpenSmileConfigurationConverter</RootNamespace>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Composition" Version="5.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WpfWidgetContract\WpfWidgetContract.csproj" />
+  </ItemGroup>
+
+</Project>

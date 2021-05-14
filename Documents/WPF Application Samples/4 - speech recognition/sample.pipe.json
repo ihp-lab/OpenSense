@@ -1,0 +1,169 @@
+{
+	Name: "",
+	Id: "4014fc05-d194-4411-b8d6-2ef1542a9116",
+	Description: "",
+	DeliveryPolicy: {
+		InitialQueueSize: 16,
+		MaximumQueueSize: 2147483647,
+		Name: "Unlimited"
+	},
+	Instances: [
+		{
+			ComponentType: "OpenSense.Component.Psi.Audio.AudioCaptureConfiguration, OpenSense.Component.Psi.Audio.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			Name: "Microsoft.Psi.Audio.AudioCapture",
+			Description: "",
+			Inputs: [],
+			Raw: {
+				DeviceName: null,
+				TargetLatencyInMs: 20,
+				AudioEngineBufferInMs: 500,
+				AudioLevel: -1.0,
+				Gain: 1.0,
+				OptimizeForSpeech: false,
+				UseEventDrivenCapture: true,
+				DropOutOfOrderPackets: false,
+				Format: {
+					FormatTag: 1,
+					Channels: 1,
+					SamplesPerSec: 16000,
+					AvgBytesPerSec: 32000,
+					BlockAlign: 2,
+					BitsPerSample: 16,
+					ExtraSize: 0
+				}
+			},
+			Id: "6afd08c4-3532-4bd1-8d10-a5574fbf334e"
+		},
+		{
+			ComponentType: "OpenSense.Component.Psi.Speech.SystemVoiceActivityDetectorConfiguration, OpenSense.Component.Psi.Speech.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			Name: "Microsoft.Psi.Speech.SystemVoiceActivityDetector",
+			Description: "",
+			Inputs: [
+				{
+					RemoteId: "6afd08c4-3532-4bd1-8d10-a5574fbf334e",
+					LocalPort: {
+						Identifier: "In",
+						Index: null
+					},
+					Id: "79724b20-a270-414e-aba3-5763913d86fe",
+					RemotePort: {
+						Identifier: "Out",
+						Index: null
+					},
+					DeliveryPolicy: null
+				}
+			],
+			Raw: {
+				Language: "en-us",
+				Grammars: null,
+				BufferLengthInMs: 1000,
+				VoiceActivityStartOffsetMs: -150,
+				VoiceActivityEndOffsetMs: -150,
+				InitialSilenceTimeoutMs: 0,
+				BabbleTimeoutMs: 0,
+				EndSilenceTimeoutMs: 150,
+				EndSilenceTimeoutAmbiguousMs: 500,
+				InputFormat: {
+					FormatTag: 1,
+					Channels: 1,
+					SamplesPerSec: 16000,
+					AvgBytesPerSec: 32000,
+					BlockAlign: 2,
+					BitsPerSample: 16,
+					ExtraSize: 0
+				}
+			},
+			Id: "add0906c-d3d7-4296-83a5-e57e9751312d"
+		},
+		{
+			ComponentType: "OpenSense.Component.Psi.JoinConfiguration, OpenSense.Component.Psi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			Name: "Join Operator",
+			Description: "",
+			Inputs: [
+				{
+					RemoteId: "6afd08c4-3532-4bd1-8d10-a5574fbf334e",
+					LocalPort: {
+						Identifier: "Primary",
+						Index: null
+					},
+					Id: "ee4edda5-bdeb-4714-86e2-fb3244efa3e4",
+					RemotePort: {
+						Identifier: "Out",
+						Index: null
+					},
+					DeliveryPolicy: null
+				},
+				{
+					RemoteId: "add0906c-d3d7-4296-83a5-e57e9751312d",
+					LocalPort: {
+						Identifier: "Secondary",
+						Index: null
+					},
+					Id: "249c017f-5622-47f1-9131-af53eef0ee3b",
+					RemotePort: {
+						Identifier: "Out",
+						Index: null
+					},
+					DeliveryPolicy: null
+				}
+			],
+			Id: "851134ae-da79-4035-863f-c5c4f8c24145"
+		},
+		{
+			ComponentType: "OpenSense.Component.Psi.CognitiveServices.Speech.AzureSpeechRecognizerConfiguration, OpenSense.Component.Psi.CognitiveServices.Speech, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			Name: "Microsoft.Psi.CognitiveServices.Speech.AzureSpeechRecognizer",
+			Description: "",
+			Inputs: [
+				{
+					RemoteId: "851134ae-da79-4035-863f-c5c4f8c24145",
+					LocalPort: {
+						Identifier: "In",
+						Index: null
+					},
+					Id: "656da1d2-d5a3-467e-9383-49cbbcbced82",
+					RemotePort: {
+						Identifier: "Out",
+						Index: null
+					},
+					DeliveryPolicy: null
+				}
+			],
+			Raw: {
+				Language: "en-us",
+				SubscriptionKey: "{your_subscription_key}",
+				InputFormat: {
+					FormatTag: 1,
+					Channels: 1,
+					SamplesPerSec: 16000,
+					AvgBytesPerSec: 32000,
+					BlockAlign: 2,
+					BitsPerSample: 16,
+					ExtraSize: 0
+				},
+				Region: "{your_subscription_region}"
+			},
+			Id: "f2bcaa84-d8a2-4af8-a22e-d794eb6c1f72"
+		},
+		{
+			ComponentType: "OpenSense.Component.Psi.Speech.Visualizer.StreamingSpeechRecognitionVisualizerConfiguration, OpenSense.Wpf.Component.Psi.Speech.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			Id: "b152cb7e-6652-4b8d-ba3e-abb91813621d",
+			Name: "OpenSense.Component.Psi.Speech.Visualizer.StreamingSpeechRecognitionVisualizer",
+			Description: "",
+			Inputs: [
+				{
+					RemoteId: "f2bcaa84-d8a2-4af8-a22e-d794eb6c1f72",
+					LocalPort: {
+						Identifier: "In",
+						Index: null
+					},
+					Id: "51999360-5e94-49c1-8382-d89cda70089e",
+					RemotePort: {
+						Identifier: "Out",
+						Index: null
+					},
+					DeliveryPolicy: null
+				}
+			]
+		}
+	]
+}

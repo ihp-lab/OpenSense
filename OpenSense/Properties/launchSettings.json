@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "OpenSense": {
-      "commandName": "Project",
-      "nativeDebugging": true
-    }
-  }
-}

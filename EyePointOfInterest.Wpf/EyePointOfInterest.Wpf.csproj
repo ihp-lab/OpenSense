@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>OpenSense.Wpf.Component.EyePointOfInterest</AssemblyName>
+    <RootNamespace>OpenSense.Wpf.Component.EyePointOfInterest</RootNamespace>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EyePointOfInterest.Wpf.Common\EyePointOfInterest.Wpf.Common.csproj" />
+    <ProjectReference Include="..\EyePointOfInterest\EyePointOfInterest.csproj" />
+    <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="DisplayPoiEstimatorConfigurationControl.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="DisplayPoiEstimatorInstanceControl.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+  </ItemGroup>
+
+</Project>

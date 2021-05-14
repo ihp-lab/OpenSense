@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
+  
   <PropertyGroup Label="UserMacros" />
+  
   <PropertyGroup>
-    <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)\bin\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\obj\$(Platform)\$(Configuration)\</IntDir>
     <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
   </PropertyGroup>
+  
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>$(ProjectDir)\openSmileLib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -16,14 +19,16 @@
       <AdditionalLibraryDirectories>$(ProjectDir)\openSmileLib\lib\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>openSmileLib_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>:: Copy openSMILE's native dll into OutDir
-copy /Y "$(ProjectDir)\openSmileLib\lib\$(PlatformName)\$(ConfigurationName)\openSmileLib_$(ConfigurationName).dll" "$(OutDir)\openSmileLib_$(ConfigurationName).dll"</Command>
-    </PostBuildEvent>
-    <PostBuildEvent>
-      <Message>
-      </Message>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemGroup />
+  
+  <ItemGroup>
+    <Content Include="$(ProjectDir)\openSmileLib\lib\$(PlatformName)\$(ConfigurationName)\openSmileLib_$(ConfigurationName).dll">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(ProjectDir)\openSmileLib\lib\$(PlatformName)\$(ConfigurationName)\openSmileLib_$(ConfigurationName).pdb">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

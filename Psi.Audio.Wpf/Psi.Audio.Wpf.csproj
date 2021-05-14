@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>OpenSense.Wpf.Component.Psi.Audio</AssemblyName>
+    <RootNamespace>OpenSense.Wpf.Component.Psi.Audio</RootNamespace>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Psi.Audio\Psi.Audio.csproj" />
+    <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="WaveFileAudioSourceConfigurationControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="WaveFileWriterConfigurationControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="WaveFileAudioSourceConfigurationControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="WaveFileWriterConfigurationControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
+</Project>

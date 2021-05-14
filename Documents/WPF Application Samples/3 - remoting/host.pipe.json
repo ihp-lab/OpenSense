@@ -1,0 +1,99 @@
+{
+	Id: "0c52426f-85b5-4b91-aee8-a78361135c0f",
+	Name: "host",
+	Description: "",
+	DeliveryPolicy: {
+		InitialQueueSize: 1,
+		MaximumQueueSize: 1,
+		Name: "LatestMessage"
+	},
+	Instances: [
+		{
+			ComponentType: "OpenSense.Component.Psi.Media.MediaCaptureConfiguration, OpenSense.Component.Psi.Media.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			Raw: {
+				CaptureAudio: false,
+				BacklightCompensation: {
+					Value: false,
+					Auto: false
+				},
+				Brightness: {
+					Value: 0,
+					Auto: false
+				},
+				ColorEnable: {
+					Value: false,
+					Auto: false
+				},
+				Contrast: {
+					Value: 0,
+					Auto: false
+				},
+				Gain: {
+					Value: 0,
+					Auto: false
+				},
+				Gamma: {
+					Value: 0,
+					Auto: false
+				},
+				Hue: {
+					Value: 0,
+					Auto: false
+				},
+				Saturation: {
+					Value: 0,
+					Auto: false
+				},
+				Sharpness: {
+					Value: 0,
+					Auto: false
+				},
+				WhiteBalance: {
+					Value: 0,
+					Auto: false
+				},
+				Focus: {
+					Value: 0,
+					Auto: false
+				},
+				UseInSharedMode: false,
+				Width: 4096,
+				Height: 3072,
+				Framerate: 15.0,
+				DeviceId: null
+			},
+			Id: "4911182e-8caf-4766-ba3b-9de143b0866f",
+			Name: "Microsoft.Psi.Media.MediaCapture",
+			Description: "",
+			Inputs: []
+		},
+		{
+			ComponentType: "OpenSense.Component.Psi.RemoteExporterConfiguration, OpenSense.Component.Psi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			Port: 11411,
+			Transport: 2,
+			MaxBytesPerSecond: 9223372036854775807,
+			BytesPerSecondSmoothingWindowSeconds: 5.0,
+			LargeMessageInputs: [
+				"ceda0910-76fe-4652-907a-497249b219d0"
+			],
+			Id: "4d0adda3-15dd-4ef8-b450-d1692ea38ff2",
+			Name: "Remote Exporter",
+			Description: "",
+			Inputs: [
+				{
+					Id: "ceda0910-76fe-4652-907a-497249b219d0",
+					LocalPort: {
+						Identifier: "In",
+						Index: "video"
+					},
+					RemoteId: "4911182e-8caf-4766-ba3b-9de143b0866f",
+					RemotePort: {
+						Identifier: "Video",
+						Index: null
+					},
+					DeliveryPolicy: null
+				}
+			]
+		}
+	]
+}

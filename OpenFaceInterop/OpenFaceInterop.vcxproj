@@ -118,6 +118,10 @@
     <ClInclude Include="include\RecorderInterop.h" />
     <ClInclude Include="include\SequenceReaderInterop.h" />
     <ClInclude Include="include\VisualizerInterop.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="OpenFaceInterop.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

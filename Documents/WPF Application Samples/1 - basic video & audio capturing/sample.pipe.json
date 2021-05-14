@@ -1,0 +1,113 @@
+{
+	Name: "",
+	Id: "fb2174cd-6580-4f3d-b6a2-8f2785d1ac7d",
+	Description: "",
+	DeliveryPolicy: {
+		InitialQueueSize: 1,
+		MaximumQueueSize: 1,
+		Name: "LatestMessage"
+	},
+	Instances: [
+		{
+			ComponentType: "OpenSense.Component.Psi.Media.MediaCaptureConfiguration, OpenSense.Component.Psi.Media.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			Name: "Microsoft.Psi.Media.MediaCapture",
+			Description: "",
+			Inputs: [],
+			Raw: {
+				CaptureAudio: true,
+				BacklightCompensation: {
+					Value: false,
+					Auto: false
+				},
+				Brightness: {
+					Value: 0,
+					Auto: false
+				},
+				ColorEnable: {
+					Value: false,
+					Auto: false
+				},
+				Contrast: {
+					Value: 60,
+					Auto: false
+				},
+				Gain: {
+					Value: 64,
+					Auto: false
+				},
+				Gamma: {
+					Value: 300,
+					Auto: false
+				},
+				Hue: {
+					Value: 0,
+					Auto: false
+				},
+				Saturation: {
+					Value: 50,
+					Auto: false
+				},
+				Sharpness: {
+					Value: 40,
+					Auto: false
+				},
+				WhiteBalance: {
+					Value: 4600,
+					Auto: true
+				},
+				Focus: {
+					Value: 0,
+					Auto: false
+				},
+				UseInSharedMode: false,
+				Width: 640,
+				Height: 480,
+				Framerate: 30.0,
+				DeviceId: null
+			},
+			Id: "b2cd7220-17b2-4e3c-a73f-af34a56e8b37"
+		},
+		{
+			ComponentType: "OpenSense.Component.Imaging.Visualizer.ColorVideoVisualizerConfiguration, OpenSense.Wpf.Component.Imaging.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			Name: "OpenSense.Component.Imaging.Visualizer.ColorVideoVisualizer",
+			Description: "",
+			Inputs: [
+				{
+					RemoteId: "b2cd7220-17b2-4e3c-a73f-af34a56e8b37",
+					LocalPort: {
+						Identifier: "In",
+						Index: null
+					},
+					Id: "f2c93fd8-9cf5-47fb-9a9f-58324fe0fb68",
+					RemotePort: {
+						Identifier: "Video",
+						Index: null
+					},
+					DeliveryPolicy: null
+				}
+			],
+			Id: "60433ffa-54aa-446e-9445-d40a00abd012"
+		},
+		{
+			ComponentType: "OpenSense.Component.Audio.Visualizer.AudioVisualizerConfiguration, OpenSense.Wpf.Component.Audio.Visualizer.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			Name: "OpenSense.Component.Audio.Visualizer.AudioVisualizer",
+			Description: "",
+			Inputs: [
+				{
+					RemoteId: "b2cd7220-17b2-4e3c-a73f-af34a56e8b37",
+					LocalPort: {
+						Identifier: "In",
+						Index: null
+					},
+					Id: "a6387bc9-3f3f-45cf-8028-403d58ceca9b",
+					RemotePort: {
+						Identifier: "Audio",
+						Index: null
+					},
+					DeliveryPolicy: null
+				}
+			],
+			Id: "b145e2d1-4479-4dea-a373-e410ba13d769"
+		}
+	]
+}

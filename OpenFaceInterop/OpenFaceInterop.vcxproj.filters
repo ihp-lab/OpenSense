@@ -46,5 +46,11 @@
     <ClInclude Include="include\VisualizerInterop.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="OpenFaceInterop.rc" />
   </ItemGroup>
 </Project>

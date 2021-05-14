@@ -20,7 +20,6 @@ writes data to data memory...
 #define COMPONENT_NAME_CRAWWAVESOURCE "cRawWaveSource"
 
 #undef class
-using std::shared_ptr;
 class cRawWaveSource : public cDataSource {
 private:
 	//std::mutex bufferLock = std::mutex();
