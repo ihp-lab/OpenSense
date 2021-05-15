@@ -30,6 +30,6 @@ This sample shows the usage of `Delivery policy` and `Join Operator`.
 ## Tips
 
 + `Microsoft.Psi.Speech.SystemVoiceActivityDetector` is only available in .net framework, it is removed in .net core and no substitution is provided. This can be a problem if you want to use speech recognition in other platforms. Microsoft /psi has a [sample](https://github.com/Microsoft/psi-samples/tree/main/Samples/SimpleVoiceActivityDetector) for making a simple voice activity detector which we plan to add to our project.
-+ For complex pipelines, you may want to set pipeline default delivery policy to some value other than `Unlimited`. To ensure correct speech recognition results, all data connections up from audio capture down to speech recognizers should have local delivery policy set to `Unlimited` or other reasonable values.
++ For complex pipelines, you may want to set pipeline default delivery policy to some value other than `Unlimited`. To ensure correct speech recognition results, all data connections up from audio capturers down to speech recognizers should have local delivery policy set to `Unlimited` or other reasonable values.
 + Other speech recognizers are also available in OpenSense.
 + Many components have a `Input format` option for their audio inputs, we haven't found any use-case that we need to match this option to the real input format.

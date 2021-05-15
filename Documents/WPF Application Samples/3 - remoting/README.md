@@ -2,7 +2,7 @@
 
 ## Description
 
-This sample contains a pipeline for sending video to remote client pipelines and a pipeline for receiving that data from the host pipeline.
+This sample contains a pipeline for sending video to remote client pipelines and a pipeline for receiving that data from the other pipeline.
 
 ## How to use
 
