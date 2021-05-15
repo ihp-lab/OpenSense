@@ -162,6 +162,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoogleCloud.Speech.V1", "Go
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoogleCloud.Speech.V1.Wpf", "GoogleCloud.Speech.V1.Wpf\GoogleCloud.Speech.V1.Wpf.csproj", "{E65A7FBF-B438-458F-AE8B-83636A485291}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Derivative", "Derivative", "{C1DFCFE7-DCB9-4648-8F4D-A6FCFBDAB5DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
