@@ -1,0 +1,101 @@
+{
+	Name: "",
+	Id: "9fbd7bdb-6ace-4e2c-a5ec-bf26055c318b",
+	Description: "",
+	DeliveryPolicy: {
+		InitialQueueSize: 16,
+		MaximumQueueSize: 2147483647,
+		Name: "Unlimited"
+	},
+	Instances: [
+		{
+			ComponentType: "OpenSense.Component.Psi.Audio.AudioCaptureConfiguration, OpenSense.Component.Psi.Audio.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			Name: "Microsoft.Psi.Audio.AudioCapture",
+			Description: "",
+			Inputs: [],
+			Raw: {
+				DeviceName: null,
+				TargetLatencyInMs: 20,
+				AudioEngineBufferInMs: 500,
+				AudioLevel: -1.0,
+				Gain: 1.0,
+				OptimizeForSpeech: false,
+				UseEventDrivenCapture: true,
+				DropOutOfOrderPackets: false,
+				Format: {
+					FormatTag: 1,
+					Channels: 1,
+					SamplesPerSec: 16000,
+					AvgBytesPerSec: 32000,
+					BlockAlign: 2,
+					BitsPerSample: 16,
+					ExtraSize: 0
+				}
+			},
+			Id: "cb7a9957-4d99-436f-a719-aa86db2b9f01"
+		},
+		{
+			ComponentType: "OpenSense.Component.OpenSmile.OpenSmileConfiguration, OpenSense.Component.OpenSmile.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			raw: {
+				OverallLogLevel: 0,
+				PrintLogToConsole: false,
+				AppendLogFile: false,
+				LogFilename: "openSMILE.log",
+				PrintLogToFile: false,
+				ConfigurationFilename: "{path_to_this_sample}/openSMILE/sample1/opensmile_energy.conf",
+				UseConfigurationFile: true,
+				InstanceConfigurations: []
+			},
+			Name: "OpenSense.Component.OpenSmile.OpenSmile",
+			Description: "",
+			Inputs: [
+				{
+					RemoteId: "cb7a9957-4d99-436f-a719-aa86db2b9f01",
+					LocalPort: {
+						Identifier: "In",
+						Index: "waveSource"
+					},
+					Id: "47818c97-dbd5-45f6-b51e-5cd392f4ebd9",
+					RemotePort: {
+						Identifier: "Out",
+						Index: null
+					},
+					DeliveryPolicy: null
+				}
+			],
+			Raw: {
+				OverallLogLevel: 0,
+				PrintLogToConsole: false,
+				AppendLogFile: false,
+				LogFilename: "openSMILE.log",
+				PrintLogToFile: false,
+				ConfigurationFilename: "{path_to_this_sample}/openSMILE/sample1/opensmile_energy.conf",
+				UseConfigurationFile: true,
+				InstanceConfigurations: []
+			},
+			Mute: false,
+			Id: "4fcfc0cc-acf7-4a38-9d2e-3354a7d490e7"
+		},
+		{
+			ComponentType: "OpenSense.Component.OpenSmile.Visualizer.OpenSmileVisualizerConfiguration, OpenSense.Wpf.Component.OpenSmile.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			Name: "OpenSense.Component.OpenSmile.Visualizer.OpenSmileVisualizer",
+			Description: "",
+			Inputs: [
+				{
+					RemoteId: "4fcfc0cc-acf7-4a38-9d2e-3354a7d490e7",
+					LocalPort: {
+						Identifier: "In",
+						Index: null
+					},
+					Id: "a8b94df5-0567-49ee-926e-dd8e56120699",
+					RemotePort: {
+						Identifier: "Out",
+						Index: "dataSink"
+					},
+					DeliveryPolicy: null
+				}
+			],
+			Id: "aea2e950-2ee8-46eb-8dcb-6566c2de02bc"
+		}
+	]
+}
