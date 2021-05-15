@@ -1,0 +1,249 @@
+{
+	Name: "",
+	Id: "732f2dce-f8f0-4b2f-abb3-806d17cfa073",
+	Description: "",
+	DeliveryPolicy: {
+		InitialQueueSize: 1,
+		MaximumQueueSize: 1,
+		Name: "LatestMessage"
+	},
+	Instances: [
+		{
+			ComponentType: "OpenSense.Component.Psi.Media.MediaCaptureConfiguration, OpenSense.Component.Psi.Media.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			Name: "Microsoft.Psi.Media.MediaCapture",
+			Description: "",
+			Inputs: [],
+			Raw: {
+				CaptureAudio: false,
+				BacklightCompensation: {
+					Value: false,
+					Auto: false
+				},
+				Brightness: {
+					Value: 0,
+					Auto: false
+				},
+				ColorEnable: {
+					Value: false,
+					Auto: false
+				},
+				Contrast: {
+					Value: 0,
+					Auto: false
+				},
+				Gain: {
+					Value: 0,
+					Auto: false
+				},
+				Gamma: {
+					Value: 0,
+					Auto: false
+				},
+				Hue: {
+					Value: 0,
+					Auto: false
+				},
+				Saturation: {
+					Value: 0,
+					Auto: false
+				},
+				Sharpness: {
+					Value: 0,
+					Auto: false
+				},
+				WhiteBalance: {
+					Value: 0,
+					Auto: false
+				},
+				Focus: {
+					Value: 0,
+					Auto: false
+				},
+				UseInSharedMode: false,
+				Width: 4096,
+				Height: 3072,
+				Framerate: 15.0,
+				DeviceId: null
+			},
+			Id: "ca337198-ad00-4117-b21a-3f0b541275c7"
+		},
+		{
+			ComponentType: "OpenSense.Component.OpenPose.OpenPoseConfiguration, OpenSense.Component.OpenPose, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			Name: "OpenSense.Component.OpenPose.OpenPose",
+			Description: "",
+			Inputs: [
+				{
+					RemoteId: "ca337198-ad00-4117-b21a-3f0b541275c7",
+					LocalPort: {
+						Identifier: "In",
+						Index: null
+					},
+					Id: "5fa828f0-d8b4-4cd6-a360-9ffb9b8b50b4",
+					RemotePort: {
+						Identifier: "Out",
+						Index: null
+					},
+					DeliveryPolicy: null
+				}
+			],
+			Raw: {
+				Pose: {
+					PoseMode: 1,
+					NetResolution: {
+						x: -1,
+						y: 368,
+						magnitude: 368.001373,
+						sqrMagnitude: 135425
+					},
+					OutputSize: null,
+					KeypointScaleMode: 0,
+					GpuNumber: -1,
+					GpuNumberStart: 0,
+					ScalesNumber: 1,
+					ScaleGap: 0.25,
+					RenderMode: 1,
+					PoseModel: 0,
+					BlendOriginalFrame: true,
+					AlphaKeypoint: 0.6,
+					AlphaHeatMap: 0.7,
+					DefaultPartToRender: 0,
+					ModelFolder: null,
+					HeatMapTypes: 0,
+					HeatMapScaleMode: 3,
+					AddPartCandidates: false,
+					RenderThreshold: 0.05,
+					NumberPeopleMax: -1,
+					MaximizePositives: false,
+					FpsMax: -1.0,
+					ProtoTxtPath: "",
+					CaffeModelPath: "",
+					UpsamplingRatio: 0.0
+				},
+				Hand: {
+					Enable: false,
+					Detector: 0,
+					InputResolution: {
+						x: 368,
+						y: 368,
+						magnitude: 520.4306,
+						sqrMagnitude: 270848
+					},
+					ScalesNumber: 1,
+					ScaleRange: 0.4,
+					RenderMode: 1,
+					AlphaKeypoint: 0.6,
+					AlphaHeatMap: 0.7,
+					RenderThreshold: 0.2
+				},
+				Face: {
+					Enable: false,
+					Detector: 0,
+					InputResolution: {
+						x: 368,
+						y: 368,
+						magnitude: 520.4306,
+						sqrMagnitude: 270848
+					},
+					RenderMode: 1,
+					AlphaKeypoint: 0.6,
+					AlphaHeatMap: 0.7,
+					RenderThreshold: 0.4
+				},
+				Extra: {
+					Reconstruct3d: false,
+					MinViews3d: -1,
+					Identification: false,
+					Tracking: -1,
+					IkThreads: 0
+				},
+				Input: {
+					InputType: 4,
+					ProducerString: "-1",
+					FrameFirst: 0,
+					FrameStep: 1,
+					FrameLast: 18446744073709551615,
+					RealTimeProcessing: false,
+					FrameFlip: false,
+					FrameRotate: 0,
+					FramesRepeat: false,
+					CameraResolution: null,
+					CameraParameterPath: null,
+					UndistortImage: false,
+					NumberViews: -1
+				},
+				Output: {
+					Verbose: -1.0,
+					WriteKeypoint: "",
+					WriteKeypointFormat: 1,
+					WriteJson: "",
+					WriteCocoJson: "",
+					WriteCocoJsonVariants: 1,
+					WriteCocoJsonVariant: 1,
+					WriteImages: "",
+					WriteImagesFormat: "png",
+					WriteVideo: "",
+					WriteVideoFps: -1.0,
+					WriteVideoWithAudio: false,
+					WriteHeatMaps: "",
+					WriteHeatMapsFormat: "png",
+					WriteVideo3D: "",
+					WriteVideoAdam: "",
+					WriteBvh: "",
+					UdpHost: "",
+					UdpPort: "8051"
+				},
+				Gui: {
+					DisplayMode: 0,
+					GuiVerbose: false,
+					FullScreen: false
+				},
+				Debug: {
+					LogPriority: 3,
+					DisableMultiThread: false,
+					ProfileSpeed: 1000
+				}
+			},
+			Id: "3157db77-feb8-457b-a67a-a9dd822408de"
+		},
+		{
+			ComponentType: "OpenSense.Component.OpenPose.Visualizer.OpenPoseVisualizerConfiguration, OpenSense.Wpf.Component.OpenPose.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			Name: "OpenSense.Component.OpenPose.Visualizer.OpenPoseVisualizer",
+			Description: "",
+			Inputs: [
+				{
+					RemoteId: "3157db77-feb8-457b-a67a-a9dd822408de",
+					LocalPort: {
+						Identifier: "DataIn",
+						Index: null
+					},
+					Id: "1cee0e0f-447f-4600-b105-8694c929dcc0",
+					RemotePort: {
+						Identifier: "Out",
+						Index: null
+					},
+					DeliveryPolicy: null
+				},
+				{
+					RemoteId: "ca337198-ad00-4117-b21a-3f0b541275c7",
+					LocalPort: {
+						Identifier: "ImageIn",
+						Index: null
+					},
+					Id: "ff1329de-ae7d-458d-8ac6-5aa7c169074e",
+					RemotePort: {
+						Identifier: "Out",
+						Index: null
+					},
+					DeliveryPolicy: null
+				}
+			],
+			Mute: false,
+			DrawPose: true,
+			DrawFace: true,
+			DrawHand: true,
+			CircleRadius: 3,
+			LineThickness: 1,
+			Id: "5a39b781-d16c-4d4c-b341-6eab20aed5d9"
+		}
+	]
+}
