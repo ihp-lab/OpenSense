@@ -27,7 +27,7 @@ This sample contains a pipeline for demonstrating the usage of openSMILE compone
 ## Tips
 
 + openSMILE has its own configuration file format. Please reference to its own documents to understand the format.
-+ The openSMILE in our project is a customized versing with 2 additional openSMILE components, 1 for receiving wave data and 1 for sending back results.
-+ In sample 1, the `sample1/opensmile_energy.conf` is referencing `sample1/shared/common_io.conf`. This `common_io.conf` is the interface for exchanging data between OpenSense and openSMILE.
++ The openSMILE in our project is a customized version with 2 additional openSMILE components, 1 for receiving wave data and 1 for sending back results.
++ The `sample1/opensmile_energy.conf` is referencing `sample1/shared/common_io.conf`. This `common_io.conf` is the interface for exchanging data between OpenSense and openSMILE.
 + There is a `OpenSmile Configuration Converter` widget to converting a regular openSMILE configuration file to a OpenSense-compatible openSMILE configuration. This is down by simply replacing the wave source and data sink segments. This widget may not always work.
 + `sample2/opensmile_emobase_live4.conf` is a sample openSMILE configuration processed by `OpenSmile Configuration Converter`.
