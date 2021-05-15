@@ -90,6 +90,13 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
             set => SetProperty(ref postInterimResults, value);
         }
 
+        private bool addDurationToOutputTime = false;
+
+        public bool AddDurationToOutputTime {
+            get => addDurationToOutputTime;
+            set => SetProperty(ref addDurationToOutputTime, value);
+        }
+
         private string jsonCredentials;
         private SpeechClient client;
         private SpeechClient.StreamingRecognizeStream stream;
@@ -203,11 +210,16 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
                         var bestAlternative = combined.First();
                         var restAlternatives = combined
                             .Skip(1);
-                        var duration = TimeSpan.FromSeconds(mostStablePortion.ResultEndTime.Seconds) + TimeSpan.FromMilliseconds(mostStablePortion.ResultEndTime.Nanos / 1e6);
                         var isFinalResult = mostStablePortion.IsFinal && !AtMostOneFinalResultEachVadSession;
                         var result = new StreamingSpeechRecognitionResult(isFinalResult, bestAlternative.Text, bestAlternative.Confidence, restAlternatives);
-                        var resultTime = startTime.Value + duration;
-                        var postTime = resultTime;
+                        DateTime postTime;
+                        if (AddDurationToOutputTime) {
+                            var duration = TimeSpan.FromSeconds(mostStablePortion.ResultEndTime.Seconds) + TimeSpan.FromMilliseconds(mostStablePortion.ResultEndTime.Nanos / 1e6);
+                            var resultTime = 
+                            postTime = startTime.Value + duration;
+                        } else {
+                            postTime = startTime.Value;
+                        }
                         lock (this) {
                             if (postTime <= maxPostTime) {
                                 postTime = maxPostTime + TimeSpan.FromMilliseconds(1);//TimeSpan.MinValue too small

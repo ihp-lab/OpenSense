@@ -52,6 +52,13 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
             set => SetProperty(ref postInterimResults, value);
         }
 
+        private bool addDurationToOutputTime = false;
+
+        public bool AddDurationToOutputTime {
+            get => addDurationToOutputTime;
+            set => SetProperty(ref addDurationToOutputTime, value);
+        }
+
         public override IComponentMetadata GetMetadata() => new GoogleCloudSpeechMetadata();
 
         protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new GoogleCloudSpeech(pipeline, File.ReadAllText(CredentialsPath)) { 
@@ -60,6 +67,7 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
             LanguageCode = LanguageCode,
             SeparateRecognitionPerChannel = SeparateRecognitionPerChannel,
             PostInterimResults = PostInterimResults,
+            AddDurationToOutputTime = AddDurationToOutputTime,
         };
     }
 }

@@ -18,6 +18,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
         <Label>Mute</Label>
@@ -37,5 +38,8 @@
 
         <Label Grid.Row="5">Post interim results</Label>
         <CheckBox Grid.Row="5" Grid.Column="1" IsChecked="{Binding PostInterimResults}"/>
+
+        <Label Grid.Row="6">Add duration to output time</Label>
+        <CheckBox Grid.Row="6" Grid.Column="1" IsChecked="{Binding AddDurationToOutputTime}"/>
     </Grid>
 </UserControl>
