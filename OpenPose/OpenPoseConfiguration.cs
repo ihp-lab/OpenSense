@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using OpenSense.Component.Contract;
@@ -19,7 +18,7 @@ namespace OpenSense.Component.OpenPose {
         public override IComponentMetadata GetMetadata() => new OpenPoseMetadata();
 
         protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new OpenPose(pipeline, Raw) { 
-            Logger = serviceProvider?.GetService<ILoggerProvider>()?.CreateLogger(Name),
+            Logger = (serviceProvider?.GetService(typeof(ILoggerProvider)) as ILoggerProvider)?.CreateLogger(Name),
         };
     }
 }

@@ -16,7 +16,7 @@ If you want to add a user interface for interaction with the component at runtim
 Add this project as a reference project.
 
 ```xml
-<ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
+<ProjectReference Include="$(SolutionDir)\ComponentContract\ComponentContract.csproj" />
 ```
 
 Use the following template to implement the interfaces:
@@ -30,7 +30,7 @@ public class MyComponentConfiguration : ConventionalComponentConfiguration {
     public override IComponentMetadata GetMetadata() => new MyComponentMetadata();
 
     protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new MyComponent(pipeline) { 
-        Logger = serviceProvider?.GetService(typeof(ILoggerProvider))?.CreateLogger(Name), //if you want a ILogger, then define a field Logger for /psi component.
+        Logger = (serviceProvider?.GetService(typeof(ILoggerProvider)) as ILoggerProvider)?.CreateLogger(Name), //if you want a ILogger, then define a field Logger for /psi component.
     };
 }
 
@@ -61,10 +61,12 @@ Check the implementation of `Join Operator` or `PsiStoreExporter` for a referenc
 
 ## Write UI
 
+User interfaces are not mandatory.
+
 Add this project as a reference project.
 
 ```xml
-<ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+<ProjectReference Include="$(SolutionDir)\WpfComponentContract\WpfComponentContract.csproj" />
 ```
 
 Use the following template to implement the interfaces:
