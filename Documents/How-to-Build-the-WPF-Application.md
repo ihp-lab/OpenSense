@@ -32,18 +32,18 @@ If you clone this repository by downloading a zip file, some files will be repla
 If you clone by a git client without Git LFS extension, the clone process will report an error.
 
 Click `Initialize Git LFS` if this window pops out.
-[[images/github desktop git lfs.png]]
+![image](images/github-desktop-git-lfs.png)
 
 ## Build
 
 Open the file `OpenSense.sln` with Visual Studio.
 
 You may see security warnings like this.
-[[images/visual studio security warning.png]]
+![image](images/visual-studio-security-warning.png)
 *This may because this VS solution contains native C++ projects.*
 
 If a retarget dialog is shown, select `No Upgrade` for all.
-[[images/visual studio retarget project.png]].
+![image](images/visual-studio-retarget-project.png)
 *We once upgraded them to VS 2019 Toolset, but found some native functions does not work.*
 
 Select project `WpfApplication` and set it to be the startup project (by right click on it and click `Set as Startup Project`).
@@ -55,4 +55,4 @@ Then you can build the solution.
 Once you successfully build OpenSense, you may run it.
 
 You need to install Kinect SDK, if you see a runtime error like this.
-[[images/kinect sdk not installed.png]]
+![image](images/kinect-sdk-not-installed.png)
