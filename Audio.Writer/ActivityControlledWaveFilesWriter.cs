@@ -3,7 +3,7 @@ using System.IO;
 using Microsoft.Psi;
 using Microsoft.Psi.Audio;
 
-namespace OpenSense.Component.Psi.Audio {
+namespace OpenSense.Component.Audio.Writer {
     /// <summary>
     /// This component will write multiple wave files when the activity indicator is on.
     /// </summary>
