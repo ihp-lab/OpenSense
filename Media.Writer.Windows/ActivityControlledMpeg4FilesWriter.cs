@@ -46,8 +46,8 @@ namespace OpenSense.Component.Media.Writer {
             _filenameGenerator = filenameGenerator ?? throw new ArgumentNullException(nameof(filenameGenerator));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
-            InConnector = CreateInputConnectorFrom<(Shared<Image>, bool)>(this, nameof(In));
-            AudioInConnector = CreateInputConnectorFrom<AudioBuffer>(this, nameof(AudioIn));
+            InConnector = CreateInputConnectorFrom<(Shared<Image>, bool)>(pipeline, nameof(In));
+            AudioInConnector = CreateInputConnectorFrom<AudioBuffer>(pipeline, nameof(AudioIn));
 
             var videoTime = InConnector.Select((_, e) => e.OriginatingTime);
             var audioTime = AudioInConnector.Select((_, e) => e.OriginatingTime);
