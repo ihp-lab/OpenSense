@@ -6,7 +6,7 @@ Since OpenSense components are wrapping /psi components.
 You need to have a /psi component first. Please refer to [/psi document](https://github.com/microsoft/psi/wiki/Writing-Components) for writing a /psi component.
 
 There are only 2 simple interfaces you need to implement to wrap a /psi component to become a OpenSense component.
-After you implemented these interfaces, compile it into a DLL assembly file and paste it into the same directory of OpenSense assembly is located, then you can use it.
+After you implemented these interfaces, compile them (/psi component together with interfaces) into a DLL assembly file and paste the DLL into the same directory of OpenSense assembly is located, then you can use it.
 
 If you want to add a user interface for setting component's options, 1 more interface need to be implemented.
 If you want to add a user interface for interaction with the component at runtime, there is 1 more interface.
@@ -30,7 +30,7 @@ public class MyComponentConfiguration : ConventionalComponentConfiguration {
     public override IComponentMetadata GetMetadata() => new MyComponentMetadata();
 
     protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new MyComponent(pipeline) { 
-        Logger = (serviceProvider?.GetService(typeof(ILoggerProvider)) as ILoggerProvider)?.CreateLogger(Name), //if you want a ILogger, then define a field Logger for /psi component.
+        //Logger = (serviceProvider?.GetService(typeof(ILoggerProvider)) as ILoggerProvider)?.CreateLogger(Name), //if you want an ILogger, then define a field Logger for /psi component.
     };
 }
 
@@ -49,15 +49,15 @@ The following types of public properties of the /psi component can be detected a
 
 + `IConsumer<T>`
 + `IProducer<T>`
-+ `IConsumer<IReadOnlyList<T>>`
-+ `IProducer<IReadOnlyList<T>>`
-+ `IConsumer<IReadOnlyDictionary<string, T>>`
-+ `IProducer<IReadOnlyDictionary<string, T>>`
++ `IReadOnlyList<IConsumer<T>>`
++ `IReadOnlyList<IProducer<T>>`
++ `IReadOnlyDictionary<string, IConsumer<T>>`
++ `IReadOnlyDictionary<string, IProducer<T>>`
 
 Finally, copy and paste the DLL file.
 
-If you want to add a component that knows its transmitting data types only after the pipeline is assemblied (before the pipelien is executed), this will be a little bit harder.
-Check the implementation of `Join Operator` or `PsiStoreExporter` for a reference.
+If you want to add a component that knows its transmitting data types only after the pipeline is assemblied (and before the pipelien is executed), this will be a little bit harder.
+Check the implementation of `Join Operator` and/or `PsiStoreExporter` for a reference.
 
 ## Write UI
 
