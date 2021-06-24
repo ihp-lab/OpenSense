@@ -71,11 +71,12 @@ namespace OpenSense.Pipeline {
                 return;
             }
             Pipeline.Dispose();
-            foreach (var inst in Instances.OfType<IDisposable>()) {
-                //Pipeline components are already disposed when Pipeline.Dispose() is called, 
-                //but Instances here may not be the same object as the corresponding pipeline component,
-                //so this call of Dispose is necessary
-                inst.Dispose();
+            foreach (var instObj in Instances.Select(i => i.Instance).OfType<IDisposable>()) {
+                //some components will not be disposed by pipeline dispose
+                instObj.Dispose();
+            }
+            foreach (var instObj in Instances.Select(i => i.Configuration).OfType<IDisposable>()) {
+                instObj.Dispose();
             }
             disposed = true;
         }
