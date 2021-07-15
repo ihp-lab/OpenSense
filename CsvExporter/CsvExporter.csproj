@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>OpenSense.Component.CsvExporter</AssemblyName>
+    <RootNamespace>OpenSense.Component.CsvExporter</RootNamespace>
+    <LangVersion>9.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Composition" Version="5.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
+    <ProjectReference Include="..\Psi\Psi.csproj" />
+  </ItemGroup>
+
+</Project>
