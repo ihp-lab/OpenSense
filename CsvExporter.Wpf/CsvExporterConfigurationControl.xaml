@@ -14,9 +14,17 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
         <Label Grid.Row="0" Grid.Column="0">Filename</Label>
         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Filename}"/>
+
+        <Label Grid.Row="1" Grid.Column="0">Max recursion depth</Label>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MaxRecursionDepth}"/>
+
+        <Label Grid.Row="2" Grid.Column="0">Null value result string</Label>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding NullValueResultString}"/>
     </Grid>
 </UserControl>

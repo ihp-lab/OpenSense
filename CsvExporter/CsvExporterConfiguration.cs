@@ -15,10 +15,26 @@ namespace OpenSense.Component.CsvExporter {
             set => SetProperty(ref filename, value);
         }
 
+        private int maxRecursionDepth = int.MaxValue;
+
+        public int MaxRecursionDepth {
+            get => maxRecursionDepth;
+            set => SetProperty(ref maxRecursionDepth, value);
+        }
+
+        private string nullValueResultString = "null";
+
+        public string NullValueResultString {
+            get => nullValueResultString;
+            set => SetProperty(ref nullValueResultString, value);
+        }
+
         public override IComponentMetadata GetMetadata() => new CsvExporterMetadata();
 
         protected override object CreateInstance(Pipeline pipeline) {
             var result = new CsvExporter(pipeline, Filename) { 
+                MaxRecursionDepth = MaxRecursionDepth,
+                NullValueResultString = NullValueResultString,
             };
             return result;
         }

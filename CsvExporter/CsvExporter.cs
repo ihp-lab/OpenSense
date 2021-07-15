@@ -17,7 +17,25 @@ namespace OpenSense.Component.CsvExporter {
         private readonly string _filename;
 
         #region Settings
-        //None
+        private int maxRecursionDepth = int.MaxValue;
+
+        public int MaxRecursionDepth {
+            get => maxRecursionDepth;
+            set {
+                SetProperty(ref maxRecursionDepth, value);
+                serializers.ForEach(s => s.MaxRecursionDepth = value);
+            }
+        }
+
+        private string nullValueResultString = "null";
+
+        public string NullValueResultString {
+            get => nullValueResultString;
+            set {
+                SetProperty(ref nullValueResultString, value);
+                serializers.ForEach(s => s.NullValueResultString = value);
+            }
+        }
         #endregion
 
         private StreamWriter writer;
@@ -41,7 +59,10 @@ namespace OpenSense.Component.CsvExporter {
             if (!canAddStream) {
                 throw new InvalidOperationException();
             }
-            var serializer = new StreamSerializer<T>(ParentPipeline, streamName, GenerateNewColumnIndex);//TODO: what if "this"?
+            var serializer = new StreamSerializer<T>(ParentPipeline, streamName, GenerateNewColumnIndex) { //TODO: what if "this"?
+                MaxRecursionDepth = MaxRecursionDepth,
+                NullValueResultString = NullValueResultString,
+            };
             serializers.Add(serializer);
             source.PipeTo(serializer, deliveryPolicy);
         }
@@ -112,7 +133,7 @@ namespace OpenSense.Component.CsvExporter {
                 } else {
                     writer.Dispose();
 
-                    var tempFilename = Path.GetTempFileName();
+                    var tempFilename = $"{_filename}.tmp";
                     var tempFileStream = File.OpenWrite(tempFilename);
                     var tempFileWriter = new StreamWriter(tempFileStream) {
                         NewLine = "\n",
@@ -134,6 +155,7 @@ namespace OpenSense.Component.CsvExporter {
                     oldFileReader.Dispose();//base stream is also closed
                     tempFileWriter.Dispose();//base stream is also closed
 
+                    File.Delete(_filename);
                     File.Move(tempFilename, _filename);
 
                     CreateWriter(append: true);
