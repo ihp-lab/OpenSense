@@ -116,11 +116,13 @@ namespace OpenSense.Component.AzureKinect.Visualizer {
                             var p1 = calibration.ToColorSpace(p1_3d);
                             var p2 = calibration.ToColorSpace(p2_3d);
                             if ((p1.X != 0 || p1.Y != 0) && (p2.X != 0 || p2.Y != 0)) {
-                                var _p1 = new PointF((float)p1.X, (float)p1.Y);
-                                var _p2 = new PointF((float)p2.X, (float)p2.Y);
-                                graphics.DrawLine(linePen, _p1, _p2);
-                                graphics.FillEllipse(circleBrush, _p1.X, _p1.Y, circleRadius, circleRadius);
-                                graphics.FillEllipse(circleBrush, _p2.X, _p2.Y, circleRadius, circleRadius);
+                                if (IsValidPoint2D(p1) && IsValidPoint2D(p2)) {
+                                    var _p1 = new PointF((float)p1.X, (float)p1.Y);
+                                    var _p2 = new PointF((float)p2.X, (float)p2.Y);
+                                    graphics.DrawLine(linePen, _p1, _p2);
+                                    graphics.FillEllipse(circleBrush, _p1.X, _p1.Y, circleRadius, circleRadius);
+                                    graphics.FillEllipse(circleBrush, _p2.X, _p2.Y, circleRadius, circleRadius);
+                                }
                             }
                         }
                         foreach (var bone in AzureKinectBody.Bones) {
@@ -138,5 +140,17 @@ namespace OpenSense.Component.AzureKinect.Visualizer {
         private void OnPipelineCompleted(object sender, PipelineCompletedEventArgs e) {
             display.Clear();
         }
+
+        private static bool IsValidDouble(double val) {
+            if (Double.IsNaN(val)) {
+                return false;
+            }
+            if (Double.IsInfinity(val)) {
+                return false;
+            }
+            return true;
+        }
+
+        private static bool IsValidPoint2D(MathNet.Spatial.Euclidean.Point2D point) => IsValidDouble(point.X) && IsValidDouble(point.Y);
     }
 }
