@@ -64,12 +64,27 @@ namespace OpenSense.Component.Head.Common {
         [JsonIgnore]
         public Pupil InnerEyeCornerPosition => new Pupil(Landmarks3D[14], Landmarks3D[36]);
 
-        public bool Equals(Gaze other) {
-            return Landmarks.SequenceEqual(other.Landmarks)
-                && VisiableLandmarks.SequenceEqual(other.VisiableLandmarks)
-                && Landmarks3D.SequenceEqual(other.Landmarks3D)
-                && GazeVector.Equals(other.GazeVector)
-                && Angle.Equals(other.Angle);
-        }
+        #region IEquatable
+        public bool Equals(Gaze other) =>
+            Landmarks.SequenceEqual(other.Landmarks)
+            && VisiableLandmarks.SequenceEqual(other.VisiableLandmarks)
+            && Landmarks3D.SequenceEqual(other.Landmarks3D)
+            && GazeVector.Equals(other.GazeVector)
+            && Angle.Equals(other.Angle);
+
+        public override bool Equals(object obj) => obj is Gaze other ? Equals(obj) : false;
+
+        public override int GetHashCode() => HashCode.Combine(
+            Landmarks,
+            VisiableLandmarks,
+            Landmarks3D,
+            GazeVector,
+            Angle
+        );
+
+        public static bool operator ==(Gaze a, Gaze b) => a.Equals(b);
+
+        public static bool operator !=(Gaze a, Gaze b) => !(a == b);
+        #endregion
     }
 }

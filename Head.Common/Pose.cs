@@ -20,13 +20,13 @@ namespace OpenSense.Component.Head.Common {
         /// </summary>
         public readonly Vector3 Angle;
 
-        public readonly ImmutableArray<Vector2> Landmarks;
+        public readonly IReadOnlyList<Vector2> Landmarks;
 
-        public readonly ImmutableArray<Vector2> VisiableLandmarks;
+        public readonly IReadOnlyList<Vector2> VisiableLandmarks;
 
-        public readonly ImmutableArray<Vector3> Landmarks3D;
+        public readonly IReadOnlyList<Vector3> Landmarks3D;
 
-        public readonly ImmutableArray<ValueTuple<Vector2, Vector2>> IndicatorLines;
+        public readonly IReadOnlyList<ValueTuple<Vector2, Vector2>> IndicatorLines;
 
         [JsonConstructor]
         public Pose(
@@ -99,12 +99,27 @@ namespace OpenSense.Component.Head.Common {
 
         #endregion
 
-        public bool Equals(Pose other) {
-            return Landmarks.SequenceEqual(other.Landmarks)
-                && VisiableLandmarks.SequenceEqual(other.VisiableLandmarks)
-                && Landmarks3D.SequenceEqual(other.Landmarks3D)
-                && Position.Equals(other.Position)
-                && Angle.Equals(other.Angle);
-        }
+        #region IEquatable
+        public bool Equals(Pose other) => 
+            Landmarks.SequenceEqual(other.Landmarks)
+            && VisiableLandmarks.SequenceEqual(other.VisiableLandmarks)
+            && Landmarks3D.SequenceEqual(other.Landmarks3D)
+            && Position.Equals(other.Position)
+            && Angle.Equals(other.Angle);
+
+        public override bool Equals(object obj) => obj is Pose other ? Equals(obj) : false;
+
+        public override int GetHashCode() => HashCode.Combine(
+            Landmarks,
+            VisiableLandmarks,
+            Landmarks3D,
+            Position,
+            Angle
+        );
+
+        public static bool operator ==(Pose a, Pose b) => a.Equals(b);
+
+        public static bool operator !=(Pose a, Pose b) => !(a == b);
+        #endregion
     }
 }

@@ -16,6 +16,22 @@ namespace OpenSense.Component.Head.Common {
             Right = right;
         }
 
-        public bool Equals(Pupil other) => Left.Equals(other.Left) && Right.Equals(other.Right);
+        #region IEquatable
+        public bool Equals(Pupil other) =>
+            Left.Equals(other.Left)
+            && Right.Equals(other.Right)
+            ;
+
+        public override bool Equals(object obj) => obj is Pupil other ? Equals(obj) : false;
+
+        public override int GetHashCode() => HashCode.Combine(
+            Left,
+            Right
+        );
+
+        public static bool operator ==(Pupil a, Pupil b) => a.Equals(b);
+
+        public static bool operator !=(Pupil a, Pupil b) => !(a == b);
+        #endregion
     }
 }

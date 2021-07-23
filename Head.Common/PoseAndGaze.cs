@@ -15,6 +15,22 @@ namespace OpenSense.Component.Head.Common {
             Gaze = gaze;
         }
 
-        public bool Equals(PoseAndGaze other) => Gaze.Equals(other.Gaze) && HeadPose.Equals(other.HeadPose);
+        #region IEquatable
+        public bool Equals(PoseAndGaze other) =>
+            HeadPose.Equals(other.HeadPose)
+            && Gaze.Equals(other.Gaze)
+            ;
+
+        public override bool Equals(object obj) => obj is PoseAndGaze other ? Equals(obj) : false;
+
+        public override int GetHashCode() => HashCode.Combine(
+            HeadPose,
+            Gaze
+        );
+
+        public static bool operator ==(PoseAndGaze a, PoseAndGaze b) => a.Equals(b);
+
+        public static bool operator !=(PoseAndGaze a, PoseAndGaze b) => !(a == b);
+        #endregion
     }
 }

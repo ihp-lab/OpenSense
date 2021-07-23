@@ -15,6 +15,19 @@ namespace OpenSense.Component.Head.Common {
             ActionUnits = actionUnits.ToImmutableSortedDictionary();
         }
 
-        public bool Equals(Face other) => ActionUnits.SequenceEqual(other.ActionUnits);
+        #region IEquatable
+        public bool Equals(Face other) =>
+            ActionUnits.SequenceEqual(other.ActionUnits);
+
+        public override bool Equals(object obj) => obj is Face other ? Equals(obj) : false;
+
+        public override int GetHashCode() => HashCode.Combine(
+            ActionUnits
+        );
+
+        public static bool operator ==(Face a, Face b) => a.Equals(b);
+
+        public static bool operator !=(Face a, Face b) => !(a == b);
+        #endregion
     }
 }

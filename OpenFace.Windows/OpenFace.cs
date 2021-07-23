@@ -205,8 +205,7 @@ namespace OpenSense.Component.OpenFace {
                             //Face
                             var (actionUnitIntensities, actionUnitOccurences) = faceAnalyser.PredictStaticAUsAndComputeFeatures(colorRawImage, rawAllLandmarks);//image mode, so not using faceAnalyser.AddNextFrame()
                             var actionUnits = actionUnitIntensities
-                                .Select(kv => new KeyValuePair<string, ActionUnit>(kv.Key, new ActionUnit { Intensity = kv.Value, Presence = actionUnitOccurences[kv.Key] }))
-                                .ToDictionary(kv => kv.Key, kv => kv.Value);
+                                .ToDictionary(kv => kv.Key, kv => new ActionUnit(intensity: kv.Value, presence: actionUnitOccurences[kv.Key]));
                             var face = new Face(actionUnits);
                             FaceOut.Post(face, envelope.OriginatingTime);
 
