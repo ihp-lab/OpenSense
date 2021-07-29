@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>OpenSense.Wpf.Component.Shimmer3</RootNamespace>
+    <AssemblyName>OpenSense.Wpf.Component.Shimmer3</AssemblyName>
+    <LangVersion>9.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Composition" Version="5.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shimmer3\Shimmer3.csproj" />
+    <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+  </ItemGroup>
+
+</Project>
