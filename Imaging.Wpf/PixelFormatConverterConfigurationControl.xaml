@@ -16,6 +16,7 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
         <Label Grid.Row="0" Grid.Column="0">Format</Label>
@@ -23,5 +24,8 @@
                   SelectedItem="{Binding TargetPixelFormat}"
                   ItemsSource="{Binding Source={util:EnumBindingSource {x:Type img:PixelFormat}}, Mode=OneTime}"
                   />
+
+        <Label Grid.Row="1" Grid.Column="0">Bypass if possible</Label>
+        <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding BypassIfPossible}"/>
     </Grid>
 </UserControl>

@@ -14,6 +14,13 @@ namespace OpenSense.Component.Imaging {
             set => SetProperty(ref targetPixelFormat, value);
         }
 
+        private bool bypassIfPossible = true;
+
+        public bool BypassIfPossible {
+            get => bypassIfPossible;
+            set => SetProperty(ref bypassIfPossible, value);
+        }
+
         public Receiver<Shared<Image>> In { get; private set; }
 
         public Emitter<Shared<Image>> Out { get; private set; }
@@ -24,7 +31,7 @@ namespace OpenSense.Component.Imaging {
         }
 
         private void PorcessFrame(Shared<Image> frame, Envelope envelope) {
-            if (frame.Resource.PixelFormat == TargetPixelFormat) {
+            if (BypassIfPossible && frame.Resource.PixelFormat == TargetPixelFormat) {
                 Out.Post(frame, envelope.OriginatingTime);
                 return;
             }
