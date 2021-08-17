@@ -10,6 +10,8 @@ using ShimmerAPI;
 namespace OpenSense.Component.Shimmer3 {
     public class Shimmer3Streamer: IDisposable, INotifyPropertyChanged {
 
+        protected const int Shimmer3ClockFrequency = 32768;//CalibrateTimeStamp() in ShimmerDevice.cs
+
         protected static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         private readonly DeviceConfiguration _config;
@@ -33,6 +35,13 @@ namespace OpenSense.Component.Shimmer3 {
             get => bufferTimeSpan;
             set => SetProperty(ref bufferTimeSpan, value);
         }
+
+        private bool doNotPostIfNoSubscriber = false;
+
+        public bool DoNotPostIfNoSubscriber {
+            get => doNotPostIfNoSubscriber;
+            set => SetProperty(ref doNotPostIfNoSubscriber, value);
+        }
         #endregion
 
         #region Output Channels
@@ -54,28 +63,28 @@ namespace OpenSense.Component.Shimmer3 {
         /// Unit: mVolt
         /// Can be set as PPG output.
         /// </summary>
-        public Emitter<double> InternalAdc1Out { get; }
+        public Emitter<double> InternalAdc1 { get; }
 
         /// <summary>
         /// Internal ADC
         /// Unit: mVolt
         /// Can be set as PPG output.
         /// </summary>
-        public Emitter<double> InternalAdc12Out { get; }
+        public Emitter<double> InternalAdc12 { get; }
 
         /// <summary>
         /// Internal ADC
         /// Unit: mVolt
         /// Can be set as PPG output.
         /// </summary>
-        public Emitter<double> InternalAdc13Out { get; }
+        public Emitter<double> InternalAdc13 { get; }
 
         /// <summary>
         /// Internal ADC
         /// Unit: mVolt
         /// Can be set as PPG output.
         /// </summary>
-        public Emitter<double> InternalAdc14Out { get; }
+        public Emitter<double> InternalAdc14 { get; }
         #endregion
 
         #region ECG
@@ -106,19 +115,21 @@ namespace OpenSense.Component.Shimmer3 {
 
         protected ShimmerLogAndStreamSystemSerialPort device;
 
+        protected DateTime firstDataPacketTime = DateTime.MinValue;
+
         public Shimmer3Streamer(Pipeline pipeline, DeviceConfiguration configuration) {
             _config = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
             SampleRateOut = pipeline.CreateEmitter<double>(this, nameof(SampleRateOut));
             BaudRateOut = pipeline.CreateEmitter<int>(this, nameof(BaudRateOut));
 
-            InternalAdc1Out = pipeline.CreateEmitter<double>(this, nameof(InternalAdc1Out));
-            InternalAdc12Out = pipeline.CreateEmitter<double>(this, nameof(InternalAdc12Out));
-            InternalAdc13Out = pipeline.CreateEmitter<double>(this, nameof(InternalAdc13Out));
-            InternalAdc14Out = pipeline.CreateEmitter<double>(this, nameof(InternalAdc14Out));
+            InternalAdc1 = pipeline.CreateEmitter<double>(this, nameof(InternalAdc1));
+            InternalAdc12 = pipeline.CreateEmitter<double>(this, nameof(InternalAdc12));
+            InternalAdc13 = pipeline.CreateEmitter<double>(this, nameof(InternalAdc13));
+            InternalAdc14 = pipeline.CreateEmitter<double>(this, nameof(InternalAdc14));
 
             ECG_LL_RA = pipeline.CreateEmitter<double>(this, nameof(ECG_LL_RA));
-            ECG_LA_RA = pipeline.CreateEmitter<double>(this, nameof(ECG_LL_RA));
+            ECG_LA_RA = pipeline.CreateEmitter<double>(this, nameof(ECG_LA_RA));
             ECG_Vx_RL = pipeline.CreateEmitter<double>(this, nameof(ECG_Vx_RL));
             ExG2_CH1 = pipeline.CreateEmitter<double>(this, nameof(ExG2_CH1));
 
@@ -132,10 +143,10 @@ namespace OpenSense.Component.Shimmer3 {
         private void CloseOutputEmitters() {
             var time = DateTime.UtcNow;
 
-            InternalAdc1Out.Close(time);
-            InternalAdc12Out.Close(time);
-            InternalAdc13Out.Close(time);
-            InternalAdc14Out.Close(time);
+            InternalAdc1.Close(time);
+            InternalAdc12.Close(time);
+            InternalAdc13.Close(time);
+            InternalAdc14.Close(time);
 
             ECG_LL_RA.Close(time);
             ECG_LA_RA.Close(time);
@@ -159,7 +170,6 @@ namespace OpenSense.Component.Shimmer3 {
             BaudRateOut.Close(time);
 
             device.StartConnectThread();
-            device.StartStreaming();//.StartStreamingAndLog() is also available
         }
 
         private void Disconnect() {
@@ -201,6 +211,8 @@ namespace OpenSense.Component.Shimmer3 {
             switch (state) {
                 case ShimmerBluetooth.SHIMMER_STATE_CONNECTED:
                     Logger?.LogInformation("Shimmer connected via Bluetooth {portName}", device.GetShimmerAddress());
+                    //send start streaming message only after device is connected
+                    device.StartStreaming();//.StartStreamingAndLog() is also available
                     break;
                 case ShimmerBluetooth.SHIMMER_STATE_CONNECTING:
                     Logger?.LogInformation("Connecting Shimmer via Bluetooth {portName}", device.GetShimmerAddress());
@@ -220,20 +232,24 @@ namespace OpenSense.Component.Shimmer3 {
             var state = (ShimmerLogAndStream.ShimmerSDBTMinorIdentifier)args.getMinorIndication();
             switch (state) {
                 case ShimmerLogAndStream.ShimmerSDBTMinorIdentifier.MSG_WARNING:
-                    Logger?.LogWarning("Received a Shimmer warning {message} via Bluetooth {portName}", message, device.GetShimmerAddress());
+                    Logger?.LogWarning("Received a Shimmer warning \"{message}\" via Bluetooth {portName}", message, device.GetShimmerAddress());
                     break;
                 case ShimmerLogAndStream.ShimmerSDBTMinorIdentifier.MSG_EXTRA_REMOVABLE_DEVICES_DETECTED:
                     Logger?.LogInformation("Received MSG_EXTRA_REMOVABLE_DEVICES_DETECTED via Bluetooth {portName}", device.GetShimmerAddress());
                     break;
                 case ShimmerLogAndStream.ShimmerSDBTMinorIdentifier.MSG_ERROR:
-                    Logger?.LogError("Received a Shimmer error {message} via Bluetooth {portName}", message, device.GetShimmerAddress());
+                    Logger?.LogError("Received a Shimmer error \"{message}\" via Bluetooth {portName}", message, device.GetShimmerAddress());
                     break;
                 default:
-                    if (message == "Connection lost") {//this value got from official demo
-                        Logger?.LogWarning("Received lost Shimmer Bluetooth connection message via Bluetooth {portName}", device.GetShimmerAddress());
-                        CloseOutputEmitters();
-                    } else {
-                        Logger?.LogInformation("Received a unrecognized Shimmer message {message} via Bluetooth {portName}", message, device.GetShimmerAddress());
+                    switch (message) {
+                        case "Connection lost":
+                        case "Unable to connect to specified port":
+                            Logger?.LogInformation("Received a Shimmer message \"{message}\" via Bluetooth {portName}, will shutdown Shimmer streamer", message, device.GetShimmerAddress());
+                            CloseOutputEmitters();
+                            break;
+                        default:
+                            Logger?.LogInformation("Received a unrecognized Shimmer message \"{message}\" via Bluetooth {portName}", message, device.GetShimmerAddress());
+                            break;
                     }
                     break;
             }
@@ -242,14 +258,22 @@ namespace OpenSense.Component.Shimmer3 {
         private void ProcessDataPacketEvent(ShimmerBluetooth device, CustomEventArgs args) {
             var aggr = (ObjectCluster)args.getObject();
 
-            //var elapsed = aggr.GetData(ShimmerConfiguration.SignalNames.TIMESTAMP, ShimmerConfiguration.SignalFormats.CAL).Data;//in mSec
+            /* Timestamps it give are totally wrong! Unusable! These timestamps are adjusted by CalibrateTimeStamp() in ShimmerDevice.cs.
+            var elapsed = aggr.GetData(ShimmerConfiguration.SignalNames.TIMESTAMP, ShimmerConfiguration.SignalFormats.CAL).Data;//in mSec
             var timestamp = aggr.GetData(ShimmerConfiguration.SignalNames.SYSTEM_TIMESTAMP, ShimmerConfiguration.SignalFormats.CAL).Data;
             var originatingTime = UnixEpoch + TimeSpan.FromMilliseconds(timestamp);
-            
-            PostData(aggr, Shimmer3Configuration.SignalNames.INTERNAL_ADC_A1, InternalAdc1Out, originatingTime);
-            PostData(aggr, Shimmer3Configuration.SignalNames.INTERNAL_ADC_A12, InternalAdc12Out, originatingTime);
-            PostData(aggr, Shimmer3Configuration.SignalNames.INTERNAL_ADC_A13, InternalAdc13Out, originatingTime);
-            PostData(aggr, Shimmer3Configuration.SignalNames.INTERNAL_ADC_A14, InternalAdc14Out, originatingTime);
+            */
+            var clock = aggr.RawTimeStamp;
+            if (firstDataPacketTime == DateTime.MinValue) {
+                firstDataPacketTime = DateTime.UtcNow;
+            }
+            var elapsedSeconds = (double)clock / Shimmer3ClockFrequency;
+            var originatingTime = firstDataPacketTime + TimeSpan.FromSeconds(elapsedSeconds);
+
+            PostData(aggr, Shimmer3Configuration.SignalNames.INTERNAL_ADC_A1, InternalAdc1, originatingTime);
+            PostData(aggr, Shimmer3Configuration.SignalNames.INTERNAL_ADC_A12, InternalAdc12, originatingTime);
+            PostData(aggr, Shimmer3Configuration.SignalNames.INTERNAL_ADC_A13, InternalAdc13, originatingTime);
+            PostData(aggr, Shimmer3Configuration.SignalNames.INTERNAL_ADC_A14, InternalAdc14, originatingTime);
 
             PostData(aggr, Shimmer3Configuration.SignalNames.ECG_LL_RA, ECG_LL_RA, originatingTime);
             PostData(aggr, Shimmer3Configuration.SignalNames.ECG_LA_RA, ECG_LA_RA, originatingTime);
@@ -262,19 +286,19 @@ namespace OpenSense.Component.Shimmer3 {
             //do nothing
         }
 
-        protected static void PostData(ObjectCluster aggr, string signalName, Emitter<double> emitter, DateTime originatingTime) {
-            if (!emitter.HasSubscribers) {
+        protected void PostData(ObjectCluster aggr, string signalName, Emitter<double> emitter, DateTime originatingTime) {
+            if (DoNotPostIfNoSubscriber && !emitter.HasSubscribers) {
                 return;
             }
             var wrapper = aggr.GetData(signalName, ShimmerConfiguration.SignalFormats.CAL);
             if (wrapper is null) {
                 return;
             }
-            if (originatingTime <= emitter.LastEnvelope.OriginatingTime) {//TODO: fix this, reorder packets
-                return;
-            }
+            //if (originatingTime <= emitter.LastEnvelope.OriginatingTime) {//TODO: fix this, reorder packets
+            //    return;
+            //}
             var data = wrapper.Data;
-            Debug.WriteLine($"{originatingTime:O} - {signalName}: {data}");//emitter.Post(data, originatingTime);
+            //Debug.WriteLine($"{originatingTime:O} - {signalName}: {data}");//emitter.Post(data, originatingTime);
         }
 
         #region INotifyPropertyChanged
