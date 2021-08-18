@@ -111,11 +111,24 @@ namespace OpenSense.Component.Shimmer3 {
         /// </summary>
         public Emitter<double> ExG2_CH1 { get; }
         #endregion
+
+        #region GSR
+        /// <summary>
+        /// Unit: Kilo Ohms
+        /// </summary>
+        public Emitter<double> GSR_Resistance { get; }
+
+        /// <summary>
+        /// Unit: Micro Siemens
+        /// Converted from resistance internaly
+        /// </summary>
+        public Emitter<double> GSR_Conductance { get; }
+        #endregion
         #endregion
 
         protected ShimmerLogAndStreamSystemSerialPort device;
 
-        protected DateTime firstDataPacketTime = DateTime.MinValue;
+        protected DateTimeOffset firstDataPacketTime = DateTimeOffset.MinValue;
 
         public Shimmer3Streamer(Pipeline pipeline, DeviceConfiguration configuration) {
             _config = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -132,6 +145,9 @@ namespace OpenSense.Component.Shimmer3 {
             ECG_LA_RA = pipeline.CreateEmitter<double>(this, nameof(ECG_LA_RA));
             ECG_Vx_RL = pipeline.CreateEmitter<double>(this, nameof(ECG_Vx_RL));
             ExG2_CH1 = pipeline.CreateEmitter<double>(this, nameof(ExG2_CH1));
+
+            GSR_Resistance = pipeline.CreateEmitter<double>(this, nameof(GSR_Resistance));
+            GSR_Conductance = pipeline.CreateEmitter<double>(this, nameof(GSR_Conductance));
 
             pipeline.PipelineRun += OnPipelineRun;
         }
@@ -263,13 +279,17 @@ namespace OpenSense.Component.Shimmer3 {
             var timestamp = aggr.GetData(ShimmerConfiguration.SignalNames.SYSTEM_TIMESTAMP, ShimmerConfiguration.SignalFormats.CAL).Data;
             var originatingTime = UnixEpoch + TimeSpan.FromMilliseconds(timestamp);
             */
+            /* also not working, the raw timestamp does not make sense
             var clock = aggr.RawTimeStamp;
-            if (firstDataPacketTime == DateTime.MinValue) {
-                firstDataPacketTime = DateTime.UtcNow;
+            if (firstDataPacketTime == DateTimeOffset.MinValue) {
+                firstDataPacketTime = DateTimeOffset.UtcNow;
             }
             var elapsedSeconds = (double)clock / Shimmer3ClockFrequency;
             var originatingTime = firstDataPacketTime + TimeSpan.FromSeconds(elapsedSeconds);
-
+            Debug.WriteLine($"{(DateTimeOffset.UtcNow - firstDataPacketTime).TotalSeconds:F6}:{clock}");
+            */
+            var originatingTime = DateTimeOffset.UtcNow;
+            
             PostData(aggr, Shimmer3Configuration.SignalNames.INTERNAL_ADC_A1, InternalAdc1, originatingTime);
             PostData(aggr, Shimmer3Configuration.SignalNames.INTERNAL_ADC_A12, InternalAdc12, originatingTime);
             PostData(aggr, Shimmer3Configuration.SignalNames.INTERNAL_ADC_A13, InternalAdc13, originatingTime);
@@ -279,6 +299,9 @@ namespace OpenSense.Component.Shimmer3 {
             PostData(aggr, Shimmer3Configuration.SignalNames.ECG_LA_RA, ECG_LA_RA, originatingTime);
             PostData(aggr, Shimmer3Configuration.SignalNames.ECG_VX_RL, ECG_Vx_RL, originatingTime);
             PostData(aggr, Shimmer3Configuration.SignalNames.EXG2_CH1, ExG2_CH1, originatingTime);
+            
+            PostData(aggr, Shimmer3Configuration.SignalNames.GSR, GSR_Resistance, originatingTime);
+            PostData(aggr, Shimmer3Configuration.SignalNames.GSR_CONDUCTANCE, GSR_Conductance, originatingTime);
         }
 
         private void ProcessIdentifierPacketReceptionRateEvent(ShimmerBluetooth device, CustomEventArgs args) {
@@ -286,7 +309,7 @@ namespace OpenSense.Component.Shimmer3 {
             //do nothing
         }
 
-        protected void PostData(ObjectCluster aggr, string signalName, Emitter<double> emitter, DateTime originatingTime) {
+        protected void PostData(ObjectCluster aggr, string signalName, Emitter<double> emitter, DateTimeOffset originatingTime) {
             if (DoNotPostIfNoSubscriber && !emitter.HasSubscribers) {
                 return;
             }
@@ -294,11 +317,13 @@ namespace OpenSense.Component.Shimmer3 {
             if (wrapper is null) {
                 return;
             }
-            //if (originatingTime <= emitter.LastEnvelope.OriginatingTime) {//TODO: fix this, reorder packets
-            //    return;
-            //}
             var data = wrapper.Data;
-            //Debug.WriteLine($"{originatingTime:O} - {signalName}: {data}");//emitter.Post(data, originatingTime);
+            //Debug.WriteLine($"{originatingTime:O} - {signalName}: {data}");
+            var timeToPost = originatingTime;
+            if (originatingTime <= emitter.LastEnvelope.OriginatingTime) {
+                timeToPost = emitter.LastEnvelope.OriginatingTime + TimeSpan.FromMilliseconds(1);//since the raw timestamp itself doen't make sense, we do not further reorder packets
+            }
+            emitter.Post(data, timeToPost.DateTime);
         }
 
         #region INotifyPropertyChanged
