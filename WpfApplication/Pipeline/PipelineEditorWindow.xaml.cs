@@ -101,7 +101,7 @@ namespace OpenSense.Wpf.Pipeline {
                 } catch (System.Reflection.ReflectionTypeLoadException refEx) {
                     var errorMessage = "Unable to load the following assemblies. \nThis is because versions of assemblies mismatched. \nPlease verify versions and signatures of the following assemblies:\n\n"
                         + string.Join("\n", refEx.LoaderExceptions.Cast<FileLoadException>().Select(ex => ex.FileName));
-                    MessageBox.Show(this, errorMessage, "Failed to load assemblies", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(this, errorMessage, "Failed to load assemblies when creating component WPF control", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
