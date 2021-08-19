@@ -99,8 +99,21 @@ namespace OpenSense.Wpf.Pipeline {
                     }
                     ContentControlSettings.Children.Add(control);
                 } catch (System.Reflection.ReflectionTypeLoadException refEx) {
-                    var errorMessage = "Unable to load the following assemblies. \nThis is because versions of assemblies mismatched. \nPlease verify versions and signatures of the following assemblies:\n\n"
-                        + string.Join("\n", refEx.LoaderExceptions.Cast<FileLoadException>().Select(ex => ex.FileName));
+                    var errorMessage = "Unable to load the assemblies.";
+                    if (refEx.LoaderExceptions.OfType<FileLoadException>().Any()) {
+                        errorMessage = errorMessage + "\n\n"
+                            + string.Join("\n", refEx.LoaderExceptions.OfType<FileLoadException>().Select(ex => ex.FileName)) + "\n"
+                            + "These are because versions of assemblies mismatched. \nPlease verify versions and signatures of the above assemblies.";
+                    }
+                    if (refEx.LoaderExceptions.OfType<BadImageFormatException>().Any()) {
+                        errorMessage = errorMessage + "\n\n"
+                            + string.Join("\n", refEx.LoaderExceptions.OfType<BadImageFormatException>().Select(ex => ex.FileName)) + "\n"
+                            + "These may because some dependency DLL files are missing. \nPlease verify SDK installtions of the above assemblies.";
+                    }
+                    errorMessage = errorMessage + "\n\n"
+                        + "The following is the raw exception message, listed here for debugging purpose" + "\n"
+                        + refEx.ToString();
+
                     MessageBox.Show(this, errorMessage, "Failed to load assemblies when creating component WPF control", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
