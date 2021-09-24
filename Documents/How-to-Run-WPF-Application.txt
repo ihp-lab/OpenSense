@@ -25,7 +25,7 @@ Or you can install [Kinect for Windows SDK 2.0](https://www.microsoft.com/en-us/
 Since the WPF application detects available components and loads them dynamically, the default security policy will stop this load behavior, and you will get an error.
 
 The solution is that modify a file called `OpenSense.Wpf.exe.config` next to the application EXE file. It is a plain text file.
-Add a line `<loadFromRemoteSources enabled="true"/>` under the line `<configuration>`. Then you may run the EXE file.
+Add a line `<loadFromRemoteSources enabled="true"/>` under the line `<runtime>` of `<configuration>`. Then you may run the EXE file.
 
 Another solution is building the project yourself, so that those DLLs will not be treated as dangerous files.
 
