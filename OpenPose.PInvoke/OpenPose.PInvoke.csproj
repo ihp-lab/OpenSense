@@ -11,7 +11,7 @@
     <ProjectReference Include="..\OpenPose.Common\OpenPose.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="$(Configuration) == 'Debug'">
+  <ItemGroup>
     <Content Include="$(ProjectDir)\OpenPoseLib\models\**\*">
       <Link>models\%(RecursiveDir)%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
