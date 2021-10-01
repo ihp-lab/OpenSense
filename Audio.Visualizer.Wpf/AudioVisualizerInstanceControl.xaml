@@ -5,10 +5,34 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:OpenSense.Wpf.Component.Audio.Visualizer"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             DataContextChanged="UserControl_DataContextChanged"
+             Unloaded="UserControl_Unloaded"
+             >
     <Grid>
-        <Border Width="162" Height="52" BorderThickness="1" BorderBrush="Black">
-            <Image Width="160" Height="50" Source="{Binding Path=Image}"/>
-        </Border>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0">Image width</Label>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ImageWidth}"/>
+
+        <Label Grid.Row="1" Grid.Column="0">Image height</Label>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ImageHeight}"/>
+
+        <Label Grid.Row="2" Grid.Column="0">Duration</Label>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Duration}"/>
+
+        <Image Grid.Row="3" Grid.ColumnSpan="2"
+            Source="{Binding Path=Image}"
+            />
     </Grid>
 </UserControl>
