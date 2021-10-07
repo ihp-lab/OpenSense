@@ -105,14 +105,14 @@ namespace OpenSense.Component.Audio.Visualizer {
                 while (loc < buffer.Data.Length) {
                     for (var i = 0; i < drawingSampleBuffer_Channels; i++) {
                         var sample = ReadOneSample(buffer, ref loc);
-                        accumulateBuffer[i] += sample;
+                        accumulateBuffer[i] += Math.Abs(sample);
                     }
                     accumulatedSampleCount++;
                     if (accumulatedSampleCount >= numSamplesForEachPixel) {
                         var index = drawingSampleBuffer_Count % drawingSampleBuffer_Length;
                         for (var i = 0; i < drawingSampleBuffer_Channels; i++) {
                             var mean = accumulateBuffer[i] / accumulatedSampleCount;
-                            var val = Math.Max(0, mean);
+                            var val = Math.Max(0, Math.Min(1, mean));
                             drawingSampleBuffer[index, i] = val;
                         }
                         drawingSampleBuffer_Count++;
@@ -131,7 +131,7 @@ namespace OpenSense.Component.Audio.Visualizer {
                 case WaveFormatTag.WAVE_FORMAT_IEEE_FLOAT:
                     Debug.Assert(buffer.Format.BitsPerSample == 8 * sizeof(float));
                     result = BitConverter.ToSingle(buffer.Data, location);
-                    Debug.Assert(0 <= result && result <= 1);
+                    Debug.Assert(-1 <= result && result <= 1);
                     location += sizeof(float);
                     return result;
                 case WaveFormatTag.WAVE_FORMAT_PCM:
@@ -140,14 +140,10 @@ namespace OpenSense.Component.Audio.Visualizer {
                             result = (float)buffer.Data[location] / byte.MaxValue;
                             location += sizeof(byte);
                             return result;
-                        case 16:
-                            var s = BitConverter.ToUInt16(buffer.Data, location);
-                            result = (float)s / ushort.MaxValue;
+                        case 16://signed
+                            var s = BitConverter.ToInt16(buffer.Data, location);
+                            result = (float)s / short.MaxValue;
                             location += sizeof(ushort);
-                            return result;
-                        case 32:
-                            result = (float)BitConverter.ToUInt32(buffer.Data, location) / uint.MaxValue;
-                            location += sizeof(uint);
                             return result;
                         default:
                             throw new NotSupportedException($"Audio visualizer does not support calculating audio with {buffer.Format.BitsPerSample} per sample");
