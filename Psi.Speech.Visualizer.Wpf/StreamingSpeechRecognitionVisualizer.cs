@@ -1,11 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Microsoft.Psi;
 using Microsoft.Psi.Speech;
 
 namespace OpenSense.Component.Psi.Speech.Visualizer {
-    public class StreamingSpeechRecognitionVisualizer : IConsumer<IStreamingSpeechRecognitionResult>, INotifyPropertyChanged {
+    public sealed class StreamingSpeechRecognitionVisualizer : IConsumer<IStreamingSpeechRecognitionResult>, INotifyPropertyChanged {
+
+        #region Settings
+        private bool onlyUpdateOnFinalResults = false;
+
+        public bool OnlyUpdateOnFinalResults {
+            get => onlyUpdateOnFinalResults;
+            set => SetProperty(ref onlyUpdateOnFinalResults, value);
+        }
+        #endregion
 
         public Receiver<IStreamingSpeechRecognitionResult> In { get; private set; }
 
@@ -15,15 +25,19 @@ namespace OpenSense.Component.Psi.Speech.Visualizer {
         }
 
         private void Porcess(IStreamingSpeechRecognitionResult speech, Envelope envelope) {
-            Speech = speech.Text;
-            Final = speech.IsFinal;
+            if (OnlyUpdateOnFinalResults && !speech.IsFinal) {
+                return;
+            }
+            Timestamp = envelope.OriginatingTime;
+            Result = speech;
         }
 
         private void PipelineCompleted(object sender, PipelineCompletedEventArgs e) {
-            Speech = string.Empty;
-            Final = false;
+            Result = null;
+            Timestamp = null;
         }
 
+        #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null) {
@@ -31,20 +45,22 @@ namespace OpenSense.Component.Psi.Speech.Visualizer {
                 field = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
+        } 
+        #endregion
+
+        private DateTime? timestamp = null;
+
+        public DateTime? Timestamp {
+            get => timestamp;
+            private set => SetProperty(ref timestamp, value);
         }
 
-        private string speech = string.Empty;
+        private IStreamingSpeechRecognitionResult result = null;
 
-        public string Speech {
-            get => speech;
-            set => SetProperty(ref speech, value);
+        public IStreamingSpeechRecognitionResult Result {
+            get => result;
+            private set => SetProperty(ref result, value);
         }
-
-        private bool final = false;
-
-        public bool Final {
-            get => final;
-            set => SetProperty(ref final, value);
-        }
+        
     }
 }

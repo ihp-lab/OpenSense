@@ -6,22 +6,79 @@
              xmlns:local="clr-namespace:OpenSense.Wpf.Component.Psi.Speech.Visualizer"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid HorizontalAlignment="Left">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
+    <StackPanel>
+        <GroupBox Header="Settings">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
 
-        <Label Grid.Row="0">Final:</Label>
-        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Final}"/>
+                <Label Grid.Row="0" Grid.Column="0">
+                    Only update on final results
+                </Label>
+                <CheckBox Grid.Row="0" Grid.Column="1"
+                          IsChecked="{Binding OnlyUpdateOnFinalResults}"
+                          />
+            </Grid>
+        </GroupBox>
 
-        <Label Grid.Row="1">Speech:</Label>
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Speech}"/>
+        <GroupBox Header="Last Result">
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
 
-        
-    </Grid>
+                <Label Grid.Row="0">
+                    Timestamp
+                </Label>
+                <TextBlock Grid.Row="0" Grid.Column="1"
+                           Text="{Binding Timestamp, Mode=OneWay, StringFormat=s}"
+                           />
+
+                <Label Grid.Row="1">
+                    Is final
+                </Label>
+                <TextBlock Grid.Row="1" Grid.Column="1" 
+                          DataContext="{Binding Result, Mode=OneWay}"
+                          Text="{Binding IsFinal, Mode=OneWay}"
+                          />
+
+                <Label Grid.Row="2">
+                    Confidence
+                </Label>
+                <TextBlock Grid.Row="2" Grid.Column="1"
+                           DataContext="{Binding Result, Mode=OneWay}"
+                           Text="{Binding Confidence, Mode=OneWay, StringFormat=0.000}"
+                           />
+
+                <Label Grid.Row="3">
+                    Duration
+                </Label>
+                <TextBlock Grid.Row="3" Grid.Column="1"
+                           DataContext="{Binding Result, Mode=OneWay}"
+                           Text="{Binding Duration, Mode=OneWay}"
+                           />
+
+                <Label Grid.Row="4">Text</Label>
+                <TextBlock Grid.Row="4" Grid.Column="1" 
+                           DataContext="{Binding Result, Mode=OneWay}"
+                           Text="{Binding Text, Mode=OneWay}" 
+                           FontWeight="Bold" TextWrapping="Wrap"
+                   />
+
+            </Grid>
+        </GroupBox>
+    </StackPanel>
 </UserControl>
