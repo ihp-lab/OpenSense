@@ -147,19 +147,40 @@ namespace OpenSense.Wpf.Pipeline {
             if (Env is null || Env.Instances.Count == 0) {
                 return;
             }
-            var graph = new PipelineConnectionGraph(Env);
-            var positions = graph.CalcPositions();
-            foreach (var compEnv in Env.Instances) {
-                var control = new InstanceControlCreatorManager().Create(compEnv.Instance);
-                var container = new InstanceContainerControl(compEnv.Configuration.Name, control);
-                var position = positions[compEnv.Configuration.Id];
-                AddControl(container, position.Hierachy, position.Offset);
+            switch (ComboBoxView.SelectedIndex) {
+                case 0:
+                    var scrollViewer = new ScrollViewer();
+                    ContentControlDisplay.Children.Add(scrollViewer);
+                    var stackPanel = new StackPanel();
+                    scrollViewer.Content = stackPanel;
+                    foreach (var compEnv in Env.Instances) {
+                        var control = new InstanceControlCreatorManager().Create(compEnv.Instance);
+                        var container = new InstanceContainerControl(compEnv.Configuration.Name, control);
+                        stackPanel.Children.Add(container);
+                    }
+                    break;
+                case 1:
+                    var graph = new PipelineConnectionGraph(Env);
+                    var positions = graph.CalcPositions();
+                    foreach (var compEnv in Env.Instances) {
+                        var control = new InstanceControlCreatorManager().Create(compEnv.Instance);
+                        var container = new InstanceContainerControl(compEnv.Configuration.Name, control);
+                        var position = positions[compEnv.Configuration.Id];
+                        AddControl(container, position.Hierachy, position.Offset);
+                    }
+                    var numRow = positions.Values.Max(p => p.Hierachy) + 1;
+                    var numCol = positions.Values.Max(p => p.Offset) + 1;
+                    AllocateRowsAndColumns(numRow, numCol);//add last, for correct overlay
+                    break;
             }
-            var numRow = positions.Values.Max(p => p.Hierachy) + 1;
-            var numCol = positions.Values.Max(p => p.Offset) + 1;
-            AllocateRowsAndColumns(numRow, numCol);//add last, for correct overlay
         }
 
+        private void ComboBoxView_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if (Env is null || Env.Instances.Count == 0) {
+                return;
+            }
+            GenerateControls();
+        }
         #endregion
 
         private void ButtonNew_Click(object sender, RoutedEventArgs e) {

@@ -28,7 +28,7 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            
+
             <Expander Header="Pipeline info" IsExpanded="True"
                       Margin="3" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
                 <Grid>
@@ -61,11 +61,25 @@
 
                         <Label>Running:</Label>
                         <TextBlock Grid.Column="1" Text="{Binding Running}"/>
+
+                        <Label Grid.Row="1">
+                            View style:
+                        </Label>
+                        <ComboBox Grid.Row="1" Grid.Column="1"
+                                  Name="ComboBoxView"
+                                  SelectedIndex="0"
+                                  SelectionChanged="ComboBoxView_SelectionChanged"
+                                  >
+                            <ComboBoxItem Content="List"/>
+                            <ComboBoxItem Content="Grid"/>
+                        </ComboBox>
+
                     </Grid>
                 </Grid>
             </Expander>
-
+            
             <Grid Grid.Row="1" Name="ContentControlDisplay"/>
+            
         </Grid>
     </DockPanel>
 </Window>
