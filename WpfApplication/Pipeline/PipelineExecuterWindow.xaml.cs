@@ -148,7 +148,7 @@ namespace OpenSense.Wpf.Pipeline {
                 return;
             }
             switch (ComboBoxView.SelectedIndex) {
-                case 0:
+                case 1://list
                     var scrollViewer = new ScrollViewer();
                     ContentControlDisplay.Children.Add(scrollViewer);
                     var stackPanel = new StackPanel();
@@ -159,7 +159,7 @@ namespace OpenSense.Wpf.Pipeline {
                         stackPanel.Children.Add(container);
                     }
                     break;
-                case 1:
+                case 0://grid
                     var graph = new PipelineConnectionGraph(Env);
                     var positions = graph.CalcPositions();
                     foreach (var compEnv in Env.Instances) {

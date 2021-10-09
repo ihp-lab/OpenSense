@@ -70,8 +70,8 @@
                                   SelectedIndex="0"
                                   SelectionChanged="ComboBoxView_SelectionChanged"
                                   >
-                            <ComboBoxItem Content="List"/>
                             <ComboBoxItem Content="Grid"/>
+                            <ComboBoxItem Content="List"/>
                         </ComboBox>
 
                     </Grid>
