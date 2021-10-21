@@ -5,7 +5,7 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>OpenSense.Wpf.Component.Builtin.Visualizer</AssemblyName>
     <RootNamespace>OpenSense.Wpf.Component.Builtin.Visualizer</RootNamespace>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

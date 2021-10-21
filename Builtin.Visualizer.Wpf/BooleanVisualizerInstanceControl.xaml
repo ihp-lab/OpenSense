@@ -6,24 +6,78 @@
              xmlns:local="clr-namespace:OpenSense.Wpf.Component.Builtin.Visualizer"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid HorizontalAlignment="Left">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+    <StackPanel Grid.IsSharedSizeScope="True">
+        <Expander Header="Settings"
+                  IsExpanded="False"
+                  >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" SharedSizeGroup="Lable"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
-        <Label>Boolean:</Label>
-        <TextBlock Grid.Column="1" Text="{Binding Value}">
-            <TextBlock.Style>
-                <Style TargetType="TextBlock">
-                    <Setter Property="Visibility" Value="Visible"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Value}" Value="{x:Null}">
-                            <Setter Property="Visibility" Value="Collapsed"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBlock.Style>
-        </TextBlock>
-    </Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0">
+                    History Capacity
+                </Label>
+                <TextBox Grid.Row="0" Grid.Column="1"
+                         Text="{Binding HistoryCapacity}"
+                         />
+
+                <Label Grid.Row="1" Grid.Column="0">
+                    False Text
+                </Label>
+                <TextBox Grid.Row="1" Grid.Column="1"
+                         Text="{Binding FalseText}"
+                         />
+
+                <Label Grid.Row="2" Grid.Column="0">
+                    True Text
+                </Label>
+                <TextBox Grid.Row="2" Grid.Column="1"
+                         Text="{Binding TrueText}"
+                         />
+
+                <Label Grid.Row="3" Grid.Column="0">
+                    Null Text
+                </Label>
+                <TextBox Grid.Row="3" Grid.Column="1"
+                         Text="{Binding NullText}"
+                         />
+            </Grid>
+        </Expander>
+        
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" SharedSizeGroup="Lable"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0">
+                Last Result
+            </Label>
+            <TextBlock Grid.Row="0" Grid.Column="1" 
+                   Text="{Binding Text}"
+                   />
+
+            <Label Grid.Row="1" Grid.Column="0">
+                History
+            </Label>
+            <TextBlock Grid.Row="1" Grid.Column="1"
+                   Text="{Binding History}"
+                   />
+
+        </Grid>
+    </StackPanel>
 </UserControl>
