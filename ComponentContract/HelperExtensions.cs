@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using Microsoft.Psi;
 
 namespace OpenSense.Component.Contract {
@@ -68,8 +70,29 @@ namespace OpenSense.Component.Contract {
         }
 
         public static IProducer<T> GetStaticProducer<T>(this StaticPortMetadata portMetadata, PortConfiguration portConfiguration, object instance) {
+            /* old implementation
             dynamic obj = GetStaticConnector(instance, portMetadata, portConfiguration);
             return (IProducer<T>)obj;
+            */
+
+            object obj = GetStaticConnector(instance, portMetadata, portConfiguration);
+            var objType = obj.GetType();
+            if (typeof(IProducer<T>).IsAssignableFrom(objType)) {
+                return (IProducer<T>)obj;
+            }
+            if (objType.IsGenericType) {
+                var interfaceName = typeof(IProducer<>).Name;//should be "IProducer`1"
+                var @interface = objType.GetInterface(interfaceName);
+                if (@interface != null) {
+                    var typeArg = @interface.GetGenericArguments().Single();
+                    if (typeArg.CanBeAssignedOrCastTo(typeof(T))) {
+                        var methodInfo = typeof(HelperExtensions).GetMethod(nameof(Cast)).MakeGenericMethod(new[] { typeArg, typeof(T) });
+                        var result = (IProducer<T>)methodInfo.Invoke(obj: null, new[] { (dynamic)obj, false });
+                        return result;
+                    }
+                }
+            }
+            throw new InvalidOperationException("returned object is not a valid type");
         }
 
         public static IConsumer<T> GetStaticConsumer<T>(this StaticPortMetadata portMetadata, PortConfiguration portConfiguration, object instance) {
@@ -105,7 +128,7 @@ namespace OpenSense.Component.Contract {
             }
         }
 
-        public static bool IsAssignableToGenericType(this Type givenType, Type genericType) {
+        public static bool IsAssignableToGenericType(this Type givenType, Type genericType) {//genericType should be an open generic type
             var interfaceTypes = givenType.GetInterfaces();
             foreach (var it in interfaceTypes) {
                 if (it.IsGenericType && it.GetGenericTypeDefinition() == genericType) {
@@ -120,6 +143,28 @@ namespace OpenSense.Component.Contract {
                 return false;
             }
             return IsAssignableToGenericType(baseType, genericType);
+        }
+
+        private static bool HasImplicitOrExplicitConversionTo_SingleWay(this Type source, Type target) {
+            var result = source.GetMethods(BindingFlags.Public | BindingFlags.Static)
+                .Where(mi => (mi.Name == "op_Implicit" || mi.Name == "op_Explicit") && mi.ReturnType == target)
+                .Any(mi => {
+                    ParameterInfo pi = mi.GetParameters().FirstOrDefault();
+                    return pi != null && pi.ParameterType == source;
+                });
+            return result;
+        }
+
+        public static bool CanBeAssignedOrCastTo(this Type source, Type target) {
+            var result = target.IsAssignableFrom(source) || HasImplicitOrExplicitConversionTo_SingleWay(source, target) || HasImplicitOrExplicitConversionTo_SingleWay(target, source);
+            return result;
+        }
+
+        public static IProducer<TTarget> Cast<TSrouce, TTarget>(this IProducer<TSrouce> producer, bool checkTypeAssignabilityImmediately = true) {
+            if (checkTypeAssignabilityImmediately && !CanBeAssignedOrCastTo(typeof(TSrouce), typeof(TTarget))) {
+                throw new InvalidCastException($"cannot cast from {typeof(TSrouce)} to {typeof(TTarget)}");
+            }
+            return Operators.Select(producer, o => (TTarget)(object)o);//TODO: for performance consideration, implement this by Expression Tree
         }
 
         public static object DefaultPortIndex(this PortAggregation aggregation) {
