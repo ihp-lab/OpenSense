@@ -9,30 +9,34 @@
              DataContextChanged="UserControl_DataContextChanged"
              Unloaded="UserControl_Unloaded"
              >
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+    
+    <StackPanel>
+        <Expander Header="Render Settings"
+                  IsExpanded="False"
+                  >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
 
-        <Label Grid.Row="0" Grid.Column="0">Image width</Label>
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ImageWidth}"/>
+                <Label Grid.Row="0" Grid.Column="0">Image width</Label>
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ImageWidth}"/>
 
-        <Label Grid.Row="1" Grid.Column="0">Image height</Label>
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ImageHeight}"/>
+                <Label Grid.Row="1" Grid.Column="0">Image height</Label>
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ImageHeight}"/>
 
-        <Label Grid.Row="2" Grid.Column="0">Duration</Label>
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Duration}"/>
+                <Label Grid.Row="2" Grid.Column="0">Duration</Label>
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Duration}"/>
+            </Grid>
+        </Expander>
 
-        <Image Grid.Row="3" Grid.ColumnSpan="2"
-            Source="{Binding Path=Image}"
-            />
-    </Grid>
+        <Image Source="{Binding Path=Image}"/>
+    </StackPanel>
 </UserControl>
