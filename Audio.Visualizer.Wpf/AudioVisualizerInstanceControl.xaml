@@ -11,7 +11,7 @@
              >
     
     <StackPanel>
-        <Expander Header="Render Settings"
+        <Expander Header="Settings"
                   IsExpanded="False"
                   >
             <Grid>

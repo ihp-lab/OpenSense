@@ -7,7 +7,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel>
-        <GroupBox Header="Settings">
+        <Expander Header="Settings"
+                  IsExpanded="False"
+                  >
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
@@ -24,7 +26,7 @@
                           IsChecked="{Binding OnlyUpdateOnFinalResults}"
                           />
             </Grid>
-        </GroupBox>
+        </Expander>
 
         <GroupBox Header="Last Result">
             <Grid >
