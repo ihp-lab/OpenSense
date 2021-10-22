@@ -119,6 +119,8 @@ namespace OpenSense.Component.Audio.Visualizer {
 
                         Array.Clear(accumulateBuffer, 0, accumulateBuffer.Length);
                         accumulatedSampleCount = 0;
+
+                        imageBackingDataUpdated = true;
                     }
                 }
             }
@@ -165,6 +167,8 @@ namespace OpenSense.Component.Audio.Visualizer {
 
         private object lockObj = new object();
 
+        private bool imageBackingDataUpdated = false;
+
         private float[,] drawingSampleBuffer = null;
 
         private int drawingSampleBuffer_Channels;
@@ -192,7 +196,7 @@ namespace OpenSense.Component.Audio.Visualizer {
         /// </summary>
         public void RenderingCallback(object sender, EventArgs args) {
             lock(lockObj) {
-                if (drawingSampleBuffer is null) {
+                if (drawingSampleBuffer is null && !imageBackingDataUpdated) {
                     return;
                 }
 
@@ -242,6 +246,8 @@ namespace OpenSense.Component.Audio.Visualizer {
                 DrawOverlayLines();
 
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Image)));
+
+                imageBackingDataUpdated = false;
             }
         }
 
