@@ -20,10 +20,15 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Label>Frame Rate:</Label>
-            <TextBlock Grid.Column="1" Text="{Binding FrameRate}"/>
+            
+            <Label>Frame Rate</Label>
+            <TextBlock Grid.Column="1" 
+                       Text="{Binding FrameRate, StringFormat=F3}"
+                       />
         </Grid>
         
-        <Image Grid.Row="1" Source="{Binding Path=Image}" />
+        <Image Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+               Source="{Binding Path=Image}"
+               />
     </Grid>
 </UserControl>

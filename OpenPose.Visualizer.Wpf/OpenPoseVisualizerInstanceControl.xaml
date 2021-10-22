@@ -1,33 +1,75 @@
 ﻿<UserControl x:Class="OpenSense.Wpf.Component.OpenPose.Visualizer.OpenPoseVisualizerInstanceControl"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:OpenSense.Wpf.Component.OpenPose.Visualizer"
-        mc:Ignorable="d"
-        d:DesignHeight="200" d:DesignWidth="200">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:OpenSense.Wpf.Component.OpenPose.Visualizer"
+             mc:Ignorable="d"
+             d:DesignHeight="200" d:DesignWidth="200"
+             DataContextChanged="UserControl_DataContextChanged"
+             Unloaded="UserControl_Unloaded">
+    <StackPanel Grid.IsSharedSizeScope="True">
+        <Expander Header="Settings"
+                  IsExpanded="False"
+                  >
+            <Grid>
 
-        <local:OpenPoseVisualizerConfigurationControl/><!--names of params are the same, reuse available-->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"  SharedSizeGroup="Label"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0">Mute</Label>
+                <CheckBox Grid.Row="0" Grid.Column="1" IsChecked="{Binding Mute}"/>
+
+                <Label Grid.Row="1" Grid.Column="0">Draw pose</Label>
+                <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding DrawPose}"/>
+
+                <Label Grid.Row="2" Grid.Column="0">Draw face</Label>
+                <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding DrawFace}"/>
+
+                <Label Grid.Row="3" Grid.Column="0">Draw hand</Label>
+                <CheckBox Grid.Row="3" Grid.Column="1" IsChecked="{Binding DrawHand}"/>
+
+                <Label Grid.Row="4" Grid.Column="0">Circle radius</Label>
+                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding CircleRadius}"/>
+
+                <Label Grid.Row="5" Grid.Column="0">Line thickness</Label>
+                <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding LineThickness}"/>
+            </Grid>
+        </Expander>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"  SharedSizeGroup="Label"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Label>Frame Rate:</Label>
-                <TextBlock Grid.Column="1" Text="{Binding FrameRate}"/>
-            </Grid>
-            <Image Grid.Row="1" Source="{Binding Path=Image}" />
+
+            <Label Grid.Row="0" Grid.Column="0"
+                >
+                Frame Rate
+            </Label>
+            <TextBlock Grid.Row="0" Grid.Column="1" 
+                       Text="{Binding FrameRate, StringFormat=F3}"
+                       />
+
+            <Image Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                   Source="{Binding Image}" 
+                   />
         </Grid>
-    </Grid>
+    </StackPanel>
 </UserControl>

@@ -25,6 +25,7 @@ namespace OpenSense.Component.OpenPose.Visualizer {
         }
         #endregion
 
+        #region Ports
         private Connector<Datum> DataInConnector;
 
         private Connector<Shared<Image>> ImageInConnector;
@@ -33,8 +34,10 @@ namespace OpenSense.Component.OpenPose.Visualizer {
 
         public Receiver<Shared<Image>> ImageIn => ImageInConnector.In;
 
-        public Emitter<Shared<Image>> Out {get; private set;}
+        public Emitter<Shared<Image>> Out { get; private set; }
+        #endregion
 
+        #region Settings
         private bool mute = false;
 
         public bool Mute {
@@ -78,16 +81,15 @@ namespace OpenSense.Component.OpenPose.Visualizer {
             get => lineThickness;
             set => SetProperty(ref lineThickness, value);
         }
+        #endregion
 
-        private DisplayVideo display = new DisplayVideo();
+        #region Binding Properties
+        public WriteableBitmap Image => imageVisualizer.Image;
 
-        public WriteableBitmap Image {
-            get => display.VideoImage;
-        }
+        public double? FrameRate => imageVisualizer.FrameRate;
+        #endregion
 
-        public int FrameRate {
-            get => display.ReceivedFrames.Rate;
-        }
+        private ImageVisualizer imageVisualizer = new ImageVisualizer();
 
         public OpenPoseVisualizer(Pipeline pipeline): base(pipeline) {
             DataInConnector = CreateInputConnectorFrom<Datum>(pipeline, nameof(DataIn));
@@ -96,18 +98,9 @@ namespace OpenSense.Component.OpenPose.Visualizer {
 
             var joined = DataInConnector.Out.Join(ImageInConnector.Out, Reproducible.Nearest<Shared<Image>>());
             joined.Do(Process);
-            
-            pipeline.PipelineCompleted += OnPipelineCompleted;
 
-            display.PropertyChanged += (sender, e) => {
-                if (e.PropertyName == nameof(display.VideoImage)) {
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Image)));
-                }
-            };
-            display.ReceivedFrames.PropertyChanged += (sender, e) => {
-                if (e.PropertyName == nameof(display.RenderedFrames.Rate)) {
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FrameRate)));
-                }
+            imageVisualizer.PropertyChanged += (sender, e) => {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(e.PropertyName));
             };
         }
 
@@ -117,8 +110,8 @@ namespace OpenSense.Component.OpenPose.Visualizer {
             }
             var (datum, frame) = data;
             if (NoDraw) {
+                imageVisualizer.UpdateImage(frame, envelope.OriginatingTime);
                 Out.Post(frame, envelope.OriginatingTime);
-                display.Update(frame);
                 return;
             }
             lock (this) {
@@ -329,14 +322,12 @@ namespace OpenSense.Component.OpenPose.Visualizer {
                     #endregion
                     using var img = ImagePool.GetOrCreate(frame.Resource.Width, frame.Resource.Height, frame.Resource.PixelFormat);
                     img.Resource.CopyFrom(bitmap);
+                    imageVisualizer.UpdateImage(img, envelope.OriginatingTime);
                     Out.Post(img, envelope.OriginatingTime);
-                    display.Update(img);
                 }
             }
         }
 
-        private void OnPipelineCompleted(object sender, PipelineCompletedEventArgs e) {
-            display.Clear();
-        }
+        public void RenderingCallback(object sender, EventArgs args) => imageVisualizer.RenderingCallback(sender, args);
     }
 }

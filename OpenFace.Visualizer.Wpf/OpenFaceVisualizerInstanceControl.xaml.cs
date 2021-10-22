@@ -1,25 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using OpenSense.Component.OpenFace.Visualizer;
 
 namespace OpenSense.Wpf.Component.OpenFace.Visualizer {
-    /// <summary>
-    /// OpenFaceVisualizerInstanceControl.xaml 的交互逻辑
-    /// </summary>
-    public partial class OpenFaceVisualizerInstanceControl : UserControl {
+    public sealed partial class OpenFaceVisualizerInstanceControl : UserControl {
+        private OpenFaceVisualizer ViewModel => (OpenFaceVisualizer)DataContext;
+
         public OpenFaceVisualizerInstanceControl() {
             InitializeComponent();
+        }
+
+        private void UserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) {
+            if (e.OldValue is OpenFaceVisualizer old) {
+                CompositionTarget.Rendering -= old.RenderingCallback;
+            }
+            if (e.NewValue is OpenFaceVisualizer @new) {
+                CompositionTarget.Rendering += @new.RenderingCallback;//will be called before every time WPF wants to render a frame
+            }
+        }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e) {
+            if (ViewModel != null) {
+                CompositionTarget.Rendering -= ViewModel.RenderingCallback;
+            }
         }
     }
 }

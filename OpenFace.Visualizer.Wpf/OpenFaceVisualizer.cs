@@ -12,7 +12,7 @@ using OpenSense.Component.Imaging.Visualizer.Common;
 using Image = Microsoft.Psi.Imaging.Image;
 
 namespace OpenSense.Component.OpenFace.Visualizer {
-    public class OpenFaceVisualizer : Subpipeline, IProducer<Shared<Image>>, INotifyPropertyChanged {
+    public sealed class OpenFaceVisualizer : Subpipeline, IProducer<Shared<Image>>, INotifyPropertyChanged {
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -25,6 +25,7 @@ namespace OpenSense.Component.OpenFace.Visualizer {
         }
         #endregion
 
+        #region Ports
         private Connector<PoseAndGaze> DataInConnector;
 
         private Connector<Shared<Image>> ImageInConnector;
@@ -33,8 +34,10 @@ namespace OpenSense.Component.OpenFace.Visualizer {
 
         public Receiver<Shared<Image>> ImageIn => ImageInConnector.In;
 
-        public Emitter<Shared<Image>> Out { get; private set; }
+        public Emitter<Shared<Image>> Out { get; private set; } 
+        #endregion
 
+        #region Settings
         private bool mute = false;
 
         public bool Mute {
@@ -55,16 +58,15 @@ namespace OpenSense.Component.OpenFace.Visualizer {
             get => lineThickness;
             set => SetProperty(ref lineThickness, value);
         }
+        #endregion
 
-        private DisplayVideo display = new DisplayVideo();
+        #region Binding Properties
+        public WriteableBitmap Image => imageVisualizer.Image;
 
-        public WriteableBitmap Image {
-            get => display.VideoImage;
-        }
+        public double? FrameRate => imageVisualizer.FrameRate;
+        #endregion
 
-        public int FrameRate {
-            get => display.ReceivedFrames.Rate;
-        }
+        private ImageVisualizer imageVisualizer = new ImageVisualizer();
 
         public OpenFaceVisualizer(Pipeline pipeline) : base(pipeline) {
             DataInConnector = CreateInputConnectorFrom<PoseAndGaze>(pipeline, nameof(DataIn));
@@ -74,17 +76,8 @@ namespace OpenSense.Component.OpenFace.Visualizer {
             var joined = DataInConnector.Out.Join(ImageInConnector.Out, Reproducible.Exact<Shared<Image>>());
             joined.Do(Process);
 
-            pipeline.PipelineCompleted += OnPipelineCompleted;
-
-            display.PropertyChanged += (sender, e) => {
-                if (e.PropertyName == nameof(display.VideoImage)) {
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Image)));
-                }
-            };
-            display.ReceivedFrames.PropertyChanged += (sender, e) => {
-                if (e.PropertyName == nameof(display.RenderedFrames.Rate)) {
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FrameRate)));
-                }
+            imageVisualizer.PropertyChanged += (sender, e) => {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(e.PropertyName));
             };
         }
 
@@ -121,14 +114,12 @@ namespace OpenSense.Component.OpenFace.Visualizer {
                     }
                     using var img = ImagePool.GetOrCreate(frame.Resource.Width, frame.Resource.Height, frame.Resource.PixelFormat);
                     img.Resource.CopyFrom(bitmap);
+                    imageVisualizer.UpdateImage(img, envelope.OriginatingTime);
                     Out.Post(img, envelope.OriginatingTime);
-                    display.Update(img);
                 }
             }
         }
 
-        private void OnPipelineCompleted(object sender, PipelineCompletedEventArgs e) {
-            display.Clear();
-        }
+        public void RenderingCallback(object sender, EventArgs args) => imageVisualizer.RenderingCallback(sender, args);
     }
 }
