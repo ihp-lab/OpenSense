@@ -19,7 +19,7 @@ namespace OpenSense.Pipeline {
                 typeof(ComponentManager).Assembly,
                 Assembly.GetEntryAssembly(),
             };
-            var files = Directory.EnumerateFiles(AppDomain.CurrentDomain.BaseDirectory, "*Component*.dll");
+            var files = Directory.EnumerateFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
             foreach (var file in files) {
                 try {
                     var asm = Assembly.LoadFrom(file);
