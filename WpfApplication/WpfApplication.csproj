@@ -1,119 +1,85 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net48</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <RootNamespace>OpenSense.Wpf</RootNamespace>
-    <LangVersion>8.0</LangVersion>
-    <ApplicationIcon>Resource\Icon\usc.ico</ApplicationIcon>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <Version>2.0.0</Version>
-    <Authors />
-    <PackageId />
-    <Company />
-    <AssemblyName>OpenSense.Wpf</AssemblyName>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <OutputType>WinExe</OutputType>
+        <UseWPF>true</UseWPF>
+        <RootNamespace>OpenSense.Wpf</RootNamespace>
+        <ApplicationIcon>Resource\Icon\usc.ico</ApplicationIcon>
+        <AssemblyVersion>2.0.0.0</AssemblyVersion>
+        <Version>2.0.0</Version>
+        <Authors />
+        <PackageId />
+        <Company />
+        <AssemblyName>OpenSense.Wpf</AssemblyName>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Utility\**" />
-    <EmbeddedResource Remove="Utility\**" />
-    <None Remove="Utility\**" />
-    <Page Remove="Utility\**" />
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Remove="Utility\**" />
+        <EmbeddedResource Remove="Utility\**" />
+        <None Remove="Utility\**" />
+        <Page Remove="Utility\**" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="Resource\Icon\about.ico" />
-    <None Remove="Resource\Icon\devices.ico" />
-    <None Remove="Resource\Icon\exit.ico" />
-    <None Remove="Resource\Icon\export.ico" />
-    <None Remove="Resource\Icon\hflip.ico" />
-    <None Remove="Resource\Icon\import.ico" />
-    <None Remove="Resource\Icon\local.ico" />
-    <None Remove="Resource\Icon\remote.ico" />
-    <None Remove="Resource\Icon\reset.ico" />
-    <None Remove="Resource\Icon\usc.ico" />
-    <None Remove="Resource\Icon\vflip.ico" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="Resource\Icon\about.ico" />
+        <None Remove="Resource\Icon\devices.ico" />
+        <None Remove="Resource\Icon\exit.ico" />
+        <None Remove="Resource\Icon\export.ico" />
+        <None Remove="Resource\Icon\hflip.ico" />
+        <None Remove="Resource\Icon\import.ico" />
+        <None Remove="Resource\Icon\local.ico" />
+        <None Remove="Resource\Icon\remote.ico" />
+        <None Remove="Resource\Icon\reset.ico" />
+        <None Remove="Resource\Icon\usc.ico" />
+        <None Remove="Resource\Icon\vflip.ico" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
-    <PackageReference Include="Serilog" Version="2.10.0" />
-    <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
-    <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
-    <PackageReference Include="System.Composition" Version="5.0.1" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+        <PackageReference Include="Serilog" Version="2.10.0" />
+        <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
+        <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
+        <PackageReference Include="System.Composition" Version="5.0.1" />
+    </ItemGroup>
 
-  <!--Minimal Project References: If you want a clean version of app, just copy and paste these reference. You may add additional project references to make this app shipping with components. 
-  <ItemGroup>
-    <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
-    <ProjectReference Include="..\Pipeline\Pipeline.csproj" />
-    <ProjectReference Include="..\Psi.Wpf.Common\Psi.Wpf.Common.csproj" />
-    <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
-    <ProjectReference Include="..\WpfWidgetContract\WpfWidgetContract.csproj" />
-  </ItemGroup>
-  -->
+    <!--Minimal Project References: If you want a clean version of app, just copy and paste these reference. You may add additional project references to make this app shipping with components. 
+    <ItemGroup>
+      <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
+      <ProjectReference Include="..\Pipeline\Pipeline.csproj" />
+      <ProjectReference Include="..\Psi.Wpf.Common\Psi.Wpf.Common.csproj" />
+      <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+      <ProjectReference Include="..\WpfWidgetContract\WpfWidgetContract.csproj" />
+    </ItemGroup>
+    -->
 
-  <!--All-In-One Project References: All available components are added as dependencies-->
-  <ItemGroup>
-    <!--Minimal project references: Cannot run without these-->
-    <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
-    <ProjectReference Include="..\Pipeline\Pipeline.csproj" />
-    <ProjectReference Include="..\Psi.Wpf.Common\Psi.Wpf.Common.csproj" />
-    <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
-    <ProjectReference Include="..\WpfWidgetContract\WpfWidgetContract.csproj" />
+    <!--All-In-One Project References: All available components are added as dependencies-->
+    <ItemGroup>
+        <!--Minimal project references: Cannot run without these-->
+        <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
+        <ProjectReference Include="..\Pipeline\Pipeline.csproj" />
+        <ProjectReference Include="..\Psi.Wpf.Common\Psi.Wpf.Common.csproj" />
+        <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+        <ProjectReference Include="..\WpfWidgetContract\WpfWidgetContract.csproj" />
 
-    <!--Additional references: All project names ending with ".Wpf"-->
-    <!--Components-->
-    <ProjectReference Include="..\Audio.Visualizer.Wpf\Audio.Visualizer.Wpf.csproj" />
-    <ProjectReference Include="..\AzureKinect.Visualizer.Wpf\AzureKinect.Visualizer.Wpf.csproj" />
-    <ProjectReference Include="..\Biopac.Visualizer.Wpf\Biopac.Visualizer.Wpf.csproj" />
-    <ProjectReference Include="..\Builtin.Visualizer.Wpf\Builtin.Visualizer.Wpf.csproj" />
-    <ProjectReference Include="..\CsvExporter.Wpf\CsvExporter.Wpf.csproj" />
-    <ProjectReference Include="..\Emotion.Visualizer.Wpf\Emotion.Visualizer.Wpf.csproj" />
-    <ProjectReference Include="..\EyePointOfInterest.Visualizer.Wpf\EyePointOfInterest.Visualizer.Wpf.csproj" />
-    <ProjectReference Include="..\EyePointOfInterest.Wpf\EyePointOfInterest.Wpf.csproj" />
-    <ProjectReference Include="..\GoogleCloud.Speech.V1.Wpf\GoogleCloud.Speech.V1.Wpf.csproj" />
-    <ProjectReference Include="..\HeadGesture\HeadGesture.csproj" /><!--No settings available, thus no related WPF project here-->
-    <ProjectReference Include="..\HeadGesture.Visualizer.Wpf\HeadGesture.Visualizer.Wpf.csproj" />
-    <ProjectReference Include="..\Imaging.Visualizer.Wpf\Imaging.Visualizer.Wpf.csproj" />
-    <ProjectReference Include="..\Imaging.Wpf\Imaging.Wpf.csproj" />
-    <ProjectReference Include="..\OpenFace.Visualizer.Wpf\OpenFace.Visualizer.Wpf.csproj" />
-    <ProjectReference Include="..\OpenFace.Windows.Wpf\OpenFace.Windows.Wpf.csproj" />
-    <ProjectReference Include="..\OpenPose.Visualizer.Wpf\OpenPose.Visualizer.Wpf.csproj" />
-    <ProjectReference Include="..\OpenPose.Wpf\OpenPose.Wpf.csproj" />
-    <ProjectReference Include="..\OpenSmile.Visualizer.Wpf\OpenSmile.Visualizer.Wpf.csproj" />
-    <ProjectReference Include="..\OpenSmile.Windows.Wpf\OpenSmile.Windows.Wpf.csproj" />
-    <ProjectReference Include="..\Psi.Audio.Windows.Wpf\Psi.Audio.Windows.Wpf.csproj" />
-    <ProjectReference Include="..\Psi.Audio.Wpf\Psi.Audio.Wpf.csproj" />
-    <ProjectReference Include="..\Psi.AzureKinect.Wpf\Psi.AzureKinect.Wpf.csproj" />
-    <ProjectReference Include="..\Psi.CognitiveServices.Face.Wpf\Psi.CognitiveServices.Face.Wpf.csproj" />
-    <ProjectReference Include="..\Psi.CognitiveServices.Speech.Wpf\Psi.CognitiveServices.Speech.Wpf.csproj" />
-    <ProjectReference Include="..\Psi.Imaging.Windows.Wpf\Psi.Imaging.Windows.Wpf.csproj" />
-    <!--<ProjectReference Include="..\Psi.Kinect.Windows.Wpf\Psi.Kinect.Windows.Wpf.csproj" />--><!--removed because it may add difficulty of start using this application-->
-    <ProjectReference Include="..\Psi.Media.Windows.Wpf\Psi.Media.Windows.Wpf.csproj" />
-    <ProjectReference Include="..\Psi.Speech.Visualizer.Wpf\Psi.Speech.Visualizer.Wpf.csproj" />
-    <ProjectReference Include="..\Psi.Speech.Windows.Wpf\Psi.Speech.Windows.Wpf.csproj" />
-    <ProjectReference Include="..\Psi.Wpf\Psi.Wpf.csproj" />
-    <ProjectReference Include="..\Shimmer3.Wpf\Shimmer3.Wpf.csproj" />
-    <!--Widgets-->
-    <ProjectReference Include="..\DisplayPoiEstimatorBuilder.Wpf\DisplayPoiEstimatorBuilder.Wpf.csproj" />
-    <ProjectReference Include="..\OpenSmileConfigurationConverter.Wpf\OpenSmileConfigurationConverter.Wpf.csproj" />
-  </ItemGroup>
+        <!--Additional references: All project names ending with ".Wpf"-->
+        <!--Components-->
+        <!--Widgets-->
+    </ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="Resource\Icon\about.ico" />
-    <Resource Include="Resource\Icon\devices.ico" />
-    <Resource Include="Resource\Icon\exit.ico" />
-    <Resource Include="Resource\Icon\export.ico" />
-    <Resource Include="Resource\Icon\hflip.ico" />
-    <Resource Include="Resource\Icon\import.ico" />
-    <Resource Include="Resource\Icon\local.ico" />
-    <Resource Include="Resource\Icon\remote.ico" />
-    <Resource Include="Resource\Icon\reset.ico" />
-    <Resource Include="Resource\Icon\usc.ico" />
-    <Resource Include="Resource\Icon\vflip.ico" />
-  </ItemGroup>
+    <ItemGroup>
+        <Resource Include="Resource\Icon\about.ico" />
+        <Resource Include="Resource\Icon\devices.ico" />
+        <Resource Include="Resource\Icon\exit.ico" />
+        <Resource Include="Resource\Icon\export.ico" />
+        <Resource Include="Resource\Icon\hflip.ico" />
+        <Resource Include="Resource\Icon\import.ico" />
+        <Resource Include="Resource\Icon\local.ico" />
+        <Resource Include="Resource\Icon\remote.ico" />
+        <Resource Include="Resource\Icon\reset.ico" />
+        <Resource Include="Resource\Icon\usc.ico" />
+        <Resource Include="Resource\Icon\vflip.ico" />
+    </ItemGroup>
 
 </Project>
