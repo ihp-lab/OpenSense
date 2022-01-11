@@ -1,19 +1,22 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
-    <AssemblyName>OpenSense.Component.Psi.Speech.Windows</AssemblyName>
-    <RootNamespace>OpenSense.Component.Psi.Speech</RootNamespace>
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <AssemblyName>OpenSense.Component.Psi.Speech.Windows</AssemblyName>
+        <RootNamespace>OpenSense.Component.Psi.Speech</RootNamespace>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Psi.Speech.Windows" Version="0.15.49.1-beta" />
-    <PackageReference Include="System.Composition" Version="5.0.1" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Psi.Language" Version="0.15.49.1-beta" /><!--Indirect referencing this package by Microsoft.Psi.Speech.Windows does not work-->
+        <PackageReference Include="Microsoft.Psi.Speech.Windows" Version="0.15.49.1-beta">
+            <NoWarn>NU1701</NoWarn><!--Only a .net framework package is available-->
+        </PackageReference>
+        <PackageReference Include="System.Composition" Version="5.0.1" />
+        <PackageReference Include="System.Speech" Version="6.0.0" /><!--System.Speech does not exist in .net core. Later this package was published, made it is possible to port the project to .net core. The new Windows Compatibility Pack can be an alternitave-->
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
+    </ItemGroup>
 
 </Project>

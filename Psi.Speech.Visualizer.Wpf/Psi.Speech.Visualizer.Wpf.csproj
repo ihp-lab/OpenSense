@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>OpenSense.Wpf.Component.Psi.Speech.Visualizer</AssemblyName>
     <RootNamespace>OpenSense.Wpf.Component.Psi.Speech.Visualizer</RootNamespace>
