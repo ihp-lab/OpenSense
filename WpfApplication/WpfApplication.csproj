@@ -4,14 +4,12 @@
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
         <Platforms>x64</Platforms>
+        <PlatformTarget>x64</PlatformTarget>
         <OutputType>WinExe</OutputType>
         <RootNamespace>OpenSense.Wpf</RootNamespace>
         <ApplicationIcon>Resource\Icon\usc.ico</ApplicationIcon>
         <AssemblyVersion>2.0.0.0</AssemblyVersion>
         <Version>2.0.0</Version>
-        <Authors />
-        <PackageId />
-        <Company />
         <AssemblyName>OpenSense.Wpf</AssemblyName>
     </PropertyGroup>
 
@@ -77,7 +75,15 @@
         <ProjectReference Include="..\GoogleCloud.Speech.V1.Wpf\GoogleCloud.Speech.V1.Wpf.csproj" />
         <ProjectReference Include="..\HeadGesture\HeadGesture.csproj" /><!--No settings available, thus no related WPF project here-->
         <ProjectReference Include="..\HeadGesture.Visualizer.Wpf\HeadGesture.Visualizer.Wpf.csproj" />
+        <ProjectReference Include="..\Imaging.Visualizer.Wpf\Imaging.Visualizer.Wpf.csproj" />
+        <ProjectReference Include="..\Imaging.Wpf\Imaging.Wpf.csproj" />
+        <ProjectReference Include="..\OpenFace.Visualizer.Wpf\OpenFace.Visualizer.Wpf.csproj" />
+        <ProjectReference Include="..\OpenFace.Windows.Wpf\OpenFace.Windows.Wpf.csproj" />
+        <!--...-->
+        <ProjectReference Include="..\Psi.Media.Windows.Wpf\Psi.Media.Windows.Wpf.csproj" />
+        <!--...-->
         <!--Widgets-->
+        <!--...-->
     </ItemGroup>
 
     <ItemGroup>

@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
-using System.Runtime.ExceptionServices;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
@@ -143,7 +142,6 @@ namespace OpenSense.Component.OpenFace {
         /// The receive method for the ImageIn receiver.
         /// This executes every time a message arrives on ImageIn.
         /// </summary>
-        [HandleProcessCorruptedStateExceptions]
         private void ReceiveImage(Shared<Image> input, Envelope envelope) {
             if (Mute) {
                 return;
