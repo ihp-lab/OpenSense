@@ -1,33 +1,32 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <LangVersion>8.0</LangVersion>
-    <AssemblyName>OpenSense.Wpf.Component.Psi.Audio.Windows</AssemblyName>
-    <RootNamespace>OpenSense.Wpf.Component.Psi.Audio</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <AssemblyName>OpenSense.Wpf.Component.Psi.Audio.Windows</AssemblyName>
+        <RootNamespace>OpenSense.Wpf.Component.Psi.Audio</RootNamespace>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Composition" Version="5.0.1" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="System.Composition" Version="5.0.1" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Psi.Audio.Windows\Psi.Audio.Windows.csproj" />
-    <ProjectReference Include="..\Psi.Audio.Wpf.Common\Psi.Audio.Wpf.Common.csproj" />
-    <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Psi.Audio.Windows\Psi.Audio.Windows.csproj" />
+        <ProjectReference Include="..\Psi.Audio.Wpf.Common\Psi.Audio.Wpf.Common.csproj" />
+        <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="AudioPlayerConfigurationControl.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Update="AudioPlayerConfigurationControl.xaml.cs">
+            <SubType>Code</SubType>
+        </Compile>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Page Update="AudioPlayerConfigurationControl.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
+    <ItemGroup>
+        <Page Update="AudioPlayerConfigurationControl.xaml">
+            <SubType>Designer</SubType>
+        </Page>
+    </ItemGroup>
 
 </Project>

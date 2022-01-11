@@ -63,8 +63,6 @@ namespace OpenSense.Wpf.Component.OpenSmile.Visualizer {
 
         private int newValueAvailable;
 
-        private float valueError;
-
         private DateTime? lastValueRefreshTime;
 
         private int valueRefreshIndex;

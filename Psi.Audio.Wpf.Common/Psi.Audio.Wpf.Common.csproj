@@ -1,9 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <LangVersion>8.0</LangVersion>
     <AssemblyName>OpenSense.Wpf.Component.Psi.Audio.Common</AssemblyName>
     <RootNamespace>OpenSense.Wpf.Component.Psi.Audio.Common</RootNamespace>
   </PropertyGroup>

@@ -79,6 +79,12 @@
         <ProjectReference Include="..\Imaging.Wpf\Imaging.Wpf.csproj" />
         <ProjectReference Include="..\OpenFace.Visualizer.Wpf\OpenFace.Visualizer.Wpf.csproj" />
         <ProjectReference Include="..\OpenFace.Windows.Wpf\OpenFace.Windows.Wpf.csproj" />
+        <ProjectReference Include="..\OpenPose.Visualizer.Wpf\OpenPose.Visualizer.Wpf.csproj" />
+        <ProjectReference Include="..\OpenPose.Wpf\OpenPose.Wpf.csproj" />
+        <ProjectReference Include="..\OpenSmile.Visualizer.Wpf\OpenSmile.Visualizer.Wpf.csproj" />
+        <ProjectReference Include="..\OpenSmile.Windows.Wpf\OpenSmile.Windows.Wpf.csproj" />
+        <ProjectReference Include="..\Psi.Audio.Windows.Wpf\Psi.Audio.Windows.Wpf.csproj" />
+        <ProjectReference Include="..\Psi.Audio.Wpf\Psi.Audio.Wpf.csproj" />
         <!--...-->
         <ProjectReference Include="..\Psi.Media.Windows.Wpf\Psi.Media.Windows.Wpf.csproj" />
         <!--...-->

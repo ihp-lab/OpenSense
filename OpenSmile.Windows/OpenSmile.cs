@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Runtime.ExceptionServices;
 using Microsoft.Psi;
 using Microsoft.Psi.Audio;
 using OpenSense.Component.OpenSmile.Common;
@@ -88,7 +87,6 @@ namespace OpenSense.Component.OpenSmile {
                 this.sourceName = sourceName;
             }
 
-            [HandleProcessCorruptedStateExceptions]
             public void Porcess(AudioBuffer input, Envelope envelope) {
                 if (opensmile.Mute) {
                     return;
