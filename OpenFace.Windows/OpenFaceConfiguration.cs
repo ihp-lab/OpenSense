@@ -46,7 +46,7 @@ namespace OpenSense.Component.OpenFace {
         public override IComponentMetadata GetMetadata() => new OpenFaceMetadata();
 
         protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new OpenFace(pipeline) {
-            Logger = (serviceProvider?.GetService(typeof(ILoggerProvider)) as ILoggerProvider)?.CreateLogger(Name),
+            Logger = (serviceProvider?.GetService(typeof(ILoggerFactory)) as ILoggerFactory)?.CreateLogger(Name),
             Mute = Mute,
             CameraCalibFx = CameraCalibFx,
             CameraCalibFy = CameraCalibFy,

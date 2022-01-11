@@ -10,7 +10,7 @@ namespace OpenSense.Component.Emotion {
         public override IComponentMetadata GetMetadata() => new EmotionDetectorMetadata();
 
         protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new EmotionDetector(pipeline) {
-            Logger = (serviceProvider?.GetService(typeof(ILoggerProvider)) as ILoggerProvider)?.CreateLogger(Name),
+            Logger = (serviceProvider?.GetService(typeof(ILoggerFactory)) as ILoggerFactory)?.CreateLogger(Name),
         };
     }
 }

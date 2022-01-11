@@ -18,7 +18,7 @@ namespace OpenSense.Component.OpenPose {
         public override IComponentMetadata GetMetadata() => new OpenPoseMetadata();
 
         protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new OpenPose(pipeline, Raw) { 
-            Logger = (serviceProvider?.GetService(typeof(ILoggerProvider)) as ILoggerProvider)?.CreateLogger(Name),
+            Logger = (serviceProvider?.GetService(typeof(ILoggerFactory)) as ILoggerFactory)?.CreateLogger(Name),
         };
     }
 }

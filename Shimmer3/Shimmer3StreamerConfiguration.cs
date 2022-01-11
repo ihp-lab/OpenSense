@@ -24,7 +24,7 @@ namespace OpenSense.Component.Shimmer3 {
         public override IComponentMetadata GetMetadata() => new Shimmer3StreamerMetadata();
 
         protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new Shimmer3Streamer(pipeline, Raw) {
-            Logger = (serviceProvider?.GetService(typeof(ILoggerProvider)) as ILoggerProvider)?.CreateLogger(Name),
+            Logger = (serviceProvider?.GetService(typeof(ILoggerFactory)) as ILoggerFactory)?.CreateLogger(Name),
             BufferTimeSpan = TimeSpan.FromMilliseconds(BufferTimeInMillisecond),
         };
     }

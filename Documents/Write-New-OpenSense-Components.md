@@ -30,7 +30,7 @@ public class MyComponentConfiguration : ConventionalComponentConfiguration {
     public override IComponentMetadata GetMetadata() => new MyComponentMetadata();
 
     protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new MyComponent(pipeline) { 
-        //Logger = (serviceProvider?.GetService(typeof(ILoggerProvider)) as ILoggerProvider)?.CreateLogger(Name), //if you want an ILogger, then define a field Logger for /psi component.
+        //Logger = (serviceProvider?.GetService(typeof(ILoggerFactory)) as ILoggerFactory)?.CreateLogger(Name), //if you want an ILogger, then define a field Logger for /psi component.
     };
 }
 
