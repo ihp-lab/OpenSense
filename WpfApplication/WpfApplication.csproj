@@ -93,6 +93,7 @@
         <ProjectReference Include="..\Psi.Media.Windows.Wpf\Psi.Media.Windows.Wpf.csproj" />
         <ProjectReference Include="..\Psi.Speech.Visualizer.Wpf\Psi.Speech.Visualizer.Wpf.csproj" />
         <ProjectReference Include="..\Psi.Speech.Windows.Wpf\Psi.Speech.Windows.Wpf.csproj" />
+        <ProjectReference Include="..\Psi.Builtin.Wpf\Psi.Builtin.Wpf.csproj" />
         <!--...-->
         <!--Widgets-->
         <!--...-->

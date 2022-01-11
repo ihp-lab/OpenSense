@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
-    <ProjectReference Include="..\Psi\Psi.csproj" />
+    <ProjectReference Include="..\Psi.Builtin\Psi.Builtin.csproj" />
   </ItemGroup>
 
 </Project>

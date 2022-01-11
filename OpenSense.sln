@@ -36,9 +36,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imaging.Visualizer.Wpf", "I
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Legacy", "Legacy", "{8F6A4B36-5588-4C25-8900-6F969C345F3C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi", "Psi\Psi.csproj", "{D275B163-5D5B-4879-9A10-A5C10EDB00AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Builtin", "Psi.Builtin\Psi.Builtin.csproj", "{D275B163-5D5B-4879-9A10-A5C10EDB00AE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Wpf", "Psi.Wpf\Psi.Wpf.csproj", "{3F716DF0-E3EF-4C61-8F80-3244DF8D68DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Builtin.Wpf", "Psi.Builtin.Wpf\Psi.Builtin.Wpf.csproj", "{3F716DF0-E3EF-4C61-8F80-3244DF8D68DE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Audio.Windows", "Psi.Audio.Windows\Psi.Audio.Windows.csproj", "{CF8A5C5E-46D1-485E-A1DD-45529BFCE950}"
 EndProject
