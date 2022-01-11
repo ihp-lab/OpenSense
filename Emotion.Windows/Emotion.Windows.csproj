@@ -2,9 +2,8 @@
 
     <PropertyGroup>
         <!--TODO: not tested after ported from .net framework to .net 6-->
-        <TargetFramework>net6.0-windows</TargetFramework>
-        <UseWPF>true</UseWPF>
-        <!--Windows Drawing facilities-->
+        <TargetFrameworks>net6.0-windows;net48</TargetFrameworks>
+        <UseWPF>true</UseWPF><!--Windows Drawing facilities-->
         <AssemblyName>OpenSense.Component.Emotion</AssemblyName>
         <RootNamespace>OpenSense.Component.Emotion</RootNamespace>
     </PropertyGroup>

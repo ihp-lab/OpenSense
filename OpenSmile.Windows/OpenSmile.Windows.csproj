@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0-windows</TargetFramework>
+        <TargetFrameworks>net6.0-windows;net48</TargetFrameworks>
         <Platforms>x64</Platforms>
         <PlatformTarget>x64</PlatformTarget>
         <AssemblyName>OpenSense.Component.OpenSmile.Windows</AssemblyName>
