@@ -1,32 +1,33 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <AssemblyName>OpenSense.Component.Emotion</AssemblyName>
-    <RootNamespace>OpenSense.Component.Emotion</RootNamespace>
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <!--TODO: not tested after ported from .net framework to .net 6-->
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <!--Windows Drawing facilities-->
+        <AssemblyName>OpenSense.Component.Emotion</AssemblyName>
+        <RootNamespace>OpenSense.Component.Emotion</RootNamespace>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
-    <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="1.5.2" />
-    <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="1.5.2" />
-    <PackageReference Include="Microsoft.Psi.Imaging" Version="0.15.49.1-beta" />
-    <PackageReference Include="System.Composition" Version="5.0.1" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+        <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="1.5.2" />
+        <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="1.5.2" />
+        <PackageReference Include="Microsoft.Psi.Imaging" Version="0.15.49.1-beta" />
+        <PackageReference Include="System.Composition" Version="5.0.1" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
-    <ProjectReference Include="..\DataWriterContract\DataWriterContract.csproj" />
-    <ProjectReference Include="..\Emotion.Common\Emotion.Common.csproj" />
-    <ProjectReference Include="..\Head.Common\Head.Common.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
+        <ProjectReference Include="..\DataWriterContract\DataWriterContract.csproj" />
+        <ProjectReference Include="..\Emotion.Common\Emotion.Common.csproj" />
+        <ProjectReference Include="..\Head.Common\Head.Common.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Models\emotion_model.onnx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <None Update="Models\emotion_model.onnx">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 
 </Project>

@@ -1,19 +1,25 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
-    <AssemblyName>OpenSense.Component.Media.Writer.Windows</AssemblyName>
-    <RootNamespace>OpenSense.Component.Media.Writer</RootNamespace>
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <!--TODO: not tested after ported from .net framework to .net 6-->
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <Platforms>x64</Platforms>
+        <PlatformTarget>x64</PlatformTarget>
+        <AssemblyName>OpenSense.Component.Media.Writer.Windows</AssemblyName>
+        <RootNamespace>OpenSense.Component.Media.Writer</RootNamespace>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Psi.Media.Windows.x64" Version="0.15.49.1-beta" />
-    <PackageReference Include="System.Composition" Version="5.0.1" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Psi.Audio" Version="0.15.49.1-beta" />
+        <PackageReference Include="Microsoft.Psi.Imaging" Version="0.15.49.1-beta" />
+        <PackageReference Include="Microsoft.Psi.Media.Windows.x64" Version="0.15.49.1-beta">
+            <NoWarn>NU1701</NoWarn><!--Only a .net framework package is available-->
+        </PackageReference>
+        <PackageReference Include="System.Composition" Version="5.0.1" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
+    </ItemGroup>
 
 </Project>

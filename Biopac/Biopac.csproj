@@ -1,18 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>OpenSense.Component.Biopac</AssemblyName>
-    <RootNamespace>OpenSense.Component.Biopac</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <Platforms>x64</Platforms>
+        <PlatformTarget>x64</PlatformTarget>
+        <AssemblyName>OpenSense.Component.Biopac</AssemblyName>
+        <RootNamespace>OpenSense.Component.Biopac</RootNamespace>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Composition" Version="5.0.1" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="System.Composition" Version="5.0.1" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BiopacInterop\BiopacInterop.vcxproj" />
-    <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\BiopacInterop\BiopacInterop.vcxproj" />
+        <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
+    </ItemGroup>
 
 </Project>
