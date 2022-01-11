@@ -161,7 +161,7 @@ namespace OpenSense.Component.Imaging.Visualizer.Common {
                     renderedFrames.Increment();
                 }
 
-                if (psiDecodedImage != null && psiDecodedImage.ImageData != null) {
+                if (psiDecodedImage != null && psiDecodedImage.ImageData != IntPtr.Zero) {
                     if (VideoImage == null || VideoImage.PixelWidth != psiDecodedImage.Width || VideoImage.PixelHeight != psiDecodedImage.Height || VideoImage.BackBufferStride != psiDecodedImage.Stride) {
                         System.Windows.Media.PixelFormat pixelFormat;
 

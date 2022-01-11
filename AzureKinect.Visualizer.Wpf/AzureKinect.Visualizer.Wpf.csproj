@@ -1,12 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <Platforms>x64</Platforms>
     <AssemblyName>OpenSense.Wpf.Component.AzureKinect.Visualizer</AssemblyName>
     <RootNamespace>OpenSense.Wpf.Component.AzureKinect.Visualizer</RootNamespace>
-    <LangVersion>8.0</LangVersion>
-    <Platforms>x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>

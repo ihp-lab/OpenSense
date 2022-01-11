@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30204.135
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenFaceInterop", "OpenFaceInterop\OpenFaceInterop.vcxproj", "{78196985-EE54-411F-822B-5A23EDF80642}"
 EndProject
@@ -210,14 +210,11 @@ Global
 		{3CCE5DC7-EF98-4E4A-B48A-6BF3C207136E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3CCE5DC7-EF98-4E4A-B48A-6BF3C207136E}.Release|x64.ActiveCfg = Release|Any CPU
 		{3CCE5DC7-EF98-4E4A-B48A-6BF3C207136E}.Release|x64.Build.0 = Release|Any CPU
-		{E3A55EA5-09F8-4ED6-99C9-4E7767A0121A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E3A55EA5-09F8-4ED6-99C9-4E7767A0121A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E3A55EA5-09F8-4ED6-99C9-4E7767A0121A}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{E3A55EA5-09F8-4ED6-99C9-4E7767A0121A}.Debug|x64.Build.0 = Debug|Any CPU
-		{E3A55EA5-09F8-4ED6-99C9-4E7767A0121A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E3A55EA5-09F8-4ED6-99C9-4E7767A0121A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E3A55EA5-09F8-4ED6-99C9-4E7767A0121A}.Release|x64.ActiveCfg = Release|Any CPU
-		{E3A55EA5-09F8-4ED6-99C9-4E7767A0121A}.Release|x64.Build.0 = Release|Any CPU
+		{E3A55EA5-09F8-4ED6-99C9-4E7767A0121A}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{E3A55EA5-09F8-4ED6-99C9-4E7767A0121A}.Debug|x64.ActiveCfg = Debug|x64
+		{E3A55EA5-09F8-4ED6-99C9-4E7767A0121A}.Debug|x64.Build.0 = Debug|x64
+		{E3A55EA5-09F8-4ED6-99C9-4E7767A0121A}.Release|Any CPU.ActiveCfg = Release|x64
+		{E3A55EA5-09F8-4ED6-99C9-4E7767A0121A}.Release|x64.ActiveCfg = Release|x64
 		{2FB95435-EECA-4EE6-8E48-5068165E6A14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2FB95435-EECA-4EE6-8E48-5068165E6A14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2FB95435-EECA-4EE6-8E48-5068165E6A14}.Debug|x64.ActiveCfg = Debug|Any CPU

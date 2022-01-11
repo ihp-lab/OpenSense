@@ -2,8 +2,9 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
-        <OutputType>WinExe</OutputType>
         <UseWPF>true</UseWPF>
+        <Platforms>x64</Platforms>
+        <OutputType>WinExe</OutputType>
         <RootNamespace>OpenSense.Wpf</RootNamespace>
         <ApplicationIcon>Resource\Icon\usc.ico</ApplicationIcon>
         <AssemblyVersion>2.0.0.0</AssemblyVersion>
@@ -65,6 +66,8 @@
 
         <!--Additional references: All project names ending with ".Wpf"-->
         <!--Components-->
+        <ProjectReference Include="..\Audio.Visualizer.Wpf\Audio.Visualizer.Wpf.csproj" />
+        <ProjectReference Include="..\AzureKinect.Visualizer.Wpf\AzureKinect.Visualizer.Wpf.csproj" />
         <!--Widgets-->
     </ItemGroup>
 
