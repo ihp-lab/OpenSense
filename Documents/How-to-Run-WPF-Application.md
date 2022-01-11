@@ -8,9 +8,9 @@ Binary releases are available on Github [release page](https://github.com/intell
 
 # Install Dependencies
 
-## .Net Framework 4.8
+## .Net 6 Runtime (x64)
 
-.Net Framework 4.8 is shipped with Windows 10. You can turn on this feature from `Control Panel`.
+The runtime can be downloaded from [Microsoft's official site](https://dotnet.microsoft.com).
 
 ## Kinect V2 SDK
 

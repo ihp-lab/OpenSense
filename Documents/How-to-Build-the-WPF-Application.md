@@ -14,11 +14,12 @@ You can replace the project reference list with references in the comment.
 
 ## Prerequisites
 
-+ Visual Studio 2019
++ Visual Studio 2022
   + Desktop development with C++ (Workload)
   + .NET desktop development (Workload)
   + .NET Framework 4.8 SDK (Individual Component)
   + .NET Framework 4.8 targeting pack (Individual Component)
+  + .NET 6.0 Runtime (Individual Component)
   + MSVC v141 - VS 2017 C++ x64/x86 build tools (Individual Component) (if you want to compile OpenFace and openSMILE)
   + Windows 10 SDK (10.0.18362.0)
 + [Kinect for Windows SDK 2.0](https://www.microsoft.com/en-us/download/details.aspx?id=44561) (if you want to run KinectV2)
