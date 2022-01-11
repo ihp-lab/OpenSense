@@ -1,11 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>OpenSense.Wpf.Component.GoogleCloud.Speech.V1</AssemblyName>
     <RootNamespace>OpenSense.Wpf.Component.GoogleCloud.Speech.V1</RootNamespace>
-    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

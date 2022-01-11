@@ -11,7 +11,6 @@ namespace OpenSense.Component.HeadGesture {
         private string modelFilePath;
         private OnnxRNNScorer modelScorer;
         private MLContext mlContext;
-        private string assetsPath;
         private LinkedList<List<float>> dataQueueTransDiff = new LinkedList<List<float>>();
         private LinkedList<List<float>> dataQueueTTRRDiffDiff2 = new LinkedList<List<float>>();
         private List<float> lastInputTRTRDiffDiff2 = new List<float>();
