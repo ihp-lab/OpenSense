@@ -67,20 +67,20 @@ namespace OpenSense.Component.HeadGesture {
             List<float> inputTRTRDiffDiff2 = new List<float>(); //diff_Tx, diff_Ty, diff_Tz, diff_Rx, diff_Ry, diff_Rz, diff2_Tx, diff2_Ty, diff2_Tz, diff2_Rx, diff2_Ry, diff2_Rz
             // calculate diff of T_x, T_y, T_z, R_x, R_y, R_z
 
-            for (int i = 0; i < input.Count(); i++) {
+            for (int i = 0; i < input.Count; i++) {
                 inputTRTRTransDiff.Add((float)input[i]);
             }
-            for (int i = 0; i < input.Count(); i++) {
+            for (int i = 0; i < input.Count; i++) {
                 inputTRTRTransDiff.Add((float)input[i] - dataQueueTransDiff.Last()[i]);
             }
             // calculate diff and diff2 of T_x, T_y, T_z, R_x, R_y, R_z
             // add diff
 
-            for (int i = 0; i < input.Count(); i++) {
+            for (int i = 0; i < input.Count; i++) {
                 inputTRTRDiffDiff2.Add(inputTRTRTransDiff[input.Count + i]);
             }
             // add diff2
-            for (int i = 0; i < input.Count(); i++) {
+            for (int i = 0; i < input.Count; i++) {
                 inputTRTRDiffDiff2.Add(inputTRTRDiffDiff2[i] - lastInputTRTRDiffDiff2[i]);
             }
 

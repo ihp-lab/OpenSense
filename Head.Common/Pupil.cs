@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Numerics;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace OpenSense.Component.Head.Common {
     [Serializable]

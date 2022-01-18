@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace OpenSense.Component.Head.Common {
-    [JsonObject]
-    public class Pose : IEnumerable<double>, IEquatable<Pose> {
+    //[JsonObject]
+    public class Pose /*: IEnumerable<double>, IEquatable<Pose>*/ {//Interfaces removed since no support for JsonObjectAttribute after Json.Net is removed
 
         /// <summary>
         /// Absolute head postion to camera in millimeter
@@ -93,9 +93,9 @@ namespace OpenSense.Component.Head.Common {
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator() {
-            return GetEnumerator();
-        }
+        //IEnumerator IEnumerable.GetEnumerator() {
+        //    return GetEnumerator();
+        //}
 
         #endregion
 
