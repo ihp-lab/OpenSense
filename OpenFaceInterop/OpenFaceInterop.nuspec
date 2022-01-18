@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Note: This file is managed manually, as Visual Studio does not support managing .nuspec for non-SDK style projects-->
+<!--Note: Paths are hard coded here. Build the project with Release configuration first.-->
+<!--Usage: call "nuget pack"-->
+<package >
+  <metadata>
+    <id>OpenFaceInterop</id><!-- <id>OpenSense.Component.OpenFace.Interop</id> -->
+    <version>1.0.0</version>
+    <!-- <title>$title$</title> -->
+    <authors>Unknown</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <!-- <license type="expression">MIT</license> -->
+    <!-- <icon>icon.png</icon> -->
+    <!-- <projectUrl>http://project_url_here_or_delete_this_line/</projectUrl> -->
+    <description>.Net wrapper of native OpenFace</description>
+    <!-- <releaseNotes>Summary of changes made in this release of the package.</releaseNotes> -->
+    <!-- <copyright>$copyright$</copyright> -->
+    <tags>native</tags><!--Important-->
+    <contentFiles>
+      <!--Note: For new nuget format-->
+      <!--Note: Paths here are reletave to "contentFiles"-->
+      <files include="any/any/**" copyToOutput="true"/>
+    </contentFiles>
+    <dependencies>
+      <group targetFramework=".NETFramework4.8">
+        <!--Note: Empty, to resolve error NU5128-->
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <!--Note: For content files, target="content" is for old nuget format, while target="contentFiles\any\any" is the new format. The old format is not used here-->
+    <!--.Net Library-->
+    <file src="bin\x64\Release\OpenFaceInterop.dll" target="lib\net48"/>
+    <file src="bin\x64\Release\OpenFaceInterop.pdb" target="lib\net48"/>
+    <!--Native Library-->
+    <file src="..\Shared\lib\tbb\default\bin\x64\Release\tbb.dll" target="runtimes\win-x64\native"/>
+    <file src="..\Shared\lib\openblas\default\bin\x64\Release\openblas.dll" target="runtimes\win-x64\native"/>
+    <file src="..\Shared\lib\opencv\default\bin\x64\Release\*.dll" target="runtimes\win-x64\native"/>
+    <!--OpenCV Content-->
+    <file src="..\Shared\lib\opencv\default\classifiers\**" target="contentFiles\any\any\classifiers"/>
+    <!--OpenFace Content-->
+    <file src="..\Shared\lib\openface\default\openface\FaceAnalyser\predictors\**" target="contentFiles\any\any\predictors"/>
+    <file src="..\Shared\lib\openface\default\openface\LandmarkDetector\models\**" target="contentFiles\any\any\models"/>
+  </files>
+</package>
