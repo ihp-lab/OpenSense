@@ -80,7 +80,7 @@ namespace OpenSense.Component.EyePointOfInterest.SpatialTracking {
         public Vector2 Train(IList<GazeToDisplayCoordinateMappingRecord> data) {
             Samples = data.ToArray();
 
-            var predict = data.Select(r => Predict(new PoseAndGaze(r.HeadPose, r.Gaze))).ToArray();
+            var predict = data.Select(r => Predict(new PoseAndGaze(r.HeadPose, r.Gaze, r.Face))).ToArray();
             var rSquaredX = GoodnessOfFit.RSquared(predict.Select(p => (double)p.X), data.Select(d => d.Display.X).Select(d => (double)d));
             var rSquaredY = GoodnessOfFit.RSquared(predict.Select(p => (double)p.Y), data.Select(d => d.Display.Y).Select(d => (double)d));
             return new Vector2((float)rSquaredX, (float)rSquaredY);

@@ -208,7 +208,7 @@ namespace OpenSense.Component.OpenFace {
                             FaceOut.Post(face, envelope.OriginatingTime);
 
                             //All
-                            var headPoseAndGaze = new PoseAndGaze(headPose.DeepClone(), gaze.DeepClone());
+                            var headPoseAndGaze = new PoseAndGaze(headPose.DeepClone(), gaze.DeepClone(), face.DeepClone());
                             DataWriter?.Write(headPoseAndGaze, envelope);
                             Out.Post(headPoseAndGaze, envelope.OriginatingTime);
                         }

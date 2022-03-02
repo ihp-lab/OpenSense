@@ -9,23 +9,28 @@ namespace OpenSense.Component.Head.Common {
 
         public readonly Gaze Gaze;
 
+        public readonly Face Face;
+
         [JsonConstructor]
-        public PoseAndGaze(Pose headPose, Gaze gaze) {
+        public PoseAndGaze(Pose headPose, Gaze gaze, Face face) {
             HeadPose = headPose;
             Gaze = gaze;
+            Face = face;
         }
 
         #region IEquatable
         public bool Equals(PoseAndGaze other) =>
             HeadPose.Equals(other.HeadPose)
             && Gaze.Equals(other.Gaze)
+            && Face.Equals(other.Face)
             ;
 
         public override bool Equals(object obj) => obj is PoseAndGaze other ? Equals(obj) : false;
 
         public override int GetHashCode() => HashCode.Combine(
             HeadPose,
-            Gaze
+            Gaze,
+            Face
         );
 
         public static bool operator ==(PoseAndGaze a, PoseAndGaze b) => a.Equals(b);
