@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -69,6 +68,7 @@ namespace OpenSense.Component.Head.Common {
         [JsonIgnore]
         public Vector3 NoseTip3D => Landmarks3D[30];
 
+        [JsonIgnore]
         #region To accommodate old code
         public double this[int index] {
             get {
@@ -91,6 +91,7 @@ namespace OpenSense.Component.Head.Common {
             }
         }
 
+        [JsonIgnore]
         public int Count => 6;
 
         public IEnumerator<double> GetEnumerator() {
