@@ -68,8 +68,8 @@ namespace OpenSense.Component.Head.Common {
         [JsonIgnore]
         public Vector3 NoseTip3D => Landmarks3D[30];
 
-        [JsonIgnore]
         #region To accommodate old code
+        [JsonIgnore]
         public double this[int index] {
             get {
                 switch (index) {
