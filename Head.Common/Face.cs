@@ -8,6 +8,7 @@ namespace OpenSense.Component.Head.Common {
     [Serializable]
     public class Face : IEquatable<Face> {
 
+        [JsonInclude]
         public readonly IReadOnlyDictionary<string, ActionUnit> ActionUnits;
 
         [JsonConstructor]

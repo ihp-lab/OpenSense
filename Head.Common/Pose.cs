@@ -13,19 +13,25 @@ namespace OpenSense.Component.Head.Common {
         /// <summary>
         /// Absolute head postion to camera in millimeter
         /// </summary>
+        [JsonInclude]
         public readonly Vector3 Position;
 
         /// <summary>
         /// Absolute head rotation to camera in radian
         /// </summary>
+        [JsonInclude]
         public readonly Vector3 Angle;
 
+        [JsonInclude]
         public readonly IReadOnlyList<Vector2> Landmarks;
 
+        [JsonInclude]
         public readonly IReadOnlyList<Vector2> VisiableLandmarks;
 
+        [JsonInclude]
         public readonly IReadOnlyList<Vector3> Landmarks3D;
 
+        [JsonInclude]
         public readonly IReadOnlyList<ValueTuple<Vector2, Vector2>> IndicatorLines;
 
         [JsonConstructor]

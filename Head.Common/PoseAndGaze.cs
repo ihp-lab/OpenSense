@@ -5,10 +5,13 @@ namespace OpenSense.Component.Head.Common {
     [Serializable]
     public class PoseAndGaze : IEquatable<PoseAndGaze> {
 
+        [JsonInclude]
         public readonly Pose HeadPose;
 
+        [JsonInclude]
         public readonly Gaze Gaze;
 
+        [JsonInclude]
         public readonly Face Face;
 
         [JsonConstructor]

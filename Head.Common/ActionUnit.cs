@@ -5,7 +5,10 @@ namespace OpenSense.Component.Head.Common {
     [Serializable]
     public class ActionUnit: IEquatable<ActionUnit> {
 
+        [JsonInclude]
         public readonly double Intensity;
+
+        [JsonInclude]
         public readonly double Presence;
 
         [JsonConstructor]

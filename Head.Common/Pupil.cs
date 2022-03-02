@@ -6,8 +6,10 @@ namespace OpenSense.Component.Head.Common {
     [Serializable]
     public class Pupil : IEquatable<Pupil> {
 
+        [JsonInclude]
         public readonly Vector3 Left;
 
+        [JsonInclude]
         public readonly Vector3 Right;
 
         [JsonConstructor]

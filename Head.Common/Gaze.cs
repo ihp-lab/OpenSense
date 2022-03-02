@@ -11,27 +11,29 @@ namespace OpenSense.Component.Head.Common {
         /// <summary>
         /// Normalized left pupil vector to camera
         /// </summary>
+        [JsonInclude]
         public readonly Pupil GazeVector;
 
         /// <summary>
         /// Absolute gaze angle to camera in radian、
         /// mean of eyes
         /// </summary>
+        [JsonInclude]
         public readonly Vector2 Angle;
 
+        [JsonInclude]
         public readonly IReadOnlyList<Vector2> Landmarks;
 
+        [JsonInclude]
         public readonly IReadOnlyList<Vector3> Landmarks3D;
 
-        [JsonIgnore]
+        [JsonInclude]
         public readonly IReadOnlyList<Vector2> VisiableLandmarks;
 
-        [JsonIgnore]
+        [JsonInclude]
         public readonly IReadOnlyList<ValueTuple<Vector2, Vector2>> IndicatorLines;
 
         [JsonConstructor]
-        public Gaze(Pupil gazeVector, Vector2 angle, IEnumerable<Vector2> landmarks, IEnumerable<Vector3> landmarks3D) : this(gazeVector, angle, landmarks, Array.Empty<Vector2>(), landmarks3D, Array.Empty<ValueTuple<Vector2, Vector2>>()) { }
-
         public Gaze(
             Pupil gazeVector, 
             Vector2 angle,
@@ -40,12 +42,12 @@ namespace OpenSense.Component.Head.Common {
             IEnumerable<Vector3> landmarks3D,
             IEnumerable<ValueTuple<Vector2, Vector2>> indicatorLines
             ) {
-            IndicatorLines = indicatorLines.ToImmutableArray();
-            Landmarks = landmarks.ToImmutableArray();
-            VisiableLandmarks = visiableLandmarks.ToImmutableArray();
-            Landmarks3D = landmarks3D.ToImmutableArray();
             GazeVector = gazeVector;
             Angle = angle;
+            Landmarks = landmarks.ToImmutableArray();
+            Landmarks3D = landmarks3D.ToImmutableArray();
+            VisiableLandmarks = visiableLandmarks.ToImmutableArray();
+            IndicatorLines = indicatorLines.ToImmutableArray();
         }
 
         [JsonIgnore]
