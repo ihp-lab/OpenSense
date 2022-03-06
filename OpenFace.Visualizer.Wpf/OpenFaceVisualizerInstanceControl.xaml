@@ -24,16 +24,64 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
-                <Label Grid.Row="0" Grid.Column="0">Mute</Label>
-                <CheckBox Grid.Row="0" Grid.Column="1" IsChecked="{Binding Mute}"/>
+                <Label Grid.Row="0" Grid.Column="0">
+                    Mute
+                </Label>
+                <CheckBox Grid.Row="0" Grid.Column="1" 
+                          IsChecked="{Binding Mute}"
+                          />
 
-                <Label Grid.Row="1" Grid.Column="0">Circle radius</Label>
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CircleRadius}"/>
+                <Label Grid.Row="1" Grid.Column="0">
+                    Circle radius
+                </Label>
+                <TextBox Grid.Row="1" Grid.Column="1" 
+                         Text="{Binding CircleRadius}"
+                         />
 
-                <Label Grid.Row="2" Grid.Column="0">Line thickness</Label>
-                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding LineThickness}"/>
+                <Label Grid.Row="2" Grid.Column="0">
+                    Line thickness
+                </Label>
+                <TextBox Grid.Row="2" Grid.Column="1" 
+                         Text="{Binding LineThickness}"
+                         />
+
+                <Label Grid.Row="3" Grid.Column="0"
+                       >
+                    Draw Head Landmarks
+                </Label>
+                <CheckBox Grid.Row="3" Grid.Column="1"
+                          IsChecked="{Binding DrawHeadLandmarks}"
+                          />
+
+                <Label Grid.Row="4" Grid.Column="0"
+                       >
+                    Draw Head Indicator Lines
+                </Label>
+                <CheckBox Grid.Row="4" Grid.Column="1"
+                          IsChecked="{Binding DrawHeadIndicatorLines}"
+                          />
+
+                <Label Grid.Row="5" Grid.Column="0"
+                       >
+                    Draw Eye Landmarks
+                </Label>
+                <CheckBox Grid.Row="5" Grid.Column="1"
+                          IsChecked="{Binding DrawEyeLandmarks}"
+                          />
+
+                <Label Grid.Row="6" Grid.Column="0"
+                       >
+                    Draw Eye Indicator Lines
+                </Label>
+                <CheckBox Grid.Row="6" Grid.Column="1"
+                          IsChecked="{Binding DrawEyeIndicatorLines}"
+                          />
             </Grid>
         </Expander>
         

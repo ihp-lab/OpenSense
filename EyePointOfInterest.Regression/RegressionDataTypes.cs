@@ -36,7 +36,7 @@ namespace OpenSense.Component.EyePointOfInterest.Regression {
             DisplayY = (float)record.Display.Y;
         }
 
-        public RegressionRecord(PoseAndGaze headPoseAndGaze) :this(new GazeToDisplayCoordinateMappingRecord(headPoseAndGaze, new Vector2())) {}
+        public RegressionRecord(PoseAndEyeAndFace headPoseAndGaze) :this(new GazeToDisplayCoordinateMappingRecord(headPoseAndGaze, new Vector2())) {}
     }
 
     public class RegressionPrediction {

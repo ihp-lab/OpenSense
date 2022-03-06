@@ -86,12 +86,12 @@ namespace OpenSense.Wpf.Widget.DisplayPoiEstimatorBuilder {
             flip.PipeTo(openface.In, DeliveryPolicy.LatestMessage);
             var dispFlip = new FlipColorVideo(pipeline) { FlipHorizontal = !FlipX, FlipVertical = FlipY };// mirror display
             source.PipeTo(dispFlip.In, DeliveryPolicy.LatestMessage);
-            var joinedVideoFrame = openface.Out.Join(dispFlip.Out, Reproducible.Exact<Shared<Microsoft.Psi.Imaging.Image>>(), (dataPoint, frame) => new Tuple<PoseAndGaze, Shared<Microsoft.Psi.Imaging.Image>>(dataPoint, frame), DeliveryPolicy.LatestMessage, DeliveryPolicy.LatestMessage);
+            var joinedVideoFrame = openface.Out.Join(dispFlip.Out, Reproducible.Exact<Shared<Microsoft.Psi.Imaging.Image>>(), (dataPoint, frame) => new Tuple<PoseAndEyeAndFace, Shared<Microsoft.Psi.Imaging.Image>>(dataPoint, frame), DeliveryPolicy.LatestMessage, DeliveryPolicy.LatestMessage);
             joinedVideoFrame.Do(UpdateDisplay, DeliveryPolicy.LatestMessage);
             pipeline.RunAsync();
         }
 
-        private void UpdateDisplay(Tuple<PoseAndGaze, Shared<Microsoft.Psi.Imaging.Image>> dataPoint, Envelope e) {
+        private void UpdateDisplay(Tuple<PoseAndEyeAndFace, Shared<Microsoft.Psi.Imaging.Image>> dataPoint, Envelope e) {
             var coordinate = Estimator.Predict(dataPoint.Item1).DeepClone();
             try {
                 Dispatcher.Invoke(() => {

@@ -8,7 +8,7 @@ namespace OpenSense.Component.EyePointOfInterest.Common {
     [Serializable]
     public class GazeToDisplayCoordinateMappingRecord : IEquatable<GazeToDisplayCoordinateMappingRecord> {
  
-        public readonly Gaze Gaze;
+        public readonly Eye Gaze;
 
         public readonly Pose HeadPose;
 
@@ -20,17 +20,17 @@ namespace OpenSense.Component.EyePointOfInterest.Common {
         public readonly Vector2 Display;
 
         [JsonConstructor]
-        public GazeToDisplayCoordinateMappingRecord(Gaze gaze, Pose headPose, Face face, Vector2 display) {
+        public GazeToDisplayCoordinateMappingRecord(Eye gaze, Pose headPose, Face face, Vector2 display) {
             Gaze = gaze;
             HeadPose = headPose;
             Face = face;
             Display = display;
         }
 
-        public GazeToDisplayCoordinateMappingRecord(PoseAndGaze headPoseAndGaze, Vector2 display) : this(headPoseAndGaze.Gaze, headPoseAndGaze.HeadPose, headPoseAndGaze.Face, display) {}
+        public GazeToDisplayCoordinateMappingRecord(PoseAndEyeAndFace headPoseAndGaze, Vector2 display) : this(headPoseAndGaze.Eye, headPoseAndGaze.Pose, headPoseAndGaze.Face, display) {}
 
         [JsonIgnore]
-        public PoseAndGaze HeadPoseAndGaze => new PoseAndGaze(HeadPose, Gaze, Face);
+        public PoseAndEyeAndFace HeadPoseAndGaze => new PoseAndEyeAndFace(HeadPose, Gaze, Face);
 
         public bool Equals(GazeToDisplayCoordinateMappingRecord other) {
             return Gaze.Equals(other.Gaze) && HeadPose.Equals(other.HeadPose) && Face.Equals(other.Face) && Display.Equals(other.Display);
