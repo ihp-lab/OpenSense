@@ -13,7 +13,7 @@ using OpenSense.Component.Head.Common;
 using OpenSense.DataWriter.Contract;
 
 namespace OpenSense.Component.OpenFace {
-    public class OpenFace : IConsumer<Shared<Image>>, IProducer<PoseAndEyeAndFace>, INotifyPropertyChanged {
+    public sealed class OpenFace : IConsumer<Shared<Image>>, IProducer<PoseAndEyeAndFace>, INotifyPropertyChanged {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -73,7 +73,7 @@ namespace OpenSense.Component.OpenFace {
             faceAnalyser.Reset();
         }
 
-        public ILogger Logger { protected get; set; }
+        public ILogger Logger { private get; set; }
 
         private bool mute = false;
 
@@ -250,7 +250,7 @@ namespace OpenSense.Component.OpenFace {
                     }
                 }
             } catch (Exception ex) {
-                Logger?.LogError("OpenFace exception: {exception}", ex);
+                Logger?.LogError(ex, "OpenFace exception");
                 Mute = true;
             }
         }
