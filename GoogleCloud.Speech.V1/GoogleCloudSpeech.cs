@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Google.Cloud.Speech.V1;
 using Google.Protobuf;
+using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using Microsoft.Psi.Audio;
 using Microsoft.Psi.Components;
@@ -15,7 +16,7 @@ using Microsoft.Psi.Speech;
 
 namespace OpenSense.Component.GoogleCloud.Speech.V1 {
 
-    public class GoogleCloudSpeech : IConsumerProducer<(AudioBuffer, bool), IStreamingSpeechRecognitionResult> {
+    public sealed class GoogleCloudSpeech : IConsumerProducer<(AudioBuffer, bool), IStreamingSpeechRecognitionResult> {
 
         private static readonly IList<SpeechRecognitionAlternate> EmptyAlternatives = new List<SpeechRecognitionAlternate> {
            new SpeechRecognitionAlternate(text: "", confidence: 1.0),
@@ -31,6 +32,8 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
             }
         }
         #endregion
+
+        public ILogger Logger { private get; set; }
 
         public Receiver<(AudioBuffer, bool)> In { get; private set; }
 
@@ -242,7 +245,7 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
             } catch (Grpc.Core.RpcException ex2) when (ex2.StatusCode == Grpc.Core.StatusCode.Cancelled) {
                 ;
             } catch (Exception ex) {
-                Console.WriteLine(ex.ToString());
+                Logger?.LogError(ex, "Exception while communicate with Google cloud speech");
             }
             ;//for debug
         }

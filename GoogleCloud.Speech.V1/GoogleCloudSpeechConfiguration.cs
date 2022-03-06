@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using OpenSense.Component.Contract;
 
@@ -62,6 +63,7 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
         public override IComponentMetadata GetMetadata() => new GoogleCloudSpeechMetadata();
 
         protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new GoogleCloudSpeech(pipeline, File.ReadAllText(CredentialsPath)) { 
+            Logger = (serviceProvider?.GetService(typeof(ILoggerFactory)) as ILoggerFactory)?.CreateLogger(Name),
             Mute = Mute,
             AtMostOneFinalResultEachVadSession = AtMostOneFinalResultEachVadSession,
             LanguageCode = LanguageCode,
