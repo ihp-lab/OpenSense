@@ -24,7 +24,7 @@ namespace OpenSense.Component.Head.Common {
             && Right.Equals(other.Right)
             ;
 
-        public override bool Equals(object obj) => obj is GazeVector other ? Equals(obj) : false;
+        public override bool Equals(object obj) => obj is GazeVector other ? Equals(other) : false;
 
         public override int GetHashCode() => HashCode.Combine(
             Left,

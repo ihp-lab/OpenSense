@@ -114,7 +114,7 @@ namespace OpenSense.Component.Head.Common {
             && Position.Equals(other.Position)
             && Angle.Equals(other.Angle);
 
-        public override bool Equals(object obj) => obj is Pose other ? Equals(obj) : false;
+        public override bool Equals(object obj) => obj is Pose other ? Equals(other) : false;
 
         public override int GetHashCode() => HashCode.Combine(
             Landmarks,

@@ -23,7 +23,7 @@ namespace OpenSense.Component.Head.Common {
             && Presence.Equals(other.Presence)
             ;
 
-        public override bool Equals(object obj) => obj is ActionUnit other ? Equals(obj) : false;
+        public override bool Equals(object obj) => obj is ActionUnit other ? Equals(other) : false;
 
         public override int GetHashCode() => HashCode.Combine(
             Intensity,

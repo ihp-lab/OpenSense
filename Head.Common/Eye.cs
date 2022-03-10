@@ -74,7 +74,7 @@ namespace OpenSense.Component.Head.Common {
             && GazeVector.Equals(other.GazeVector)
             && Angle.Equals(other.Angle);
 
-        public override bool Equals(object obj) => obj is Eye other ? Equals(obj) : false;
+        public override bool Equals(object obj) => obj is Eye other ? Equals(other) : false;
 
         public override int GetHashCode() => HashCode.Combine(
             Landmarks,

@@ -20,7 +20,7 @@ namespace OpenSense.Component.Head.Common {
         public bool Equals(Face other) =>
             ActionUnits.SequenceEqual(other.ActionUnits);
 
-        public override bool Equals(object obj) => obj is Face other ? Equals(obj) : false;
+        public override bool Equals(object obj) => obj is Face other ? Equals(other) : false;
 
         public override int GetHashCode() => HashCode.Combine(
             ActionUnits

@@ -28,7 +28,7 @@ namespace OpenSense.Component.Head.Common {
             && Face.Equals(other.Face)
             ;
 
-        public override bool Equals(object obj) => obj is PoseAndEyeAndFace other ? Equals(obj) : false;
+        public override bool Equals(object obj) => obj is PoseAndEyeAndFace other ? Equals(other) : false;
 
         public override int GetHashCode() => HashCode.Combine(
             Pose,
