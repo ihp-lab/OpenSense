@@ -116,8 +116,6 @@ namespace OpenSense.Component.OpenFace.Visualizer {
             var (datum, frame) = data;
             if (frame?.Resource != null) {
                 var bitmap = frame.Resource.ToBitmap();
-                var width = frame.Resource.Width;
-                var height = frame.Resource.Height;
                 using var linePen = new Pen(Color.LightGreen, LineThickness);
                 using var circleBrush = new SolidBrush(Color.LightGreen);
                 using var graphics = Graphics.FromImage(bitmap);
@@ -132,27 +130,27 @@ namespace OpenSense.Component.OpenFace.Visualizer {
                 }
                 if (DrawHeadLandmarks) {
                     foreach (var p in datum.Pose.VisiableLandmarks) {
-                        var point = new PointF(p.X * width, p.Y * height);
+                        var point = new PointF(p.X, p.Y);
                         drawCircle(point);
                     } 
                 }
                 if (DrawEyeLandmarks) {
                     foreach (var p in datum.Eye.VisiableLandmarks) {
-                        var point = new PointF(p.X * width, p.Y * height);
+                        var point = new PointF(p.X, p.Y);
                         drawCircle(point);
                     } 
                 }
                 if (DrawHeadIndicatorLines) {
                     foreach (var l in datum.Pose.IndicatorLines) {
-                        var a = new PointF(l.Item1.X * width, l.Item1.Y * height);
-                        var b = new PointF(l.Item2.X * width, l.Item2.Y * height);
+                        var a = new PointF(l.Item1.X, l.Item1.Y);
+                        var b = new PointF(l.Item2.X, l.Item2.Y);
                         drawLine(a, b);
                     } 
                 }
                 if (DrawEyeIndicatorLines) {
                     foreach (var l in datum.Eye.IndicatorLines) {
-                        var a = new PointF(l.Item1.X * width, l.Item1.Y * height);
-                        var b = new PointF(l.Item2.X * width, l.Item2.Y * height);
+                        var a = new PointF(l.Item1.X, l.Item1.Y);
+                        var b = new PointF(l.Item2.X, l.Item2.Y);
                         drawLine(a, b);
                     } 
                 }

@@ -150,17 +150,11 @@ namespace OpenSense.Component.OpenFace {
             try {
                 var width = input.Resource.Width;
                 var height = input.Resource.Height;
-                Vector2 normalizeT(Tuple<float, float> value) {
-                    var normX = value.Item1 / width;
-                    var normY = value.Item2 / height;
-                    var result = new Vector2(normX, normY);
-                    return result;
+                static Vector2 pointToVector2(Point p) {
+                    return new Vector2((float)p.X, (float)p.Y);
                 }
-                Vector2 normalizeP(Point value) {
-                    var normX = (float)value.X / width;
-                    var normY = (float)value.Y / height;
-                    var result = new Vector2(normX, normY);
-                    return result;
+                static Vector2 tupleToVector2(Tuple<float, float> tuple) {
+                    return new Vector2(tuple.Item1, tuple.Item2);
                 }
                 using (var colorSharedImage = ImagePool.GetOrCreate(width, height, input.Resource.PixelFormat))
                 using (var graySharedImage = ImagePool.GetOrCreate(width, height, PixelFormat.Gray_8bpp)) {
@@ -183,10 +177,10 @@ namespace OpenSense.Component.OpenFace {
                             //Dictionary<string, double> aus = faceAnalyser.GetCurrentAUsReg();
 
                             // Pose.
-                            var allLandmarks = rawAllLandmarks.Select(normalizeT);
+                            var allLandmarks = rawAllLandmarks.Select(tupleToVector2);
                             var visiableLandmarks = landmarkDetector
                                 .CalculateVisibleLandmarks()
-                                .Select(normalizeT);
+                                .Select(tupleToVector2);
                             var landmarks3D = landmarkDetector
                                 .Calculate3DLandmarks(CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy)
                                 .Select(m => new Vector3(m.Item1, m.Item2, m.Item3));
@@ -194,8 +188,8 @@ namespace OpenSense.Component.OpenFace {
                             landmarkDetector.GetPose(poseData, CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy);
                             var box = landmarkDetector.CalculateBox(CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy);
                             var boxConverted = box.Select(line => {
-                                var a = normalizeP(line.Item1);
-                                var b = normalizeP(line.Item2);
+                                var a = pointToVector2(line.Item1);
+                                var b = pointToVector2(line.Item2);
                                 return (a, b);
                             });
                             var headPose = new Pose(poseData, allLandmarks, visiableLandmarks, landmarks3D, boxConverted);
@@ -205,10 +199,10 @@ namespace OpenSense.Component.OpenFace {
                             gazeAnalyser.AddNextFrame(landmarkDetector, success: true, CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy);
                             var eyeLandmarks = landmarkDetector
                                 .CalculateAllEyeLandmarks()
-                                .Select(normalizeT);
+                                .Select(tupleToVector2);
                             var visiableEyeLandmarks = landmarkDetector
                                 .CalculateVisibleEyeLandmarks()
-                                .Select(normalizeT);
+                                .Select(tupleToVector2);
                             var eyeLandmarks3D = landmarkDetector
                                 .CalculateAllEyeLandmarks3D(CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy)
                                 .Select(m => new Vector3(m.Item1, m.Item2, m.Item3));
@@ -216,8 +210,8 @@ namespace OpenSense.Component.OpenFace {
                             var (angleX, angleY) = gazeAnalyser.GetGazeAngle();//Not accurate
                             var gazeLines = gazeAnalyser.CalculateGazeLines(CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy);
                             var gazeLinesConverted = gazeLines.Select(line => {
-                                var a = normalizeP(line.Item1);
-                                var b = normalizeP(line.Item2);
+                                var a = pointToVector2(line.Item1);
+                                var b = pointToVector2(line.Item2);
                                 return (a, b);
                             });
                             var gaze = new Eye(
