@@ -16,21 +16,21 @@ namespace OpenSense.Wpf.Component.Psi.Media {
             InitializeComponent();
         }
 
+        private bool comboBoxCamera_Loaded = false;//Load() method will be called twice, we only want it to be called once. If called twice, it will have wrong behavior.
+
         private void ComboBoxCamera_Loaded(object sender, RoutedEventArgs e) {
+            if (comboBoxCamera_Loaded) {
+                return;
+            }
+            comboBoxCamera_Loaded = true;
+
             MediaCaptureDevice.Initialize();
+            var newCameraComboBoxItems = new List<ComboBoxItem>();
             ComboBoxCamera.Items.Clear();
             foreach (var device in MediaCaptureDevice.AllDevices.OrderBy(d => d.FriendlyName)) {
                 device.Attach(Config.Raw.UseInSharedMode);//required, otherwise no detail will show
                 var item = new ComboBoxItem() { Content = device.FriendlyName, Tag = device };
                 ComboBoxCamera.Items.Add(item);
-            }
-            foreach (var item in ComboBoxCamera.Items.Cast<ComboBoxItem>()) {
-                var dev = (MediaCaptureDevice)item.Tag;
-                if (Config.Raw.DeviceId != dev.SymbolicLink) {
-                    continue;
-                }
-                ComboBoxCamera.SelectedItem = item;
-                return;
             }
             foreach (var item in ComboBoxCamera.Items.Cast<ComboBoxItem>()) {
                 var dev = (MediaCaptureDevice)item.Tag;
