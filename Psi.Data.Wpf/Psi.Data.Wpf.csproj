@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <RootNamespace>OpenSense.Wpf.Component.Psi.Data</RootNamespace>
+        <AssemblyName>OpenSense.Wpf.Component.Psi.Data</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="System.Composition" Version="5.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Psi.Data\Psi.Data.csproj" />
+        <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="JsonStoreExporterConfigurationControl.xaml">
+        <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      </Page>
+      <Page Update="JsonStoreImporterConfigurationControl.xaml">
+        <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      </Page>
+    </ItemGroup>
+
+</Project>

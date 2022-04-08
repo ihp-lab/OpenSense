@@ -13,6 +13,8 @@
         <PackageReference Include="Microsoft.Psi.Media.Windows.x64" Version="0.15.49.1-beta">
             <NoWarn>NU1701</NoWarn><!--Only a .net framework package is available-->
         </PackageReference>
+        <!--SharpDX.MediaFoundation is a dependency of Microsoft.Psi.Media.Windows.x64. If we build the project targeting .net, this dependency will be missing, because Microsoft.Psi.Media.Windows.x64 does not support this target. We manually add this dependency to resolve it.-->
+        <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
         <PackageReference Include="System.Composition" Version="5.0.1" />
     </ItemGroup>
 

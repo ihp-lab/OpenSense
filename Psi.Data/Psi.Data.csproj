@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <RootNamespace>OpenSense.Component.Psi.Data</RootNamespace>
+        <AssemblyName>OpenSense.Component.Psi.Data</AssemblyName>
+        <LangVersion>10.0</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Psi.Data" Version="0.15.49.1-beta" />
+        <PackageReference Include="System.Composition" Version="5.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
+        <ProjectReference Include="..\Psi.Builtin\Psi.Builtin.csproj" />
+    </ItemGroup>
+
+</Project>

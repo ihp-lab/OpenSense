@@ -88,6 +88,7 @@
         <ProjectReference Include="..\Psi.AzureKinect.Wpf\Psi.AzureKinect.Wpf.csproj" />
         <ProjectReference Include="..\Psi.CognitiveServices.Face.Wpf\Psi.CognitiveServices.Face.Wpf.csproj" />
         <ProjectReference Include="..\Psi.CognitiveServices.Speech.Wpf\Psi.CognitiveServices.Speech.Wpf.csproj" />
+        <ProjectReference Include="..\Psi.Data.Wpf\Psi.Data.Wpf.csproj" />
         <ProjectReference Include="..\Psi.Imaging.Windows.Wpf\Psi.Imaging.Windows.Wpf.csproj" />
         <!--<ProjectReference Include="..\Psi.Kinect.Windows.Wpf\Psi.Kinect.Windows.Wpf.csproj" />--><!--removed because it may add difficulty of start using this application-->
         <ProjectReference Include="..\Psi.Media.Windows.Wpf\Psi.Media.Windows.Wpf.csproj" />
