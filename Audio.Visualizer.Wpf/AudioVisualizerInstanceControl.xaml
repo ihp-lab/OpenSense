@@ -22,21 +22,18 @@
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
-                <Label Grid.Row="0" Grid.Column="0">Image width</Label>
-                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ImageWidth}"/>
-
-                <Label Grid.Row="1" Grid.Column="0">Image height</Label>
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ImageHeight}"/>
-
-                <Label Grid.Row="2" Grid.Column="0">Duration</Label>
-                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Duration}"/>
+                <Label Grid.Row="0" Grid.Column="0">Duration</Label>
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Duration}"/>
             </Grid>
         </Expander>
 
-        <Image Source="{Binding Path=Image}"/>
+        <Image 
+            Name="ImageCanvas"
+            Source="{Binding Path=Image}"
+            SizeChanged="ImageCanvas_Changed"
+            DpiChanged="ImageCanvas_Changed"
+            />
     </StackPanel>
 </UserControl>

@@ -25,8 +25,6 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
                 <Label Grid.Row="0" Grid.Column="0">
@@ -60,28 +58,14 @@
                          />
 
                 <Label Grid.Row="4" Grid.Column="0">
-                    Render Image Width
-                </Label>
-                <TextBox Grid.Row="4" Grid.Column="1"
-                         Text="{Binding ImageWidth}"
-                         />
-
-                <Label Grid.Row="5" Grid.Column="0">
-                    Render Image Height
-                </Label>
-                <TextBox Grid.Row="5" Grid.Column="1"
-                         Text="{Binding ImageHeight}"
-                         />
-
-                <Label Grid.Row="6" Grid.Column="0">
                     # of Samples Per Pixel
                 </Label>
-                <TextBox Grid.Row="6" Grid.Column="1"
+                <TextBox Grid.Row="4" Grid.Column="1"
                          Text="{Binding NumSamplesPerPixel}"
                          />
             </Grid>
         </Expander>
-        
+
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" SharedSizeGroup="Label"/>
@@ -117,7 +101,10 @@
                        />
 
             <Image Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                   Name="ImageCanvas"
                    Source="{Binding Path=Image}"
+                   SizeChanged="ImageCanvas_Changed" 
+                   DpiChanged="ImageCanvas_Changed"
                    />
         </Grid>
     </StackPanel>
