@@ -196,7 +196,7 @@ namespace OpenSense.Component.Audio.Visualizer {
         /// </summary>
         public void RenderingCallback(object sender, EventArgs args) {
             lock(lockObj) {
-                if (drawingSampleBuffer is null && !imageBackingDataUpdated) {
+                if (drawingSampleBuffer is null || !imageBackingDataUpdated) {
                     return;
                 }
 
