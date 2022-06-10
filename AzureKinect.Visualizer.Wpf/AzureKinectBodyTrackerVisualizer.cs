@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
+using MathNet.Spatial.Euclidean;
 using Microsoft.Azure.Kinect.BodyTracking;
 using Microsoft.Psi;
 using Microsoft.Psi.AzureKinect;
@@ -113,20 +114,18 @@ namespace OpenSense.Component.AzureKinect.Visualizer {
                         void drawLine(JointId joint1, JointId joint2) {
                             var p1_3d = body.Joints[joint1].Pose.Origin;
                             var p2_3d = body.Joints[joint2].Pose.Origin;
-                            var p1 = calibration.ToColorSpace(p1_3d);
-                            var p2 = calibration.ToColorSpace(p2_3d);
-                            if ((p1.X != 0 || p1.Y != 0) && (p2.X != 0 || p2.Y != 0)) {
-                                if (IsValidPoint2D(p1) && IsValidPoint2D(p2)) {
-                                    var _p1 = new PointF((float)p1.X, (float)p1.Y);
-                                    var _p2 = new PointF((float)p2.X, (float)p2.Y);
-                                    graphics.DrawLine(linePen, _p1, _p2);
-                                    graphics.FillEllipse(circleBrush, _p1.X, _p1.Y, circleRadius, circleRadius);
-                                    graphics.FillEllipse(circleBrush, _p2.X, _p2.Y, circleRadius, circleRadius);
-                                }
+                            var p1nullable = calibration.GetPixelPosition(p1_3d);
+                            var p2nullable = calibration.GetPixelPosition(p2_3d);
+                            if (p1nullable is Point2D p1 && p2nullable is Point2D p2 && IsValidPoint2D(p1) && IsValidPoint2D(p2)) {
+                                var _p1 = new PointF((float)p1.X, (float)p1.Y);
+                                var _p2 = new PointF((float)p2.X, (float)p2.Y);
+                                graphics.DrawLine(linePen, _p1, _p2);
+                                graphics.FillEllipse(circleBrush, _p1.X, _p1.Y, circleRadius, circleRadius);
+                                graphics.FillEllipse(circleBrush, _p2.X, _p2.Y, circleRadius, circleRadius);
                             }
                         }
-                        foreach (var bone in AzureKinectBody.Bones) {
-                            drawLine(bone.ParentJoint, bone.ChildJoint);
+                        foreach (var (parentJoin, childJoin) in AzureKinectBody.Bones) {
+                            drawLine(parentJoin, childJoin);
                         }
                     }
                     using var img = ImagePool.GetOrCreate(frame.Resource.Width, frame.Resource.Height, frame.Resource.PixelFormat);
