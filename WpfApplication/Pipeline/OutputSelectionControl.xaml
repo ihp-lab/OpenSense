@@ -28,7 +28,7 @@
                  SelectionChanged="ListBoxOutputs_SelectionChanged">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
+                    <Grid ToolTip="{Binding PortMetadata.Description}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
