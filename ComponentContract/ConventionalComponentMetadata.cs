@@ -16,6 +16,8 @@ namespace OpenSense.Component.Contract {
 
         public virtual string Description => "";
 
+        protected virtual string GetPortDescription(string portName) => null;
+
         public IReadOnlyList<IPortMetadata> Ports {
             get {
                 var resultProps = new List<PropertyInfo>();
@@ -53,7 +55,11 @@ namespace OpenSense.Component.Contract {
                 }
 
                 var result = resultProps
-                    .Select(p => new StaticPortMetadata(p))
+                    .Select(p => {
+                        var description = GetPortDescription(p.Name);
+                        var result = new StaticPortMetadata(p, description: description);
+                        return result;
+                    })
                     .ToArray();
                 return result;
             }

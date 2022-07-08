@@ -7,9 +7,22 @@ namespace OpenSense.Component.Psi.Imaging {
     [Export(typeof(IComponentMetadata))]
     public class ImageEncoderMetadata : ConventionalComponentMetadata {
 
-        public override string Description => "Component that encodes an image using a specified Microsoft.Psi.Imaging.IImageToStreamEncoder (Windows defaul implementation).";
+        public override string Description => "Encodes bitmap images to another format. A Windows default implementation.";
 
         protected override Type ComponentType => typeof(ImageEncoder);
+
+        public override string Name => "Image Encoder";
+
+        protected override string GetPortDescription(string portName) {
+            switch (portName) {
+                case nameof(ImageEncoder.In):
+                    return "[Required] Bitmap images.";
+                case nameof(ImageEncoder.Out):
+                    return "Encoded images.";
+                default:
+                    return null;
+            }
+        }
 
         public override ComponentConfiguration CreateConfiguration() => new ImageEncoderConfiguration();
     }

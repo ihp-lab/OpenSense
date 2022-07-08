@@ -9,7 +9,7 @@ namespace OpenSense.Component.Psi {
 
         public string Name => "Remote Exporter";
 
-        public string Description => "Broadcast streams.";
+        public string Description => "Broadcasts streams.";
 
         public IReadOnlyList<IPortMetadata> Ports => new[] {
             new ExporterPortMetadata(),

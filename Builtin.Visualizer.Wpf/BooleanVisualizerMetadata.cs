@@ -10,6 +10,19 @@ namespace OpenSense.Component.Builtin.Visualizer {
 
         protected override Type ComponentType => typeof(BooleanVisualizer);
 
+        public override string Name => "Boolean Visualizer";
+
+        protected override string GetPortDescription(string portName) {
+            switch (portName) {
+                case nameof(BooleanVisualizer.In):
+                    return "[Required] Boolean values to be visualized.";
+                case nameof(BooleanVisualizer.Out):
+                    return "Boolean mapped texts.";
+                default:
+                    return null;
+            }
+        }
+
         public override ComponentConfiguration CreateConfiguration() => new BooleanVisualizerConfiguration();
     }
 }

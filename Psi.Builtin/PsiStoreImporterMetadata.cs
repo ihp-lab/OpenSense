@@ -9,9 +9,9 @@ namespace OpenSense.Component.Psi {
     [Export(typeof(IComponentMetadata))]
     public class PsiStoreImporterMetadata : IComponentMetadata {
 
-        public string Name => "Psi Store Importer";
+        public string Name => "\\psi Store Importer";
 
-        public string Description => @"Read streams from a \psi store.";
+        public string Description => @"Reads streams from a \psi store.";
 
         public IReadOnlyList<IPortMetadata> Ports => new[] {
             new ImporterPortMetadata(),

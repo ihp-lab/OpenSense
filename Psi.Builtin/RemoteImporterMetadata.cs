@@ -11,7 +11,7 @@ namespace OpenSense.Component.Psi {
 
         public string Name => "Remote Importer";
 
-        public string Description => "Read streams from a remote host.";
+        public string Description => "Reads streams from a remote host.";
 
         public IReadOnlyList<IPortMetadata> Ports => new[] {
             new ImporterPortMetadata(),
