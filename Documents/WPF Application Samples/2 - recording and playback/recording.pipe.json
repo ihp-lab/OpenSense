@@ -10,7 +10,7 @@
 	Instances: [
 		{
 			ComponentType: "OpenSense.Component.Psi.Media.MediaCaptureConfiguration, OpenSense.Component.Psi.Media.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-			Name: "Microsoft.Psi.Media.MediaCapture",
+			Name: "Media Capture",
 			Description: "",
 			Inputs: [],
 			Raw: {
@@ -77,7 +77,7 @@
 				"bc3b9f5e-7ab4-492f-9ffa-787eba26c6a5"
 			],
 			Id: "4adfdce9-97f6-4acb-9ad4-662eea972411",
-			Name: "Psi Store Exporter",
+			Name: "\\psi Store Exporter",
 			Description: "",
 			Inputs: [
 				{

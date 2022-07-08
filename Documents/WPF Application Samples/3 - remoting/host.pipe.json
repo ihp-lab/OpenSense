@@ -63,7 +63,7 @@
 				DeviceId: null
 			},
 			Id: "4911182e-8caf-4766-ba3b-9de143b0866f",
-			Name: "Microsoft.Psi.Media.MediaCapture",
+			Name: "Media Capture",
 			Description: "",
 			Inputs: []
 		},

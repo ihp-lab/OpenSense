@@ -10,7 +10,7 @@
 	Instances: [
 		{
 			ComponentType: "OpenSense.Component.Psi.PsiStoreImporterConfiguration, OpenSense.Component.Psi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-			Name: "Psi Store Importer",
+			Name: "\\psi Store Importer",
 			Description: "",
 			Inputs: [],
 			StoreName: "sample",
@@ -19,7 +19,7 @@
 		},
 		{
 			ComponentType: "OpenSense.Component.Imaging.Visualizer.ColorVideoVisualizerConfiguration, OpenSense.Wpf.Component.Imaging.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-			Name: "OpenSense.Component.Imaging.Visualizer.ColorVideoVisualizer",
+			Name: "Color Image Visualizer",
 			Description: "",
 			Inputs: [
 				{
@@ -40,7 +40,7 @@
 		},
 		{
 			ComponentType: "OpenSense.Component.Audio.Visualizer.AudioVisualizerConfiguration, OpenSense.Wpf.Component.Audio.Visualizer.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-			Name: "OpenSense.Component.Audio.Visualizer.AudioVisualizer",
+			Name: "Audio Visualizer",
 			Description: "",
 			Inputs: [
 				{

@@ -10,7 +10,7 @@
 	Instances: [
 		{
 			ComponentType: "OpenSense.Component.Psi.Audio.AudioCaptureConfiguration, OpenSense.Component.Psi.Audio.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-			Name: "Microsoft.Psi.Audio.AudioCapture",
+			Name: "Audio Capture",
 			Description: "",
 			Inputs: [],
 			Raw: {
@@ -46,7 +46,7 @@
 				UseConfigurationFile: true,
 				InstanceConfigurations: []
 			},
-			Name: "OpenSense.Component.OpenSmile.OpenSmile",
+			Name: "openSMILE",
 			Description: "",
 			Inputs: [
 				{
@@ -78,7 +78,7 @@
 		},
 		{
 			ComponentType: "OpenSense.Component.OpenSmile.Visualizer.OpenSmileVisualizerConfiguration, OpenSense.Wpf.Component.OpenSmile.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-			Name: "OpenSense.Component.OpenSmile.Visualizer.OpenSmileVisualizer",
+			Name: "openSMILE Visualizer",
 			Description: "",
 			Inputs: [
 				{

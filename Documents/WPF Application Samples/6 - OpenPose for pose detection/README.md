@@ -7,15 +7,15 @@ This sample contains a pipeline for demonstrating the usage of OpenPose componen
 ## How to use
 
 + Open the `sample.pipe.json` configuration file using a `Pipeline Editor` window.
-+ Select the `Microsoft.Psi.Media.MediaCapture` instance and set a camera.
++ Select the `Media Capture` instance and set a camera.
 + Run the pipeline.
 
 ## Steps to replicate
 
-+ Add a `Microsoft.Psi.Media.MediaCapture` instance.
-+ Add a `OpenSense.Component.OpenPose.OpenPose` instance.
-+ Add the `In` input and connect it to the `Out` output of the `MediaCapture` instance.
-+ Add a `OpenSense.Component.OpenPose.Visualizer.OpenPoseVisualizer` instance.
++ Add a `Media Capture` instance.
++ Add a `OpenPose` instance.
++ Add the `In` input and connect it to the `Out` output of the `Media Capture` instance.
++ Add a `OpenPose Visualizer` instance.
 + Add the `In` input and connect it to the `Out` output of the `OpenPose` instance.
 + Save the pipeline configuration.
 

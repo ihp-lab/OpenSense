@@ -21,7 +21,7 @@
 		},
 		{
 			ComponentType: "OpenSense.Component.Imaging.Visualizer.ColorVideoVisualizerConfiguration, OpenSense.Wpf.Component.Imaging.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-			Name: "OpenSense.Component.Imaging.Visualizer.ColorVideoVisualizer",
+			Name: "Color Image Visualizer",
 			Description: "",
 			Inputs: [
 				{

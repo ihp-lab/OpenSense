@@ -7,19 +7,19 @@ This sample contains a pipeline for demonstrating the usage of openSMILE compone
 ## How to use
 
 + Open the `sample.pipe.json` configuration file using a `Pipeline Editor` window.
-+ Select the `Microsoft.Psi.Audio.AudioCapture` instance and set a microphone.
-+ Select the `OpenSense.Component.OpenSmile.OpenSmile` instance and fill in the missing part of the `Configuration file path` option.
++ Select the `Audio Capture` instance and set a microphone.
++ Select the `openSMILE` instance and fill in the missing part of the `Configuration file path` option.
 + Run the pipeline.
 + Select `pcm_LOGenergy` under `Select a feature`, then you can see the result.
 
 ## Steps to replicate
 
 + Change the pipeline default `Delivery policy` on the top to `Unlimited`.
-+ Add a `Microsoft.Psi.Audio.AudioCapture` instance.
-+ Add a `OpenSense.Component.OpenSmile.OpenSmile` instance.
++ Add a `Audio Capture` instance.
++ Add a `openSMILE` instance.
 + Add the `In` input and connect it to the `Out` output of the `AudioCapture` instance.
 + Use `waveSource` as the input port index. This name is defined inside the openSMILE configuration file, you cannot change it here.
-+ Add a `OpenSense.Component.OpenSmile.Visualizer.OpenSmileVisualizer` instance.
++ Add a `openSMILE Visualizer` instance.
 + Add the `In` input and connect it to the `Out` output of the `OpenSmile` instance.
 + Use `dataSink` as the output port index. This name is also defined inside the openSMILE configuration file.
 + Save the pipeline configuration.

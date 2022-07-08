@@ -10,7 +10,7 @@
 	Instances: [
 		{
 			ComponentType: "OpenSense.Component.Psi.Audio.AudioCaptureConfiguration, OpenSense.Component.Psi.Audio.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-			Name: "Microsoft.Psi.Audio.AudioCapture",
+			Name: "Audio Capture",
 			Description: "",
 			Inputs: [],
 			Raw: {
@@ -36,7 +36,7 @@
 		},
 		{
 			ComponentType: "OpenSense.Component.Psi.Speech.SystemVoiceActivityDetectorConfiguration, OpenSense.Component.Psi.Speech.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-			Name: "Microsoft.Psi.Speech.SystemVoiceActivityDetector",
+			Name: "System Voice Activity Detector",
 			Description: "",
 			Inputs: [
 				{
@@ -111,7 +111,7 @@
 		},
 		{
 			ComponentType: "OpenSense.Component.Psi.CognitiveServices.Speech.AzureSpeechRecognizerConfiguration, OpenSense.Component.Psi.CognitiveServices.Speech, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-			Name: "Microsoft.Psi.CognitiveServices.Speech.AzureSpeechRecognizer",
+			Name: "Azure Speech Recognizer",
 			Description: "",
 			Inputs: [
 				{
@@ -147,7 +147,7 @@
 		{
 			ComponentType: "OpenSense.Component.Psi.Speech.Visualizer.StreamingSpeechRecognitionVisualizerConfiguration, OpenSense.Wpf.Component.Psi.Speech.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
 			Id: "b152cb7e-6652-4b8d-ba3e-abb91813621d",
-			Name: "OpenSense.Component.Psi.Speech.Visualizer.StreamingSpeechRecognitionVisualizer",
+			Name: "Speech Recognition Visualizer",
 			Description: "",
 			Inputs: [
 				{
