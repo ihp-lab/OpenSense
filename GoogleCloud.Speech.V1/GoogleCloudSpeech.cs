@@ -104,17 +104,17 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
         private SpeechClient client;
         private SpeechClient.StreamingRecognizeStream stream;
         private CancellationTokenSource streamCancellationTokenSource;
-        private Task responseTask;
-        private DateTime? startTime;
+        private Task responseListenerTask;
+        private DateTime? currentRequestStartTime;
         private DateTime maxPostTime = DateTime.MinValue;
         private IList<SpeechRecognitionAlternate> bufferedAlternatives = EmptyAlternatives;
 
-        private bool ClientInitialized => responseTask != null && !responseTask.IsCompleted;
-        private bool FormatInitialized => startTime != null;
+        private bool ClientInitialized => responseListenerTask != null && !responseListenerTask.IsCompleted;
+        private bool FormatInitialized => currentRequestStartTime != null;
 
         public GoogleCloudSpeech(Pipeline pipeline, string jsonCredentials) {
             // psi pipeline
-            In = pipeline.CreateReceiver<(AudioBuffer, bool)>(this, PorcessFrames, nameof(In));
+            In = pipeline.CreateAsyncReceiver<(AudioBuffer, bool)>(this, PorcessFramesAsync, nameof(In));
             Out = pipeline.CreateEmitter<IStreamingSpeechRecognitionResult>(this, nameof(Out));
             Audio = pipeline.CreateEmitter<AudioBuffer>(this, nameof(Audio));
 
@@ -129,24 +129,26 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
         }
 
         private void OnPipeCompleted(object sender, PipelineCompletedEventArgs e) {
-            Stop();
+            CloseStreamAsync().Wait();
         }
 
-        private void InitializeClient() {
-            Stop();
+        private async Task InitializeClientAsync() {
+            Logger?.LogDebug("Initializing a Google cloud speech client.");
+            await CloseStreamAsync();
 
             streamCancellationTokenSource = new CancellationTokenSource();
-            startTime = null;
+            currentRequestStartTime = null;
 
-            client = new SpeechClientBuilder() {
+            var builder = new SpeechClientBuilder() {
                 JsonCredentials = jsonCredentials,
-            }.Build();
+            };
+            client = await builder.BuildAsync();
             stream = client.StreamingRecognize();
-            responseTask = Task.Run(ProcessResponses);
+            responseListenerTask = Task.Run(ProcessResponsesAsync);
         }
 
-        private void InitializeFormat(AudioBuffer frame, Envelope envelope) {
-            startTime = envelope.OriginatingTime;
+        private async Task InitializeFormatAsync(AudioBuffer frame, Envelope envelope) {
+            currentRequestStartTime = envelope.OriginatingTime;
             var initReq = new StreamingRecognizeRequest() {
                 StreamingConfig = new StreamingRecognitionConfig() {
                     Config = new RecognitionConfig() {
@@ -159,44 +161,55 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
                     InterimResults = PostInterimResults,
                 }
             };
-            stream.WriteAsync(initReq).Wait();
+            await stream.WriteAsync(initReq);
         }
 
-        private void Stop() {
-            stream?.WriteCompleteAsync().Wait();
-            streamCancellationTokenSource?.Cancel();
-            responseTask?.Wait();
+        private async Task CloseStreamAsync() {
+            if (stream != null) {
+                try {
+                    await stream.WriteCompleteAsync();
+                } catch (Exception ex) {
+                    Logger?.LogError(ex, "An exception was thrown when trying to write complete to Google cloud speech stream. This exception will be ignored.");
+                }
+                stream = null;
+            }
+
+            if (streamCancellationTokenSource != null) {
+                Debug.Assert(responseListenerTask != null);
+                streamCancellationTokenSource.Cancel();
+                await responseListenerTask;
+                responseListenerTask = null;
+                streamCancellationTokenSource = null;
+            }
+
             PostBufferedAsFinal();
-            stream = null;
-            streamCancellationTokenSource = null;
-            responseTask = null;
             client = null;
         }
 
-        private void PorcessFrames((AudioBuffer, bool) frame, Envelope envelope) {
+        private async Task PorcessFramesAsync((AudioBuffer, bool) frame, Envelope envelope) {
             var (audio, active) = frame;
             if (Mute || !active) {
-                Stop();
+                await CloseStreamAsync();
                 return;
             }
             if (audio.Data.Length == 0) {
                 return;
             }
             if (!ClientInitialized) {
-                InitializeClient();
+                await InitializeClientAsync();
             }
             Trace.Assert(audio.Format.FormatTag == WaveFormatTag.WAVE_FORMAT_PCM && audio.Format.BitsPerSample == 16);//TODO: convert format silently
             if (!FormatInitialized) {
-                InitializeFormat(audio, envelope);
+                await InitializeFormatAsync(audio, envelope);
             }
             var request = new StreamingRecognizeRequest() {
                 AudioContent = ByteString.CopyFrom(audio.Data, 0, audio.Data.Length),
             };
-            stream.WriteAsync(request).Wait();
+            await stream.WriteAsync(request);
             Audio.Post(audio, envelope.OriginatingTime);
         }
 
-        private async Task ProcessResponses() {//Note: do not use ValueTask
+        private async Task ProcessResponsesAsync() {//Note: do not use ValueTask
             try {
                 var responseStream = stream.GetResponseStream();
                 while (!streamCancellationTokenSource.Token.IsCancellationRequested) {
@@ -219,9 +232,9 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
                         if (AddDurationToOutputTime) {
                             var duration = TimeSpan.FromSeconds(mostStablePortion.ResultEndTime.Seconds) + TimeSpan.FromMilliseconds(mostStablePortion.ResultEndTime.Nanos / 1e6);
                             var resultTime = 
-                            postTime = startTime.Value + duration;
+                            postTime = currentRequestStartTime.Value + duration;
                         } else {
-                            postTime = startTime.Value;
+                            postTime = currentRequestStartTime.Value;
                         }
                         lock (this) {
                             if (postTime <= maxPostTime) {
@@ -245,7 +258,7 @@ namespace OpenSense.Component.GoogleCloud.Speech.V1 {
             } catch (Grpc.Core.RpcException ex2) when (ex2.StatusCode == Grpc.Core.StatusCode.Cancelled) {
                 ;
             } catch (Exception ex) {
-                Logger?.LogError(ex, "Exception while communicate with Google cloud speech");
+                Logger?.LogError(ex, "An exception was thrown while listening to Google cloud speech responses.  This exception will be ignored.");
             }
             ;//for debug
         }
