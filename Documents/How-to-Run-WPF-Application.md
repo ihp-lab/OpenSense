@@ -30,7 +30,7 @@ Without a functioning hardware, those components will not work properly.
 OpenSense WPF Application has 2 dependencies that is not included in the released packages.
 These 2 dependencies need to be installed first.
 
-The first dependency is __.NET 6`__.
+The first dependency is __.NET 6__.
 You can download its latest installer from its [website](https://dotnet.microsoft.com/en-us/download/dotnet/6.0).
 Please download and install an SDK installer, it contains functions of all kinds of Runtime installers.
 A single kind of Runtime installer does not contain all the functions that may be used.
