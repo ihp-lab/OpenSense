@@ -67,6 +67,7 @@
         <ProjectReference Include="..\Audio.Visualizer.Wpf\Audio.Visualizer.Wpf.csproj" />
         <ProjectReference Include="..\AzureKinect.Visualizer.Wpf\AzureKinect.Visualizer.Wpf.csproj" />
         <ProjectReference Include="..\Biopac.Visualizer.Wpf\Biopac.Visualizer.Wpf.csproj" />
+        <ProjectReference Include="..\BodyGestureDetectors.Wpf\BodyGestureDetectors.Wpf.csproj" />
         <ProjectReference Include="..\Builtin.Visualizer.Wpf\Builtin.Visualizer.Wpf.csproj" />
         <ProjectReference Include="..\CsvExporter.Wpf\CsvExporter.Wpf.csproj" />
         <ProjectReference Include="..\Emotion.Visualizer.Wpf\Emotion.Visualizer.Wpf.csproj" />
