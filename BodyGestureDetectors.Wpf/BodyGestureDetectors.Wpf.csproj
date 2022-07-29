@@ -19,6 +19,14 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Page Update="BodySwirlDetectorInstanceControl.xaml">
+        <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="BodySwirlDetectorConfigurationControl.xaml">
+        <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
       <Page Update="BodyLeaningDetectorConfigurationControl.xaml">
         <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       </Page>

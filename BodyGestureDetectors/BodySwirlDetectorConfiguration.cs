@@ -4,7 +4,7 @@ using OpenSense.Component.Contract;
 
 namespace OpenSense.Component.BodyGestureDetectors {
     [Serializable]
-    public class BodyLeaningDetectorConfiguration : ConventionalComponentConfiguration {
+    public class BodySwirlDetectorConfiguration : ConventionalComponentConfiguration {
 
         private int bodyIndex = 0;
 
@@ -31,9 +31,9 @@ namespace OpenSense.Component.BodyGestureDetectors {
 
         public DeliveryPolicy BodyTrackerDeliveryPolicy { get; set; } = null;
 
-        public override IComponentMetadata GetMetadata() => new BodyLeaningDetectorMetadata();
+        public override IComponentMetadata GetMetadata() => new BodySwirlDetectorMetadata();
 
-        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new BodyLeaningDetector(pipeline) { 
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new BodySwirlDetector(pipeline) {
             BodyIndex = BodyIndex,
             MinimumConfidenceLevel = MinimumConfidenceLevel,
             OutputOffset = OutputOffset,
