@@ -86,8 +86,13 @@ namespace OpenSense.Component.Contract {
                 if (@interface != null) {
                     var typeArg = @interface.GetGenericArguments().Single();
                     if (typeArg.CanBeAssignedOrCastTo(typeof(T))) {
-                        var methodInfo = typeof(HelperExtensions).GetMethod(nameof(Cast)).MakeGenericMethod(new[] { typeArg, typeof(T) });
-                        var result = (IProducer<T>)methodInfo.Invoke(obj: null, new[] { (dynamic)obj, false });
+                        var methodInfo = typeof(HelperExtensions)
+                            .GetMethod(nameof(CastProducer), BindingFlags.NonPublic | BindingFlags.Static)
+                            .MakeGenericMethod(new[] { 
+                                typeArg, 
+                                typeof(T) 
+                            });
+                        var result = (IProducer<T>)methodInfo.Invoke(obj: null, new[] { (dynamic)obj });
                         return result;
                     }
                 }
@@ -145,7 +150,48 @@ namespace OpenSense.Component.Contract {
             return IsAssignableToGenericType(baseType, genericType);
         }
 
-        private static bool HasImplicitOrExplicitConversionTo_SingleWay(this Type source, Type target) {
+        private static bool IsNullable(Type type) {
+            var result = type.IsGenericType 
+                && type.GetGenericTypeDefinition() == typeof(Nullable<>) 
+                && !type.GetGenericArguments().Single().IsGenericType //We supports only one layer of nesting
+                ;
+            return result;
+        }
+
+        private static bool HasImplicitOrExplicitConversionTo_SingleWay(this Type source, Type target, bool unwrapNullables) {
+            /** Nullable
+             */
+            if (unwrapNullables) {
+                var sourceIsNullable = IsNullable(source);
+                var targetIsNullable = IsNullable(target);
+                switch (sourceIsNullable, targetIsNullable) {
+                    case (true, false):
+                        return false;
+                    case (false, true):
+                        return HasImplicitOrExplicitConversionTo_SingleWay(
+                            source, 
+                            target.GetGenericArguments()[0], 
+                            unwrapNullables: true
+                        );
+                    case (true, true):
+                        return HasImplicitOrExplicitConversionTo_SingleWay(
+                            source.GetGenericArguments()[0],
+                            target.GetGenericArguments()[0],
+                            unwrapNullables: true
+                        );
+                } 
+            }
+
+            /** Built-in (Conversion done by compiler)
+             */
+            var bothConvertable = typeof(IConvertible).IsAssignableFrom(source) 
+                && typeof(IConvertible).IsAssignableFrom(target);
+            if (bothConvertable) {
+                return true;
+            }
+
+            /** Custom
+             */
             var result = source.GetMethods(BindingFlags.Public | BindingFlags.Static)
                 .Where(mi => (mi.Name == "op_Implicit" || mi.Name == "op_Explicit") && mi.ReturnType == target)
                 .Any(mi => {
@@ -156,15 +202,89 @@ namespace OpenSense.Component.Contract {
         }
 
         public static bool CanBeAssignedOrCastTo(this Type source, Type target) {
-            var result = target.IsAssignableFrom(source) || HasImplicitOrExplicitConversionTo_SingleWay(source, target) || HasImplicitOrExplicitConversionTo_SingleWay(target, source);
+            var result = target.IsAssignableFrom(source) 
+                || HasImplicitOrExplicitConversionTo_SingleWay(source, target, unwrapNullables: true) 
+                || HasImplicitOrExplicitConversionTo_SingleWay(target, source, unwrapNullables: false);
             return result;
         }
 
-        public static IProducer<TTarget> Cast<TSrouce, TTarget>(this IProducer<TSrouce> producer, bool checkTypeAssignabilityImmediately = true) {
-            if (checkTypeAssignabilityImmediately && !CanBeAssignedOrCastTo(typeof(TSrouce), typeof(TTarget))) {
-                throw new InvalidCastException($"cannot cast from {typeof(TSrouce)} to {typeof(TTarget)}");
+        private static IProducer<TTarget> CastProducer<TSource, TTarget>(this IProducer<TSource> producer) {
+            if (typeof(TSource) == typeof(TTarget)) {
+                return (IProducer<TTarget>)producer;
             }
-            return Operators.Select(producer, o => (TTarget)(object)o);//TODO: for performance consideration, implement this by Expression Tree
+
+            Debug.Assert(CanBeAssignedOrCastTo(typeof(TSource), typeof(TTarget)));
+
+            var func = CastDelegate<TSource, TTarget>();
+
+            return producer.Select(func);
+        }
+
+        private static Func<TSource, TTarget> CastDelegate<TSource, TTarget>() {
+            if (typeof(TSource) == typeof(TTarget)) {
+                throw new InvalidOperationException("TSource is the same as TTarget.");
+            }
+
+            var sourceIsNullable = IsNullable(typeof(TSource));
+            var targetIsNullable = IsNullable(typeof(TTarget));
+            switch (sourceIsNullable, targetIsNullable) {
+                case (true, false):
+                    throw new InvalidOperationException();
+                case (false, false):
+                    var bothConvertable = typeof(IConvertible).IsAssignableFrom(typeof(TSource))
+                        && typeof(IConvertible).IsAssignableFrom(typeof(TTarget));
+                    if (bothConvertable) {
+                        if (typeof(TSource) == typeof(float) && typeof(TTarget) == typeof(double)) {
+                            return v => (TTarget)(object)Convert.ToDouble((float)(object)v);
+                        } else {
+                            return CastConvertable<TSource, TTarget>;//Will box object
+                        }
+                    } else {
+                        return new Func<TSource, TTarget>(Cast<TSource, TTarget>);
+                    }
+                case (true, true):
+                    var nestedSourceType = typeof(TSource).GetGenericArguments()[0];
+                    var nestedTargetType = typeof(TTarget).GetGenericArguments()[0];
+                    var method1 = typeof(HelperExtensions)
+                        .GetMethod(nameof(CastBetweenNullables), BindingFlags.NonPublic | BindingFlags.Static)
+                        .MakeGenericMethod(new[] {
+                            nestedSourceType,
+                            nestedTargetType
+                        });
+                    var funcType = typeof(Func<,>).MakeGenericType(nestedSourceType, nestedTargetType);
+                    var func = Delegate.CreateDelegate(funcType, method1);
+                    return v => (TTarget)func.DynamicInvoke(v);
+                case (false, true):
+                    dynamic method2 = typeof(HelperExtensions)
+                        .GetMethod(nameof(CastDelegate), BindingFlags.NonPublic | BindingFlags.Static) //Nested nullable occasion
+                        .MakeGenericMethod(new[] {
+                            typeof(TSource),
+                            typeof(TTarget).GetGenericArguments()[0]
+                        })
+                        .Invoke(obj: null, parameters: Array.Empty<object>());
+                    return v => (TTarget)method2(v);
+            }
+        }
+
+        private static TTarget Cast<TSource, TTarget>(TSource source) {
+            var result = (TTarget)(object)source;
+            return result;
+        }
+
+        private static TTarget CastConvertable<TSource, TTarget>(TSource source){
+            var result = (TTarget)Convert.ChangeType(source, typeof(TTarget));
+            return result;
+        }
+
+        private static TTarget? CastBetweenNullables<TSource, TTarget>(TSource? source) 
+            where TSource : struct 
+            where TTarget : struct {
+            if (!source.HasValue) {
+                return null;
+            }
+            var func = CastDelegate<TSource, TTarget>();
+            TTarget? result = func(source.Value);
+            return result;
         }
 
         public static object DefaultPortIndex(this PortAggregation aggregation) {

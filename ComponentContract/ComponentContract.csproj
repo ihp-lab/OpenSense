@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>OpenSense.Component.Contract</RootNamespace>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>10.0</LangVersion>
     <AssemblyName>OpenSense.Component.Contract</AssemblyName>
   </PropertyGroup>
 

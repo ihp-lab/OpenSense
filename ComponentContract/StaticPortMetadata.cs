@@ -101,9 +101,9 @@ namespace OpenSense.Component.Contract {
         public bool CanConnectDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes) {
             switch (Direction) {
                 case PortDirection.Input:
-                    return remoteEndPointDataType != null && DataType.IsAssignableFrom(remoteEndPointDataType);
+                    return remoteEndPointDataType != null && remoteEndPointDataType.CanBeAssignedOrCastTo(DataType);
                 case PortDirection.Output:
-                    return remoteEndPointDataType != null && remoteEndPointDataType.IsAssignableFrom(DataType);
+                    return remoteEndPointDataType != null && DataType.CanBeAssignedOrCastTo(remoteEndPointDataType);
                 default:
                     throw new InvalidOperationException();
             }
