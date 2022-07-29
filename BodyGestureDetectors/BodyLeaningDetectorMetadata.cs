@@ -18,8 +18,10 @@ namespace OpenSense.Component.BodyGestureDetectors {
                     return "[Required] IMU samples of Azure Kinect for up vectors.";
                 case nameof(BodyLeaningDetector.BodiesIn):
                     return "[Required] Tracked bodies of Azure Kinect.";
-                case nameof(BodyLeaningDetector.Out):
+                case nameof(BodyLeaningDetector.DegreeOut):
                     return "Floating point angle in degrees (forward negative, backward positive).";
+                case nameof(BodyLeaningDetector.RadianOut):
+                    return "Floating point angle in radians (forward negative, backward positive).";
                 default:
                     return null;
             }

@@ -13,6 +13,20 @@ namespace OpenSense.Component.BodyGestureDetectors {
             set => SetProperty(ref bodyIndex, value);
         }
 
+        private float radianOffset = 0;
+
+        public float RadianOffset {
+            get => radianOffset;
+            set => SetProperty(ref radianOffset, value);
+        }
+
+        private ConfidenceLevel minimumConfidenceLevel = ConfidenceLevel.Medium;
+
+        public ConfidenceLevel MinimumConfidenceLevel {
+            get => minimumConfidenceLevel;
+            set => SetProperty(ref minimumConfidenceLevel, value);
+        }
+
         public DeliveryPolicy DefaultDeliveryPolicy { get; set; } = null;
 
         public DeliveryPolicy BodyTrackerDeliveryPolicy { get; set; } = null;
@@ -20,7 +34,9 @@ namespace OpenSense.Component.BodyGestureDetectors {
         public override IComponentMetadata GetMetadata() => new BodyLeaningDetectorMetadata();
 
         protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new BodyLeaningDetector(pipeline) { 
-            BodyIndex = BodyIndex
+            BodyIndex = BodyIndex,
+            MinimumConfidenceLevel = MinimumConfidenceLevel,
+            RadianOffset = RadianOffset,
         };
     }
 }
