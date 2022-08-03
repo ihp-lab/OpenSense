@@ -1,19 +1,22 @@
-﻿<UserControl x:Class="OpenSense.Wpf.Component.BodyGestureDetectors.BodyLeaningDetectorInstanceControl"
+﻿<UserControl x:Class="OpenSense.Wpf.Component.BodyGestureDetectors.BodyAttitudeDetectorConfigurationControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:OpenSense.Wpf.Component.BodyGestureDetectors"
              xmlns:util="clr-namespace:OpenSense.Wpf.Component.Utility;assembly=OpenSense.Wpf.Component.Contract"
              xmlns:component="clr-namespace:OpenSense.Component.BodyGestureDetectors;assembly=OpenSense.Component.BodyGestureDetectors"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450"
+             d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
@@ -30,9 +33,19 @@
                   SelectedItem="{Binding MinimumConfidenceLevel}"
                   ItemsSource="{Binding Source={util:EnumBindingSource {x:Type component:ConfidenceLevel}}, Mode=OneTime}" />
 
-        <Label Grid.Row="2">Offset (Radians)</Label>
+        <Label Grid.Row="2">Yaw Offset (Radians)</Label>
         <TextBox Grid.Row="2"
                  Grid.Column="1"
-                 Text="{Binding OutputOffset}" />
+                 Text="{Binding YawOffset}" />
+
+        <Label Grid.Row="3">Pitch Offset (Radians)</Label>
+        <TextBox Grid.Row="3"
+                 Grid.Column="1"
+                 Text="{Binding PitchOffset}" />
+
+        <Label Grid.Row="4">Roll Offset (Radians)</Label>
+        <TextBox Grid.Row="4"
+                 Grid.Column="1"
+                 Text="{Binding RollOffset}" />
     </Grid>
 </UserControl>

@@ -19,18 +19,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Page Update="BodySwirlDetectorInstanceControl.xaml">
-        <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-        <SubType>Designer</SubType>
-      </Page>
-      <Page Update="BodySwirlDetectorConfigurationControl.xaml">
-        <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-        <SubType>Designer</SubType>
-      </Page>
-      <Page Update="BodyLeaningDetectorConfigurationControl.xaml">
+      <Page Update="BodyAttitudeDetectorConfigurationControl.xaml">
         <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       </Page>
-      <Page Update="BodyLeaningDetectorInstanceControl.xaml">
+      <Page Update="BodyAttitudeDetectorInstanceControl.xaml">
         <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       </Page>
     </ItemGroup>
