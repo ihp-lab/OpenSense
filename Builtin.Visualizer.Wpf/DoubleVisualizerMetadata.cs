@@ -6,11 +6,11 @@ namespace OpenSense.Component.Builtin.Visualizer {
     [Export(typeof(IComponentMetadata))]
     public class DoubleVisualizerMetadata : ConventionalComponentMetadata {
 
-        public override string Description => "Visualize double floating point values.";
+        public override string Description => "Visualizes floating point values. Accepts single or double precision.";
 
         protected override Type ComponentType => typeof(DoubleVisualizer);
 
-        public override string Name => "Double Visualizer";
+        public override string Name => "Floating Point Value Visualizer";
 
         protected override string GetPortDescription(string portName) {
             switch (portName) {
