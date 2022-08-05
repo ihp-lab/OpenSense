@@ -11,10 +11,14 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="30"/>
+            <ColumnDefinition Width="auto" />
             <ColumnDefinition MinWidth="20"/>
+            <ColumnDefinition Width="auto" />
             <ColumnDefinition MinWidth="20"/>
+            <ColumnDefinition Width="auto" />
             <ColumnDefinition MinWidth="20"/>
-            <ColumnDefinition MinWidth="25"/>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition MinWidth="25" />
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
@@ -24,40 +28,52 @@
                  Name="TextBoxDays"
                  Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:TimeSpanControl}}, Path=Value.Days, Mode=OneWay}"
                  LostFocus="TextBoxDays_LostFocus" />
+        <TextBlock Grid.Column="1">
+            :
+        </TextBlock>
 
-        <TextBox Grid.Column="1"
+        <TextBox Grid.Column="2"
                  Name="TextBoxHours"
                  Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:TimeSpanControl}}, Path=Value.Hours, Mode=OneWay}"
                  LostFocus="TextBoxHours_LostFocus"/>
+        <TextBlock Grid.Column="3">
+            :
+        </TextBlock>
 
-        <TextBox Grid.Column="2"
+        <TextBox Grid.Column="4"
                  Name="TextBoxMinutes"
                  Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:TimeSpanControl}}, Path=Value.Minutes, Mode=OneWay}"
                  LostFocus="TextBoxMinutes_LostFocus" />
+        <TextBlock Grid.Column="5">
+            :
+        </TextBlock>
 
-        <TextBox Grid.Column="3"
+        <TextBox Grid.Column="6"
                  Name="TextBoxSeconds"
                  Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:TimeSpanControl}}, Path=Value.Seconds, Mode=OneWay}"
                  LostFocus="TextBoxSeconds_LostFocus"/>
+        <TextBlock Grid.Column="7">
+            .
+        </TextBlock>
 
-        <TextBox Grid.Column="4"
+        <TextBox Grid.Column="8"
                  Name="TextBoxMilliseconds"
                  Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:TimeSpanControl}}, Path=Value.Milliseconds, Mode=OneWay}"
-                 LostFocus="TextBoxMilliseconds_LostFocus"/>
+                 LostFocus="TextBoxMilliseconds_LostFocus" />
 
-        <Button Grid.Column="5"
+        <Button Grid.Column="9"
                 Name="ButtonZero"
                 Click="ButtonZero_Click">
             Zero
         </Button>
 
-        <Button Grid.Column="6"
+        <Button Grid.Column="10"
                 Name="ButtonMin"
                 Click="ButtonMin_Click">
             Min
         </Button>
 
-        <Button Grid.Column="7"
+        <Button Grid.Column="11"
                 Name="ButtonMax"
                 Click="ButtonMax_Click">
             Max
