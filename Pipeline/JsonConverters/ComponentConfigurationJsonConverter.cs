@@ -13,6 +13,7 @@ namespace OpenSense.Pipeline.JsonConverters {
         static ComponentConfigurationJsonConverter() {
             var setting = new JsonSerializerSettings();
             setting.Converters.Add(new DeliveryPolicyJsonConverter());
+            setting.Converters.Add(new RelativeTimeIntervalJsonConverter());
             Serializer = JsonSerializer.Create(setting);
         }
 

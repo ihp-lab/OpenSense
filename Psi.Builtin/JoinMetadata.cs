@@ -11,7 +11,7 @@ namespace OpenSense.Component.Psi {
 
         public string Name => "Join Operator";
 
-        public string Description => "Join the primary stream with values from a secondary stream.";
+        public string Description => "Joins the primary stream with values from a secondary stream.";
 
         public IReadOnlyList<IPortMetadata> Ports => new[] {
             new FusionOperatorPortMetadata("Primary", PortDirection.Input, "Primary stream."),

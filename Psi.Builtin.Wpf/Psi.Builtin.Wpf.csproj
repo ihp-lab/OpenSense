@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Psi.Builtin\Psi.Builtin.csproj" />
+    <ProjectReference Include="..\Psi.Wpf.Common\Psi.Wpf.Common.csproj" />
     <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
   </ItemGroup>
 
