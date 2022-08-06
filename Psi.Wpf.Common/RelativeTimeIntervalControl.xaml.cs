@@ -38,22 +38,24 @@ namespace OpenSense.Wpf.Component.Psi.Common {
 
         public RelativeTimeIntervalControl() {
             InitializeComponent();
+            IntervalEndpointControlLeft.MinOrMax = TimeSpan.MinValue;
+            IntervalEndpointControlRight.MinOrMax = TimeSpan.MaxValue;
         }
 
         private void OnValueChanged(DependencyPropertyChangedEventArgs args) {
-            /** Redo bindings, otherwise the Value in TimeSpanControl will not be updated.
+            /** Redo bindings, otherwise the Value in IntervalEndpointControl_TimeSpan will not be updated.
              *  Create a new Binding object and bind it, because GetBindingExpression() will return null here.
              */
-            var leftBinding = new Binding($"{nameof(Value)}.{nameof(RelativeTimeInterval.LeftEndpoint)}.{nameof(IntervalEndpoint<TimeSpan>.Point)}") {
-                Source = this,
-                Mode = BindingMode.OneWay,
-            };
-            TimeSpanLeft.SetBinding(TimeSpanControl.ValueProperty, leftBinding);
-            var rightBinding = new Binding($"{nameof(Value)}.{nameof(RelativeTimeInterval.RightEndpoint)}.{nameof(IntervalEndpoint<TimeSpan>.Point)}") {
-                Source = this,
-                Mode = BindingMode.OneWay,
-            };
-            TimeSpanRight.SetBinding(TimeSpanControl.ValueProperty, rightBinding);
+            void bind(string endpointName, IntervalEndpointControl_TimeSpan intervalControl) {
+                var binding = new Binding($"{nameof(Value)}.{endpointName}") {
+                    Source = this,
+                    Mode = BindingMode.OneWay,
+                };
+                intervalControl.SetBinding(IntervalEndpointControl_TimeSpan.ValueProperty, binding);
+            }
+            bind(nameof(RelativeTimeInterval.LeftEndpoint), IntervalEndpointControlLeft);
+            bind(nameof(RelativeTimeInterval.RightEndpoint), IntervalEndpointControlRight);
+
             /** Also trigger a event
              */
             var eventArgs = new RoutedEventArgs(ValueChangedEvent);
@@ -85,62 +87,12 @@ namespace OpenSense.Wpf.Component.Psi.Common {
             Value = RelativeTimeInterval.Future();
         }
 
-        private void CheckBoxLeftBounded_Checked(object sender, RoutedEventArgs e) {
-            var oldEndPoint = Value.LeftEndpoint;
-            var newEndpoint = new IntervalEndpoint<TimeSpan>(oldEndPoint.Point, oldEndPoint.Inclusive);
-            Value = new RelativeTimeInterval(newEndpoint, Value.RightEndpoint);
+        private void IntervalEndpointControlLeft_ValueChanged(object sender, RoutedEventArgs e) {
+            Value = new RelativeTimeInterval(IntervalEndpointControlLeft.Value, Value.RightEndpoint);
         }
 
-        private void CheckBoxLeftBounded_Unchecked(object sender, RoutedEventArgs e) {
-            var newEndpoint = new IntervalEndpoint<TimeSpan>(TimeSpan.MinValue);
-            Value = new RelativeTimeInterval(newEndpoint, Value.RightEndpoint);
-        }
-
-        private void CheckBoxRightBounded_Checked(object sender, RoutedEventArgs e) {
-            var oldEndPoint = Value.RightEndpoint;
-            var newEndpoint = new IntervalEndpoint<TimeSpan>(oldEndPoint.Point, oldEndPoint.Inclusive);
-            Value = new RelativeTimeInterval(Value.LeftEndpoint, newEndpoint);
-        }
-
-        private void CheckBoxRightBounded_Unchecked(object sender, RoutedEventArgs e) {
-            var newEndpoint = new IntervalEndpoint<TimeSpan>(TimeSpan.MaxValue);
-            Value = new RelativeTimeInterval(Value.LeftEndpoint, newEndpoint);
-        }
-
-        private void TimeSpanLeft_Changed(object sender, RoutedEventArgs e) {
-            var oldEndPoint = Value.LeftEndpoint;
-            var newEndpoint = oldEndPoint.Bounded ?
-                new IntervalEndpoint<TimeSpan>(TimeSpanLeft.Value, oldEndPoint.Inclusive)
-                :
-                new IntervalEndpoint<TimeSpan>(TimeSpan.MinValue);
-            Value = new RelativeTimeInterval(newEndpoint, Value.RightEndpoint);
-        }
-
-        private void TimeSpanRight_Changed(object sender, RoutedEventArgs e) {
-            var oldEndPoint = Value.RightEndpoint;
-            var newEndpoint = oldEndPoint.Bounded ?
-                new IntervalEndpoint<TimeSpan>(TimeSpanRight.Value, oldEndPoint.Inclusive)
-                :
-                new IntervalEndpoint<TimeSpan>(TimeSpan.MaxValue);
-            Value = new RelativeTimeInterval(Value.LeftEndpoint, newEndpoint);
-        }
-
-        private void CheckBoxLeftInclusive_Changed(object sender, RoutedEventArgs e) {
-            var oldEndPoint = Value.LeftEndpoint;
-            var newEndpoint = oldEndPoint.Bounded ?
-                new IntervalEndpoint<TimeSpan>(oldEndPoint.Point, CheckBoxLeftInclusive.IsChecked == true)
-                :
-                new IntervalEndpoint<TimeSpan>(TimeSpan.MinValue);
-            Value = new RelativeTimeInterval(newEndpoint, Value.RightEndpoint);
-        }
-
-        private void CheckBoxRightInclusive_Changed(object sender, RoutedEventArgs e) {
-            var oldEndPoint = Value.RightEndpoint;
-            var newEndpoint = oldEndPoint.Bounded ?
-                new IntervalEndpoint<TimeSpan>(oldEndPoint.Point, CheckBoxRightInclusive.IsChecked == true)
-                :
-                new IntervalEndpoint<TimeSpan>(TimeSpan.MaxValue);
-            Value = new RelativeTimeInterval(Value.LeftEndpoint, newEndpoint);
+        private void IntervalEndpointControlRight_ValueChanged(object sender, RoutedEventArgs e) {
+            Value = new RelativeTimeInterval(Value.LeftEndpoint, IntervalEndpointControlRight.Value);
         }
     }
 }

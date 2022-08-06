@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:OpenSense.Wpf.Component.Psi.Common"
+             xmlns:sys="clr-namespace:System;assembly=System.Core"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
@@ -17,100 +18,20 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Label Grid.Row="0"
                Grid.Column="0">
-            Left Bounded
-        </Label>
-        <CheckBox Grid.Row="0"
-                  Grid.Column="1"
-                  Name="CheckBoxLeftBounded"
-                  IsChecked="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:RelativeTimeIntervalControl}}, Path=Value.LeftEndpoint.Bounded, Mode=OneWay}"
-                  Checked="CheckBoxLeftBounded_Checked"
-                  Unchecked="CheckBoxLeftBounded_Unchecked"/>
-
-        <Label Grid.Row="1"
-               Grid.Column="0">
-            Left Point
-        </Label>
-        <!--The binding of Value property might be replaced at runtime.-->
-        <local:TimeSpanControl Grid.Row="1"
-                               Grid.Column="1"
-                               x:Name="TimeSpanLeft"
-                               IsEnabled="{Binding ElementName=CheckBoxLeftBounded, Path=IsChecked}"
-                               Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:RelativeTimeIntervalControl}}, Path=Value.LeftEndpoint.Point, Mode=OneWay}"
-                               ValueChanged="TimeSpanLeft_Changed"
-                               />
-
-        <Label Grid.Row="2"
-               Grid.Column="0">
-            Left Inclusive
-        </Label>
-        <CheckBox Grid.Row="2"
-                  Grid.Column="1"
-                  IsEnabled="{Binding ElementName=CheckBoxLeftBounded, Path=IsChecked}"
-                  Name="CheckBoxLeftInclusive"
-                  IsChecked="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:RelativeTimeIntervalControl}}, Path=Value.LeftEndpoint.Inclusive, Mode=OneWay}"
-                  Checked="CheckBoxLeftInclusive_Changed"
-                  Unchecked="CheckBoxLeftInclusive_Changed"
-                  />
-
-
-        <Label Grid.Row="3"
-               Grid.Column="0">
-            Right Bounded
-        </Label>
-        <CheckBox Grid.Row="3"
-                  Grid.Column="1"
-                  Name="CheckBoxRightBounded"
-                  IsChecked="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:RelativeTimeIntervalControl}}, Path=Value.RightEndpoint.Bounded, Mode=OneWay}"
-                  Checked="CheckBoxRightBounded_Checked"
-                  Unchecked="CheckBoxRightBounded_Unchecked" />
-
-        <Label Grid.Row="4"
-               Grid.Column="0">
-            Right Point
-        </Label>
-        <!--The binding of Value property might be replaced at runtime.-->
-        <local:TimeSpanControl Grid.Row="4"
-                               Grid.Column="1"
-                               x:Name="TimeSpanRight"
-                               IsEnabled="{Binding ElementName=CheckBoxRightBounded, Path=IsChecked}"
-                               Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:RelativeTimeIntervalControl}}, Path=Value.RightEndpoint.Point, Mode=OneWay}"
-                               ValueChanged="TimeSpanRight_Changed" 
-                               />
-
-        <Label Grid.Row="5"
-               Grid.Column="0">
-            Right Inclusive
-        </Label>
-        <CheckBox Grid.Row="5"
-                  Grid.Column="1"
-                  IsEnabled="{Binding ElementName=CheckBoxRightBounded, Path=IsChecked}"
-                  Name="CheckBoxRightInclusive"
-                  IsChecked="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:RelativeTimeIntervalControl}}, Path=Value.RightEndpoint.Inclusive, Mode=OneWay}"
-                  Checked="CheckBoxRightInclusive_Changed"
-                  Unchecked="CheckBoxRightInclusive_Changed"/>
-
-        <Label Grid.Row="6"
-               Grid.Column="0">
             Shortcuts
         </Label>
-
-        <WrapPanel Grid.Row="7"
-                   Grid.Column="1"
-                   >
+        <WrapPanel Grid.Row="0"
+                   Grid.Column="1">
 
             <Button Name="ButtonEmpty"
                     Click="ButtonEmpty_Click">
                 Empty
             </Button>
-            
+
             <Button Name="ButtonZero"
                     Click="ButtonZero_Click">
                 Zero
@@ -131,5 +52,24 @@
                 Future
             </Button>
         </WrapPanel>
+
+        <GroupBox Grid.Row="1"
+                  Grid.Column="0"
+                  Grid.ColumnSpan="2"
+                  Header="Left">
+            <local:IntervalEndpointControl_TimeSpan x:Name="IntervalEndpointControlLeft"
+                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:RelativeTimeIntervalControl}}, Path=Value.LeftEndpoint, Mode=OneWay}"
+                                                    ValueChanged="IntervalEndpointControlLeft_ValueChanged"/>
+        </GroupBox>
+
+        <GroupBox Grid.Row="2"
+                  Grid.Column="0"
+                  Grid.ColumnSpan="2"
+                  Header="Right">
+            <local:IntervalEndpointControl_TimeSpan x:Name="IntervalEndpointControlRight"
+                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:RelativeTimeIntervalControl}}, Path=Value.RightEndpoint, Mode=OneWay}"
+                                                    ValueChanged="IntervalEndpointControlRight_ValueChanged" />
+        </GroupBox>
+
     </Grid>
 </UserControl>

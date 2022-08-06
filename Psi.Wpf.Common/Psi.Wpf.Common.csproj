@@ -11,4 +11,8 @@
     <PackageReference Include="Microsoft.Psi.Runtime" Version="0.17.52.1-beta" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+  </ItemGroup>
+
 </Project>
