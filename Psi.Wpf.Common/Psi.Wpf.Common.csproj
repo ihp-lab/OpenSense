@@ -14,5 +14,5 @@
   <ItemGroup>
     <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
   </ItemGroup>
-
+    
 </Project>

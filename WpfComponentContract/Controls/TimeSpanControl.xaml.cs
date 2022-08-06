@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using OpenSense.Wpf.Component.Converters;
 
-namespace OpenSense.Wpf.Component.Psi.Common {
+namespace OpenSense.Wpf.Component.Controls {
     public partial class TimeSpanControl : UserControl
     {
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
@@ -41,18 +41,9 @@ namespace OpenSense.Wpf.Component.Psi.Common {
         }
 
         private void OnValueChanged(DependencyPropertyChangedEventArgs args) {
-            /** Change Sign radio buttons
+            /** Update radio buttons
              */
-            switch(Sign(Value)) {
-                case 1:
-                    RadioButtonPositive.IsChecked = true;
-                    break;
-                case -1:
-                    RadioButtonNegative.IsChecked = true;
-                    break;
-                default:
-                    throw new InvalidOperationException();
-            }
+            UpdateRadioButtons();
 
             /** Redo bindings, otherwise the Value in TimeSpanControl will not be updated.
              *  Create a new Binding object and bind it, because GetBindingExpression() will return null here.
@@ -84,22 +75,23 @@ namespace OpenSense.Wpf.Component.Psi.Common {
             control.OnValueChanged(args);
         }
 
-        private void ButtonZero_Click(object sender, RoutedEventArgs e) {
+        private void RadioButtonZero_Click(object sender, RoutedEventArgs e) {
             Value = TimeSpan.Zero;
         }
 
-        private void ButtonMin_Click(object sender, RoutedEventArgs e) {
+        private void RadioButtonMin_Click(object sender, RoutedEventArgs e) {
             Value = TimeSpan.MinValue;
         }
 
-        private void ButtonMax_Click(object sender, RoutedEventArgs e) {
+        private void RadioButtonMax_Click(object sender, RoutedEventArgs e) {
             Value = TimeSpan.MaxValue;
         }
 
         private void TextBoxDays_LostFocus(object sender, RoutedEventArgs e) {
             if (uint.TryParse(TextBoxDays.Text.Trim(), out var newValueAbs)) {
                 var newValue = Sign(Value) * (int)newValueAbs;
-                Value = new TimeSpan(newValue, Value.Hours, Value.Minutes, Value.Seconds, Value.Milliseconds);
+                var ticks = Value.Ticks + (newValue - Value.Days) * TimeSpan.TicksPerDay;
+                Value = new TimeSpan(ticks);
             }
             TextBoxDays.Text = Math.Abs(Value.Days).ToString();
         }
@@ -107,15 +99,17 @@ namespace OpenSense.Wpf.Component.Psi.Common {
         private void TextBoxHours_LostFocus(object sender, RoutedEventArgs e) {
             if (uint.TryParse(TextBoxHours.Text.Trim(), out var newValueAbs)) {
                 var newValue = Sign(Value) * (int)newValueAbs;
-                Value = new TimeSpan(Value.Days, newValue, Value.Minutes, Value.Seconds, Value.Milliseconds);
+                var ticks = Value.Ticks + (newValue - Value.Hours) * TimeSpan.TicksPerHour;
+                Value = new TimeSpan(ticks);
             }
             TextBoxHours.Text = Math.Abs(Value.Hours).ToString("D2");
         }
 
         private void TextBoxMinutes_LostFocus(object sender, RoutedEventArgs e) {
-            if (int.TryParse(TextBoxMinutes.Text.Trim(), out var newValueAbs)) {
+            if (uint.TryParse(TextBoxMinutes.Text.Trim(), out var newValueAbs)) {
                 var newValue = Sign(Value) * (int)newValueAbs;
-                Value = new TimeSpan(Value.Days, Value.Hours, newValue, Value.Seconds, Value.Milliseconds);
+                var ticks = Value.Ticks + (newValue - Value.Minutes) * TimeSpan.TicksPerMinute;
+                Value = new TimeSpan(ticks);
             }
             TextBoxMinutes.Text = Math.Abs(Value.Minutes).ToString("D2");
         }
@@ -123,7 +117,8 @@ namespace OpenSense.Wpf.Component.Psi.Common {
         private void TextBoxSeconds_LostFocus(object sender, RoutedEventArgs e) {
             if (uint.TryParse(TextBoxSeconds.Text.Trim(), out var newValueAbs)) {
                 var newValue = Sign(Value) * (int)newValueAbs;
-                Value = new TimeSpan(Value.Days, Value.Hours, Value.Minutes, newValue, Value.Milliseconds);
+                var ticks = Value.Ticks + (newValue - Value.Seconds) * TimeSpan.TicksPerSecond;
+                Value = new TimeSpan(ticks);
             }
             TextBoxSeconds.Text = Math.Abs(Value.Seconds).ToString("D2");
         }
@@ -131,7 +126,8 @@ namespace OpenSense.Wpf.Component.Psi.Common {
         private void TextBoxMilliseconds_LostFocus(object sender, RoutedEventArgs e) {
             if (uint.TryParse(TextBoxMilliseconds.Text.Trim(), out var newValueAbs)) {
                 var newValue = Sign(Value) * (int)newValueAbs;
-                Value = new TimeSpan(Value.Days, Value.Hours, Value.Minutes, Value.Seconds, newValue);
+                var ticks = Value.Ticks + (newValue - Value.Milliseconds) * TimeSpan.TicksPerMillisecond;
+                Value = new TimeSpan(ticks);
             }
             TextBoxMilliseconds.Text = Math.Abs(Value.Milliseconds).ToString("D3");
         }
@@ -146,13 +142,48 @@ namespace OpenSense.Wpf.Component.Psi.Common {
                 (false, true) => -1,
                 _ => throw new InvalidOperationException(),
             };
-            Value = new TimeSpan(
-                days: sign * Math.Abs(Value.Days),
-                hours: sign * Math.Abs(Value.Hours),
-                minutes: sign * Math.Abs(Value.Minutes),
-                seconds: sign * Math.Abs(Value.Seconds),
-                milliseconds: sign * Math.Abs(Value.Milliseconds)
-            );
+            var currentValue = Value;
+            switch (sign, currentValue >= TimeSpan.Zero) {
+                case (1, false):
+                case (-1, true):
+                    if (currentValue == TimeSpan.MaxValue) {
+                        Value = TimeSpan.MinValue;
+                    } else if (currentValue == TimeSpan.MinValue) {
+                        Value = TimeSpan.MaxValue;
+                    } else {
+                        Value = currentValue.Negate();
+                    }
+                    break;
+                default:
+                    break;
+            }
+            UpdateRadioButtons();
+        }
+
+        private void UpdateRadioButtons() {
+            var newValue = (TimeSpan)Value;//Value might change once radio buttons are set, use a fixed value.
+            switch (Sign(newValue)) {
+                case 1:
+                    RadioButtonPositive.IsChecked = true;
+                    break;
+                case -1:
+                    RadioButtonNegative.IsChecked = true;
+                    break;
+                default:
+                    throw new InvalidOperationException();
+            }
+
+            if (newValue == TimeSpan.Zero) {
+                RadioButtonZero.IsChecked = true;
+            } else if (newValue == TimeSpan.MinValue) {
+                RadioButtonMin.IsChecked = true;
+            } else if (newValue == TimeSpan.MaxValue) {
+                RadioButtonMax.IsChecked = true;
+            } else {
+                RadioButtonZero.IsChecked = false;
+                RadioButtonMin.IsChecked = false;
+                RadioButtonMax.IsChecked = false;
+            }
         }
 
         private static int Sign(TimeSpan time) {

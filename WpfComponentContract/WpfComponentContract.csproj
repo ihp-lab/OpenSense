@@ -15,4 +15,17 @@
     <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Controls\TimeSpanControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\TimeSpanControl.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
 </Project>

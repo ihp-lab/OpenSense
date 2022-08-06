@@ -13,6 +13,13 @@ namespace OpenSense.Pipeline {
     [Serializable]
     public class PipelineConfiguration : INotifyPropertyChanged {
 
+        private static IList<JsonConverter> DefaultConverters = new JsonConverter[] {
+            new ComponentConfigurationJsonConverter(),
+            new TimeSpanJsonConverter(),
+            new RelativeTimeIntervalJsonConverter(),
+            new IntervalEndpointJsonConverter(),
+        };
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -73,12 +80,9 @@ namespace OpenSense.Pipeline {
         }
 
         public PipelineConfiguration(string json/*, params JsonConverter[] extraConverters*/): this() {
-            var setting = new JsonSerializerSettings();
-            //foreach(var extraConverter in extraConverters) {
-            //    setting.Converters.Add(extraConverter);
-            //}
-            setting.Converters.Add(new ComponentConfigurationJsonConverter());
-            setting.Converters.Add(new DeliveryPolicyJsonConverter());
+            var setting = new JsonSerializerSettings() {
+                Converters = DefaultConverters,
+            };
             JsonConvert.PopulateObject(json, this, setting);
         }
 
@@ -86,9 +90,7 @@ namespace OpenSense.Pipeline {
             var jsonSettings = new JsonSerializerSettings() {
                 DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate,
                 NullValueHandling = NullValueHandling.Ignore,
-                Converters = new[] {
-                    new ComponentConfigurationJsonConverter(),
-                },
+                Converters = DefaultConverters,
             };
             var jsonSerializer = JsonSerializer.Create(jsonSettings);
             using (var stringWriter = new StringWriter()) {

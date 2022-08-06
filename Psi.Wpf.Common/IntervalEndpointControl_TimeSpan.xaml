@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:OpenSense.Wpf.Component.Psi.Common"
+             xmlns:control="clr-namespace:OpenSense.Wpf.Component.Controls;assembly=OpenSense.Wpf.Component.Contract"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
@@ -66,7 +67,7 @@
                 Point
             </Label>
             <!--The binding of Value property might be replaced at runtime.-->
-            <local:TimeSpanControl Grid.Row="0"
+            <control:TimeSpanControl Grid.Row="0"
                                    Grid.Column="1"
                                    x:Name="TimeSpanControlPoint"
                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:IntervalEndpointControl_TimeSpan}}, Path=Value.Point, Mode=OneWay}"

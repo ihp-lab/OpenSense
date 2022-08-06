@@ -7,14 +7,6 @@ using Newtonsoft.Json.Linq;
 namespace OpenSense.Pipeline.JsonConverters {
     internal class RelativeTimeIntervalJsonConverter : JsonConverter {
 
-        private static readonly JsonSerializer Serializer;
-
-        static RelativeTimeIntervalJsonConverter() {
-            var setting = new JsonSerializerSettings();
-            setting.Converters.Add(new IntervalEndpointJsonConverter());
-            Serializer = JsonSerializer.Create(setting);
-        }
-
         public override bool CanConvert(Type objectType) {
             return typeof(RelativeTimeInterval).IsAssignableFrom(objectType);
         }
@@ -28,11 +20,11 @@ namespace OpenSense.Pipeline.JsonConverters {
             var jsonObject = (JObject)jsonToken;
             IntervalEndpoint<TimeSpan> leftEndpoint;
             using (var subReader = jsonObject[nameof(RelativeTimeInterval.LeftEndpoint)].CreateReader()) {
-                leftEndpoint = (IntervalEndpoint<TimeSpan>)Serializer.Deserialize(subReader, typeof(IntervalEndpoint<TimeSpan>));
+                leftEndpoint = (IntervalEndpoint<TimeSpan>)serializer.Deserialize(subReader, typeof(IntervalEndpoint<TimeSpan>));
             }
             IntervalEndpoint<TimeSpan> rightEndpoint;
             using (var subReader = jsonObject[nameof(RelativeTimeInterval.RightEndpoint)].CreateReader()) {
-                rightEndpoint = (IntervalEndpoint<TimeSpan>)Serializer.Deserialize(subReader, typeof(IntervalEndpoint<TimeSpan>));
+                rightEndpoint = (IntervalEndpoint<TimeSpan>)serializer.Deserialize(subReader, typeof(IntervalEndpoint<TimeSpan>));
             }
             var result = new RelativeTimeInterval(leftEndpoint, rightEndpoint);
             return result;

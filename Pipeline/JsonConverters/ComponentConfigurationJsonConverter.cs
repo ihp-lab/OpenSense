@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OpenSense.Component.Contract;
@@ -8,15 +9,6 @@ namespace OpenSense.Pipeline.JsonConverters {
 
         private static string FieldName = "ComponentType";
 
-        private static readonly JsonSerializer Serializer;
-
-        static ComponentConfigurationJsonConverter() {
-            var setting = new JsonSerializerSettings();
-            setting.Converters.Add(new DeliveryPolicyJsonConverter());
-            setting.Converters.Add(new RelativeTimeIntervalJsonConverter());
-            Serializer = JsonSerializer.Create(setting);
-        }
-
         public override bool CanConvert(Type objectType) {
             return typeof(ComponentConfiguration).IsAssignableFrom(objectType);
         }
@@ -25,8 +17,14 @@ namespace OpenSense.Pipeline.JsonConverters {
             var jsonObject = JObject.Load(reader);
             var assemblyQualifiedName = jsonObject.GetValue(FieldName).ToString();
             var type = Type.GetType(assemblyQualifiedName, true);
+            var setting = new JsonSerializerSettings() {
+                Converters = serializer.Converters
+                    .Where(c => c is not ComponentConfigurationJsonConverter)
+                    .ToArray(),
+            };
+            var subSerializer = JsonSerializer.Create(setting);
             using (var subReader = jsonObject.CreateReader()) {
-                return Serializer.Deserialize(subReader, type);
+                return subSerializer.Deserialize(subReader, type);
             }
         }
 
@@ -35,12 +33,13 @@ namespace OpenSense.Pipeline.JsonConverters {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
             var t = JToken.FromObject(value);
             if (t.Type != JTokenType.Object) {
-                t.WriteTo(writer);
-            } else {
-                var o = (JObject)t;
-                o.AddFirst(new JProperty(FieldName, value.GetType().AssemblyQualifiedName));
-                o.WriteTo(writer);
+                serializer.Serialize(writer, t);
+                return;
             }
+            var o = (JObject)t;
+            o.AddFirst(new JProperty(FieldName, value.GetType().AssemblyQualifiedName));
+            serializer.Serialize(writer, o);
+            return;
         }
     }
 }

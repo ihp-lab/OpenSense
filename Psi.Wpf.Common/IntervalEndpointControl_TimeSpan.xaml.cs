@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using Microsoft.Psi;
+using OpenSense.Wpf.Component.Controls;
 
 namespace OpenSense.Wpf.Component.Psi.Common {
     public partial class IntervalEndpointControl_TimeSpan : UserControl {

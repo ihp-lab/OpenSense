@@ -1,0 +1,135 @@
+﻿<UserControl x:Class="OpenSense.Wpf.Component.Controls.TimeSpanControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:OpenSense.Wpf.Component.Controls"
+             xmlns:converter="clr-namespace:OpenSense.Wpf.Component.Converters"
+             mc:Ignorable="d"
+             d:DesignHeight="20"
+             d:DesignWidth="250">
+    <UserControl.Resources>
+        <converter:IntAbsoluteValueConverter x:Key="IntAbsConv" />
+    </UserControl.Resources>
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="5*" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
+
+        <!--RadioButton.GroupName is NOT always working.-->
+        <Grid Grid.Column="0">
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <RadioButton Grid.Column="0"
+                         Name="RadioButtonPositive"
+                         IsChecked="True"
+                         Style="{StaticResource {x:Type ToggleButton}}"
+                         Checked="RadioButtonSign_CheckedOrUnchecked"
+                         Unchecked="RadioButtonSign_CheckedOrUnchecked">
+                +
+            </RadioButton>
+
+            <RadioButton Grid.Column="1"
+                         Name="RadioButtonNegative"
+                         IsChecked="False"
+                         Style="{StaticResource {x:Type ToggleButton}}"
+                         Checked="RadioButtonSign_CheckedOrUnchecked"
+                         Unchecked="RadioButtonSign_CheckedOrUnchecked">
+                -
+            </RadioButton>
+        </Grid>
+
+        <!--The binding of Text property might be replaced at runtime.-->
+        <TextBox Grid.Column="1"
+                 Name="TextBoxDays"
+                 Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:TimeSpanControl}}, Path=Value.Days, Mode=OneWay, Converter={StaticResource IntAbsConv}}"
+                 LostFocus="TextBoxDays_LostFocus" />
+        <TextBlock Grid.Column="2">
+            .
+        </TextBlock>
+
+        <!--The binding of Text property might be replaced at runtime.-->
+        <TextBox Grid.Column="3"
+                 Name="TextBoxHours"
+                 Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:TimeSpanControl}}, Path=Value.Hours, Mode=OneWay, Converter={StaticResource IntAbsConv}}"
+                 LostFocus="TextBoxHours_LostFocus" />
+        <TextBlock Grid.Column="4">
+            :
+        </TextBlock>
+
+        <!--The binding of Text property might be replaced at runtime.-->
+        <TextBox Grid.Column="5"
+                 Name="TextBoxMinutes"
+                 Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:TimeSpanControl}}, Path=Value.Minutes, Mode=OneWay, Converter={StaticResource IntAbsConv}}"
+                 LostFocus="TextBoxMinutes_LostFocus" />
+        <TextBlock Grid.Column="6">
+            :
+        </TextBlock>
+
+        <!--The binding of Text property might be replaced at runtime.-->
+        <TextBox Grid.Column="7"
+                 Name="TextBoxSeconds"
+                 Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:TimeSpanControl}}, Path=Value.Seconds, Mode=OneWay, Converter={StaticResource IntAbsConv}}"
+                 LostFocus="TextBoxSeconds_LostFocus" />
+        <TextBlock Grid.Column="8">
+            .
+        </TextBlock>
+
+        <!--The binding of Text property might be replaced at runtime.-->
+        <TextBox Grid.Column="9"
+                 Name="TextBoxMilliseconds"
+                 Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:TimeSpanControl}}, Path=Value.Milliseconds, Mode=OneWay, Converter={StaticResource IntAbsConv}}"
+                 LostFocus="TextBoxMilliseconds_LostFocus" />
+
+        <!--RadioButton.GroupName is NOT always working.-->
+        <Grid Grid.Column="10">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+
+            <RadioButton Grid.Column="0"
+                         Name="RadioButtonZero"
+                         Style="{StaticResource {x:Type ToggleButton}}"
+                         IsChecked="True"
+                         Click="RadioButtonZero_Click">
+                Zero
+            </RadioButton>
+
+            <RadioButton Grid.Column="1"
+                         Name="RadioButtonMin"
+                         Style="{StaticResource {x:Type ToggleButton}}"
+                         IsChecked="False"
+                         Click="RadioButtonMin_Click">
+                Min
+            </RadioButton>
+
+            <RadioButton Grid.Column="2"
+                         Name="RadioButtonMax"
+                         Style="{StaticResource {x:Type ToggleButton}}"
+                         IsChecked="False"
+                         Click="RadioButtonMax_Click">
+                Max
+            </RadioButton>
+        </Grid>
+        
+        
+    </Grid>
+</UserControl>

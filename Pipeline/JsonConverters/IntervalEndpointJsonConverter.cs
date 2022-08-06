@@ -7,8 +7,6 @@ using Newtonsoft.Json.Linq;
 namespace OpenSense.Pipeline.JsonConverters {
     internal class IntervalEndpointJsonConverter : JsonConverter {
 
-        private static readonly JsonSerializer Serializer = new JsonSerializer();
-
         public override bool CanConvert(Type objectType) {
             return typeof(IntervalEndpoint<TimeSpan>).IsAssignableFrom(objectType);
         }
@@ -22,7 +20,10 @@ namespace OpenSense.Pipeline.JsonConverters {
             var jsonObject = (JObject)jsonToken;
             IntervalEndpoint<TimeSpan> result;
             var bounded = jsonObject[nameof(IntervalEndpoint<TimeSpan>.Bounded)].Value<bool>();
-            var point = TimeSpan.Parse(jsonObject[nameof(IntervalEndpoint<TimeSpan>.Point)].Value<string>());
+            TimeSpan point;
+            using (var subReader = jsonObject[nameof(IntervalEndpoint<TimeSpan>.Point)].CreateReader()) {
+                point = (TimeSpan)serializer.Deserialize(subReader, typeof(TimeSpan));
+            }
             if (bounded) {
                 var inclusive = jsonObject[nameof(IntervalEndpoint<TimeSpan>.Inclusive)].Value<bool>();
                 result = new IntervalEndpoint<TimeSpan>(point, inclusive);
