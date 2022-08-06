@@ -23,34 +23,53 @@
                Grid.Column="0">
             Shortcuts
         </Label>
-        <WrapPanel Grid.Row="0"
-                   Grid.Column="1">
+        <Grid Grid.Row="0"
+              Grid.Column="1">
 
-            <Button Name="ButtonEmpty"
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0"
+                    Name="ButtonEmpty"
                     Click="ButtonEmpty_Click">
                 Empty
             </Button>
 
-            <Button Name="ButtonZero"
+            <Button Grid.Column="1"
+                Name="ButtonZero"
                     Click="ButtonZero_Click">
                 Zero
             </Button>
 
-            <Button Name="ButtonInfinite"
+            <Button Grid.Column="2"
+                    Name="ButtonInfinite"
                     Click="ButtonInfinite_Click">
                 Infinite
             </Button>
 
-            <Button Name="ButtonPast"
+            <Button Grid.Column="3"
+                    Name="ButtonPast"
                     Click="ButtonPast_Click">
                 Past
             </Button>
 
-            <Button Name="ButtonFuture"
+            <Button Grid.Column="4"
+                    Name="ButtonFuture"
                     Click="ButtonFuture_Click">
                 Future
             </Button>
-        </WrapPanel>
+
+            <TextBlock Grid.Column="5"
+                       d:Text="[0,0]"
+                       Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:RelativeTimeIntervalControl}}, Path=Value, Mode=OneWay}"
+                       HorizontalAlignment="Right" />
+        </Grid>
 
         <GroupBox Grid.Row="1"
                   Grid.Column="0"
@@ -58,7 +77,7 @@
                   Header="Left">
             <local:IntervalEndpointControl_TimeSpan x:Name="IntervalEndpointControlLeft"
                                                     Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:RelativeTimeIntervalControl}}, Path=Value.LeftEndpoint, Mode=OneWay}"
-                                                    ValueChanged="IntervalEndpointControlLeft_ValueChanged"/>
+                                                    ValueChanged="IntervalEndpointControlLeft_ValueChanged" />
         </GroupBox>
 
         <GroupBox Grid.Row="2"
