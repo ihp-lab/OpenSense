@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Reflection.Metadata;
+using System.Reflection.PortableExecutable;
 using Microsoft.Psi;
 
 namespace OpenSense.Component.Contract {
@@ -455,5 +458,36 @@ jump:;
             return FindOutputPortDataTypes(config, configs, new Tuple<ComponentConfiguration, IPortMetadata>(config, exclude));
         }
         #endregion
+
+        public static IEnumerable<Assembly> LoadAssemblies(string rootPath) {
+            var files = Directory.EnumerateFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
+            foreach (var file in files) {
+                /** Test if it is a valid .NET assembly without throwing any exception.
+                 */
+                using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
+                    using var peReader = new PEReader(fs);
+                    if (!peReader.HasMetadata) {
+                        continue;
+                    }
+                    var reader = peReader.GetMetadataReader();
+                    if (!reader.IsAssembly) {
+                        continue;
+                    }
+                }
+
+                /** Try to load assembly.
+                  */
+                Assembly asm = null;
+                try {
+                    asm = Assembly.LoadFrom(file);
+                } catch (BadImageFormatException) {
+                    ;
+                }
+                if (asm is null) {
+                    continue;
+                }
+                yield return asm;
+            }
+        }
     }
 }

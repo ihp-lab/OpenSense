@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Composition;
 using System.Composition.Hosting;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using OpenSense.Component.Contract;
 using OpenSense.Wpf.Component.Contract;
 
 namespace OpenSense.Wpf.Pipeline {
@@ -19,14 +19,7 @@ namespace OpenSense.Wpf.Pipeline {
                 typeof(ConfigurationControlCreatorManager).Assembly,
                 Assembly.GetEntryAssembly(),
             };
-            var files = Directory.EnumerateFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
-            foreach (var file in files) {
-                try {
-                    var asm = Assembly.LoadFrom(file);
-                    assemblies.Add(asm);
-                } catch (BadImageFormatException) {
-                }
-            }
+            assemblies.AddRange(HelperExtensions.LoadAssemblies(AppDomain.CurrentDomain.BaseDirectory));
             var configuration = new ContainerConfiguration()
                 .WithAssemblies(assemblies);//note: Fluent interface
             using var container = configuration.CreateContainer();
