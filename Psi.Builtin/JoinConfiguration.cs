@@ -7,7 +7,7 @@ using OpenSense.Component.Contract;
 namespace OpenSense.Component.Psi {
 
     [Serializable]
-    public class JoinConfiguration : FusionConfiguration {
+    public class JoinConfiguration : OperatorConfiguration {
 
         public override IComponentMetadata GetMetadata() => new JoinMetadata();
 

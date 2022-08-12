@@ -7,7 +7,7 @@ using OpenSense.Component.Contract;
 
 namespace OpenSense.Component.Psi {
     [Serializable]
-    public class StandardDeviationConfiguration : FusionConfiguration {
+    public class StandardDeviationConfiguration : OperatorConfiguration {
 
         public override IComponentMetadata GetMetadata() => new StandardDeviationMetadata();
 

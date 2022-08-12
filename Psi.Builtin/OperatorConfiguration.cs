@@ -7,7 +7,7 @@ using OpenSense.Component.Contract;
 
 namespace OpenSense.Component.Psi {
     [Serializable]
-    public abstract class FusionConfiguration : ComponentConfiguration {
+    public abstract class OperatorConfiguration : ComponentConfiguration {
 
         protected IReadOnlyList<dynamic> GetRemoteProducers(IReadOnlyList<ComponentEnvironment> instantiatedComponents) {
             var configurations = instantiatedComponents.Select(e => e.Configuration).ToArray();
