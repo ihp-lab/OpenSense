@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.Psi;
-using OpenSense.Component.Contract;
 
-namespace OpenSense.Component.Psi {
+namespace OpenSense.Component.Contract {
     [Serializable]
     public abstract class OperatorConfiguration : ComponentConfiguration {
 
+        #region Helper Methods
         protected IReadOnlyList<dynamic> GetRemoteProducers(IReadOnlyList<ComponentEnvironment> instantiatedComponents) {
             var configurations = instantiatedComponents.Select(e => e.Configuration).ToArray();
             var result = new List<dynamic>();
@@ -23,6 +23,7 @@ namespace OpenSense.Component.Psi {
             }
             Debug.Assert(result.Count == Inputs.Count);
             return result;
-        }
+        } 
+        #endregion
     }
 }
