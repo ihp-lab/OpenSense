@@ -96,6 +96,7 @@
         <ProjectReference Include="..\Psi.Speech.Visualizer.Wpf\Psi.Speech.Visualizer.Wpf.csproj" />
         <ProjectReference Include="..\Psi.Speech.Windows.Wpf\Psi.Speech.Windows.Wpf.csproj" />
         <ProjectReference Include="..\Psi.Builtin.Wpf\Psi.Builtin.Wpf.csproj" />
+        <ProjectReference Include="..\PythonSupports.Wpf\PythonSupports.Wpf.csproj" />
         <ProjectReference Include="..\Shimmer3.Wpf\Shimmer3.Wpf.csproj" />
         <ProjectReference Include="..\Statistics.Wpf\Statistics.Wpf.csproj" />
         <!--Widgets-->

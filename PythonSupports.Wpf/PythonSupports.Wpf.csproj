@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <RootNamespace>OpenSense.Wpf.Component.PythonSupports</RootNamespace>
+        <AssemblyName>OpenSense.Wpf.Component.PythonSupports</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="System.Composition" Version="5.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\PythonSupports\PythonSupports.csproj" />
+        <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+    </ItemGroup>
+
+</Project>
