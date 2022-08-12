@@ -20,7 +20,7 @@ namespace OpenSense.Component.Psi {
 
         public PortAggregation Aggregation => PortAggregation.Object;
 
-        public bool CanConnectDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes) {
+        public virtual bool CanConnectDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes) {
             switch (Direction) {
                 case PortDirection.Input:
                     return true;
@@ -34,7 +34,7 @@ namespace OpenSense.Component.Psi {
                          */
                         return false;
                     }
-                    var result =  selfDataType.CanBeCastTo(remoteEndPointDataType);
+                    var result = selfDataType.CanBeCastTo(remoteEndPointDataType);
                     return result;
                 default:
                     throw new InvalidOperationException();
@@ -42,5 +42,7 @@ namespace OpenSense.Component.Psi {
         }
 
         public abstract Type GetTransmissionDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes);
+
+        
     }
 }
