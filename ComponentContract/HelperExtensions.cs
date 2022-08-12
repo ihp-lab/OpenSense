@@ -70,34 +70,9 @@ namespace OpenSense.Component.Contract {
         }
 
         public static IProducer<T> GetStaticProducer<T>(this StaticPortMetadata portMetadata, PortConfiguration portConfiguration, object instance) {
-            /* old implementation
-            dynamic obj = GetStaticConnector(instance, portMetadata, portConfiguration);
-            return (IProducer<T>)obj;
-            */
-
             object obj = GetStaticConnector(instance, portMetadata, portConfiguration);
-            var objType = obj.GetType();
-            if (typeof(IProducer<T>).IsAssignableFrom(objType)) {
-                return (IProducer<T>)obj;
-            }
-            if (objType.IsGenericType) {
-                var interfaceName = typeof(IProducer<>).Name;//should be "IProducer`1"
-                var @interface = objType.GetInterface(interfaceName);
-                if (@interface != null) {
-                    var typeArg = @interface.GetGenericArguments().Single();
-                    if (typeArg.CanBeAssignedOrCastTo(typeof(T))) {
-                        var methodInfo = typeof(HelperExtensions)
-                            .GetMethod(nameof(CastProducer), BindingFlags.NonPublic | BindingFlags.Static)
-                            .MakeGenericMethod(new[] { 
-                                typeArg, 
-                                typeof(T) 
-                            });
-                        var result = (IProducer<T>)methodInfo.Invoke(obj: null, new[] { (dynamic)obj });
-                        return result;
-                    }
-                }
-            }
-            throw new InvalidOperationException("returned object is not a valid type");
+            var result = CastProducerResult<T>(obj);
+            return result;
         }
 
         public static IConsumer<T> GetStaticConsumer<T>(this StaticPortMetadata portMetadata, PortConfiguration portConfiguration, object instance) {
@@ -201,19 +176,59 @@ namespace OpenSense.Component.Contract {
             return result;
         }
 
-        public static bool CanBeAssignedOrCastTo(this Type source, Type target) {
-            var result = target.IsAssignableFrom(source) 
-                || HasImplicitOrExplicitConversionTo_SingleWay(source, target, unwrapNullables: true) 
-                || HasImplicitOrExplicitConversionTo_SingleWay(target, source, unwrapNullables: false);
+        public static bool CanBeCastTo(this Type sourceType, Type targetType) {
+            var result = targetType.IsAssignableFrom(sourceType) 
+                || HasImplicitOrExplicitConversionTo_SingleWay(sourceType, targetType, unwrapNullables: true) 
+                || HasImplicitOrExplicitConversionTo_SingleWay(targetType, sourceType, unwrapNullables: false);
             return result;
         }
 
-        private static IProducer<TTarget> CastProducer<TSource, TTarget>(this IProducer<TSource> producer) {
+        private static Type GetProducerResultType(object instance) {
+            var instanceType = instance.GetType();
+            if (!instanceType.IsGenericType) {
+                throw new InvalidOperationException("The instance is not a generic type.");
+            }
+            var interfaceName = typeof(IProducer<>).Name;//should be "IProducer`1"
+            var @interface = instanceType.GetInterface(interfaceName);
+            if (@interface is null) {
+                throw new InvalidOperationException("The instance does not implement IProducer<>.");
+            }
+            var typeArg = @interface.GetGenericArguments().Single();
+            return typeArg;
+        }
+
+        public static bool CanProducerResultBeCastTo<T>(object instance) {
+            var argType = GetProducerResultType(instance);
+            var result = argType.CanBeCastTo(typeof(T));
+            return result;
+        }
+
+        public static IProducer<T> CastProducerResult<T>(object instance) {
+            var instanceType = instance.GetType();
+            if (typeof(IProducer<T>).IsAssignableFrom(instanceType)) {
+                return (IProducer<T>)instance;
+            }
+            var argType = GetProducerResultType(instance);
+            if (!argType.CanBeCastTo(typeof(T))) {
+                throw new InvalidOperationException($"The return type of producer \"{argType.Name}\" cannot be converted to \"{typeof(T).Name}\".");
+            }
+            Debug.Assert(argType != typeof(T));//If match, then should have returned at the beginning.
+            var methodInfo = typeof(HelperExtensions)
+                .GetMethod(nameof(CastProducerResult_Internal), BindingFlags.NonPublic | BindingFlags.Static)
+                .MakeGenericMethod(new[] {
+                    argType,
+                    typeof(T),
+                });
+            var result = (IProducer<T>)methodInfo.Invoke(obj: null, new[] { (dynamic)instance });
+            return result;
+        }
+
+        private static IProducer<TTarget> CastProducerResult_Internal<TSource, TTarget>(this IProducer<TSource> producer) {
             if (typeof(TSource) == typeof(TTarget)) {
                 return (IProducer<TTarget>)producer;
             }
 
-            Debug.Assert(CanBeAssignedOrCastTo(typeof(TSource), typeof(TTarget)));
+            Debug.Assert(CanBeCastTo(typeof(TSource), typeof(TTarget)));
 
             var func = CastDelegate<TSource, TTarget>();
 
@@ -364,7 +379,17 @@ jump:;
         }
 
         public static Type FindOutputPortDataType(this ComponentConfiguration config, IPortMetadata portMetadata, IReadOnlyList<ComponentConfiguration> configs, params Tuple<ComponentConfiguration, IPortMetadata>[] exclude) {
+            /** Try with no information given.
+             */
             var dataType = portMetadata.GetTransmissionDataType(null, Array.Empty<Type>(), Array.Empty<Type>());
+
+            /** Try with local input types given.
+             */
+            if (dataType is null) {
+                var inputTypes = config.FindInputPortDataTypes(configs);
+                dataType = portMetadata.GetTransmissionDataType(null, inputTypes, Array.Empty<Type>());
+            }
+
             if (dataType is null) {
                 foreach (var other in configs) {
                     foreach (var i in other.Inputs) {
@@ -377,16 +402,24 @@ jump:;
                             var otherInput = FindInputPortDataTypes(other, configs, newExclude);
                             var otherEnd = iMetadata.GetTransmissionDataType(null, otherOutput, otherInput);
                             if (otherEnd != null) {
+                                /** Try with only remote input type given
+                                 */
                                 dataType = portMetadata.GetTransmissionDataType(otherEnd, Array.Empty<Type>(), Array.Empty<Type>());
                                 if (dataType != null) {
                                     goto jump;
                                 }
+
+                                /** Try with remote input type and local input types given
+                                 */
                                 newExclude[exclude.Length] = new Tuple<ComponentConfiguration, IPortMetadata>(config, portMetadata);
                                 var selfInput = FindInputPortDataTypes(config, configs, newExclude);
                                 dataType = portMetadata.GetTransmissionDataType(otherEnd, selfInput, Array.Empty<Type>());
                                 if (dataType != null) {
                                     goto jump;
                                 }
+
+                                /** Try with remote input type, local input types and local output types given
+                                 */
                                 var selfOutput = FindOutputPortDataTypes(config, configs, newExclude);
                                 dataType = portMetadata.GetTransmissionDataType(otherEnd, selfInput, selfOutput);
                                 if (dataType != null) {

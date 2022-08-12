@@ -7,21 +7,14 @@ using OpenSense.Component.Contract;
 
 namespace OpenSense.Component.Psi {
     [Serializable]
-    public class WindowConfiguration : FusionConfiguration {
+    public class StandardDeviationConfiguration : FusionConfiguration {
 
-        private RelativeTimeInterval relativeTimeInterval = RelativeTimeInterval.Empty;
-
-        public RelativeTimeInterval RelativeTimeInterval {
-            get => relativeTimeInterval;
-            set => SetProperty(ref relativeTimeInterval, value);
-        }
-
-        public override IComponentMetadata GetMetadata() => new WindowMetadata();
+        public override IComponentMetadata GetMetadata() => new StandardDeviationMetadata();
 
         public override object Instantiate(Pipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents, IServiceProvider serviceProvider) {
             var producers = GetRemoteProducers(instantiatedComponents);
             Debug.Assert(producers.Count == 1);
-            var producer = Operators.Window(producers.Single(), RelativeTimeInterval, Inputs.Single().DeliveryPolicy);
+            var producer = Operators.Std(producers.Single(), Inputs.Single().DeliveryPolicy);
             return producer;
         }
     }

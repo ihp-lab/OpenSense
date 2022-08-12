@@ -7,17 +7,17 @@ using OpenSense.Component.Contract;
 
 namespace OpenSense.Component.Psi {
     [Export(typeof(IComponentMetadata))]
-    public class WindowMetadata : IComponentMetadata {
-        public string Name => "Window Operator";
+    public class StandardDeviationMetadata : IComponentMetadata {
+        public string Name => "Standard Deviation Operator";
 
-        public string Description => "Groups signal values using a sliding window.";
+        public string Description => "Calculate standard deviation of values of arrays.";
 
         public IReadOnlyList<IPortMetadata> Ports => new[] {
-            new WindowPortMetadata("In", PortDirection.Input, "Input."),
-            new WindowPortMetadata("Out", PortDirection.Output, "Output."),
+            new StandardDeviationPortMetadata("In", PortDirection.Input, "Input."),
+            new StandardDeviationPortMetadata("Out", PortDirection.Output, "Output."),
         };
 
-        public ComponentConfiguration CreateConfiguration() => new WindowConfiguration();
+        public ComponentConfiguration CreateConfiguration() => new StandardDeviationConfiguration();
 
         public object GetConnector<T>(object instance, PortConfiguration portConfiguration) {
             Debug.Assert(Equals(this.OutputPorts().Single().Identifier, portConfiguration.Identifier));
