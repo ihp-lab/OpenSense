@@ -12,7 +12,7 @@ namespace OpenSense.Component.Psi {
         /** Officially supported overloads.
          * Find overloads with arrays as input and a relative time is not required.
          */
-        private static readonly Type[] ValidInputTypes = typeof(Operators)
+        private static readonly Type[] ValidInputArrayTypes = typeof(Operators)
             .GetMethods(BindingFlags.Public | BindingFlags.Static)
             .Where(m => m.Name == nameof(Operators.Std))
             .Select(m => m.GetParameters())
@@ -20,8 +20,10 @@ namespace OpenSense.Component.Psi {
             .Where(p => p[1].ParameterType.IsGenericType)
             .Where(p => p[1].ParameterType.GetGenericTypeDefinition() == typeof(DeliveryPolicy<>))
             .Select(p => p[0].ParameterType)
+            .Where(t => t.IsGenericType)
+            .Where(t => t.GetGenericTypeDefinition() == typeof(IProducer<>))
+            .Select(t => t.GetGenericArguments()[0])
             .Where(t => t.IsArray)
-            .Select(t => t.GetElementType())
             .ToArray()
             ;
 
@@ -31,8 +33,8 @@ namespace OpenSense.Component.Psi {
         public override bool CanConnectDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes) {
             switch (Direction) {
                 case PortDirection.Input:
-                    Debug.Assert(ValidInputTypes.Length > 0);
-                    var result = ValidInputTypes.Contains(remoteEndPointDataType);
+                    Debug.Assert(ValidInputArrayTypes.Length > 0);
+                    var result = ValidInputArrayTypes.Contains(remoteEndPointDataType);
                     return result;
                 default:
                     return base.CanConnectDataType(remoteEndPointDataType, localOtherDirectionPortsDataTypes, localSameDirectionPortsDataTypes);
