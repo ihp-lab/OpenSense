@@ -12,7 +12,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Psi.AzureKinect.x64" Version="0.17.52.1-beta" /><!--Although this package does not use the device, classes from this package are used as payloads-->
-        <PackageReference Include="System.Composition" Version="5.0.1" />
+        <PackageReference Include="System.Composition" Version="6.0.0" />
     </ItemGroup>
 
     <ItemGroup>

@@ -13,7 +13,7 @@
         <PackageReference Include="Microsoft.Psi.Imaging.Windows" Version="0.17.52.1-beta">
             <NoWarn>NU1701</NoWarn><!--Only a .net framework package is available-->
         </PackageReference>
-        <PackageReference Include="System.Composition" Version="5.0.1" />
+        <PackageReference Include="System.Composition" Version="6.0.0" />
     </ItemGroup>
 
     <ItemGroup>

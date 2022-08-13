@@ -12,7 +12,7 @@
         <PackageReference Include="IronPython" Version="3.4.0-beta1" />
         <PackageReference Include="IronPython.StdLib" Version="3.4.0-beta1" />
         <PackageReference Include="Microsoft.Psi.Runtime" Version="0.17.52.1-beta" />
-        <PackageReference Include="System.Composition" Version="5.0.1" />
+        <PackageReference Include="System.Composition" Version="6.0.0" />
     </ItemGroup>
 
     <ItemGroup>
