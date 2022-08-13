@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <AssemblyName>OpenSense.Wpf.Component.Psi.Common</AssemblyName>
-    <RootNamespace>OpenSense.Wpf.Component.Psi.Common</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <AssemblyName>OpenSense.Wpf.Component.Psi.Common</AssemblyName>
+        <RootNamespace>OpenSense.Wpf.Component.Psi.Common</RootNamespace>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Psi.Runtime" Version="0.17.52.1-beta" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Psi.Runtime" Version="0.17.52.1-beta" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
-  </ItemGroup>
-    
+    <ItemGroup>
+        <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+    </ItemGroup>
+
 </Project>

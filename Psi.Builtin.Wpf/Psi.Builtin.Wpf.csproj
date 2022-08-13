@@ -1,20 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <RootNamespace>OpenSense.Wpf.Component.Psi</RootNamespace>
-    <AssemblyName>OpenSense.Wpf.Component.Psi</AssemblyName>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <RootNamespace>OpenSense.Wpf.Component.Psi</RootNamespace>
+        <AssemblyName>OpenSense.Wpf.Component.Psi</AssemblyName>
+        <EmbedAllSources>true</EmbedAllSources>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Composition" Version="5.0.1" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="System.Composition" Version="5.0.1" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Psi.Builtin\Psi.Builtin.csproj" />
-    <ProjectReference Include="..\Psi.Wpf.Common\Psi.Wpf.Common.csproj" />
-    <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Psi.Builtin\Psi.Builtin.csproj" />
+        <ProjectReference Include="..\Psi.Wpf.Common\Psi.Wpf.Common.csproj" />
+        <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+    </ItemGroup>
 
 </Project>

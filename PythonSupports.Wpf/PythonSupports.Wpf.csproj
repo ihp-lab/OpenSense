@@ -5,6 +5,7 @@
         <UseWPF>true</UseWPF>
         <RootNamespace>OpenSense.Wpf.Component.PythonSupports</RootNamespace>
         <AssemblyName>OpenSense.Wpf.Component.PythonSupports</AssemblyName>
+        <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
     <ItemGroup>

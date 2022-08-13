@@ -5,6 +5,7 @@
         <UseWPF>true</UseWPF>
         <AssemblyName>OpenSense.Wpf.Component.Audio.Visualizer.Windows</AssemblyName>
         <RootNamespace>OpenSense.Wpf.Component.Audio.Visualizer</RootNamespace>
+        <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
     <ItemGroup>

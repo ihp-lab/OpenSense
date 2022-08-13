@@ -7,6 +7,8 @@
         <PlatformTarget>x64</PlatformTarget>
         <OutputType>WinExe</OutputType>
         <RootNamespace>OpenSense.Wpf</RootNamespace>
+        <AssemblyName>OpenSense.Wpf</AssemblyName>
+        <EmbedAllSources>true</EmbedAllSources>
         <ApplicationIcon>Resource\Icon\usc.ico</ApplicationIcon>
         <AssemblyVersion>2.1.0</AssemblyVersion>
         <Version>2.1.0</Version>

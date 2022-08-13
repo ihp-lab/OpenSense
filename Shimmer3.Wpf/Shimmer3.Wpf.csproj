@@ -1,19 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <RootNamespace>OpenSense.Wpf.Component.Shimmer3</RootNamespace>
-    <AssemblyName>OpenSense.Wpf.Component.Shimmer3</AssemblyName>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <RootNamespace>OpenSense.Wpf.Component.Shimmer3</RootNamespace>
+        <AssemblyName>OpenSense.Wpf.Component.Shimmer3</AssemblyName>
+        <EmbedAllSources>true</EmbedAllSources>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Composition" Version="5.0.1" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="System.Composition" Version="5.0.1" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Shimmer3\Shimmer3.csproj" />
-    <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Shimmer3\Shimmer3.csproj" />
+        <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+    </ItemGroup>
 
 </Project>

@@ -1,25 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <AssemblyName>OpenSense.Wpf.Component.EyePointOfInterest</AssemblyName>
-    <RootNamespace>OpenSense.Wpf.Component.EyePointOfInterest</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <AssemblyName>OpenSense.Wpf.Component.EyePointOfInterest</AssemblyName>
+        <RootNamespace>OpenSense.Wpf.Component.EyePointOfInterest</RootNamespace>
+        <EmbedAllSources>true</EmbedAllSources>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\EyePointOfInterest.Wpf.Common\EyePointOfInterest.Wpf.Common.csproj" />
-    <ProjectReference Include="..\EyePointOfInterest\EyePointOfInterest.csproj" />
-    <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\EyePointOfInterest.Wpf.Common\EyePointOfInterest.Wpf.Common.csproj" />
+        <ProjectReference Include="..\EyePointOfInterest\EyePointOfInterest.csproj" />
+        <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Page Update="DisplayPoiEstimatorConfigurationControl.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
-    <Page Update="DisplayPoiEstimatorInstanceControl.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
-  </ItemGroup>
+    <ItemGroup>
+        <Page Update="DisplayPoiEstimatorConfigurationControl.xaml">
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
+        <Page Update="DisplayPoiEstimatorInstanceControl.xaml">
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
+    </ItemGroup>
 
 </Project>

@@ -7,6 +7,8 @@
         <PlatformTarget>x64</PlatformTarget>
         <AssemblyName>OpenSense.Component.Media.Writer.Windows</AssemblyName>
         <RootNamespace>OpenSense.Component.Media.Writer</RootNamespace>
+        <LangVersion>10.0</LangVersion>
+        <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
     <ItemGroup>

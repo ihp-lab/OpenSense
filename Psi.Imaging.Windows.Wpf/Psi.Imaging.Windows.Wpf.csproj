@@ -1,27 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <AssemblyName>OpenSense.Wpf.Component.Psi.Imaging.Windows</AssemblyName>
-    <RootNamespace>OpenSense.Wpf.Component.Psi.Imaging</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <AssemblyName>OpenSense.Wpf.Component.Psi.Imaging.Windows</AssemblyName>
+        <RootNamespace>OpenSense.Wpf.Component.Psi.Imaging</RootNamespace>
+        <EmbedAllSources>true</EmbedAllSources>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Psi.Imaging.Windows\Psi.Imaging.Windows.csproj" />
-    <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Psi.Imaging.Windows\Psi.Imaging.Windows.csproj" />
+        <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="ImageEncoderConfigurationControl.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Update="ImageEncoderConfigurationControl.xaml.cs">
+            <SubType>Code</SubType>
+        </Compile>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Page Update="ImageEncoderConfigurationControl.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
+    <ItemGroup>
+        <Page Update="ImageEncoderConfigurationControl.xaml">
+            <SubType>Designer</SubType>
+        </Page>
+    </ItemGroup>
 
 </Project>

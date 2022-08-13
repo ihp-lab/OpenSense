@@ -8,6 +8,7 @@
         <PlatformTarget>x64</PlatformTarget>
         <AssemblyName>OpenSense.Wpf.Widget.DisplayPoiEstimatorBuilder</AssemblyName>
         <RootNamespace>OpenSense.Wpf.Widget.DisplayPoiEstimatorBuilder</RootNamespace>
+        <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
     <ItemGroup>

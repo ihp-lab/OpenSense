@@ -5,6 +5,7 @@
         <UseWPF>true</UseWPF>
         <RootNamespace>OpenSense.Wpf.Component.Psi.Data</RootNamespace>
         <AssemblyName>OpenSense.Wpf.Component.Psi.Data</AssemblyName>
+        <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
     <ItemGroup>
@@ -17,12 +18,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Page Update="JsonStoreExporterConfigurationControl.xaml">
-        <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      </Page>
-      <Page Update="JsonStoreImporterConfigurationControl.xaml">
-        <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      </Page>
+        <Page Update="JsonStoreExporterConfigurationControl.xaml">
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
+        <Page Update="JsonStoreImporterConfigurationControl.xaml">
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
     </ItemGroup>
 
 </Project>

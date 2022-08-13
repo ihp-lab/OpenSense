@@ -1,13 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>OpenSense.Component.EyePointOfInterest.Common</AssemblyName>
-    <RootNamespace>OpenSense.Component.EyePointOfInterest.Common</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <AssemblyName>OpenSense.Component.EyePointOfInterest.Common</AssemblyName>
+        <RootNamespace>OpenSense.Component.EyePointOfInterest.Common</RootNamespace>
+        <LangVersion>10.0</LangVersion>
+        <EmbedAllSources>true</EmbedAllSources>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Head.Common\Head.Common.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Head.Common\Head.Common.csproj" />
+    </ItemGroup>
 
 </Project>

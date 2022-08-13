@@ -5,6 +5,7 @@
         <UseWPF>true</UseWPF>
         <RootNamespace>OpenSense.Wpf.Component.Statistics</RootNamespace>
         <AssemblyName>OpenSense.Wpf.Component.Statistics</AssemblyName>
+        <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
     <ItemGroup>

@@ -5,7 +5,8 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <AssemblyName>OpenSense.Component.OpenPose.PInvoke</AssemblyName>
         <RootNamespace>OpenSense.Component.OpenPose.PInvoke</RootNamespace>
-        <LangVersion>8.0</LangVersion>
+        <LangVersion>10.0</LangVersion>
+        <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
     <ItemGroup>

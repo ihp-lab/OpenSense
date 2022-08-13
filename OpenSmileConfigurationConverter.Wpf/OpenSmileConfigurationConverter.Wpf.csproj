@@ -1,18 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <AssemblyName>OpenSense.Wpf.Widget.OpenSmileConfigurationConverter</AssemblyName>
-    <RootNamespace>OpenSense.Wpf.Widget.OpenSmileConfigurationConverter</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <AssemblyName>OpenSense.Wpf.Widget.OpenSmileConfigurationConverter</AssemblyName>
+        <RootNamespace>OpenSense.Wpf.Widget.OpenSmileConfigurationConverter</RootNamespace>
+        <EmbedAllSources>true</EmbedAllSources>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Composition" Version="5.0.1" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="System.Composition" Version="5.0.1" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\WpfWidgetContract\WpfWidgetContract.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\WpfWidgetContract\WpfWidgetContract.csproj" />
+    </ItemGroup>
 
 </Project>

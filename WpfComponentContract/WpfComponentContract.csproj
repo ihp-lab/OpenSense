@@ -1,31 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <RootNamespace>OpenSense.Wpf.Component</RootNamespace>
-    <AssemblyName>OpenSense.Wpf.Component.Contract</AssemblyName>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <RootNamespace>OpenSense.Wpf.Component</RootNamespace>
+        <AssemblyName>OpenSense.Wpf.Component.Contract</AssemblyName>
+        <EmbedAllSources>true</EmbedAllSources>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp3.1|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Controls\TimeSpanControl.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Controls\TimeSpanControl.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
+    </ItemGroup>
 
 </Project>

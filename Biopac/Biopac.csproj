@@ -6,6 +6,8 @@
         <PlatformTarget>x64</PlatformTarget>
         <AssemblyName>OpenSense.Component.Biopac</AssemblyName>
         <RootNamespace>OpenSense.Component.Biopac</RootNamespace>
+        <LangVersion>10.0</LangVersion>
+        <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
     <ItemGroup>

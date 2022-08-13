@@ -5,6 +5,7 @@
         <UseWPF>true</UseWPF>
         <AssemblyName>OpenSense.Wpf.Component.Psi.Audio.Windows</AssemblyName>
         <RootNamespace>OpenSense.Wpf.Component.Psi.Audio</RootNamespace>
+        <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
     <ItemGroup>

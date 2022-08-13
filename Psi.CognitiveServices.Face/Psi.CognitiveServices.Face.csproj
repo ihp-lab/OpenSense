@@ -1,18 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>OpenSense.Component.Psi.CognitiveServices.Face</AssemblyName>
-    <RootNamespace>OpenSense.Component.Psi.CognitiveServices.Face</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <AssemblyName>OpenSense.Component.Psi.CognitiveServices.Face</AssemblyName>
+        <RootNamespace>OpenSense.Component.Psi.CognitiveServices.Face</RootNamespace>
+        <LangVersion>10.0</LangVersion>
+        <EmbedAllSources>true</EmbedAllSources>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Psi.CognitiveServices.Face" Version="0.17.52.1-beta" />
-    <PackageReference Include="System.Composition" Version="5.0.1" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Psi.CognitiveServices.Face" Version="0.17.52.1-beta" />
+        <PackageReference Include="System.Composition" Version="5.0.1" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
+    </ItemGroup>
 
 </Project>
