@@ -42,6 +42,5 @@ namespace OpenSense.Component.Contract {
 
         public abstract Type GetTransmissionDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes);
 
-        
     }
 }

@@ -136,7 +136,7 @@ namespace OpenSense.Component.Contract {
             return result;
         }
 
-        private static bool HasImplicitOrExplicitConversionTo_SingleWay(this Type source, Type target, bool unwrapNullables) {
+        private static bool HasConversionTo_SingleWay(this Type source, Type target, bool unwrapNullables) {
             /** Nullable
              */
             if (unwrapNullables) {
@@ -146,13 +146,13 @@ namespace OpenSense.Component.Contract {
                     case (true, false):
                         return false;
                     case (false, true):
-                        return HasImplicitOrExplicitConversionTo_SingleWay(
+                        return HasConversionTo_SingleWay(
                             source, 
                             target.GetGenericArguments()[0], 
                             unwrapNullables: true
                         );
                     case (true, true):
-                        return HasImplicitOrExplicitConversionTo_SingleWay(
+                        return HasConversionTo_SingleWay(
                             source.GetGenericArguments()[0],
                             target.GetGenericArguments()[0],
                             unwrapNullables: true
@@ -170,19 +170,38 @@ namespace OpenSense.Component.Contract {
 
             /** Custom
              */
-            var result = source.GetMethods(BindingFlags.Public | BindingFlags.Static)
-                .Where(mi => (mi.Name == "op_Implicit" || mi.Name == "op_Explicit") && mi.ReturnType == target)
-                .Any(mi => {
-                    ParameterInfo pi = mi.GetParameters().FirstOrDefault();
-                    return pi != null && pi.ParameterType == source;
+            var result = GetImplicitOrExplicitConverters(source, target).Any();
+            return result;
+        }
+
+        private static IEnumerable<MethodInfo> GetImplicitOrExplicitConverters_SingleWay(this Type type, Type source, Type target) {
+            var result = type.GetMethods(BindingFlags.Public | BindingFlags.Static)
+                .Where(mi => mi.Name == "op_Implicit" || mi.Name == "op_Explicit")
+                .Where(mi => mi.ReturnType == target)
+                .Where(mi => {
+                    var parameterInfos = mi.GetParameters();
+                    if (parameterInfos.Length != 1) {
+                        return false;
+                    } 
+                    var result = parameterInfos.Single().ParameterType == source;
+                    return result;
                 });
             return result;
         }
 
+        private static IEnumerable<MethodInfo> GetImplicitOrExplicitConverters(this Type source, Type target) {
+            foreach (var mi in GetImplicitOrExplicitConverters_SingleWay(source, source, target)) {
+                yield return mi;
+            }
+            foreach (var mi in GetImplicitOrExplicitConverters_SingleWay(target, source, target)) {
+                yield return mi;
+            }
+        }
+
         public static bool CanBeCastTo(this Type sourceType, Type targetType) {
             var result = targetType.IsAssignableFrom(sourceType) 
-                || HasImplicitOrExplicitConversionTo_SingleWay(sourceType, targetType, unwrapNullables: true) 
-                || HasImplicitOrExplicitConversionTo_SingleWay(targetType, sourceType, unwrapNullables: false);
+                || HasConversionTo_SingleWay(sourceType, targetType, unwrapNullables: true) 
+                || HasConversionTo_SingleWay(targetType, sourceType, unwrapNullables: false);
             return result;
         }
 
@@ -258,7 +277,16 @@ namespace OpenSense.Component.Contract {
                             return CastConvertable<TSource, TTarget>;//Will box object
                         }
                     } else {
-                        return new Func<TSource, TTarget>(Cast<TSource, TTarget>);
+                        var converterMethods = GetImplicitOrExplicitConverters(typeof(TSource), typeof(TTarget)).ToArray();
+                        if (converterMethods.Length > 0) {
+                            Debug.Assert(converterMethods.Length == 1, "It is OK to have more then 1 matched converter methods here, but their return values should be the same, the following code only uses the first converter.");
+                            var converterMethod = converterMethods.First();
+                            var result = (Func<TSource, TTarget>)Delegate.CreateDelegate(typeof(Func<TSource, TTarget>), converterMethod);
+                            return result;
+                        } else {
+                            //Fallback to cast, likly to fail
+                            return Cast<TSource, TTarget>;
+                        }
                     }
                 case (true, true):
                     var nestedSourceType = typeof(TSource).GetGenericArguments()[0];
@@ -270,8 +298,7 @@ namespace OpenSense.Component.Contract {
                             nestedTargetType
                         });
                     var funcType = typeof(Func<,>).MakeGenericType(nestedSourceType, nestedTargetType);
-                    var func = Delegate.CreateDelegate(funcType, method1);
-                    return v => (TTarget)func.DynamicInvoke(v);
+                    return (Func<TSource, TTarget>)Delegate.CreateDelegate(funcType, method1);
                 case (false, true):
                     dynamic method2 = typeof(HelperExtensions)
                         .GetMethod(nameof(CastDelegate), BindingFlags.NonPublic | BindingFlags.Static) //Nested nullable occasion
@@ -290,7 +317,7 @@ namespace OpenSense.Component.Contract {
         }
 
         private static TTarget CastConvertable<TSource, TTarget>(TSource source){
-            var result = (TTarget)Convert.ChangeType(source, typeof(TTarget));
+            var result = (TTarget)Convert.ChangeType(source, typeof(TTarget));//object boxed
             return result;
         }
 

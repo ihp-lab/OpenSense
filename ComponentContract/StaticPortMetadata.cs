@@ -99,11 +99,14 @@ namespace OpenSense.Component.Contract {
         }
 
         public bool CanConnectDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes) {
+            bool result;
             switch (Direction) {
                 case PortDirection.Input:
-                    return remoteEndPointDataType != null && remoteEndPointDataType.CanBeCastTo(DataType);
+                    result = remoteEndPointDataType != null && remoteEndPointDataType.CanBeCastTo(DataType);
+                    return result;
                 case PortDirection.Output:
-                    return remoteEndPointDataType != null && DataType.CanBeCastTo(remoteEndPointDataType);
+                    result = remoteEndPointDataType != null && DataType.CanBeCastTo(remoteEndPointDataType);
+                    return result;
                 default:
                     throw new InvalidOperationException();
             }
