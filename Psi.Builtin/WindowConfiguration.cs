@@ -7,7 +7,7 @@ using OpenSense.Component.Contract;
 
 namespace OpenSense.Component.Psi {
     [Serializable]
-    public class WindowConfiguration : OperatorConfiguration {
+    public sealed class WindowConfiguration : OperatorConfiguration {
 
         private RelativeTimeInterval relativeTimeInterval = RelativeTimeInterval.Empty;
 

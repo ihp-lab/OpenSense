@@ -7,7 +7,7 @@ using OpenSense.Component.Contract;
 
 namespace OpenSense.Component.Psi {
     [Export(typeof(IComponentMetadata))]
-    public class JoinMetadata : IComponentMetadata {
+    public sealed class JoinMetadata : IComponentMetadata {
 
         public string Name => "Join Operator";
 

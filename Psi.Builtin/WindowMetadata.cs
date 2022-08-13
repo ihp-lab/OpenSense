@@ -2,12 +2,11 @@
 using System.Composition;
 using System.Diagnostics;
 using System.Linq;
-using Microsoft.Psi;
 using OpenSense.Component.Contract;
 
 namespace OpenSense.Component.Psi {
     [Export(typeof(IComponentMetadata))]
-    public class WindowMetadata : IComponentMetadata {
+    public sealed class WindowMetadata : IComponentMetadata {
         public string Name => "Window Operator";
 
         public string Description => "Groups signal values using a sliding window.";
