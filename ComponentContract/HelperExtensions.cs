@@ -473,19 +473,14 @@ jump:;
         }
 
         public static IList<Type> FindOutputPortDataTypes(this ComponentConfiguration config, IReadOnlyList<ComponentConfiguration> configs, params Tuple<ComponentConfiguration, IPortMetadata>[] exclude) {
-            var outputPorts = config.GetMetadata().OutputPorts().ToArray();
-            var result = new Type[outputPorts.Length];
-            var idx = 0;
-            foreach (var oMetadata in outputPorts) {
-                Type dataType;
-                if (exclude != null && exclude.Any(ex => ex.Item1.Id == config.Id && Equals(ex.Item2.Identifier, oMetadata.Identifier))) {
-                    dataType = null;
-                } else {
-                    dataType = FindOutputPortDataType(config, oMetadata, configs, exclude);
-                }
-                result[idx] = dataType;
-                idx++;
-            }
+            var result = config
+                .GetMetadata()
+                .OutputPorts()
+                .Select(oMetadata => {
+                    var ret = FindOutputPortDataType(config, oMetadata, configs, exclude);
+                    return ret;
+                })
+                .ToArray();
             return result;
         }
 
