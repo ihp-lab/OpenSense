@@ -24,7 +24,7 @@ namespace OpenSense.Component.PythonSupports {
         #region IComponentMetadata
         public string Name => "Python";
 
-        public string Description => "Define an OpenSense component by Python3 code. Be aware of Python's performance.";
+        public string Description => "[Experimental] Define an OpenSense component by Python3 code.";
 
         public IReadOnlyList<IPortMetadata> Ports => _getPortsCallback();
 
@@ -32,7 +32,7 @@ namespace OpenSense.Component.PythonSupports {
 
         public object GetConnector<T>(object instance, PortConfiguration portConfiguration) {
             var portMetadata = this.OutputPorts()
-                .Single(p => p.Identifier == portConfiguration.Identifier);
+                .Single(p => Equals(p.Identifier, portConfiguration.Identifier));//Do not use ==
             var obj = (PythonRuntimeObject)instance;
             var producer = obj.Producers[portMetadata.Identifier];
             Debug.Assert(instance != null && HelperExtensions.CanProducerResultBeCastTo<T>(producer));
