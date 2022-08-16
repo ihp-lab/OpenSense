@@ -300,14 +300,22 @@ namespace OpenSense.Component.Contract {
                     var funcType = typeof(Func<,>).MakeGenericType(nestedSourceType, nestedTargetType);
                     return (Func<TSource, TTarget>)Delegate.CreateDelegate(funcType, method1);
                 case (false, true):
-                    dynamic method2 = typeof(HelperExtensions)
-                        .GetMethod(nameof(CastDelegate), BindingFlags.NonPublic | BindingFlags.Static) //Nested nullable occasion
-                        .MakeGenericMethod(new[] {
-                            typeof(TSource),
-                            typeof(TTarget).GetGenericArguments()[0]
-                        })
-                        .Invoke(obj: null, parameters: Array.Empty<object>());
-                    return v => (TTarget)method2(v);
+                    var unwrappedTargetType = typeof(TTarget).GetGenericArguments()[0];
+                    if (typeof(TSource) == unwrappedTargetType) {
+                        var nullableImplicitConverterMethod = GetImplicitOrExplicitConverters_SingleWay(typeof(TTarget), typeof(TSource), typeof(TTarget)).Single();
+                        var result = (Func<TSource, TTarget>)Delegate.CreateDelegate(typeof(Func<TSource, TTarget>), nullableImplicitConverterMethod);
+                        return result;
+                    } else {
+                        dynamic method2 = typeof(HelperExtensions)
+                            .GetMethod(nameof(CastDelegate), BindingFlags.NonPublic | BindingFlags.Static) //Nested nullable occasion
+                            .MakeGenericMethod(new[] {
+                                typeof(TSource),
+                                unwrappedTargetType,
+                            })
+                            .Invoke(obj: null, parameters: Array.Empty<object>());
+                        return v => (TTarget)method2(v);
+                    }
+                    
             }
         }
 
