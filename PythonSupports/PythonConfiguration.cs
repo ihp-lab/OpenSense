@@ -49,6 +49,7 @@ namespace OpenSense.Component.PythonSupports {
 
             /** Add default assemblies
              */
+            _engine.Runtime.LoadAssembly(Assembly.GetAssembly(typeof(int)));
             _engine.Runtime.LoadAssembly(Assembly.GetAssembly(typeof(Pipeline)));
             _engine.Runtime.LoadAssembly(Assembly.GetAssembly(typeof(HelperExtensions)));
             _engine.Runtime.LoadAssembly(Assembly.GetAssembly(typeof(PythonConfiguration)));
@@ -172,10 +173,10 @@ namespace OpenSense.Component.PythonSupports {
 # (TO BE RESOLVED) Ports will be visiable after reloading the UI control.
 # (TO BE RESOLVED) Read PORTS as iterator.
 # (TO BE RESOLVED) Provide helper methods for creating array inputs.
-import OpenSense.Component.PythonSupports.PortHelper as ph
+import OpenSense.Component.PythonSupports.PortBuilder as pb
 PORTS = [
-    ph.In(""In"", float), # The 3rd parameter is for port description. # Python's float is mapped to .NET's System.Double.
-    ph.Out(""Out"", int), # The 3rd parameter is for port description. # Python's int is mapped to .NET's System.Numerics.BigInteger.
+    pb.Create().AsInput().WithName(""In"").WithType(float).Build(), # Python's float is mapped to .NET's System.Double.
+    pb.Create().AsOutput().WithName(""Out"").WithType(int).Build(), # Python's int is mapped to .NET's System.Numerics.BigInteger.
 ]
 ";
 
