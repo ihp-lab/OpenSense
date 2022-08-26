@@ -136,17 +136,17 @@ namespace OpenSense.Component.BodyGestureDetectors {
         }
 
         #region Helpers
-        protected bool ValidateJointConfidenceLevels(params JointConfidenceLevel[] confidenceLevels) {
+        private bool ValidateJointConfidenceLevels(params JointConfidenceLevel[] confidenceLevels) {
             var result = confidenceLevels.All(confidence => (int)confidence >= (int)MinimumConfidenceLevel);
             return result;
         }
 
-        protected static float RadianBetweenVectors(Vector3 v1, Vector3 v2) {
+        private static float RadianBetweenVectors(Vector3 v1, Vector3 v2) {
             var result = (float)Math.Acos(Vector3.Dot(v1, v2) / (v1.Length() * v2.Length()));
             return result;
         }
 
-        protected static Vector3 ConvertAccelerometerCoordinateToDepthCoordinate(Vector3 accCoordinate) {
+        private static Vector3 ConvertAccelerometerCoordinateToDepthCoordinate(Vector3 accCoordinate) {
             var rgbCoordinate = new Vector3(-accCoordinate.Y, accCoordinate.Z, -accCoordinate.X);
             var tiltRadian = Math.PI * (6f / 180);
             var depthCoordiante = Vector3.Transform(rgbCoordinate, Matrix4x4.CreateRotationX((float)tiltRadian));

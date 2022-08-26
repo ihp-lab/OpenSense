@@ -41,10 +41,6 @@ namespace OpenSense.Component.BodyGestureDetectors {
             set => SetProperty(ref minimumConfidenceLevel, value);
         }
 
-        public DeliveryPolicy DefaultDeliveryPolicy { get; set; } = null;
-
-        public DeliveryPolicy BodyTrackerDeliveryPolicy { get; set; } = null;
-
         public override IComponentMetadata GetMetadata() => new BodyAttitudeDetectorMetadata();
 
         protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new BodyAttitudeDetector(pipeline) { 
