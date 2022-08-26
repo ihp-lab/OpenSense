@@ -111,7 +111,14 @@ namespace OpenSense.Component.Contract {
             }
         }
 
-        public static bool IsAssignableToGenericType(this Type givenType, Type genericType) {//genericType should be an open generic type
+        public static bool IsAssignableToGenericType(this Type givenType, Type genericType) {
+            if (!genericType.IsGenericTypeDefinition) {
+                throw new ArgumentException("Type should be an open generic type.", nameof(genericType));
+            }
+            return IsAssignableToGenericType_Internal(givenType, genericType);
+        }
+
+        private static bool IsAssignableToGenericType_Internal(Type givenType, Type genericType) {
             var interfaceTypes = givenType.GetInterfaces();
             foreach (var it in interfaceTypes) {
                 if (it.IsGenericType && it.GetGenericTypeDefinition() == genericType) {
@@ -125,7 +132,7 @@ namespace OpenSense.Component.Contract {
             if (baseType == null) {
                 return false;
             }
-            return IsAssignableToGenericType(baseType, genericType);
+            return IsAssignableToGenericType_Internal(baseType, genericType);
         }
 
         private static bool IsNullable(Type type) {
@@ -416,6 +423,7 @@ jump:;
             return FindInputPortDataTypes(config, configs, new Tuple<ComponentConfiguration, IPortMetadata>(config, exclude));
         }
 
+        //TODO: make this method non-recursive. The current implementation may get Stack Overflow if the pipeline is long.
         public static Type FindOutputPortDataType(this ComponentConfiguration config, IPortMetadata portMetadata, IReadOnlyList<ComponentConfiguration> configs, params Tuple<ComponentConfiguration, IPortMetadata>[] exclude) {
             /** Try with no information given.
              */
