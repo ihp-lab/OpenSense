@@ -22,7 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pipeline", "Pipeline\Pipeli
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Components", "Components", "{5C411F31-BF09-4976-95CD-8748327C8478}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Interoperation", "Interoperation", "{F084F6AC-C478-4C9A-A2D5-6FB3F978DD9B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Interoperations", "Interoperations", "{F084F6AC-C478-4C9A-A2D5-6FB3F978DD9B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Media.Windows", "Components\Psi.Media.Windows\Psi.Media.Windows.csproj", "{0D30E1E8-E5E3-4B9C-8BD7-4310614C65BD}"
 EndProject
@@ -140,7 +140,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest.WPF", "C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest.Visualizer.WPF", "Components\EyePointOfInterest.Visualizer.WPF\EyePointOfInterest.Visualizer.WPF.csproj", "{C6F36E53-8135-4279-802F-239A59EECD39}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Widget", "Widget", "{76A71A78-644E-4B19-B47A-6BF48E5CCCF4}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Widgets", "Widgets", "{76A71A78-644E-4B19-B47A-6BF48E5CCCF4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisplayPoiEstimatorBuilder.WPF", "DisplayPoiEstimatorBuilder.WPF\DisplayPoiEstimatorBuilder.WPF.csproj", "{5BA42999-6FEA-4399-B87F-17C94A718F51}"
 EndProject
@@ -154,7 +154,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest.WPF.Comm
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biopac.Visualizer.WPF", "Components\Biopac.Visualizer.WPF\Biopac.Visualizer.WPF.csproj", "{3BBD17E4-3F6D-44F6-8239-9DD414046C6A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utility", "Utility", "{492B19A2-749B-464D-8043-1B90CAFDE132}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{492B19A2-749B-464D-8043-1B90CAFDE132}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NMS.ActiveMQ", "NMS.ActiveMQ\NMS.ActiveMQ.csproj", "{654414EF-357E-4EAA-91DC-E1D913460053}"
 EndProject
@@ -162,7 +162,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoogleCloud.Speech.V1", "Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoogleCloud.Speech.V1.WPF", "Components\GoogleCloud.Speech.V1.WPF\GoogleCloud.Speech.V1.WPF.csproj", "{E65A7FBF-B438-458F-AE8B-83636A485291}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Derivative", "Derivative", "{C1DFCFE7-DCB9-4648-8F4D-A6FCFBDAB5DC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Derivatives", "Derivatives", "{C1DFCFE7-DCB9-4648-8F4D-A6FCFBDAB5DC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Audio.Writer", "Components\Audio.Writer\Audio.Writer.csproj", "{1FFDC570-4A89-438F-AE67-E49E1C2EA854}"
 EndProject
