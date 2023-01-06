@@ -56,6 +56,9 @@ namespace OpenSense.Component.Contract {
             set => SetProperty(ref inputs, value);
         }
 
+        /// <summary>
+        /// Create a component metadata object derived from this configuration.
+        /// </summary>
         public abstract IComponentMetadata GetMetadata();
 
         /// <summary>

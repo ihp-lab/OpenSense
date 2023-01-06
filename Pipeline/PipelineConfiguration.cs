@@ -6,6 +6,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using Microsoft.Psi;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using OpenSense.Component.Contract;
 using OpenSense.Pipeline.JsonConverters;
 
@@ -14,6 +15,7 @@ namespace OpenSense.Pipeline {
     public class PipelineConfiguration : INotifyPropertyChanged {
 
         private static IList<JsonConverter> DefaultConverters = new JsonConverter[] {
+            new Newtonsoft.Json.Converters.StringEnumConverter(new DefaultNamingStrategy(), allowIntegerValues: true),
             new ComponentConfigurationJsonConverter(),
             new TimeSpanJsonConverter(),
             new RelativeTimeIntervalJsonConverter(),

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace OpenSense.Component.Contract {
+﻿namespace OpenSense.Component.Contract {
     public enum PortAggregation {
-        Object,
-        List,
-        Dictionary,
+        Object = 1,
+        List = 2,
+        Dictionary = 3,
     }
 }

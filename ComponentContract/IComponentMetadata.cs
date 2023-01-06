@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Microsoft.Psi;
 
 namespace OpenSense.Component.Contract {
     /// <summary>
     /// Metadata of a component.
+    /// Contains information that not need to be serialized.
     /// </summary>
     public interface IComponentMetadata {
 
@@ -16,7 +16,6 @@ namespace OpenSense.Component.Contract {
         /// <summary>
         /// Create a default configuration object.
         /// </summary>
-        /// <returns></returns>
         ComponentConfiguration CreateConfiguration();
 
         object GetConnector<T>(object instance, PortConfiguration portConfiguration);

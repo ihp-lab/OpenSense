@@ -4,9 +4,10 @@ using System.Collections.Generic;
 namespace OpenSense.Component.Contract {
     public abstract class OperatorPortMetadata : IPortMetadata {
 
-        public OperatorPortMetadata(string name, PortDirection direction, string description = "") {
+        public OperatorPortMetadata(string name, PortDirection direction, string description = null) {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Direction = direction;
+            Description = description;
         }
 
         public object Identifier => Name;

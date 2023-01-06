@@ -80,6 +80,8 @@
         <ProjectReference Include="..\HeadGesture.Visualizer.Wpf\HeadGesture.Visualizer.Wpf.csproj" />
         <ProjectReference Include="..\Imaging.Visualizer.Wpf\Imaging.Visualizer.Wpf.csproj" />
         <ProjectReference Include="..\Imaging.Wpf\Imaging.Wpf.csproj" />
+        <ProjectReference Include="..\MediaPipe.Net.Visualizer.Wpf\MediaPipe.NET.Visualizer.Wpf.csproj" />
+        <ProjectReference Include="..\MediaPipe.NET.Wpf\MediaPipe.NET.Wpf.csproj" />
         <ProjectReference Include="..\OpenFace.Visualizer.Wpf\OpenFace.Visualizer.Wpf.csproj" />
         <ProjectReference Include="..\OpenFace.Windows.Wpf\OpenFace.Windows.Wpf.csproj" />
         <ProjectReference Include="..\OpenPose.Visualizer.Wpf\OpenPose.Visualizer.Wpf.csproj" />

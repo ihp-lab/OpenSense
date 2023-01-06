@@ -256,7 +256,7 @@ namespace OpenSense.Wpf.Pipeline {
         }
 
         private void Window_Unloaded(object sender, RoutedEventArgs e) {
-            Env?.Pipeline.Dispose();
+            Stop();
         }
     }
 }

@@ -1,0 +1,91 @@
+﻿<UserControl
+    x:Class="OpenSense.Wpf.Component.MediaPipe.NET.SidePacketConfigurationControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:OpenSense.Wpf.Component.MediaPipe.NET"
+    xmlns:comp="clr-namespace:OpenSense.Component.MediaPipe.NET;assembly=OpenSense.Component.MediaPipe.NET"
+    xmlns:util="clr-namespace:OpenSense.Wpf.Component.Utility;assembly=OpenSense.Wpf.Component.Contract"
+    xmlns:packets="clr-namespace:Mediapipe.Net.Framework.Packets;assembly=Mediapipe.Net"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
+    <UserControl.Resources>
+        <x:Array
+            x:Key="arrayPacketTypes"
+            Type="{x:Type packets:PacketType}">
+            <!--Note: Only supported types are added here.-->
+            <packets:PacketType>Bool</packets:PacketType>
+            <packets:PacketType>Int</packets:PacketType>
+        </x:Array>
+    </UserControl.Resources>
+
+    <Grid>
+        <d:Grid.DataContext>
+            <comp:SidePacketConfiguration />
+        </d:Grid.DataContext>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition
+                Width="auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="0">
+            Identifier
+        </TextBlock>
+        <TextBox
+            Grid.Row="0"
+            Grid.Column="1"
+            Text="{Binding Identifier}" />
+
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0">
+            Data Type
+        </TextBlock>
+        <ComboBox
+            Grid.Row="1"
+            Grid.Column="1"
+            Name="comboBoxDataType"
+            ItemsSource="{Binding Source={StaticResource arrayPacketTypes},Mode=OneTime}"
+            SelectedItem="{Binding PacketType}" 
+            SelectionChanged="comboBoxDataType_SelectionChanged"/>
+
+        <TextBlock
+            Grid.Row="2"
+            Grid.Column="0">
+            Value (JSON)
+        </TextBlock>
+        <TextBox
+            Grid.Row="2"
+            Grid.Column="1"
+            Name="textBoxValue">
+            <TextBox.Text>
+                <Binding
+                    Path="Value">
+                    <Binding.ValidationRules>
+                        <local:JTokenRule
+                            x:Name="ruleJToken" />
+                    </Binding.ValidationRules>
+                    <Binding.Converter>
+                        <local:JTokenConverter 
+                            x:Name="convJToken"/>
+                    </Binding.Converter>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+
+    </Grid>
+</UserControl>

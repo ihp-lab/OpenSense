@@ -1,0 +1,324 @@
+﻿<UserControl
+    x:Class="OpenSense.Wpf.Component.MediaPipe.NET.MediaPipeConfigurationControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:OpenSense.Wpf.Component.MediaPipe.NET"
+    xmlns:comp="clr-namespace:OpenSense.Component.MediaPipe.NET;assembly=OpenSense.Component.MediaPipe.NET"
+    mc:Ignorable="d"
+    d:DesignWidth="600"
+    d:DesignHeight="900">
+    <UserControl.Resources>
+        <DataTemplate
+            x:Key="dataTemplateNoSelection">
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                No Selection
+            </TextBlock>
+        </DataTemplate>
+        <Style
+            x:Key="styleSidePacketContent"
+            TargetType="{x:Type ContentControl}">
+            <Setter
+                Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate
+                        DataType="{x:Type comp:SidePacketConfiguration}">
+                        <local:SidePacketConfigurationControl>
+                            <local:SidePacketConfigurationControl.DataContext>
+                                <Binding
+                                    Path="DataContext">
+                                    <Binding.RelativeSource>
+                                        <RelativeSource
+                                            AncestorType="{x:Type ContentControl}" />
+                                    </Binding.RelativeSource>
+                                </Binding>
+                            </local:SidePacketConfigurationControl.DataContext>
+                        </local:SidePacketConfigurationControl>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger
+                    Binding="{Binding}"
+                    Value="{x:Null}">
+                    <Setter
+                        Property="ContentTemplate"
+                        Value="{StaticResource dataTemplateNoSelection}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style
+            x:Key="styleInputStreamContent"
+            TargetType="{x:Type ContentControl}">
+            <Setter
+                Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate
+                        DataType="{x:Type comp:InputStreamConfiguration}">
+                        <local:InputStreamConfigurationControl>
+                            <local:InputStreamConfigurationControl.DataContext>
+                                <Binding
+                                    Path="DataContext">
+                                    <Binding.RelativeSource>
+                                        <RelativeSource
+                                            AncestorType="{x:Type ContentControl}" />
+                                    </Binding.RelativeSource>
+                                </Binding>
+                            </local:InputStreamConfigurationControl.DataContext>
+                        </local:InputStreamConfigurationControl>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger
+                    Binding="{Binding}"
+                    Value="{x:Null}">
+                    <Setter
+                        Property="ContentTemplate"
+                        Value="{StaticResource dataTemplateNoSelection}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style
+            x:Key="styleOutputStreamContent"
+            TargetType="{x:Type ContentControl}">
+            <Setter
+                Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate
+                        DataType="{x:Type comp:OutputStreamConfiguration}">
+                        <local:OutputStreamConfigurationControl>
+                            <local:OutputStreamConfigurationControl.DataContext>
+                                <Binding
+                                    Path="DataContext">
+                                    <Binding.RelativeSource>
+                                        <RelativeSource
+                                            AncestorType="{x:Type ContentControl}" />
+                                    </Binding.RelativeSource>
+                                </Binding>
+                            </local:OutputStreamConfigurationControl.DataContext>
+                        </local:OutputStreamConfigurationControl>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger
+                    Binding="{Binding}"
+                    Value="{x:Null}">
+                    <Setter
+                        Property="ContentTemplate"
+                        Value="{StaticResource dataTemplateNoSelection}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <StackPanel>
+        <d:StackPanel.DataContext>
+            <comp:MediaPipeConfiguration />
+        </d:StackPanel.DataContext>
+        <Expander
+            Header="Graph"
+            IsExpanded="True">
+            <Grid>
+                <TextBox
+                    Name="textBoxGraph"
+                    Text="{Binding Graph}" />
+            </Grid>
+        </Expander>
+
+        <Expander
+            Header="Side Packets"
+            d:IsExpanded="True">
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition
+                        Width="140" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            MinHeight="80" />
+                    </Grid.RowDefinitions>
+
+                    <Grid
+                        Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <Button
+                            Grid.Column="0"
+                            Name="buttonAddSidePacket"
+                            Click="buttonAddSidePacket_Click">
+                            +
+                        </Button>
+
+                        <Button
+                            Grid.Column="1"
+                            Name="buttonRemoveSidePacket"
+                            Click="buttonRemoveSidePacket_Click">
+                            -
+                        </Button>
+                    </Grid>
+
+                    <ListBox
+                        Grid.Row="1"
+                        Name="listBoxSidePackets"
+                        ItemsSource="{Binding InputSidePackets}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate
+                                DataType="{x:Type comp:SidePacketConfiguration}">
+                                <Grid>
+                                    <TextBlock
+                                        Text="{Binding Identifier}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+
+                <ContentControl
+                    Grid.Column="1"
+                    DataContext="{Binding SelectedItem, ElementName=listBoxSidePackets}"
+                    Style="{StaticResource styleSidePacketContent}" />
+            </Grid>
+        </Expander>
+
+        <Expander
+            Header="Inputs"
+            d:IsExpanded="True">
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition
+                        Width="140" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            MinHeight="80" />
+                    </Grid.RowDefinitions>
+
+                    <Grid
+                        Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <Button
+                            Grid.Column="0"
+                            Name="buttonAddInput"
+                            Click="buttonAddInput_Click">
+                            +
+                        </Button>
+
+                        <Button
+                            Grid.Column="1"
+                            Name="buttonRemoveInput"
+                            Click="buttonRemoveInput_Click">
+                            -
+                        </Button>
+                    </Grid>
+
+                    <ListBox
+                        Grid.Row="1"
+                        Name="listBoxInputStreams"
+                        ItemsSource="{Binding InputStreams}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate
+                                DataType="{x:Type comp:InputStreamConfiguration}">
+                                <Grid>
+                                    <TextBlock
+                                        Text="{Binding Identifier}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+
+                <ContentControl
+                    Grid.Column="1"
+                    DataContext="{Binding SelectedItem, ElementName=listBoxInputStreams}"
+                    Style="{StaticResource styleInputStreamContent}" />
+            </Grid>
+        </Expander>
+
+        <Expander
+            Header="Outputs"
+            d:IsExpanded="True">
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition
+                        Width="140" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            MinHeight="80" />
+                    </Grid.RowDefinitions>
+
+                    <Grid
+                        Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <Button
+                            Grid.Column="0"
+                            Name="buttonAddOutput"
+                            Click="buttonAddOutput_Click">
+                            +
+                        </Button>
+
+                        <Button
+                            Grid.Column="1"
+                            Name="buttonRemoveOutput"
+                            Click="buttonRemoveOutput_Click">
+                            -
+                        </Button>
+                    </Grid>
+
+                    <ListBox
+                        Grid.Row="1"
+                        Name="listBoxOutputStreams"
+                        ItemsSource="{Binding OutputStreams}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate
+                                DataType="{x:Type comp:OutputStreamConfiguration}">
+                                <Grid>
+                                    <TextBlock
+                                        Text="{Binding Identifier}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+
+                <ContentControl
+                    Grid.Column="1"
+                    DataContext="{Binding SelectedItem, ElementName=listBoxOutputStreams}"
+                    Style="{StaticResource styleOutputStreamContent}" />
+            </Grid>
+        </Expander>
+    </StackPanel>
+</UserControl>

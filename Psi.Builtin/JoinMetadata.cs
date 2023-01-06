@@ -2,7 +2,6 @@
 using System.Composition;
 using System.Diagnostics;
 using System.Linq;
-using Microsoft.Psi;
 using OpenSense.Component.Contract;
 
 namespace OpenSense.Component.Psi {

@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <RootNamespace>OpenSense.Component.MediaPipe.NET</RootNamespace>
+        <AssemblyName>OpenSense.Component.MediaPipe.NET</AssemblyName>
+        <LangVersion>10.0</LangVersion>
+        <EmbedAllSources>true</EmbedAllSources>
+        <!--Note:
+        /psi Image does not support Span<T>, so we need to use pointers.
+        -->
+        <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Mediapipe.Net" Version="1.0.0-alpha2" />
+        <!--Note:
+        The latest Mediapipe.Net.Runtime.CPU version is 1.0.0-alpha2.
+        Exported symbols in native DLL is incompatible with Mediapipe.Net version 1.0.0-alpha2.
+        The native API bindings in Mediapipe.Net 1.0.0-alpha2 is out-dated, while Mediapipe.Net.Runtime.CPU 1.0.0-alpha2 contains new APIs (from MediaPipeUnityPlugin).
+        Mediapipe.Net contains many useful .NET types.
+        So, we are using an older version of Mediapipe.Net.Runtime.CPU.
+        -->
+        <PackageReference Include="Mediapipe.Net.Runtime.CPU" Version="0.8.9.1" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
+        <PackageReference Include="Microsoft.Psi.Imaging" Version="0.17.52.1-beta" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="System.Composition" Version="6.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!--Samples-->
+        <None Update="mediapipe/**/*">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+</Project>
