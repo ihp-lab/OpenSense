@@ -13,9 +13,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
+        <ProjectReference Include="..\..\ComponentContract\ComponentContract.csproj" />
         <ProjectReference Include="..\Emotion.Common\Emotion.Common.csproj" />
-        <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>
 
 </Project>

@@ -16,9 +16,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
+        <ProjectReference Include="..\..\ComponentContract\ComponentContract.csproj" />
         <ProjectReference Include="..\OpenSmile.Common\OpenSmile.Common.csproj" />
-        <ProjectReference Include="..\OpenSmileInterop\OpenSmileInterop.vcxproj" />
+        <ProjectReference Include="..\..\OpenSmileInterop\OpenSmileInterop.vcxproj" />
     </ItemGroup>
 
 </Project>

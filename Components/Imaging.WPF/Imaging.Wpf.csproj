@@ -14,7 +14,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Imaging\Imaging.csproj" />
-        <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>
 
     <ItemGroup>

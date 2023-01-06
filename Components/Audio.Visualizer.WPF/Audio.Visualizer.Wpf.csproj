@@ -15,7 +15,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Audio.Visualizer.WPF.Common\Audio.Visualizer.WPF.Common.csproj" />
-        <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>
 
     <ItemGroup>

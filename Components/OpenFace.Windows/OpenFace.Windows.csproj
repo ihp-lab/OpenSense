@@ -19,10 +19,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
-        <ProjectReference Include="..\DataWriterContract\DataWriterContract.csproj" />
+        <ProjectReference Include="..\..\ComponentContract\ComponentContract.csproj" />
+        <ProjectReference Include="..\..\DataWriterContract\DataWriterContract.csproj" />
         <ProjectReference Include="..\OpenFace.Common\OpenFace.Common.csproj" />
-        <ProjectReference Include="..\OpenFaceInterop\OpenFaceInterop.vcxproj" />
+        <ProjectReference Include="..\..\OpenFaceInterop\OpenFaceInterop.vcxproj" />
     </ItemGroup>
 
 </Project>

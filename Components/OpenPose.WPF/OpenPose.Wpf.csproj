@@ -10,7 +10,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\OpenPose\OpenPose.csproj" />
-        <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>
 
     <ItemGroup>

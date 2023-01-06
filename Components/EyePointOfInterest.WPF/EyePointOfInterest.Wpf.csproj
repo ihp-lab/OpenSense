@@ -11,7 +11,7 @@
     <ItemGroup>
         <ProjectReference Include="..\EyePointOfInterest.WPF.Common\EyePointOfInterest.WPF.Common.csproj" />
         <ProjectReference Include="..\EyePointOfInterest\EyePointOfInterest.csproj" />
-        <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -10,7 +10,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Psi.Imaging.Windows\Psi.Imaging.Windows.csproj" />
-        <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>
 
     <ItemGroup>

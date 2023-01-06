@@ -12,13 +12,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\OpenFace.Windows\OpenFace.Windows.csproj" />
-        <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Page Update="OpenFaceConfigurationControl.xaml">
-            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-        </Page>
+        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>
 
 </Project>

@@ -14,7 +14,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Psi.Data\Psi.Data.csproj" />
-        <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>
 
     <ItemGroup>

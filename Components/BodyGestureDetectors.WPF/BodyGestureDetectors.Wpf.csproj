@@ -16,7 +16,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\BodyGestureDetectors\BodyGestureDetectors.csproj" />
-        <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>
 
 </Project>

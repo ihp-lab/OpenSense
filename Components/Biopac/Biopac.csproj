@@ -16,7 +16,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\BiopacInterop\BiopacInterop.vcxproj" />
-        <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
+        <ProjectReference Include="..\..\ComponentContract\ComponentContract.csproj" />
     </ItemGroup>
 
 </Project>

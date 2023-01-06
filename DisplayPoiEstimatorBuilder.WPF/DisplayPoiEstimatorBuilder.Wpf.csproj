@@ -19,11 +19,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\EyePointOfInterest.Regression\EyePointOfInterest.Regression.csproj" />
-        <ProjectReference Include="..\EyePointOfInterest.SpatialTracking\EyePointOfInterest.SpatialTracking.csproj" />
-        <ProjectReference Include="..\EyePointOfInterest.WPF.Common\EyePointOfInterest.WPF.Common.csproj" />
-        <ProjectReference Include="..\Imaging\Imaging.csproj" />
-        <ProjectReference Include="..\OpenFace.Windows\OpenFace.Windows.csproj" />
+        <ProjectReference Include="..\Components\EyePointOfInterest.Regression\EyePointOfInterest.Regression.csproj" />
+        <ProjectReference Include="..\Components\EyePointOfInterest.SpatialTracking\EyePointOfInterest.SpatialTracking.csproj" />
+        <ProjectReference Include="..\Components\EyePointOfInterest.WPF.Common\EyePointOfInterest.WPF.Common.csproj" />
+        <ProjectReference Include="..\Components\Imaging\Imaging.csproj" />
+        <ProjectReference Include="..\Components\OpenFace.Windows\OpenFace.Windows.csproj" />
         <ProjectReference Include="..\WpfWidgetContract\WpfWidgetContract.csproj" />
     </ItemGroup>
 

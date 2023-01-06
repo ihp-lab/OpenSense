@@ -12,7 +12,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\OpenSmile.Windows\OpenSmile.Windows.csproj" />
-        <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>
 
     <ItemGroup>

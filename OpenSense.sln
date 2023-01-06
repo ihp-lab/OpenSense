@@ -20,183 +20,183 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfApplication", "WpfApplic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pipeline", "Pipeline\Pipeline.csproj", "{2FB95435-EECA-4EE6-8E48-5068165E6A14}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Component", "Component", "{5C411F31-BF09-4976-95CD-8748327C8478}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Components", "Components", "{5C411F31-BF09-4976-95CD-8748327C8478}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Interoperation", "Interoperation", "{F084F6AC-C478-4C9A-A2D5-6FB3F978DD9B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Media.Windows", "Psi.Media.Windows\Psi.Media.Windows.csproj", "{0D30E1E8-E5E3-4B9C-8BD7-4310614C65BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Media.Windows", "Components\Psi.Media.Windows\Psi.Media.Windows.csproj", "{0D30E1E8-E5E3-4B9C-8BD7-4310614C65BD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imaging", "Imaging\Imaging.csproj", "{736E1DE9-D1FB-40DD-9371-FB6E2066964D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imaging", "Components\Imaging\Imaging.csproj", "{736E1DE9-D1FB-40DD-9371-FB6E2066964D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfComponentContract", "WpfComponentContract\WpfComponentContract.csproj", "{0651C283-314F-481A-901D-7AF4366E40D3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Media.Windows.WPF", "Psi.Media.Windows.WPF\Psi.Media.Windows.WPF.csproj", "{37C0BA0E-AC85-4C61-A187-1C7CF7E690D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Media.Windows.WPF", "Components\Psi.Media.Windows.WPF\Psi.Media.Windows.WPF.csproj", "{37C0BA0E-AC85-4C61-A187-1C7CF7E690D8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imaging.Visualizer.WPF", "Imaging.Visualizer.WPF\Imaging.Visualizer.WPF.csproj", "{B7369973-9984-480E-94B7-498D3C72E4AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imaging.Visualizer.WPF", "Components\Imaging.Visualizer.WPF\Imaging.Visualizer.WPF.csproj", "{B7369973-9984-480E-94B7-498D3C72E4AF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Legacy", "Legacy", "{8F6A4B36-5588-4C25-8900-6F969C345F3C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Builtin", "Psi.Builtin\Psi.Builtin.csproj", "{D275B163-5D5B-4879-9A10-A5C10EDB00AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Builtin", "Components\Psi.Builtin\Psi.Builtin.csproj", "{D275B163-5D5B-4879-9A10-A5C10EDB00AE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Builtin.WPF", "Psi.Builtin.WPF\Psi.Builtin.WPF.csproj", "{3F716DF0-E3EF-4C61-8F80-3244DF8D68DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Builtin.WPF", "Components\Psi.Builtin.WPF\Psi.Builtin.WPF.csproj", "{3F716DF0-E3EF-4C61-8F80-3244DF8D68DE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Audio.Windows", "Psi.Audio.Windows\Psi.Audio.Windows.csproj", "{CF8A5C5E-46D1-485E-A1DD-45529BFCE950}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Audio.Windows", "Components\Psi.Audio.Windows\Psi.Audio.Windows.csproj", "{CF8A5C5E-46D1-485E-A1DD-45529BFCE950}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Audio.Windows.WPF", "Psi.Audio.Windows.WPF\Psi.Audio.Windows.WPF.csproj", "{E8E5F09C-EA0F-4CA5-A762-71EF3A3180D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Audio.Windows.WPF", "Components\Psi.Audio.Windows.WPF\Psi.Audio.Windows.WPF.csproj", "{E8E5F09C-EA0F-4CA5-A762-71EF3A3180D9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Audio", "Psi.Audio\Psi.Audio.csproj", "{7F0B64B3-7A4A-479D-AB29-6574028EF1D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Audio", "Components\Psi.Audio\Psi.Audio.csproj", "{7F0B64B3-7A4A-479D-AB29-6574028EF1D8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Audio.WPF", "Psi.Audio.WPF\Psi.Audio.WPF.csproj", "{1517437D-F5B6-4124-A985-2D2AD1D04F1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Audio.WPF", "Components\Psi.Audio.WPF\Psi.Audio.WPF.csproj", "{1517437D-F5B6-4124-A985-2D2AD1D04F1B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Imaging.Windows", "Psi.Imaging.Windows\Psi.Imaging.Windows.csproj", "{E0717F71-D9AF-41D3-9368-1810950CBCC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Imaging.Windows", "Components\Psi.Imaging.Windows\Psi.Imaging.Windows.csproj", "{E0717F71-D9AF-41D3-9368-1810950CBCC6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Imaging.Windows.WPF", "Psi.Imaging.Windows.WPF\Psi.Imaging.Windows.WPF.csproj", "{A264B8F3-03C6-43D1-A4F3-8F89A5FD9FE3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Imaging.Windows.WPF", "Components\Psi.Imaging.Windows.WPF\Psi.Imaging.Windows.WPF.csproj", "{A264B8F3-03C6-43D1-A4F3-8F89A5FD9FE3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.CognitiveServices.Speech", "Psi.CognitiveServices.Speech\Psi.CognitiveServices.Speech.csproj", "{29D814CF-27E3-4C59-A8AD-DF7D2D5E4A00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.CognitiveServices.Speech", "Components\Psi.CognitiveServices.Speech\Psi.CognitiveServices.Speech.csproj", "{29D814CF-27E3-4C59-A8AD-DF7D2D5E4A00}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.CognitiveServices.Speech.WPF", "Psi.CognitiveServices.Speech.WPF\Psi.CognitiveServices.Speech.WPF.csproj", "{AB0DD15F-B23D-4578-861F-6686057F5043}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.CognitiveServices.Speech.WPF", "Components\Psi.CognitiveServices.Speech.WPF\Psi.CognitiveServices.Speech.WPF.csproj", "{AB0DD15F-B23D-4578-861F-6686057F5043}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Audio.WPF.Common", "Psi.Audio.WPF.Common\Psi.Audio.WPF.Common.csproj", "{B72FC984-D291-4012-BCA3-944C9B82BC29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Audio.WPF.Common", "Components\Psi.Audio.WPF.Common\Psi.Audio.WPF.Common.csproj", "{B72FC984-D291-4012-BCA3-944C9B82BC29}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.AzureKinect", "Psi.AzureKinect\Psi.AzureKinect.csproj", "{F9D901FF-E808-4AB6-99DF-AC3156D22829}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.AzureKinect", "Components\Psi.AzureKinect\Psi.AzureKinect.csproj", "{F9D901FF-E808-4AB6-99DF-AC3156D22829}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.AzureKinect.WPF", "Psi.AzureKinect.WPF\Psi.AzureKinect.WPF.csproj", "{6E505226-0F29-46D4-9B56-211FAEE081B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.AzureKinect.WPF", "Components\Psi.AzureKinect.WPF\Psi.AzureKinect.WPF.csproj", "{6E505226-0F29-46D4-9B56-211FAEE081B3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.WPF.Common", "Psi.WPF.Common\Psi.WPF.Common.csproj", "{9F184FA0-C183-4D73-BDDF-E743A0D7D3A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.WPF.Common", "Components\Psi.WPF.Common\Psi.WPF.Common.csproj", "{9F184FA0-C183-4D73-BDDF-E743A0D7D3A5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Kinect.Windows", "Psi.Kinect.Windows\Psi.Kinect.Windows.csproj", "{437AD249-0114-4FEF-8D4D-D6FEA35CD4A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Kinect.Windows", "Components\Psi.Kinect.Windows\Psi.Kinect.Windows.csproj", "{437AD249-0114-4FEF-8D4D-D6FEA35CD4A6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Kinect.Windows.WPF", "Psi.Kinect.Windows.WPF\Psi.Kinect.Windows.WPF.csproj", "{07FC786F-F642-4773-BFC7-F1552CFC6585}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Kinect.Windows.WPF", "Components\Psi.Kinect.Windows.WPF\Psi.Kinect.Windows.WPF.csproj", "{07FC786F-F642-4773-BFC7-F1552CFC6585}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Speech.Windows", "Psi.Speech.Windows\Psi.Speech.Windows.csproj", "{9591FDAB-41CE-47AF-A955-4D3D067A7F3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Speech.Windows", "Components\Psi.Speech.Windows\Psi.Speech.Windows.csproj", "{9591FDAB-41CE-47AF-A955-4D3D067A7F3A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Speech.Windows.WPF", "Psi.Speech.Windows.WPF\Psi.Speech.Windows.WPF.csproj", "{70E37B3C-C697-41B2-8D31-7B9DE6D8EDDE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Speech.Windows.WPF", "Components\Psi.Speech.Windows.WPF\Psi.Speech.Windows.WPF.csproj", "{70E37B3C-C697-41B2-8D31-7B9DE6D8EDDE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.CognitiveServices.Face", "Psi.CognitiveServices.Face\Psi.CognitiveServices.Face.csproj", "{C42708A1-D995-4439-B191-F2D72917E298}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.CognitiveServices.Face", "Components\Psi.CognitiveServices.Face\Psi.CognitiveServices.Face.csproj", "{C42708A1-D995-4439-B191-F2D72917E298}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.CognitiveServices.Face.WPF", "Psi.CognitiveServices.Face.WPF\Psi.CognitiveServices.Face.WPF.csproj", "{0D736F2A-DB20-40F5-AF8F-8C21742D3037}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.CognitiveServices.Face.WPF", "Components\Psi.CognitiveServices.Face.WPF\Psi.CognitiveServices.Face.WPF.csproj", "{0D736F2A-DB20-40F5-AF8F-8C21742D3037}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Builtin.Visualizer.WPF", "Builtin.Visualizer.WPF\Builtin.Visualizer.WPF.csproj", "{06E36699-5A12-4BEA-A7DE-DA59BE921AAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Builtin.Visualizer.WPF", "Components\Builtin.Visualizer.WPF\Builtin.Visualizer.WPF.csproj", "{06E36699-5A12-4BEA-A7DE-DA59BE921AAB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureKinect.Visualizer.WPF", "AzureKinect.Visualizer.WPF\AzureKinect.Visualizer.WPF.csproj", "{36605049-7FF6-4FFB-AEC1-DDA12278F520}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureKinect.Visualizer.WPF", "Components\AzureKinect.Visualizer.WPF\AzureKinect.Visualizer.WPF.csproj", "{36605049-7FF6-4FFB-AEC1-DDA12278F520}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imaging.Visualizer.WPF.Common", "Imaging.Visualizer.WPF.Common\Imaging.Visualizer.WPF.Common.csproj", "{577E31CE-3C09-4C71-9DE8-7F52BF116135}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imaging.Visualizer.WPF.Common", "Components\Imaging.Visualizer.WPF.Common\Imaging.Visualizer.WPF.Common.csproj", "{577E31CE-3C09-4C71-9DE8-7F52BF116135}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Speech.Visualizer.WPF", "Psi.Speech.Visualizer.WPF\Psi.Speech.Visualizer.WPF.csproj", "{9384C4B6-BC0F-4237-966B-B9FF3A3911B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Speech.Visualizer.WPF", "Components\Psi.Speech.Visualizer.WPF\Psi.Speech.Visualizer.WPF.csproj", "{9384C4B6-BC0F-4237-966B-B9FF3A3911B7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biopac", "Biopac\Biopac.csproj", "{81FC9860-16CD-4014-8275-3ED10882455A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biopac", "Components\Biopac\Biopac.csproj", "{81FC9860-16CD-4014-8275-3ED10882455A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Audio.Visualizer.WPF.Common", "Audio.Visualizer.WPF.Common\Audio.Visualizer.WPF.Common.csproj", "{724A96B1-0070-43EF-87A0-F6B53E754912}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Audio.Visualizer.WPF.Common", "Components\Audio.Visualizer.WPF.Common\Audio.Visualizer.WPF.Common.csproj", "{724A96B1-0070-43EF-87A0-F6B53E754912}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Audio.Visualizer.WPF", "Audio.Visualizer.WPF\Audio.Visualizer.WPF.csproj", "{F0D0145C-9C22-41F1-AFBB-9BA04D43B40E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Audio.Visualizer.WPF", "Components\Audio.Visualizer.WPF\Audio.Visualizer.WPF.csproj", "{F0D0145C-9C22-41F1-AFBB-9BA04D43B40E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenFace.Common", "OpenFace.Common\OpenFace.Common.csproj", "{4D223CCD-F0E9-4695-89C9-6D6FA684B53D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenFace.Common", "Components\OpenFace.Common\OpenFace.Common.csproj", "{4D223CCD-F0E9-4695-89C9-6D6FA684B53D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emotion.Common", "Emotion.Common\Emotion.Common.csproj", "{D212FBA5-E203-4C9D-BBA3-15F47FE88273}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emotion.Common", "Components\Emotion.Common\Emotion.Common.csproj", "{D212FBA5-E203-4C9D-BBA3-15F47FE88273}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HeadGesture", "HeadGesture\HeadGesture.csproj", "{8B2CA7B0-0979-486D-A711-68F1A27BCF5F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HeadGesture", "Components\HeadGesture\HeadGesture.csproj", "{8B2CA7B0-0979-486D-A711-68F1A27BCF5F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emotion.Windows", "Emotion.Windows\Emotion.Windows.csproj", "{60D928A1-961E-4E63-8EAE-CA89D23C1E8B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emotion.Windows", "Components\Emotion.Windows\Emotion.Windows.csproj", "{60D928A1-961E-4E63-8EAE-CA89D23C1E8B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataWriterContract", "DataWriterContract\DataWriterContract.csproj", "{6FC61AAC-68B0-4956-9378-A670F6C2EF23}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HeadGesture.Visualizer.WPF", "HeadGesture.Visualizer.WPF\HeadGesture.Visualizer.WPF.csproj", "{483BAAB5-24B5-46B7-A552-FBF5949BD3A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HeadGesture.Visualizer.WPF", "Components\HeadGesture.Visualizer.WPF\HeadGesture.Visualizer.WPF.csproj", "{483BAAB5-24B5-46B7-A552-FBF5949BD3A2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emotion.Visualizer.WPF", "Emotion.Visualizer.WPF\Emotion.Visualizer.WPF.csproj", "{9CCB67A7-B522-43E4-92F1-EF1B1178596B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emotion.Visualizer.WPF", "Components\Emotion.Visualizer.WPF\Emotion.Visualizer.WPF.csproj", "{9CCB67A7-B522-43E4-92F1-EF1B1178596B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPose.Common", "OpenPose.Common\OpenPose.Common.csproj", "{8B66EDFB-7480-4898-9702-2A6011E7E437}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPose.Common", "Components\OpenPose.Common\OpenPose.Common.csproj", "{8B66EDFB-7480-4898-9702-2A6011E7E437}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPose.PInvoke", "OpenPose.PInvoke\OpenPose.PInvoke.csproj", "{5F08DC91-55C6-4A0C-85F3-D2C8D0B1C87E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPose.PInvoke", "Components\OpenPose.PInvoke\OpenPose.PInvoke.csproj", "{5F08DC91-55C6-4A0C-85F3-D2C8D0B1C87E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPose", "OpenPose\OpenPose.csproj", "{43E3CBB1-31F9-461D-BED0-02986AF5AA4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPose", "Components\OpenPose\OpenPose.csproj", "{43E3CBB1-31F9-461D-BED0-02986AF5AA4C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPose.Visualizer.WPF", "OpenPose.Visualizer.WPF\OpenPose.Visualizer.WPF.csproj", "{047DFF36-B0CD-4A95-AD19-08B2FB211FA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPose.Visualizer.WPF", "Components\OpenPose.Visualizer.WPF\OpenPose.Visualizer.WPF.csproj", "{047DFF36-B0CD-4A95-AD19-08B2FB211FA9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPose.WPF", "OpenPose.WPF\OpenPose.WPF.csproj", "{94D99E12-8CAB-44B2-9A76-C50F2067E5B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPose.WPF", "Components\OpenPose.WPF\OpenPose.WPF.csproj", "{94D99E12-8CAB-44B2-9A76-C50F2067E5B5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imaging.WPF", "Imaging.WPF\Imaging.WPF.csproj", "{22D8CC85-CEBF-4A8A-8E8B-5ABEB7B8A5DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imaging.WPF", "Components\Imaging.WPF\Imaging.WPF.csproj", "{22D8CC85-CEBF-4A8A-8E8B-5ABEB7B8A5DD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenFace.Windows", "OpenFace.Windows\OpenFace.Windows.csproj", "{CD6F286C-4EDC-4D3C-9E82-52F1D3812756}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenFace.Windows", "Components\OpenFace.Windows\OpenFace.Windows.csproj", "{CD6F286C-4EDC-4D3C-9E82-52F1D3812756}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenFace.Windows.WPF", "OpenFace.Windows.WPF\OpenFace.Windows.WPF.csproj", "{593D8423-F093-46FB-AD9B-6D0A5F20B47D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenFace.Windows.WPF", "Components\OpenFace.Windows.WPF\OpenFace.Windows.WPF.csproj", "{593D8423-F093-46FB-AD9B-6D0A5F20B47D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenFace.Visualizer.WPF", "OpenFace.Visualizer.WPF\OpenFace.Visualizer.WPF.csproj", "{A022B03D-6C15-49C8-B63B-77C68DC92D7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenFace.Visualizer.WPF", "Components\OpenFace.Visualizer.WPF\OpenFace.Visualizer.WPF.csproj", "{A022B03D-6C15-49C8-B63B-77C68DC92D7E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenSmile.Common", "OpenSmile.Common\OpenSmile.Common.csproj", "{C94FF304-3CAE-41C0-A647-B0E392DF66D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenSmile.Common", "Components\OpenSmile.Common\OpenSmile.Common.csproj", "{C94FF304-3CAE-41C0-A647-B0E392DF66D7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenSmile.Windows", "OpenSmile.Windows\OpenSmile.Windows.csproj", "{7A4E6698-E8A0-4D86-8E24-C87D6770A736}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenSmile.Windows", "Components\OpenSmile.Windows\OpenSmile.Windows.csproj", "{7A4E6698-E8A0-4D86-8E24-C87D6770A736}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenSmile.Windows.WPF", "OpenSmile.Windows.WPF\OpenSmile.Windows.WPF.csproj", "{9887074D-18AB-41AB-AB40-239CB53738AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenSmile.Windows.WPF", "Components\OpenSmile.Windows.WPF\OpenSmile.Windows.WPF.csproj", "{9887074D-18AB-41AB-AB40-239CB53738AF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenSmile.Visualizer.WPF", "OpenSmile.Visualizer.WPF\OpenSmile.Visualizer.WPF.csproj", "{3E093C5D-C132-4B4B-93F5-DF84203CA88E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenSmile.Visualizer.WPF", "Components\OpenSmile.Visualizer.WPF\OpenSmile.Visualizer.WPF.csproj", "{3E093C5D-C132-4B4B-93F5-DF84203CA88E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest.Contract", "EyePointOfInterest.Contract\EyePointOfInterest.Contract.csproj", "{C4782D92-20C5-43D0-96EF-A1EA049F69D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest.Contract", "Components\EyePointOfInterest.Contract\EyePointOfInterest.Contract.csproj", "{C4782D92-20C5-43D0-96EF-A1EA049F69D7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest.Regression", "EyePointOfInterest.Regression\EyePointOfInterest.Regression.csproj", "{3089BFBA-E660-43A1-83C7-018A0BB66E2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest.Regression", "Components\EyePointOfInterest.Regression\EyePointOfInterest.Regression.csproj", "{3089BFBA-E660-43A1-83C7-018A0BB66E2D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest", "EyePointOfInterest\EyePointOfInterest.csproj", "{9D0A8CDC-5E42-470C-B0DD-5E8155D30768}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest", "Components\EyePointOfInterest\EyePointOfInterest.csproj", "{9D0A8CDC-5E42-470C-B0DD-5E8155D30768}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest.WPF", "EyePointOfInterest.WPF\EyePointOfInterest.WPF.csproj", "{EABA94A9-FE16-4DEC-B8E2-B89E0F8C7671}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest.WPF", "Components\EyePointOfInterest.WPF\EyePointOfInterest.WPF.csproj", "{EABA94A9-FE16-4DEC-B8E2-B89E0F8C7671}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest.Visualizer.WPF", "EyePointOfInterest.Visualizer.WPF\EyePointOfInterest.Visualizer.WPF.csproj", "{C6F36E53-8135-4279-802F-239A59EECD39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest.Visualizer.WPF", "Components\EyePointOfInterest.Visualizer.WPF\EyePointOfInterest.Visualizer.WPF.csproj", "{C6F36E53-8135-4279-802F-239A59EECD39}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Widget", "Widget", "{76A71A78-644E-4B19-B47A-6BF48E5CCCF4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisplayPoiEstimatorBuilder.WPF", "DisplayPoiEstimatorBuilder.WPF\DisplayPoiEstimatorBuilder.WPF.csproj", "{5BA42999-6FEA-4399-B87F-17C94A718F51}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest.SpatialTracking", "EyePointOfInterest.SpatialTracking\EyePointOfInterest.SpatialTracking.csproj", "{23A771BB-0B15-4695-974F-C1EE1EA5462A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest.SpatialTracking", "Components\EyePointOfInterest.SpatialTracking\EyePointOfInterest.SpatialTracking.csproj", "{23A771BB-0B15-4695-974F-C1EE1EA5462A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfWidgetContract", "WpfWidgetContract\WpfWidgetContract.csproj", "{FC5D9B98-38E7-4057-A8FE-9EFBC3F0A09F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenSmileConfigurationConverter.WPF", "OpenSmileConfigurationConverter.WPF\OpenSmileConfigurationConverter.WPF.csproj", "{8B517B74-3FA7-4B8B-A967-7F8BFA1AB142}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest.WPF.Common", "EyePointOfInterest.WPF.Common\EyePointOfInterest.WPF.Common.csproj", "{C0E4BA17-E2EA-48EB-8639-D15FC0B02FF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest.WPF.Common", "Components\EyePointOfInterest.WPF.Common\EyePointOfInterest.WPF.Common.csproj", "{C0E4BA17-E2EA-48EB-8639-D15FC0B02FF2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biopac.Visualizer.WPF", "Biopac.Visualizer.WPF\Biopac.Visualizer.WPF.csproj", "{3BBD17E4-3F6D-44F6-8239-9DD414046C6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biopac.Visualizer.WPF", "Components\Biopac.Visualizer.WPF\Biopac.Visualizer.WPF.csproj", "{3BBD17E4-3F6D-44F6-8239-9DD414046C6A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utility", "Utility", "{492B19A2-749B-464D-8043-1B90CAFDE132}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NMS.ActiveMQ", "NMS.ActiveMQ\NMS.ActiveMQ.csproj", "{654414EF-357E-4EAA-91DC-E1D913460053}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoogleCloud.Speech.V1", "GoogleCloud.Speech.V1\GoogleCloud.Speech.V1.csproj", "{22EECD22-3262-4758-80E1-D1194A4A1F15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoogleCloud.Speech.V1", "Components\GoogleCloud.Speech.V1\GoogleCloud.Speech.V1.csproj", "{22EECD22-3262-4758-80E1-D1194A4A1F15}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoogleCloud.Speech.V1.WPF", "GoogleCloud.Speech.V1.WPF\GoogleCloud.Speech.V1.WPF.csproj", "{E65A7FBF-B438-458F-AE8B-83636A485291}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoogleCloud.Speech.V1.WPF", "Components\GoogleCloud.Speech.V1.WPF\GoogleCloud.Speech.V1.WPF.csproj", "{E65A7FBF-B438-458F-AE8B-83636A485291}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Derivative", "Derivative", "{C1DFCFE7-DCB9-4648-8F4D-A6FCFBDAB5DC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Audio.Writer", "Audio.Writer\Audio.Writer.csproj", "{1FFDC570-4A89-438F-AE67-E49E1C2EA854}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Audio.Writer", "Components\Audio.Writer\Audio.Writer.csproj", "{1FFDC570-4A89-438F-AE67-E49E1C2EA854}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Media.Writer.Windows", "Media.Writer.Windows\Media.Writer.Windows.csproj", "{87C50DE9-9B85-4DDC-93ED-5D6ACB8D3E51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Media.Writer.Windows", "Components\Media.Writer.Windows\Media.Writer.Windows.csproj", "{87C50DE9-9B85-4DDC-93ED-5D6ACB8D3E51}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvExporter", "CsvExporter\CsvExporter.csproj", "{0ACF12D2-8D0D-4A5D-85DF-5BAD696CEECA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvExporter", "Components\CsvExporter\CsvExporter.csproj", "{0ACF12D2-8D0D-4A5D-85DF-5BAD696CEECA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvExporter.WPF", "CsvExporter.WPF\CsvExporter.WPF.csproj", "{32525B21-98B0-4005-BA74-81D59A177980}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvExporter.WPF", "Components\CsvExporter.WPF\CsvExporter.WPF.csproj", "{32525B21-98B0-4005-BA74-81D59A177980}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimmer3", "Shimmer3\Shimmer3.csproj", "{35CEBE2C-487B-46EC-BDED-C67087E0420D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimmer3", "Components\Shimmer3\Shimmer3.csproj", "{35CEBE2C-487B-46EC-BDED-C67087E0420D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimmer3.WPF", "Shimmer3.WPF\Shimmer3.WPF.csproj", "{4D809B04-F12B-4345-BC71-CD2A560E1062}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimmer3.WPF", "Components\Shimmer3.WPF\Shimmer3.WPF.csproj", "{4D809B04-F12B-4345-BC71-CD2A560E1062}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Data", "Psi.Data\Psi.Data.csproj", "{36EB46E5-EB13-4F55-9B47-F64B34BDE098}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Data", "Components\Psi.Data\Psi.Data.csproj", "{36EB46E5-EB13-4F55-9B47-F64B34BDE098}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Data.WPF", "Psi.Data.WPF\Psi.Data.WPF.csproj", "{54FD2D27-1F1E-4128-B480-F5BA12132FED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Data.WPF", "Components\Psi.Data.WPF\Psi.Data.WPF.csproj", "{54FD2D27-1F1E-4128-B480-F5BA12132FED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BodyGestureDetectors", "BodyGestureDetectors\BodyGestureDetectors.csproj", "{27D68672-AAA8-4EBB-98E7-6D2E4B879B59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BodyGestureDetectors", "Components\BodyGestureDetectors\BodyGestureDetectors.csproj", "{27D68672-AAA8-4EBB-98E7-6D2E4B879B59}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BodyGestureDetectors.WPF", "BodyGestureDetectors.WPF\BodyGestureDetectors.WPF.csproj", "{5E46276E-0114-4114-8185-951273634094}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BodyGestureDetectors.WPF", "Components\BodyGestureDetectors.WPF\BodyGestureDetectors.WPF.csproj", "{5E46276E-0114-4114-8185-951273634094}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Statistics", "Statistics\Statistics.csproj", "{96BBFA14-6572-4B8A-8036-940E936FB509}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Statistics", "Components\Statistics\Statistics.csproj", "{96BBFA14-6572-4B8A-8036-940E936FB509}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Statistics.WPF", "Statistics.WPF\Statistics.WPF.csproj", "{0D32170F-9996-45EC-8B8C-DF8CB6C48C36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Statistics.WPF", "Components\Statistics.WPF\Statistics.WPF.csproj", "{0D32170F-9996-45EC-8B8C-DF8CB6C48C36}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PythonSupports", "PythonSupports\PythonSupports.csproj", "{F097C311-157A-4E2C-94D6-1286A56877E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PythonSupports", "Components\PythonSupports\PythonSupports.csproj", "{F097C311-157A-4E2C-94D6-1286A56877E3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PythonSupports.WPF", "PythonSupports.WPF\PythonSupports.WPF.csproj", "{CE55A0BE-8605-4768-838B-E325CC24E0A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PythonSupports.WPF", "Components\PythonSupports.WPF\PythonSupports.WPF.csproj", "{CE55A0BE-8605-4768-838B-E325CC24E0A8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaPipe.NET", "MediaPipe.NET\MediaPipe.NET.csproj", "{F4A8BEFB-90B2-4733-9211-43CD193F470F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaPipe.NET", "Components\MediaPipe.NET\MediaPipe.NET.csproj", "{F4A8BEFB-90B2-4733-9211-43CD193F470F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaPipe.NET.WPF", "MediaPipe.NET.WPF\MediaPipe.NET.WPF.csproj", "{BEB84F0C-97F8-40B5-A10A-9BD4BEFB4487}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaPipe.NET.WPF", "Components\MediaPipe.NET.WPF\MediaPipe.NET.WPF.csproj", "{BEB84F0C-97F8-40B5-A10A-9BD4BEFB4487}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaPipe.NET.Visualizer.WPF", "MediaPipe.NET.Visualizer.WPF\MediaPipe.NET.Visualizer.WPF.csproj", "{37181E50-7B08-449B-AED5-419EE804A1A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaPipe.NET.Visualizer.WPF", "Components\MediaPipe.NET.Visualizer.WPF\MediaPipe.NET.Visualizer.WPF.csproj", "{37181E50-7B08-449B-AED5-419EE804A1A7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualHumanMessageClient", "VirtualHumanMessageClient\VirtualHumanMessageClient.csproj", "{0AF8D899-2ACB-41FD-807E-BD2F3B87A9D7}"
 EndProject

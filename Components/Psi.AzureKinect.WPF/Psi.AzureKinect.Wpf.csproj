@@ -17,7 +17,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Psi.AzureKinect\Psi.AzureKinect.csproj" />
         <ProjectReference Include="..\Psi.WPF.Common\Psi.WPF.Common.csproj" />
-        <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
+        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>
 
     <ItemGroup>
