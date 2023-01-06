@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0-windows</TargetFramework>
+        <TargetFramework>net7.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
         <RootNamespace>OpenSense.WPF.Components.Shimmer3</RootNamespace>
         <AssemblyName>OpenSense.WPF.Components.Shimmer3</AssemblyName>
@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Composition" Version="6.0.0" />
+        <PackageReference Include="System.Composition" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>

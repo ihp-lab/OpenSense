@@ -2,10 +2,10 @@
 
     <PropertyGroup>
         <!--TODO: not tested after ported from .net framework to .net6-->
-        <TargetFrameworks>net6.0-windows;net48</TargetFrameworks>
+        <TargetFrameworks>net7.0-windows;net48</TargetFrameworks>
         <AssemblyName>OpenSense.Components.Psi.Kinect.Windows</AssemblyName>
         <RootNamespace>OpenSense.Components.Psi.Kinect</RootNamespace>
-        <LangVersion>10.0</LangVersion>
+        <LangVersion>11.0</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
@@ -13,7 +13,7 @@
         <PackageReference Include="Microsoft.Psi.Kinect.Windows" Version="0.17.52.1-beta">
             <NoWarn>NU1701</NoWarn><!--Only a .net framework package is available-->
         </PackageReference>
-        <PackageReference Include="System.Composition" Version="6.0.0" />
+        <PackageReference Include="System.Composition" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>

@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <!--TODO: not tested after ported from .net framework to .net 6-->
-        <TargetFramework>net6.0-windows</TargetFramework>
+        <TargetFramework>net7.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
         <Platforms>x64</Platforms>
         <PlatformTarget>x64</PlatformTarget>
@@ -15,7 +15,7 @@
         <PackageReference Include="Microsoft.Psi.Media.Windows.x64" Version="0.17.52.1-beta" >
             <NoWarn>NU1701</NoWarn><!--Only a .net framework package is available-->
         </PackageReference>
-        <PackageReference Include="System.Composition" Version="6.0.0" />
+        <PackageReference Include="System.Composition" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>

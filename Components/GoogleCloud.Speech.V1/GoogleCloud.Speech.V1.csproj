@@ -4,15 +4,15 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <AssemblyName>OpenSense.Components.GoogleCloud.Speech.V1</AssemblyName>
         <RootNamespace>OpenSense.Components.GoogleCloud.Speech.V1</RootNamespace>
-        <LangVersion>10.0</LangVersion>
+        <LangVersion>11.0</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
         <PackageReference Include="Microsoft.Psi.Speech" Version="0.17.52.1-beta" />
         <PackageReference Include="Google.Cloud.Speech.V1" Version="3.0.0" />
-        <PackageReference Include="System.Composition" Version="6.0.0" />
+        <PackageReference Include="System.Composition" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>
