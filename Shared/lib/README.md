@@ -1,7 +1,7 @@
 # Default Version
 
 Because symbolic links are not well supported by Git, we cannot manage the default version by creating symbolic links.
-The current solution is to put the default version into a `default` directory and record its version number here.
+The current solution is putting the default version into a `default` directory and record its version number here.
 
 Library|Version
 -|-
