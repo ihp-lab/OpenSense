@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32;
 
-namespace OpenSense.Wpf.Component.EyePointOfInterest.Common {
+namespace OpenSense.WPF.Component.EyePointOfInterest.Common {
     public static class FileDialogHelper {
 
         public static OpenFileDialog CreateOpenEstimatorConfigurationFileDialog() => new OpenFileDialog {

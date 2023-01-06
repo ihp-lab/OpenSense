@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace OpenSense.Wpf.Component.MediaPipe.NET {
+namespace OpenSense.WPF.Component.MediaPipe.NET {
 
     public partial class InputStreamConfigurationControl : UserControl {
         public InputStreamConfigurationControl() {

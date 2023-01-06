@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.Wpf.Component.Biopac.Visualizer</AssemblyName>
-        <RootNamespace>OpenSense.Wpf.Component.Biopac.Visualizer</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Component.Biopac.Visualizer</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Component.Biopac.Visualizer</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

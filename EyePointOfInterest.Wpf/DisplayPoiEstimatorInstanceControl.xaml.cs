@@ -3,9 +3,9 @@ using System.Windows;
 using System.Windows.Controls;
 using OpenSense.Component.EyePointOfInterest;
 using OpenSense.Component.EyePointOfInterest.Common;
-using OpenSense.Wpf.Component.EyePointOfInterest.Common;
+using OpenSense.WPF.Component.EyePointOfInterest.Common;
 
-namespace OpenSense.Wpf.Component.EyePointOfInterest {
+namespace OpenSense.WPF.Component.EyePointOfInterest {
     public partial class DisplayPoiEstimatorInstanceControl : UserControl {
         private DisplayPoiEstimator Component => DataContext as DisplayPoiEstimator;
 

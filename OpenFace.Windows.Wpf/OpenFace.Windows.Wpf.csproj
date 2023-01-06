@@ -5,8 +5,8 @@
         <UseWPF>true</UseWPF>
         <Platforms>x64</Platforms>
         <PlatformTarget>x64</PlatformTarget>
-        <AssemblyName>OpenSense.Wpf.Component.OpenFace.Windows</AssemblyName>
-        <RootNamespace>OpenSense.Wpf.Component.OpenFace</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Component.OpenFace.Windows</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Component.OpenFace</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

@@ -1,9 +1,9 @@
 ﻿using System.Windows;
-using OpenSense.Wpf.Pipeline;
-using OpenSense.Wpf.Widget;
-using OpenSense.Wpf.Widget.Contract;
+using OpenSense.WPF.Pipeline;
+using OpenSense.WPF.Widget;
+using OpenSense.WPF.Widget.Contract;
 
-namespace OpenSense.Wpf {
+namespace OpenSense.WPF {
 
     public partial class MainWindow : Window {
         public MainWindow() {

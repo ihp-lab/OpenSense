@@ -8,7 +8,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using OpenSense.Component.EyePointOfInterest.Visualizer;
 
-namespace OpenSense.Wpf.Component.EyePointOfInterest.Visualizer {
+namespace OpenSense.WPF.Component.EyePointOfInterest.Visualizer {
     public partial class DisplayPoiVisualizerInstanceControl : UserControl {
         public DisplayPoiVisualizerInstanceControl() {
             InitializeComponent();

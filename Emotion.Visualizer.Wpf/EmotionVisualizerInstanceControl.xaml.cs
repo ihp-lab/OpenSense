@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace OpenSense.Wpf.Component.Emotion.Visualizer {
+namespace OpenSense.WPF.Component.Emotion.Visualizer {
     public partial class EmotionVisualizerInstanceControl : UserControl {
         public EmotionVisualizerInstanceControl() {
             InitializeComponent();

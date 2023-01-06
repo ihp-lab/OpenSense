@@ -12,7 +12,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using OpenSense.Component.Contract;
 
-namespace OpenSense.Wpf.Pipeline {
+namespace OpenSense.WPF.Pipeline {
     public partial class InstanceBasicInformationControl : UserControl {
 
         private ComponentConfiguration Config;

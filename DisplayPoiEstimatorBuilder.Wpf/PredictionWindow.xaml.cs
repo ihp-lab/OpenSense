@@ -14,7 +14,7 @@ using OpenSense.Component.OpenFace.Common;
 using OpenSense.Component.Imaging;
 using OpenSense.Component.OpenFace;
 
-namespace OpenSense.Wpf.Widget.DisplayPoiEstimatorBuilder {
+namespace OpenSense.WPF.Widget.DisplayPoiEstimatorBuilder {
 
     public partial class PredictionWindow : Window {
         public PredictionWindow() {

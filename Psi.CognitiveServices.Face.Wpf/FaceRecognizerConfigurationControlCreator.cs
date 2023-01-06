@@ -2,9 +2,9 @@
 using System.Windows;
 using OpenSense.Component.Contract;
 using OpenSense.Component.Psi.CognitiveServices.Face;
-using OpenSense.Wpf.Component.Contract;
+using OpenSense.WPF.Component.Contract;
 
-namespace OpenSense.Wpf.Component.Psi.CognitiveServices.Face {
+namespace OpenSense.WPF.Component.Psi.CognitiveServices.Face {
     [Export(typeof(IConfigurationControlCreator))]
     public class FaceRecognizerConfigurationControlCreator : IConfigurationControlCreator {
 

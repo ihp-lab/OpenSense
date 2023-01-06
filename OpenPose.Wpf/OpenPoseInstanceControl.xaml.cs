@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace OpenSense.Wpf.Component.OpenPose {
+namespace OpenSense.WPF.Component.OpenPose {
     public partial class OpenPoseInstanceControl : UserControl {
         public OpenPoseInstanceControl() {
             InitializeComponent();

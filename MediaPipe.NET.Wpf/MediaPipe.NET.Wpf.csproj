@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.Wpf.Component.MediaPipe.NET</AssemblyName>
-        <RootNamespace>OpenSense.Wpf.Component.MediaPipe.NET</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Component.MediaPipe.NET</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Component.MediaPipe.NET</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Imaging.Visualizer.Wpf.Common\Imaging.Visualizer.Wpf.Common.csproj" />
+        <ProjectReference Include="..\Imaging.Visualizer.WPF.Common\Imaging.Visualizer.WPF.Common.csproj" />
         <ProjectReference Include="..\MediaPipe.NET\MediaPipe.NET.csproj" />
         <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>

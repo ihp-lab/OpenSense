@@ -2,7 +2,7 @@
 using System.Windows;
 using OpenSense.Component.Contract;
 
-namespace OpenSense.Wpf.Pipeline {
+namespace OpenSense.WPF.Pipeline {
     public partial class PortSelectionWindow : Window {
         public PortSelectionWindow(IList<IPortMetadata> ports) {
             InitializeComponent();

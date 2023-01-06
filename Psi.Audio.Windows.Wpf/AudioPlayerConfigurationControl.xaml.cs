@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
 using OpenSense.Component.Psi.Audio;
 
-namespace OpenSense.Wpf.Component.Psi.Audio {
+namespace OpenSense.WPF.Component.Psi.Audio {
     public partial class AudioPlayerConfigurationControl : UserControl {
 
         private AudioPlayerConfiguration Config => DataContext as AudioPlayerConfiguration;

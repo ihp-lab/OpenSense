@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.Wpf.Widget.OpenSmileConfigurationConverter</AssemblyName>
-        <RootNamespace>OpenSense.Wpf.Widget.OpenSmileConfigurationConverter</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Widget.OpenSmileConfigurationConverter</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Widget.OpenSmileConfigurationConverter</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

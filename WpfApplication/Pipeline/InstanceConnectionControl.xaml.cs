@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using Microsoft.Psi;
 using OpenSense.Component.Contract;
 
-namespace OpenSense.Wpf.Pipeline {
+namespace OpenSense.WPF.Pipeline {
     public partial class InstanceConnectionControl : UserControl {
 
         private ComponentConfiguration Configuration;

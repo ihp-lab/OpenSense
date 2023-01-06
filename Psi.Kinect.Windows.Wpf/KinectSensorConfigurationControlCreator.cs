@@ -2,9 +2,9 @@
 using System.Windows;
 using OpenSense.Component.Contract;
 using OpenSense.Component.Psi.Kinect;
-using OpenSense.Wpf.Component.Contract;
+using OpenSense.WPF.Component.Contract;
 
-namespace OpenSense.Wpf.Component.Psi.Kinect {
+namespace OpenSense.WPF.Component.Psi.Kinect {
     [Export(typeof(IConfigurationControlCreator))]
     public class KinectSensorConfigurationControlCreator : IConfigurationControlCreator {
 

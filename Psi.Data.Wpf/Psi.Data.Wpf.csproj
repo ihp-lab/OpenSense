@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <RootNamespace>OpenSense.Wpf.Component.Psi.Data</RootNamespace>
-        <AssemblyName>OpenSense.Wpf.Component.Psi.Data</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Component.Psi.Data</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Component.Psi.Data</AssemblyName>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

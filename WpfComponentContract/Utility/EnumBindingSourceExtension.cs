@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Markup;
 
-namespace OpenSense.Wpf.Component.Utility {
+namespace OpenSense.WPF.Component.Utility {
     public class EnumBindingSourceExtension : MarkupExtension {
 
         private Type _enumType;

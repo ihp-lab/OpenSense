@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.Wpf.Widget.Contract</AssemblyName>
-        <RootNamespace>OpenSense.Wpf.Widget.Contract</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Widget.Contract</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Widget.Contract</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

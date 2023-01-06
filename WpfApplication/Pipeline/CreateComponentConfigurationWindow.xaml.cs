@@ -5,7 +5,7 @@ using System.Windows;
 using OpenSense.Component.Contract;
 using OpenSense.Pipeline;
 
-namespace OpenSense.Wpf.Pipeline {
+namespace OpenSense.WPF.Pipeline {
     public partial class CreateComponentConfigurationWindow : Window {
 
         private IComponentMetadata[] components;

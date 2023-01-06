@@ -1,8 +1,8 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Wpf.Component.Contract;
+using OpenSense.WPF.Component.Contract;
 
-namespace OpenSense.Wpf.Component.OpenFace {
+namespace OpenSense.WPF.Component.OpenFace {
     [Export(typeof(IInstanceControlCreator))]
     public class OpenFaceInstanceControlCreator : IInstanceControlCreator {
 

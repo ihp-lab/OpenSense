@@ -145,7 +145,7 @@
 			Id: "f2bcaa84-d8a2-4af8-a22e-d794eb6c1f72"
 		},
 		{
-			ComponentType: "OpenSense.Component.Psi.Speech.Visualizer.StreamingSpeechRecognitionVisualizerConfiguration, OpenSense.Wpf.Component.Psi.Speech.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			ComponentType: "OpenSense.Component.Psi.Speech.Visualizer.StreamingSpeechRecognitionVisualizerConfiguration, OpenSense.WPF.Component.Psi.Speech.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
 			Id: "b152cb7e-6652-4b8d-ba3e-abb91813621d",
 			Name: "Speech Recognition Visualizer",
 			Description: "",

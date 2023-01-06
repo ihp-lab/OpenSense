@@ -2,10 +2,10 @@
 using System.Windows;
 using OpenSense.Component.Contract;
 using OpenSense.Component.Psi.Data;
-using OpenSense.Wpf.Component.Contract;
-using OpenSense.Wpf.Component.Psi.Data;
+using OpenSense.WPF.Component.Contract;
+using OpenSense.WPF.Component.Psi.Data;
 
-namespace OpenSense.Wpf.Component.Psi {
+namespace OpenSense.WPF.Component.Psi {
     [Export(typeof(IConfigurationControlCreator))]
     public class JsonStoreExporterConfigurationControlCreator : IConfigurationControlCreator {
         public bool CanCreate(ComponentConfiguration configuration) => configuration is JsonStoreExporterConfiguration;

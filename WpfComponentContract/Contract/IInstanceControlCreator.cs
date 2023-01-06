@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace OpenSense.Wpf.Component.Contract {
+namespace OpenSense.WPF.Component.Contract {
     public interface IInstanceControlCreator {
 
         bool CanCreate(object instance);

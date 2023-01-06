@@ -1,9 +1,9 @@
 ﻿using System.Composition;
 using System.Windows;
 using OpenSense.Component.Biopac.Visualizer;
-using OpenSense.Wpf.Component.Contract;
+using OpenSense.WPF.Component.Contract;
 
-namespace OpenSense.Wpf.Component.Biopac.Visualizer {
+namespace OpenSense.WPF.Component.Biopac.Visualizer {
     [Export(typeof(IInstanceControlCreator))]
     public class BiopacVisualizerInstanceControlCreator : IInstanceControlCreator {
 

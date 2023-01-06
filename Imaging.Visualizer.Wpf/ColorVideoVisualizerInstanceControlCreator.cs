@@ -1,9 +1,9 @@
 ﻿using System.Composition;
 using System.Windows;
 using OpenSense.Component.Imaging.Visualizer;
-using OpenSense.Wpf.Component.Contract;
+using OpenSense.WPF.Component.Contract;
 
-namespace OpenSense.Wpf.Component.Imaging.Visualizer {
+namespace OpenSense.WPF.Component.Imaging.Visualizer {
     [Export(typeof(IInstanceControlCreator))]
     public class ColorVideoVisualizerInstanceControlCreator : IInstanceControlCreator {
 

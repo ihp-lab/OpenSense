@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace OpenSense.Wpf.Component.MediaPipe.NET {
+namespace OpenSense.WPF.Component.MediaPipe.NET {
     /// <summary>
     /// Interaction logic for OutputStreamConfigurationControl.xaml
     /// </summary>

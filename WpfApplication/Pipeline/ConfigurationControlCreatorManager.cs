@@ -6,9 +6,9 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using OpenSense.Component.Contract;
-using OpenSense.Wpf.Component.Contract;
+using OpenSense.WPF.Component.Contract;
 
-namespace OpenSense.Wpf.Pipeline {
+namespace OpenSense.WPF.Pipeline {
     public class ConfigurationControlCreatorManager{
 
         [ImportMany]

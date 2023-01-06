@@ -18,7 +18,7 @@
 			Id: "08a48dbd-6244-46db-a564-27605c2a6915"
 		},
 		{
-			ComponentType: "OpenSense.Component.Imaging.Visualizer.ColorVideoVisualizerConfiguration, OpenSense.Wpf.Component.Imaging.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			ComponentType: "OpenSense.Component.Imaging.Visualizer.ColorVideoVisualizerConfiguration, OpenSense.WPF.Component.Imaging.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
 			Name: "Color Image Visualizer",
 			Description: "",
 			Inputs: [
@@ -39,7 +39,7 @@
 			Id: "55a9df83-a68e-483d-a22e-22e3eb6cd16c"
 		},
 		{
-			ComponentType: "OpenSense.Component.Audio.Visualizer.AudioVisualizerConfiguration, OpenSense.Wpf.Component.Audio.Visualizer.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			ComponentType: "OpenSense.Component.Audio.Visualizer.AudioVisualizerConfiguration, OpenSense.WPF.Component.Audio.Visualizer.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
 			Name: "Audio Visualizer",
 			Description: "",
 			Inputs: [

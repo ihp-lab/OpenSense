@@ -2,9 +2,9 @@
 using System.Windows;
 using OpenSense.Component.BodyGestureDetectors;
 using OpenSense.Component.Contract;
-using OpenSense.Wpf.Component.Contract;
+using OpenSense.WPF.Component.Contract;
 
-namespace OpenSense.Wpf.Component.BodyGestureDetectors {
+namespace OpenSense.WPF.Component.BodyGestureDetectors {
     [Export(typeof(IConfigurationControlCreator))]
     public class BodyAttitudeDetectorConfigurationControlCreator : IConfigurationControlCreator {
 

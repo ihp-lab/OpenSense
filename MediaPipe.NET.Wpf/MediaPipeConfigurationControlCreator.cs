@@ -2,9 +2,9 @@
 using System.Windows;
 using OpenSense.Component.Contract;
 using OpenSense.Component.MediaPipe.NET;
-using OpenSense.Wpf.Component.Contract;
+using OpenSense.WPF.Component.Contract;
 
-namespace OpenSense.Wpf.Component.MediaPipe.NET {
+namespace OpenSense.WPF.Component.MediaPipe.NET {
     [Export(typeof(IConfigurationControlCreator))]
     public sealed class MediaPipeConfigurationControlCreator : IConfigurationControlCreator {
 

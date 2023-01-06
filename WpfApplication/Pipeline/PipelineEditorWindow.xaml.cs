@@ -8,7 +8,7 @@ using Microsoft.Psi;
 using OpenSense.Component.Contract;
 using OpenSense.Pipeline;
 
-namespace OpenSense.Wpf.Pipeline {
+namespace OpenSense.WPF.Pipeline {
     public partial class PipelineEditorWindow : Window {
 
         public PipelineConfiguration Configuration { get; private set; }

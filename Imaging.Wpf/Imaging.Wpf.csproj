@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.Wpf.Component.Imaging</AssemblyName>
-        <RootNamespace>OpenSense.Wpf.Component.Imaging</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Component.Imaging</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Component.Imaging</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

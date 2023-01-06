@@ -20,7 +20,7 @@ using OpenSense.Component.EyePointOfInterest.Common;
 using OpenSense.Component.Imaging;
 using OpenSense.Component.OpenFace;
 
-namespace OpenSense.Wpf.Widget.DisplayPoiEstimatorBuilder {
+namespace OpenSense.WPF.Widget.DisplayPoiEstimatorBuilder {
 
     /// <summary>
     /// CalibrationWindow class.

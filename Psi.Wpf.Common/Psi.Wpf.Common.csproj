@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.Wpf.Component.Psi.Common</AssemblyName>
-        <RootNamespace>OpenSense.Wpf.Component.Psi.Common</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Component.Psi.Common</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Component.Psi.Common</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

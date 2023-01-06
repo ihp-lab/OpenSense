@@ -5,8 +5,8 @@
         <UseWPF>true</UseWPF>
         <Platforms>x64</Platforms>
         <PlatformTarget>x64</PlatformTarget>
-        <AssemblyName>OpenSense.Wpf.Component.Psi.AzureKinect</AssemblyName>
-        <RootNamespace>OpenSense.Wpf.Component.Psi.AzureKinect</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Component.Psi.AzureKinect</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Component.Psi.AzureKinect</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
@@ -16,7 +16,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Psi.AzureKinect\Psi.AzureKinect.csproj" />
-        <ProjectReference Include="..\Psi.Wpf.Common\Psi.Wpf.Common.csproj" />
+        <ProjectReference Include="..\Psi.WPF.Common\Psi.WPF.Common.csproj" />
         <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>
 

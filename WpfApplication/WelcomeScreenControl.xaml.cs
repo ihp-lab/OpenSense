@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-namespace OpenSense.Wpf {
+namespace OpenSense.WPF {
     
     public partial class WelcomeScreenControl : UserControl {
         public WelcomeScreenControl() {

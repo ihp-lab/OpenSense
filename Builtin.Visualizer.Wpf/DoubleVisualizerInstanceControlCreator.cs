@@ -1,9 +1,9 @@
 ﻿using System.Composition;
 using System.Windows;
 using OpenSense.Component.Builtin.Visualizer;
-using OpenSense.Wpf.Component.Contract;
+using OpenSense.WPF.Component.Contract;
 
-namespace OpenSense.Wpf.Component.Builtin.Visualizer {
+namespace OpenSense.WPF.Component.Builtin.Visualizer {
     [Export(typeof(IInstanceControlCreator))]
     public class DoubleVisualizerInstanceControlCreator : IInstanceControlCreator {
 

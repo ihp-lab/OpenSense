@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.Wpf.Component.HeadGesture.Visualizer</AssemblyName>
-        <RootNamespace>OpenSense.Wpf.Component.HeadGesture.Visualizer</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Component.HeadGesture.Visualizer</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Component.HeadGesture.Visualizer</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

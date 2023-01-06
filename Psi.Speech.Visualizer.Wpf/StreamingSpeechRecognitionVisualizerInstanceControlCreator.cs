@@ -1,9 +1,9 @@
 ﻿using System.Composition;
 using System.Windows;
 using OpenSense.Component.Psi.Speech.Visualizer;
-using OpenSense.Wpf.Component.Contract;
+using OpenSense.WPF.Component.Contract;
 
-namespace OpenSense.Wpf.Component.Psi.Speech.Visualizer {
+namespace OpenSense.WPF.Component.Psi.Speech.Visualizer {
     [Export(typeof(IInstanceControlCreator))]
     public class StreamingSpeechRecognitionVisualizerInstanceControlCreator : IInstanceControlCreator {
 

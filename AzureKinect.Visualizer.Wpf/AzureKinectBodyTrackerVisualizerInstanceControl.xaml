@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="OpenSense.Wpf.Component.AzureKinect.Visualizer.AzureKinectBodyTrackerVisualizerInstanceControl"
+﻿<UserControl x:Class="OpenSense.WPF.Component.AzureKinect.Visualizer.AzureKinectBodyTrackerVisualizerInstanceControl"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:OpenSense.Wpf.Component.AzureKinect.Visualizer"
+        xmlns:local="clr-namespace:OpenSense.WPF.Component.AzureKinect.Visualizer"
         mc:Ignorable="d"
         d:DesignHeight="200" d:DesignWidth="200">
     <Grid>

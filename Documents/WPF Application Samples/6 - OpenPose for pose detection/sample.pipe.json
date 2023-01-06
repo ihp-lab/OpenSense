@@ -206,7 +206,7 @@
 			Id: "3157db77-feb8-457b-a67a-a9dd822408de"
 		},
 		{
-			ComponentType: "OpenSense.Component.OpenPose.Visualizer.OpenPoseVisualizerConfiguration, OpenSense.Wpf.Component.OpenPose.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			ComponentType: "OpenSense.Component.OpenPose.Visualizer.OpenPoseVisualizerConfiguration, OpenSense.WPF.Component.OpenPose.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
 			Name: "OpenPose Visualizer",
 			Description: "",
 			Inputs: [

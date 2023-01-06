@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <RootNamespace>OpenSense.Wpf.Component.Psi</RootNamespace>
-        <AssemblyName>OpenSense.Wpf.Component.Psi</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Component.Psi</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Component.Psi</AssemblyName>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
@@ -14,7 +14,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Psi.Builtin\Psi.Builtin.csproj" />
-        <ProjectReference Include="..\Psi.Wpf.Common\Psi.Wpf.Common.csproj" />
+        <ProjectReference Include="..\Psi.WPF.Common\Psi.WPF.Common.csproj" />
         <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>
 

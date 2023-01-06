@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using OpenSense.Widget.OpenSmileConfigurationConverter;
 
-namespace OpenSense.Wpf.Widget.OpenSmileConfigurationConverter {
+namespace OpenSense.WPF.Widget.OpenSmileConfigurationConverter {
     public partial class ConverterWindow : Window {
         public ConverterWindow() {
             InitializeComponent();

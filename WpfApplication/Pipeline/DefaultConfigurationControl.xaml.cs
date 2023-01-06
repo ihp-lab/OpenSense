@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace OpenSense.Wpf.Pipeline {
+namespace OpenSense.WPF.Pipeline {
     public partial class DefaultConfigurationControl : UserControl {
         public DefaultConfigurationControl() {
             InitializeComponent();

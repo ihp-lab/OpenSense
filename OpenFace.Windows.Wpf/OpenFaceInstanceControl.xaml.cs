@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace OpenSense.Wpf.Component.OpenFace {
+namespace OpenSense.WPF.Component.OpenFace {
     public partial class OpenFaceInstanceControl : UserControl {
         public OpenFaceInstanceControl() {
             InitializeComponent();

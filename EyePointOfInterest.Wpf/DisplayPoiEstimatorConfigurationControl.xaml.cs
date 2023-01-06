@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using OpenSense.Component.EyePointOfInterest;
 
-namespace OpenSense.Wpf.Component.EyePointOfInterest {
+namespace OpenSense.WPF.Component.EyePointOfInterest {
     public partial class DisplayPoiEstimatorConfigurationControl : UserControl {
 
         private DisplayPoiEstimatorConfiguration Config => DataContext as DisplayPoiEstimatorConfiguration;

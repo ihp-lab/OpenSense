@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.Wpf.Component.Emotion.Visualizer</AssemblyName>
-        <RootNamespace>OpenSense.Wpf.Component.Emotion.Visualizer</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Component.Emotion.Visualizer</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Component.Emotion.Visualizer</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

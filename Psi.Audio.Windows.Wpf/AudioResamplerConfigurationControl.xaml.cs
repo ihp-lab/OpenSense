@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using OpenSense.Component.Psi.Audio;
-using OpenSense.Wpf.Component.Psi.Audio.Common;
+using OpenSense.WPF.Component.Psi.Audio.Common;
 
-namespace OpenSense.Wpf.Component.Psi.Audio {
+namespace OpenSense.WPF.Component.Psi.Audio {
     public partial class AudioResamplerConfigurationControl : UserControl {
 
         private AudioResamplerConfiguration Config => DataContext as AudioResamplerConfiguration;

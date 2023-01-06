@@ -5,8 +5,8 @@
         <UseWPF>true</UseWPF>
         <Platforms>x64</Platforms>
         <PlatformTarget>x64</PlatformTarget>
-        <AssemblyName>OpenSense.Wpf.Component.AzureKinect.Visualizer</AssemblyName>
-        <RootNamespace>OpenSense.Wpf.Component.AzureKinect.Visualizer</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Component.AzureKinect.Visualizer</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Component.AzureKinect.Visualizer</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
@@ -17,7 +17,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
-        <ProjectReference Include="..\Imaging.Visualizer.Wpf.Common\Imaging.Visualizer.Wpf.Common.csproj" />
+        <ProjectReference Include="..\Imaging.Visualizer.WPF.Common\Imaging.Visualizer.WPF.Common.csproj" />
         <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>
 

@@ -20,7 +20,7 @@
 			Id: "47f40226-67e3-4eb8-bc5b-c4145e20fdc9"
 		},
 		{
-			ComponentType: "OpenSense.Component.Imaging.Visualizer.ColorVideoVisualizerConfiguration, OpenSense.Wpf.Component.Imaging.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			ComponentType: "OpenSense.Component.Imaging.Visualizer.ColorVideoVisualizerConfiguration, OpenSense.WPF.Component.Imaging.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
 			Name: "Color Image Visualizer",
 			Description: "",
 			Inputs: [

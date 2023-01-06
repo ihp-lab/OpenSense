@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.Wpf.Component.OpenPose.Visualizer</AssemblyName>
-        <RootNamespace>OpenSense.Wpf.Component.OpenPose.Visualizer</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Component.OpenPose.Visualizer</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Component.OpenPose.Visualizer</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Imaging.Visualizer.Wpf.Common\Imaging.Visualizer.Wpf.Common.csproj" />
+        <ProjectReference Include="..\Imaging.Visualizer.WPF.Common\Imaging.Visualizer.WPF.Common.csproj" />
         <ProjectReference Include="..\OpenPose.Common\OpenPose.Common.csproj" />
         <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>

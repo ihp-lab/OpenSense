@@ -2,9 +2,9 @@
 using System.Windows;
 using OpenSense.Component.Contract;
 using OpenSense.Component.OpenFace;
-using OpenSense.Wpf.Component.Contract;
+using OpenSense.WPF.Component.Contract;
 
-namespace OpenSense.Wpf.Component.OpenFace {
+namespace OpenSense.WPF.Component.OpenFace {
     [Export(typeof(IConfigurationControlCreator))]
     public class OpenFaceConfigurationControlCreator : IConfigurationControlCreator {
 

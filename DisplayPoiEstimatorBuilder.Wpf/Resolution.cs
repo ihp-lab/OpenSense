@@ -1,4 +1,4 @@
-﻿namespace OpenSense.Wpf.Widget.DisplayPoiEstimatorBuilder {
+﻿namespace OpenSense.WPF.Widget.DisplayPoiEstimatorBuilder {
     internal struct Resolution {
 
         public int Width;

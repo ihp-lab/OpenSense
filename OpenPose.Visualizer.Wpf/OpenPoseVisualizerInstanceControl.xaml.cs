@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using OpenSense.Component.OpenPose.Visualizer;
 
-namespace OpenSense.Wpf.Component.OpenPose.Visualizer {
+namespace OpenSense.WPF.Component.OpenPose.Visualizer {
     public sealed partial class OpenPoseVisualizerInstanceControl : UserControl {
         private OpenPoseVisualizer ViewModel => (OpenPoseVisualizer)DataContext;
 

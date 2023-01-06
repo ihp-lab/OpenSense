@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using OpenSense.Component.Psi.Audio;
 
-namespace OpenSense.Wpf.Component.Psi.Audio {
+namespace OpenSense.WPF.Component.Psi.Audio {
     public partial class WaveFileWriterConfigurationControl : UserControl {
         public WaveFileWriterConfigurationControl() {
             InitializeComponent();

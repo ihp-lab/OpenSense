@@ -4,7 +4,7 @@ using System.Linq;
 using OpenSense.Component.Contract;
 using OpenSense.Pipeline;
 
-namespace OpenSense.Wpf.Pipeline {
+namespace OpenSense.WPF.Pipeline {
     public class PipelineConnectionGraph {
 
         private PipelineEnvironment Pipeline;

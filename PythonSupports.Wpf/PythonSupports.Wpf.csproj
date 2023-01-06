@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <RootNamespace>OpenSense.Wpf.Component.PythonSupports</RootNamespace>
-        <AssemblyName>OpenSense.Wpf.Component.PythonSupports</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Component.PythonSupports</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Component.PythonSupports</AssemblyName>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

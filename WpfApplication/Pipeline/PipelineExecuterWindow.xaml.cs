@@ -15,7 +15,7 @@ using Microsoft.Psi;
 using OpenSense.Pipeline;
 using Serilog.Extensions.Logging;
 
-namespace OpenSense.Wpf.Pipeline {
+namespace OpenSense.WPF.Pipeline {
     public partial class PipelineExecuterWindow : Window, INotifyPropertyChanged {
 
         #region INotifyPropertyChanged

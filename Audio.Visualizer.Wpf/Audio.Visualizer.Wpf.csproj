@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.Wpf.Component.Audio.Visualizer.Windows</AssemblyName>
-        <RootNamespace>OpenSense.Wpf.Component.Audio.Visualizer</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Component.Audio.Visualizer.Windows</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Component.Audio.Visualizer</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Audio.Visualizer.Wpf.Common\Audio.Visualizer.Wpf.Common.csproj" />
+        <ProjectReference Include="..\Audio.Visualizer.WPF.Common\Audio.Visualizer.WPF.Common.csproj" />
         <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>
 

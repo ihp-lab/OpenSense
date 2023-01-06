@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.Wpf.Component.Psi.Speech.Windows</AssemblyName>
-        <RootNamespace>OpenSense.Wpf.Component.Psi.Speech</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Component.Psi.Speech.Windows</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Component.Psi.Speech</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
@@ -13,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Psi.Audio.Wpf.Common\Psi.Audio.Wpf.Common.csproj" />
+        <ProjectReference Include="..\Psi.Audio.WPF.Common\Psi.Audio.WPF.Common.csproj" />
         <ProjectReference Include="..\Psi.Speech.Windows\Psi.Speech.Windows.csproj" />
         <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>

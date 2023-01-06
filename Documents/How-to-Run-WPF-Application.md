@@ -42,7 +42,7 @@ Please download and install it.
 OpenSense WPF Application is published in ZIP files.
 You can check for updates and download the latest package from OpenSense's Github [release page](https://github.com/intelligent-human-perception-laboratory/OpenSense/releases).
 After you downloaded the package file, un-zip it to a folder.
-The name of the executable file is `OpenSense.Wpf.exe`
+The name of the executable file is `OpenSense.WPF.exe`
 Double click it will launch the application.
 
 # Concepts

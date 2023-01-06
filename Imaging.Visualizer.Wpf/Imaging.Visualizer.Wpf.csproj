@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <RootNamespace>OpenSense.Wpf.Component.Imaging.Visualizer</RootNamespace>
-        <AssemblyName>OpenSense.Wpf.Component.Imaging.Visualizer</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Component.Imaging.Visualizer</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Component.Imaging.Visualizer</AssemblyName>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
@@ -14,7 +14,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
-        <ProjectReference Include="..\Imaging.Visualizer.Wpf.Common\Imaging.Visualizer.Wpf.Common.csproj" />
+        <ProjectReference Include="..\Imaging.Visualizer.WPF.Common\Imaging.Visualizer.WPF.Common.csproj" />
         <ProjectReference Include="..\Imaging\Imaging.csproj" />
         <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>

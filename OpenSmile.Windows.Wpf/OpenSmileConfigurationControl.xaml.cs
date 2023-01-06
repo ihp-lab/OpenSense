@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using OpenSense.Component.OpenSmile;
 
-namespace OpenSense.Wpf.Component.OpenSmile {
+namespace OpenSense.WPF.Component.OpenSmile {
     public partial class OpenSmileConfigurationControl : UserControl {
         public OpenSmileConfigurationControl() {
             InitializeComponent();

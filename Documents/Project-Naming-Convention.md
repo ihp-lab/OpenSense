@@ -6,11 +6,11 @@ The packag/namesapce name may not be the same as the project name.
 
 `*.Contract` interfaces need to be implemented
 
-`*.Wpf` WPF user controls
+`*.WPF` WPF user controls
 
-`*.Wpf.Common` shared WPF user controls
+`*.WPF.Common` shared WPF user controls
 
-`*.Visualizer.Wpf` OpenSense components together with WPF controls for showing data
+`*.Visualizer.WPF` OpenSense components together with WPF controls for showing data
 
 `*.Windows.*` Windows only
 

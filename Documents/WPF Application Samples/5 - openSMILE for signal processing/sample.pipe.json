@@ -77,7 +77,7 @@
 			Id: "4fcfc0cc-acf7-4a38-9d2e-3354a7d490e7"
 		},
 		{
-			ComponentType: "OpenSense.Component.OpenSmile.Visualizer.OpenSmileVisualizerConfiguration, OpenSense.Wpf.Component.OpenSmile.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			ComponentType: "OpenSense.Component.OpenSmile.Visualizer.OpenSmileVisualizerConfiguration, OpenSense.WPF.Component.OpenSmile.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
 			Name: "openSMILE Visualizer",
 			Description: "",
 			Inputs: [

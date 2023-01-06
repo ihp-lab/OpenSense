@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.Wpf.Component.OpenFace.Visualizer</AssemblyName>
-        <RootNamespace>OpenSense.Wpf.Component.OpenFace.Visualizer</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Component.OpenFace.Visualizer</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Component.OpenFace.Visualizer</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
@@ -15,7 +15,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\OpenFace.Common\OpenFace.Common.csproj" />
-        <ProjectReference Include="..\Imaging.Visualizer.Wpf.Common\Imaging.Visualizer.Wpf.Common.csproj" />
+        <ProjectReference Include="..\Imaging.Visualizer.WPF.Common\Imaging.Visualizer.WPF.Common.csproj" />
         <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>
 

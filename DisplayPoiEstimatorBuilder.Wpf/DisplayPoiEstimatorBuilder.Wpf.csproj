@@ -6,8 +6,8 @@
         <UseWPF>true</UseWPF>
         <Platforms>x64</Platforms>
         <PlatformTarget>x64</PlatformTarget>
-        <AssemblyName>OpenSense.Wpf.Widget.DisplayPoiEstimatorBuilder</AssemblyName>
-        <RootNamespace>OpenSense.Wpf.Widget.DisplayPoiEstimatorBuilder</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Widget.DisplayPoiEstimatorBuilder</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Widget.DisplayPoiEstimatorBuilder</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
@@ -21,7 +21,7 @@
     <ItemGroup>
         <ProjectReference Include="..\EyePointOfInterest.Regression\EyePointOfInterest.Regression.csproj" />
         <ProjectReference Include="..\EyePointOfInterest.SpatialTracking\EyePointOfInterest.SpatialTracking.csproj" />
-        <ProjectReference Include="..\EyePointOfInterest.Wpf.Common\EyePointOfInterest.Wpf.Common.csproj" />
+        <ProjectReference Include="..\EyePointOfInterest.WPF.Common\EyePointOfInterest.WPF.Common.csproj" />
         <ProjectReference Include="..\Imaging\Imaging.csproj" />
         <ProjectReference Include="..\OpenFace.Windows\OpenFace.Windows.csproj" />
         <ProjectReference Include="..\WpfWidgetContract\WpfWidgetContract.csproj" />

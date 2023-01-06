@@ -1,8 +1,8 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Wpf.Component.Contract;
+using OpenSense.WPF.Component.Contract;
 
-namespace OpenSense.Wpf.Component.OpenPose {
+namespace OpenSense.WPF.Component.OpenPose {
     [Export(typeof(IInstanceControlCreator))]
     public class OpenPoseInstanceControlCreator : IInstanceControlCreator {
 

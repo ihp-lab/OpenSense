@@ -1,8 +1,8 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Wpf.Component.Contract;
+using OpenSense.WPF.Component.Contract;
 
-namespace OpenSense.Wpf.Component.MediaPipe.NET.Visualizer {
+namespace OpenSense.WPF.Component.MediaPipe.NET.Visualizer {
     [Export(typeof(IInstanceControlCreator))]
     public sealed class NormalizedLandmarkListVectorVisualizerInstanceControlCreator : IInstanceControlCreator {
         public bool CanCreate(object instance) => instance is NormalizedLandmarkListVectorVisualizer;

@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using OpenSense.Component.Psi.Media;
 
-namespace OpenSense.Wpf.Component.Psi.Media {
+namespace OpenSense.WPF.Component.Psi.Media {
     public partial class MediaSourceConfigurationControl : UserControl {
         public MediaSourceConfigurationControl() {
             InitializeComponent();

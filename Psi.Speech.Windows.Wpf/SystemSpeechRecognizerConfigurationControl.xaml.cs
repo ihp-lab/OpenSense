@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using OpenSense.Component.Psi.Speech;
-using OpenSense.Wpf.Component.Psi.Audio.Common;
+using OpenSense.WPF.Component.Psi.Audio.Common;
 
-namespace OpenSense.Wpf.Component.Psi.Speech {
+namespace OpenSense.WPF.Component.Psi.Speech {
     public partial class SystemSpeechRecognizerConfigurationControl : UserControl {
 
         private SystemSpeechRecognizerConfiguration Config => DataContext as SystemSpeechRecognizerConfiguration;

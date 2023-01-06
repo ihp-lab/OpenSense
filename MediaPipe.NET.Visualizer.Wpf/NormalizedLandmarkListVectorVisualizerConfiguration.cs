@@ -2,7 +2,7 @@
 using Microsoft.Psi;
 using OpenSense.Component.Contract;
 
-namespace OpenSense.Wpf.Component.MediaPipe.NET.Visualizer {
+namespace OpenSense.WPF.Component.MediaPipe.NET.Visualizer {
     [Serializable]
     public sealed class NormalizedLandmarkListVectorVisualizerConfiguration : ConventionalComponentConfiguration {
         private bool mute = false;

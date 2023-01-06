@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using OpenSense.Component.Builtin.Visualizer;
 
-namespace OpenSense.Wpf.Component.Builtin.Visualizer {
+namespace OpenSense.WPF.Component.Builtin.Visualizer {
     public partial class DoubleVisualizerInstanceControl : UserControl {
         private DoubleVisualizer ViewModel => (DoubleVisualizer)DataContext;
 

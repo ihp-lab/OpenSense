@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace OpenSense.Wpf.Widget.Contract {
+namespace OpenSense.WPF.Widget.Contract {
     public interface IWidgetMetadata {
 
         string Name { get; }

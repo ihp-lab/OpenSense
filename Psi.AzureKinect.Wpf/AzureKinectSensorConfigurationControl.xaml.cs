@@ -5,7 +5,7 @@ using Microsoft.Psi;
 using Microsoft.Psi.DeviceManagement;
 using OpenSense.Component.Psi.AzureKinect;
 
-namespace OpenSense.Wpf.Component.Psi.AzureKinect {
+namespace OpenSense.WPF.Component.Psi.AzureKinect {
     public partial class AzureKinectSensorConfigurationControl : UserControl {
 
         private AzureKinectSensorConfiguration Config => DataContext as AzureKinectSensorConfiguration;

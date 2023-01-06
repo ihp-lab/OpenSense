@@ -6,7 +6,7 @@ using System.Windows.Data;
 using OpenSense.Component.Contract;
 using OpenSense.Component.Psi;
 
-namespace OpenSense.Wpf.Component.Psi {
+namespace OpenSense.WPF.Component.Psi {
     public partial class PsiStoreExporterConfigurationControl : UserControl {
         private PsiStoreExporterConfiguration Configuration;
 

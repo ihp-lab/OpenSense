@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
 using OpenSense.Component.MediaPipe.NET;
 
-namespace OpenSense.Wpf.Component.MediaPipe.NET {
+namespace OpenSense.WPF.Component.MediaPipe.NET {
     public partial class MediaPipeConfigurationControl : UserControl {
 
         private MediaPipeConfiguration Configuration => (MediaPipeConfiguration)DataContext;

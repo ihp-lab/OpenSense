@@ -2,9 +2,9 @@
 using System.Windows;
 using OpenSense.Component.Contract;
 using OpenSense.Component.Psi.CognitiveServices.Speech;
-using OpenSense.Wpf.Component.Contract;
+using OpenSense.WPF.Component.Contract;
 
-namespace OpenSense.Wpf.Component.Psi.CognitiveServices.Speech {
+namespace OpenSense.WPF.Component.Psi.CognitiveServices.Speech {
     [Export(typeof(IConfigurationControlCreator))]
     public class AzureSpeechRecognizerConfigurationControlCreator : IConfigurationControlCreator {
 

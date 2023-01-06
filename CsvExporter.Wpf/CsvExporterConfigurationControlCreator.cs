@@ -2,9 +2,9 @@
 using System.Windows;
 using OpenSense.Component.Contract;
 using OpenSense.Component.CsvExporter;
-using OpenSense.Wpf.Component.Contract;
+using OpenSense.WPF.Component.Contract;
 
-namespace OpenSense.Wpf.Component.CsvExporter {
+namespace OpenSense.WPF.Component.CsvExporter {
     [Export(typeof(IConfigurationControlCreator))]
     public class CsvExporterConfigurationControlCreator : IConfigurationControlCreator {
 
