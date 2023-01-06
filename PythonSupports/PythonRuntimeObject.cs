@@ -7,9 +7,9 @@ using System.Runtime.CompilerServices;
 using Microsoft.Psi;
 using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.PythonSupports {
+namespace OpenSense.Components.PythonSupports {
     public sealed class PythonRuntimeObject : INotifyPropertyChanged {
 
         private readonly ScriptEngine _engine;

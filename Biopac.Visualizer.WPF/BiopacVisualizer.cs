@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
 using Microsoft.Psi;
 
-namespace OpenSense.Component.Biopac.Visualizer {
+namespace OpenSense.Components.Biopac.Visualizer {
     public class BiopacVisualizer : IConsumer<string>, INotifyPropertyChanged {
 
         public Receiver<string> In { get; private set; }

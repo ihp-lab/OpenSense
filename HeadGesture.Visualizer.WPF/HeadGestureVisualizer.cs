@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Microsoft.Psi;
-using HeadGestureData = OpenSense.Component.OpenFace.Common.Gesture;
+using HeadGestureData = OpenSense.Components.OpenFace.Common.Gesture;
 
-namespace OpenSense.Component.HeadGesture.Visualizer {
+namespace OpenSense.Components.HeadGesture.Visualizer {
     public class HeadGestureVisualizer : IConsumer<HeadGestureData>, INotifyPropertyChanged {
 
         #region INotifyPropertyChanged

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using OpenSense.Component.Psi.Imaging;
+using OpenSense.Components.Psi.Imaging;
 
-namespace OpenSense.WPF.Component.Psi.Imaging {
+namespace OpenSense.WPF.Components.Psi.Imaging {
     public partial class ImageEncoderConfigurationControl : UserControl {
 
         private ImageEncoderConfiguration Config => DataContext as ImageEncoderConfiguration;

@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.Psi;
 using Microsoft.Psi.Speech;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi.Speech {
+namespace OpenSense.Components.Psi.Speech {
     [Serializable]
     public class SystemVoiceActivityDetectorConfiguration : ConventionalComponentConfiguration {
 

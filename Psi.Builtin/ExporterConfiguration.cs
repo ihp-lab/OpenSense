@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Psi;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi {
+namespace OpenSense.Components.Psi {
     [Serializable]
     public abstract class ExporterConfiguration : ComponentConfiguration {
 

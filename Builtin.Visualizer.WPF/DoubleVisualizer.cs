@@ -7,7 +7,7 @@ using System.Windows.Media.Imaging;
 using Microsoft.Psi;
 using Microsoft.Psi.Components;
 
-namespace OpenSense.Component.Builtin.Visualizer {
+namespace OpenSense.Components.Builtin.Visualizer {
     public sealed class DoubleVisualizer : IConsumerProducer<double?, string>, INotifyPropertyChanged {
 
         #region Settings

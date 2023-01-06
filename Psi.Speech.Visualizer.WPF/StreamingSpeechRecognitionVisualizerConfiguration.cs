@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.Psi;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi.Speech.Visualizer {
+namespace OpenSense.Components.Psi.Speech.Visualizer {
     [Serializable]
     public class StreamingSpeechRecognitionVisualizerConfiguration : ConventionalComponentConfiguration {
 

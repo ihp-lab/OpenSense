@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 using OpenSense.Pipeline;
 
 namespace OpenSense.WPF.Pipeline {

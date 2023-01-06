@@ -4,9 +4,9 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using OpenSense.Component.OpenSmile.Visualizer;
+using OpenSense.Components.OpenSmile.Visualizer;
 
-namespace OpenSense.WPF.Component.OpenSmile.Visualizer {
+namespace OpenSense.WPF.Components.OpenSmile.Visualizer {
     public partial class OpenSmileVisualizerInstanceControl : UserControl {
 
         private OpenSmileVisualizer Comp => DataContext as OpenSmileVisualizer;

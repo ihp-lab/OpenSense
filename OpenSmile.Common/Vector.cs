@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace OpenSense.Component.OpenSmile.Common {
+namespace OpenSense.Components.OpenSmile.Common {
     [Serializable]
 	public class Vector<T> {
         /// <summary>

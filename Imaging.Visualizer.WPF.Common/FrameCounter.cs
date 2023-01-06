@@ -7,7 +7,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 
-namespace OpenSense.Component.Imaging.Visualizer.Common {
+namespace OpenSense.Components.Imaging.Visualizer.Common {
     
     /// <summary>
     /// FrameCounter is a simple class for determining the frame rate of the playback.

@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace OpenSense.WPF.Component.GoogleCloud.Speech.V1 {
+namespace OpenSense.WPF.Components.GoogleCloud.Speech.V1 {
     public partial class GoogleCloudSpeechInstanceControl : UserControl {
         public GoogleCloudSpeechInstanceControl() {
             InitializeComponent();

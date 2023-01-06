@@ -9,7 +9,7 @@
 	},
 	Instances: [
 		{
-			ComponentType: "OpenSense.Component.Psi.Audio.AudioCaptureConfiguration, OpenSense.Component.Psi.Audio.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			ComponentType: "OpenSense.Components.Psi.Audio.AudioCaptureConfiguration, OpenSense.Components.Psi.Audio.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
 			Name: "Audio Capture",
 			Description: "",
 			Inputs: [],
@@ -35,7 +35,7 @@
 			Id: "6afd08c4-3532-4bd1-8d10-a5574fbf334e"
 		},
 		{
-			ComponentType: "OpenSense.Component.Psi.Speech.SystemVoiceActivityDetectorConfiguration, OpenSense.Component.Psi.Speech.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			ComponentType: "OpenSense.Components.Psi.Speech.SystemVoiceActivityDetectorConfiguration, OpenSense.Components.Psi.Speech.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
 			Name: "System Voice Activity Detector",
 			Description: "",
 			Inputs: [
@@ -76,7 +76,7 @@
 			Id: "add0906c-d3d7-4296-83a5-e57e9751312d"
 		},
 		{
-			ComponentType: "OpenSense.Component.Psi.JoinConfiguration, OpenSense.Component.Psi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			ComponentType: "OpenSense.Components.Psi.JoinConfiguration, OpenSense.Components.Psi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
 			Name: "Join Operator",
 			Description: "",
 			Inputs: [
@@ -110,7 +110,7 @@
 			Id: "851134ae-da79-4035-863f-c5c4f8c24145"
 		},
 		{
-			ComponentType: "OpenSense.Component.Psi.CognitiveServices.Speech.AzureSpeechRecognizerConfiguration, OpenSense.Component.Psi.CognitiveServices.Speech, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			ComponentType: "OpenSense.Components.Psi.CognitiveServices.Speech.AzureSpeechRecognizerConfiguration, OpenSense.Components.Psi.CognitiveServices.Speech, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
 			Name: "Azure Speech Recognizer",
 			Description: "",
 			Inputs: [
@@ -145,7 +145,7 @@
 			Id: "f2bcaa84-d8a2-4af8-a22e-d794eb6c1f72"
 		},
 		{
-			ComponentType: "OpenSense.Component.Psi.Speech.Visualizer.StreamingSpeechRecognitionVisualizerConfiguration, OpenSense.WPF.Component.Psi.Speech.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			ComponentType: "OpenSense.Components.Psi.Speech.Visualizer.StreamingSpeechRecognitionVisualizerConfiguration, OpenSense.WPF.Components.Psi.Speech.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
 			Id: "b152cb7e-6652-4b8d-ba3e-abb91813621d",
 			Name: "Speech Recognition Visualizer",
 			Description: "",

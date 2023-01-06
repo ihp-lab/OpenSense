@@ -2,10 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using OpenSense.Component.OpenPose.Common;
+using OpenSense.Components.OpenPose.Common;
 using UnityEngine;
 
-namespace OpenSense.Component.OpenPose.PInvoke {
+namespace OpenSense.Components.OpenPose.PInvoke {
     /*
 	 * Function set to parse output
 	 */

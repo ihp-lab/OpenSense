@@ -1,10 +1,10 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Component.Contract;
-using OpenSense.Component.Psi.AzureKinect;
-using OpenSense.WPF.Component.Contract;
+using OpenSense.Components.Contract;
+using OpenSense.Components.Psi.AzureKinect;
+using OpenSense.WPF.Components.Contract;
 
-namespace OpenSense.WPF.Component.Psi.AzureKinect {
+namespace OpenSense.WPF.Components.Psi.AzureKinect {
     [Export(typeof(IConfigurationControlCreator))]
     public class AzureKinectSensorConfigurationControlCreator : IConfigurationControlCreator {
 

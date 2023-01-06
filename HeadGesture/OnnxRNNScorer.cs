@@ -3,7 +3,7 @@ using Microsoft.ML.Data;
 using Microsoft.ML.Transforms.Onnx;
 using System.Collections.Generic;
 
-namespace OpenSense.Component.HeadGesture {
+namespace OpenSense.Components.HeadGesture {
     internal class OnnxRNNScorer {
         private readonly string modelLocation;
         private readonly MLContext mlContext;

@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.ML.Data;
 
-namespace OpenSense.Component.HeadGesture {
+namespace OpenSense.Components.HeadGesture {
     // the object for input of the neural nework. Pass into the network in each inference. The name of the member variable should match the first input column when loading model pipeline
     internal class HeadPoseObject {
         private const int LIST_SIZE = 384;

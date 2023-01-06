@@ -4,8 +4,8 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <Platforms>x64</Platforms>
         <PlatformTarget>x64</PlatformTarget>
-        <AssemblyName>OpenSense.Component.BodyGestureDetectors</AssemblyName>
-        <RootNamespace>OpenSense.Component.BodyGestureDetectors</RootNamespace>
+        <AssemblyName>OpenSense.Components.BodyGestureDetectors</AssemblyName>
+        <RootNamespace>OpenSense.Components.BodyGestureDetectors</RootNamespace>
         <LangVersion>10.0</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>

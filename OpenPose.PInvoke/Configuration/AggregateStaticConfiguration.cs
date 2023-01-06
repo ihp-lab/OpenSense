@@ -1,4 +1,4 @@
-﻿namespace OpenSense.Component.OpenPose.PInvoke.Configuration {
+﻿namespace OpenSense.Components.OpenPose.PInvoke.Configuration {
     public class AggregateStaticConfiguration : IStaticConfiguration {
 		public PoseConfiguration Pose { get; set; } = new PoseConfiguration();
 		public HandConfiguration Hand { get; set; } = new HandConfiguration();

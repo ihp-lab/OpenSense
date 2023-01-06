@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using OpenSense.Component.OpenFace.Visualizer;
+using OpenSense.Components.OpenFace.Visualizer;
 
-namespace OpenSense.WPF.Component.OpenFace.Visualizer {
+namespace OpenSense.WPF.Components.OpenFace.Visualizer {
     public sealed partial class OpenFaceVisualizerInstanceControl : UserControl {
         private OpenFaceVisualizer ViewModel => (OpenFaceVisualizer)DataContext;
 

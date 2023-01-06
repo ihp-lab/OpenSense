@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OpenSense.Component.Contract.PortDataTypeInferences {
+namespace OpenSense.Components.Contract.PortDataTypeInferences {
     internal sealed class InferenceExclusionItem : IEquatable<InferenceExclusionItem> {
 
         private readonly ComponentConfiguration _component;

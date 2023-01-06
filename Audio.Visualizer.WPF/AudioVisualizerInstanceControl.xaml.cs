@@ -2,9 +2,9 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using OpenSense.Component.Audio.Visualizer;
+using OpenSense.Components.Audio.Visualizer;
 
-namespace OpenSense.WPF.Component.Audio.Visualizer {
+namespace OpenSense.WPF.Components.Audio.Visualizer {
     public partial class AudioVisualizerInstanceControl : UserControl {
 
         private AudioVisualizer ViewModel => (AudioVisualizer)DataContext;

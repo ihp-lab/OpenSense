@@ -3,10 +3,10 @@ using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using OpenSense.Component.Contract;
-using OpenSense.Component.Psi;
+using OpenSense.Components.Contract;
+using OpenSense.Components.Psi;
 
-namespace OpenSense.WPF.Component.Psi {
+namespace OpenSense.WPF.Components.Psi {
     public partial class PsiStoreExporterConfigurationControl : UserControl {
         private PsiStoreExporterConfiguration Configuration;
 

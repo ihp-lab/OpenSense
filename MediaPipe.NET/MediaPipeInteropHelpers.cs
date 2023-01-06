@@ -11,7 +11,7 @@ using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
 using Newtonsoft.Json.Linq;
 
-namespace OpenSense.Component.MediaPipe.NET {
+namespace OpenSense.Components.MediaPipe.NET {
     public static class MediaPipeInteropHelpers {
 
         public static Type MapInputType(PacketType packetType) => packetType switch {

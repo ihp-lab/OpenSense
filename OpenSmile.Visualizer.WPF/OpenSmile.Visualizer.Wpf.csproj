@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.WPF.Component.OpenSmile.Visualizer</AssemblyName>
-        <RootNamespace>OpenSense.WPF.Component.OpenSmile.Visualizer</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Components.OpenSmile.Visualizer</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.OpenSmile.Visualizer</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

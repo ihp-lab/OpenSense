@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Composition;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.GoogleCloud.Speech.V1 {
+namespace OpenSense.Components.GoogleCloud.Speech.V1 {
     [Export(typeof(IComponentMetadata))]
     public class GoogleCloudSpeechMetadata : ConventionalComponentMetadata {
 

@@ -10,9 +10,9 @@ using Microsoft.Psi;
 using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
 using Microsoft.Scripting.Runtime;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.PythonSupports {
+namespace OpenSense.Components.PythonSupports {
     [Serializable]
     public sealed class PythonConfiguration : OperatorConfiguration {
 
@@ -173,7 +173,7 @@ namespace OpenSense.Component.PythonSupports {
 # (TO BE RESOLVED) Ports will be visiable after reloading the UI control.
 # (TO BE RESOLVED) Read PORTS as iterator.
 # (TO BE RESOLVED) Provide helper methods for creating array inputs.
-import OpenSense.Component.PythonSupports.PortBuilder as pb
+import OpenSense.Components.PythonSupports.PortBuilder as pb
 PORTS = [
     pb.Create().AsInput().WithName(""In"").WithType(float).Build(), # Python's float is mapped to .NET's System.Double.
     pb.Create().AsOutput().WithName(""Out"").WithType(int).Build(), # Python's int is mapped to .NET's System.Numerics.BigInteger.

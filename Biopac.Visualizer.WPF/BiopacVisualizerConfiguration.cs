@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.Psi;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Biopac.Visualizer {
+namespace OpenSense.Components.Biopac.Visualizer {
     [Serializable]
     public class BiopacVisualizerConfiguration : ConventionalComponentConfiguration {
 

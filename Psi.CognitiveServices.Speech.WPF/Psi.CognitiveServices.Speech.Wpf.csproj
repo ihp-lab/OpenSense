@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.WPF.Component.Psi.CognitiveServices.Speech</AssemblyName>
-        <RootNamespace>OpenSense.WPF.Component.Psi.CognitiveServices.Speech</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Components.Psi.CognitiveServices.Speech</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.Psi.CognitiveServices.Speech</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

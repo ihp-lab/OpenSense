@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
 
-namespace OpenSense.Component.Imaging {
+namespace OpenSense.Components.Imaging {
 
     public class FlipColorVideo : IConsumer<Shared<Image>>, IProducer<Shared<Image>>, INotifyPropertyChanged {
 

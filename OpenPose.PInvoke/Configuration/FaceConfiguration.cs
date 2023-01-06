@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace OpenSense.Component.OpenPose.PInvoke.Configuration {
+namespace OpenSense.Components.OpenPose.PInvoke.Configuration {
     public class FaceConfiguration : IStaticConfiguration {
 		public bool Enable { get; set; } = false;
 		public Detector Detector { get; set; } = Detector.Body;

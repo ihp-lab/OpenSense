@@ -2,8 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <AssemblyName>OpenSense.Component.Psi.CognitiveServices.Speech</AssemblyName>
-        <RootNamespace>OpenSense.Component.Psi.CognitiveServices.Speech</RootNamespace>
+        <AssemblyName>OpenSense.Components.Psi.CognitiveServices.Speech</AssemblyName>
+        <RootNamespace>OpenSense.Components.Psi.CognitiveServices.Speech</RootNamespace>
         <LangVersion>10.0</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>

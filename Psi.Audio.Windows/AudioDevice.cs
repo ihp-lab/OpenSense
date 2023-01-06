@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Microsoft.Psi.Audio;
 
-namespace OpenSense.Component.Psi.Audio {
+namespace OpenSense.Components.Psi.Audio {
     public class AudioDevice : INotifyPropertyChanged {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;

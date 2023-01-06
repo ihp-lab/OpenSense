@@ -1,6 +1,6 @@
 ﻿// OpenPose Unity Plugin v1.0.0alpha-1.5.0
 
-namespace OpenSense.Component.OpenPose.PInvoke {
+namespace OpenSense.Components.OpenPose.PInvoke {
 
     public enum OPState : byte {
         None,               // Default value, not used

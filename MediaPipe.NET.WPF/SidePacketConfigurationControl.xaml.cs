@@ -2,9 +2,9 @@
 
 using System.Globalization;
 using System.Windows.Controls;
-using OpenSense.Component.MediaPipe.NET;
+using OpenSense.Components.MediaPipe.NET;
 
-namespace OpenSense.WPF.Component.MediaPipe.NET {
+namespace OpenSense.WPF.Components.MediaPipe.NET {
     public partial class SidePacketConfigurationControl : UserControl {
 
         private SidePacketConfiguration Configuration => (SidePacketConfiguration)DataContext;

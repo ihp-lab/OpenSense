@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.WPF.Component.EyePointOfInterest.Visualizer</AssemblyName>
-        <RootNamespace>OpenSense.WPF.Component.EyePointOfInterest.Visualizer</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Components.EyePointOfInterest.Visualizer</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.EyePointOfInterest.Visualizer</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

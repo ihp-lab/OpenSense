@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.WPF.Component.Psi.Kinect.Windows</AssemblyName>
-        <RootNamespace>OpenSense.WPF.Component.Psi.Kinect</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Components.Psi.Kinect.Windows</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.Psi.Kinect</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

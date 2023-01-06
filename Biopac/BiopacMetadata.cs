@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Composition;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Biopac {
+namespace OpenSense.Components.Biopac {
     [Export(typeof(IComponentMetadata))]
     public class BiopacMetadata : ConventionalComponentMetadata {
 

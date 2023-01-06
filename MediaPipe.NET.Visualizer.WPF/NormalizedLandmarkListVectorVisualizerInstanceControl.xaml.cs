@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace OpenSense.WPF.Component.MediaPipe.NET.Visualizer {
+namespace OpenSense.WPF.Components.MediaPipe.NET.Visualizer {
     public partial class NormalizedLandmarkListVectorVisualizerInstanceControl : UserControl {
 
         private NormalizedLandmarkListVectorVisualizer ViewModel => (NormalizedLandmarkListVectorVisualizer)DataContext;

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.PythonSupports {
+namespace OpenSense.Components.PythonSupports {
     internal sealed class PythonPortMetadata : IPortMetadata {
 
         public Type TransmissionDataType { get; private set; }

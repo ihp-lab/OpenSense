@@ -2,8 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <AssemblyName>OpenSense.Component.Psi.Audio</AssemblyName>
-        <RootNamespace>OpenSense.Component.Psi.Audio</RootNamespace>
+        <AssemblyName>OpenSense.Components.Psi.Audio</AssemblyName>
+        <RootNamespace>OpenSense.Components.Psi.Audio</RootNamespace>
         <LangVersion>10.0</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>

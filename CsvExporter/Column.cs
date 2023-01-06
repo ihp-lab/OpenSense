@@ -1,4 +1,4 @@
-﻿namespace OpenSense.Component.CsvExporter {
+﻿namespace OpenSense.Components.CsvExporter {
     internal class Column {
 
         /// <summary>

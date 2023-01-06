@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.Psi;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.OpenFace.Visualizer {
+namespace OpenSense.Components.OpenFace.Visualizer {
     [Serializable]
     public class OpenFaceVisualizerConfiguration : ConventionalComponentConfiguration {
 

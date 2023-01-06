@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Composition;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Builtin.Visualizer {
+namespace OpenSense.Components.Builtin.Visualizer {
     [Export(typeof(IComponentMetadata))]
     public class BooleanVisualizerMetadata : ConventionalComponentMetadata {
 

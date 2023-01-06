@@ -9,7 +9,7 @@ using Microsoft.Azure.Kinect.Sensor;
 using Microsoft.Psi;
 using Microsoft.Psi.AzureKinect;
 
-namespace OpenSense.Component.BodyGestureDetectors {
+namespace OpenSense.Components.BodyGestureDetectors {
 
     public sealed class BodyAttitudeDetector {
         #region Ports

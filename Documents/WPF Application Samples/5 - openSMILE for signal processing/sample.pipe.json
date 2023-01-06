@@ -9,7 +9,7 @@
 	},
 	Instances: [
 		{
-			ComponentType: "OpenSense.Component.Psi.Audio.AudioCaptureConfiguration, OpenSense.Component.Psi.Audio.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			ComponentType: "OpenSense.Components.Psi.Audio.AudioCaptureConfiguration, OpenSense.Components.Psi.Audio.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
 			Name: "Audio Capture",
 			Description: "",
 			Inputs: [],
@@ -35,7 +35,7 @@
 			Id: "cb7a9957-4d99-436f-a719-aa86db2b9f01"
 		},
 		{
-			ComponentType: "OpenSense.Component.OpenSmile.OpenSmileConfiguration, OpenSense.Component.OpenSmile.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			ComponentType: "OpenSense.Components.OpenSmile.OpenSmileConfiguration, OpenSense.Components.OpenSmile.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
 			raw: {
 				OverallLogLevel: 0,
 				PrintLogToConsole: false,
@@ -77,7 +77,7 @@
 			Id: "4fcfc0cc-acf7-4a38-9d2e-3354a7d490e7"
 		},
 		{
-			ComponentType: "OpenSense.Component.OpenSmile.Visualizer.OpenSmileVisualizerConfiguration, OpenSense.WPF.Component.OpenSmile.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			ComponentType: "OpenSense.Components.OpenSmile.Visualizer.OpenSmileVisualizerConfiguration, OpenSense.WPF.Components.OpenSmile.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
 			Name: "openSMILE Visualizer",
 			Description: "",
 			Inputs: [

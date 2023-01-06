@@ -1,4 +1,4 @@
-﻿namespace OpenSense.Component.OpenPose.PInvoke.Configuration {
+﻿namespace OpenSense.Components.OpenPose.PInvoke.Configuration {
     public class ExtraConfiguration : IStaticConfiguration {
 		public bool Reconstruct3d { get; set; } = false;
 		public int MinViews3d { get; set; } = -1;

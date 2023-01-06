@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <RootNamespace>OpenSense.WPF.Component.MediaPipe.NET.Visualizer</RootNamespace>
-        <AssemblyName>OpenSense.WPF.Component.MediaPipe.NET.Visualizer</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.MediaPipe.NET.Visualizer</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Components.MediaPipe.NET.Visualizer</AssemblyName>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

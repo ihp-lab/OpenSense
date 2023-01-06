@@ -1,9 +1,9 @@
 ﻿using System.Numerics;
 using Microsoft.ML.Data;
-using OpenSense.Component.EyePointOfInterest.Common;
-using OpenSense.Component.OpenFace.Common;
+using OpenSense.Components.EyePointOfInterest.Common;
+using OpenSense.Components.OpenFace.Common;
 
-namespace OpenSense.Component.EyePointOfInterest.Regression {
+namespace OpenSense.Components.EyePointOfInterest.Regression {
 
     internal class RegressionRecord {
         [VectorType(8)]

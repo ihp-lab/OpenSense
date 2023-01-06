@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Composition;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Imaging.Visualizer {
+namespace OpenSense.Components.Imaging.Visualizer {
     [Export(typeof(IComponentMetadata))]
     public class ColorVideoVisualizerMetadata : ConventionalComponentMetadata {
 

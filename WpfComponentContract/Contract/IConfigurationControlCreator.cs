@@ -1,7 +1,7 @@
 ﻿using System.Windows;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.WPF.Component.Contract {
+namespace OpenSense.WPF.Components.Contract {
     public interface IConfigurationControlCreator {
 
         bool CanCreate(ComponentConfiguration configuration);

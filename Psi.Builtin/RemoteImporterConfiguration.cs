@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Psi;
 using Microsoft.Psi.Remoting;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi {
+namespace OpenSense.Components.Psi {
     [Serializable]
     public class RemoteImporterConfiguration : ComponentConfiguration {
 

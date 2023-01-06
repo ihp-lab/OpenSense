@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Imaging {
+namespace OpenSense.Components.Imaging {
     [Serializable]
     public class PixelFormatConverterConfiguration : ConventionalComponentConfiguration {
 

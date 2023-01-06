@@ -5,7 +5,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text.Json.Serialization;
 
-namespace OpenSense.Component.OpenFace.Common {
+namespace OpenSense.Components.OpenFace.Common {
     [Serializable]
     public class Eye : IEquatable<Eye> {
         /// <summary>

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.Psi;
 using Microsoft.Psi.Data.Json;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi.Data {
+namespace OpenSense.Components.Psi.Data {
     [Serializable]
     public class JsonStoreImporterConfiguration : ComponentConfiguration {
 

@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.Psi;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.OpenSmile {
+namespace OpenSense.Components.OpenSmile {
     [Serializable]
     public class OpenSmileConfiguration : ConventionalComponentConfiguration {
 

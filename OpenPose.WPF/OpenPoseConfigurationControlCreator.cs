@@ -1,11 +1,11 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Component.Contract;
-using OpenSense.Component.OpenPose;
-using OpenSense.WPF.Component.Contract;
+using OpenSense.Components.Contract;
+using OpenSense.Components.OpenPose;
+using OpenSense.WPF.Components.Contract;
 
 
-namespace OpenSense.WPF.Component.OpenPose {
+namespace OpenSense.WPF.Components.OpenPose {
     [Export(typeof(IConfigurationControlCreator))]
     public class OpenPoseConfigurationControlCreator : IConfigurationControlCreator {
 

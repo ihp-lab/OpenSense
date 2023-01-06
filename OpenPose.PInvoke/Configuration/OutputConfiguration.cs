@@ -1,4 +1,4 @@
-﻿namespace OpenSense.Component.OpenPose.PInvoke.Configuration {
+﻿namespace OpenSense.Components.OpenPose.PInvoke.Configuration {
     public class OutputConfiguration : IStaticConfiguration {
 		public double Verbose { get; set; } = -1.0;
 		public string WriteKeypoint { get; set; } = "";

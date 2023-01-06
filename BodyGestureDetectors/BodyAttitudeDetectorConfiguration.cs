@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.Psi;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.BodyGestureDetectors {
+namespace OpenSense.Components.BodyGestureDetectors {
     [Serializable]
     public class BodyAttitudeDetectorConfiguration : ConventionalComponentConfiguration {
 

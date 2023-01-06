@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.Psi;
 using Microsoft.Psi.CognitiveServices.Face;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi.CognitiveServices.Face {
+namespace OpenSense.Components.Psi.CognitiveServices.Face {
     [Serializable]
     public class FaceRecognizerConfiguration : ConventionalComponentConfiguration {
 

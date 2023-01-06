@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace OpenSense.Component.OpenFace.Common {
+namespace OpenSense.Components.OpenFace.Common {
     [Serializable]
     public class ActionUnit: IEquatable<ActionUnit> {
 

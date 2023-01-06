@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
-using OpenSense.Component.OpenPose.Common;
-using OpenSense.Component.OpenPose.PInvoke;
-using OpenSense.Component.OpenPose.PInvoke.Configuration;
-using OpenSense.Component.OpenPose.PInvoke.Session;
+using OpenSense.Components.OpenPose.Common;
+using OpenSense.Components.OpenPose.PInvoke;
+using OpenSense.Components.OpenPose.PInvoke.Configuration;
+using OpenSense.Components.OpenPose.PInvoke.Session;
 
-namespace OpenSense.Component.OpenPose {
+namespace OpenSense.Components.OpenPose {
     public class OpenPose : IConsumer<Shared<Image>>, IProducer<Datum>, INotifyPropertyChanged {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;

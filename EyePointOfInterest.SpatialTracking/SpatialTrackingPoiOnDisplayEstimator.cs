@@ -5,11 +5,11 @@ using System.Numerics;
 using MathNet.Numerics;
 using MathNet.Spatial.Euclidean;
 using MathNet.Spatial.Units;
-using OpenSense.Component.EyePointOfInterest.Common;
-using OpenSense.Component.OpenFace.Common;
+using OpenSense.Components.EyePointOfInterest.Common;
+using OpenSense.Components.OpenFace.Common;
 using static System.Math;
 
-namespace OpenSense.Component.EyePointOfInterest.SpatialTracking {
+namespace OpenSense.Components.EyePointOfInterest.SpatialTracking {
 
     public class SpatialTrackingPoiOnDisplayEstimator : IPoiOnDisplayEstimator {
 

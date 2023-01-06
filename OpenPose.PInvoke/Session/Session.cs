@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using OpenSense.Component.OpenPose.Common;
-using OpenSense.Component.OpenPose.PInvoke.Configuration;
+using OpenSense.Components.OpenPose.Common;
+using OpenSense.Components.OpenPose.PInvoke.Configuration;
 
-namespace OpenSense.Component.OpenPose.PInvoke.Session {
+namespace OpenSense.Components.OpenPose.PInvoke.Session {
     public static class Session {
 
 		#region Runtime settings

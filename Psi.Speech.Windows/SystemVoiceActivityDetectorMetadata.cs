@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Composition;
 using Microsoft.Psi.Speech;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi.Speech {
+namespace OpenSense.Components.Psi.Speech {
     [Export(typeof(IComponentMetadata))]
     public class SystemVoiceActivityDetectorMetadata : ConventionalComponentMetadata {
 

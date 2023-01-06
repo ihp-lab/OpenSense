@@ -9,10 +9,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
 using OpenFaceInterop;
-using OpenSense.Component.OpenFace.Common;
+using OpenSense.Components.OpenFace.Common;
 using OpenSense.DataWriter.Contract;
 
-namespace OpenSense.Component.OpenFace {
+namespace OpenSense.Components.OpenFace {
     public sealed class OpenFace : IConsumer<Shared<Image>>, IProducer<PoseAndEyeAndFace>, INotifyPropertyChanged {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;

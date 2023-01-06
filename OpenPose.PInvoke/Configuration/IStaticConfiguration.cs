@@ -1,4 +1,4 @@
-﻿namespace OpenSense.Component.OpenPose.PInvoke.Configuration {
+﻿namespace OpenSense.Components.OpenPose.PInvoke.Configuration {
     /// <summary>
     /// Configurations that can only be set at initial time
     /// </summary>

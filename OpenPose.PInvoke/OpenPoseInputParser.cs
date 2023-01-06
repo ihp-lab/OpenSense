@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-namespace OpenSense.Component.OpenPose.PInvoke {
+namespace OpenSense.Components.OpenPose.PInvoke {
 
 	public static class OpenPoseInputParser {
 		/*

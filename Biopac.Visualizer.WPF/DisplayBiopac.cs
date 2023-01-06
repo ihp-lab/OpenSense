@@ -4,7 +4,7 @@
 // Copyright (c) USC ICT. All rights reserved.
 // </copyright>
 
-namespace OpenSense.Component.Biopac.Visualizer {
+namespace OpenSense.Components.Biopac.Visualizer {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;

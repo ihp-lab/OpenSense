@@ -1,10 +1,10 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Component.AzureKinect.Visualizer;
-using OpenSense.Component.Contract;
-using OpenSense.WPF.Component.Contract;
+using OpenSense.Components.AzureKinect.Visualizer;
+using OpenSense.Components.Contract;
+using OpenSense.WPF.Components.Contract;
 
-namespace OpenSense.WPF.Component.AzureKinect.Visualizer {
+namespace OpenSense.WPF.Components.AzureKinect.Visualizer {
     [Export(typeof(IConfigurationControlCreator))]
     public class AzureKinectBodyTrackerVisualizerConfigurationControlCreator : IConfigurationControlCreator {
 

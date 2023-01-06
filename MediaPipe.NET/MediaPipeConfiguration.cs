@@ -9,9 +9,9 @@ using Mediapipe.Net.Framework.Packets;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using Newtonsoft.Json;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.MediaPipe.NET {
+namespace OpenSense.Components.MediaPipe.NET {
     [Serializable]
     public class MediaPipeConfiguration : OperatorConfiguration {
 

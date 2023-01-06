@@ -4,10 +4,10 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using Microsoft.Psi;
 using Microsoft.Psi.Components;
-using OpenSense.Component.EyePointOfInterest.Common;
-using OpenSense.Component.OpenFace.Common;
+using OpenSense.Components.EyePointOfInterest.Common;
+using OpenSense.Components.OpenFace.Common;
 
-namespace OpenSense.Component.EyePointOfInterest {
+namespace OpenSense.Components.EyePointOfInterest {
     public class DisplayPoiEstimator : IConsumerProducer<PoseAndEyeAndFace, Vector2> {
 
         public event PropertyChangedEventHandler PropertyChanged;

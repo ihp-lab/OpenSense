@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.WPF.Component.OpenPose.Visualizer</AssemblyName>
-        <RootNamespace>OpenSense.WPF.Component.OpenPose.Visualizer</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Components.OpenPose.Visualizer</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.OpenPose.Visualizer</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

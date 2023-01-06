@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.WPF.Component.CsvExporter</AssemblyName>
-        <RootNamespace>OpenSense.WPF.Component.CsvExporter</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Components.CsvExporter</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.CsvExporter</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

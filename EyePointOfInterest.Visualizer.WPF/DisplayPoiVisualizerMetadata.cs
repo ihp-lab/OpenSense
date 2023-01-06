@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Composition;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.EyePointOfInterest.Visualizer {
+namespace OpenSense.Components.EyePointOfInterest.Visualizer {
     [Export(typeof(IComponentMetadata))]
     public class DisplayPoiVisualizerMetadata : ConventionalComponentMetadata {
 

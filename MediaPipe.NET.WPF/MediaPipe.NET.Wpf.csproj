@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.WPF.Component.MediaPipe.NET</AssemblyName>
-        <RootNamespace>OpenSense.WPF.Component.MediaPipe.NET</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Components.MediaPipe.NET</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.MediaPipe.NET</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

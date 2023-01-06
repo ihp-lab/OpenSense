@@ -4,7 +4,7 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using Microsoft.Psi;
 
-namespace OpenSense.Component.EyePointOfInterest.Visualizer {
+namespace OpenSense.Components.EyePointOfInterest.Visualizer {
     public class DisplayPoiVisualizer : INotifyPropertyChanged, IConsumer<Vector2> {
 
         public Receiver<Vector2> In { get; private set; }

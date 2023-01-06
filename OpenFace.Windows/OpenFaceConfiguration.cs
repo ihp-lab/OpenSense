@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
 
-namespace OpenSense.Component.OpenFace {
+namespace OpenSense.Components.OpenFace {
     [Serializable]
     public class OpenFaceConfiguration : ConventionalComponentConfiguration {
 

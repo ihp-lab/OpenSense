@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.Psi;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Builtin.Visualizer {
+namespace OpenSense.Components.Builtin.Visualizer {
     [Serializable]
     public class BooleanVisualizerConfiguration : ConventionalComponentConfiguration {
 

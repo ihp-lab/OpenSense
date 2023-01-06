@@ -4,9 +4,9 @@ using System.Linq;
 using Microsoft.ML;
 using Microsoft.Psi;
 using Microsoft.Psi.Components;
-using OpenSense.Component.OpenFace.Common;
+using OpenSense.Components.OpenFace.Common;
 
-namespace OpenSense.Component.HeadGesture {
+namespace OpenSense.Components.HeadGesture {
     internal class HeadposeRNN : IConsumerProducer<Pose, float> {
         private string modelFilePath;
         private OnnxRNNScorer modelScorer;

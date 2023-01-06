@@ -2,9 +2,9 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using OpenSense.WPF.Component.Converters;
+using OpenSense.WPF.Components.Converters;
 
-namespace OpenSense.WPF.Component.Controls {
+namespace OpenSense.WPF.Components.Controls {
     public partial class TimeSpanControl : UserControl
     {
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(

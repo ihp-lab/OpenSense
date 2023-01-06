@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Composition;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi.Data {
+namespace OpenSense.Components.Psi.Data {
     [Export(typeof(IComponentMetadata))]
     public class JsonStoreExporterMetadata : IComponentMetadata {
 

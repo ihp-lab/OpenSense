@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using Mediapipe.Net.Framework.Packets;
 using Newtonsoft.Json.Linq;
 
-namespace OpenSense.Component.MediaPipe.NET {
+namespace OpenSense.Components.MediaPipe.NET {
     public sealed class SidePacketConfiguration : INotifyPropertyChanged {
 
         private string identifier = "side_packet_identifier";

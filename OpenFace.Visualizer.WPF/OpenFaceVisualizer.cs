@@ -7,11 +7,11 @@ using System.Windows.Media.Imaging;
 using Microsoft.Psi;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
-using OpenSense.Component.OpenFace.Common;
-using OpenSense.Component.Imaging.Visualizer.Common;
+using OpenSense.Components.OpenFace.Common;
+using OpenSense.Components.Imaging.Visualizer.Common;
 using Image = Microsoft.Psi.Imaging.Image;
 
-namespace OpenSense.Component.OpenFace.Visualizer {
+namespace OpenSense.Components.OpenFace.Visualizer {
     public sealed class OpenFaceVisualizer : Subpipeline, IProducer<Shared<Image>>, INotifyPropertyChanged {
 
         #region INotifyPropertyChanged

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Composition;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Biopac.Visualizer {
+namespace OpenSense.Components.Biopac.Visualizer {
     [Export(typeof(IComponentMetadata))]
     public class BiopacVisualizerMetadata : ConventionalComponentMetadata {
 

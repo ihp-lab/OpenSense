@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.ML.Data;
 using Microsoft.ML.Transforms.Image;
 
-namespace OpenSense.Component.Emotion {
+namespace OpenSense.Components.Emotion {
     internal class BitmapObject {
         //[ImageType(224, 224)]
         [ImageType(64,64), ColumnName("image")]

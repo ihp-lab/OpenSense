@@ -2,9 +2,9 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using OpenSense.Component.Builtin.Visualizer;
+using OpenSense.Components.Builtin.Visualizer;
 
-namespace OpenSense.WPF.Component.Builtin.Visualizer {
+namespace OpenSense.WPF.Components.Builtin.Visualizer {
     public partial class DoubleVisualizerInstanceControl : UserControl {
         private DoubleVisualizer ViewModel => (DoubleVisualizer)DataContext;
 

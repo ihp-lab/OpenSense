@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
-using OpenSense.Component.OpenFace.Common;
+using OpenSense.Components.OpenFace.Common;
 
-namespace OpenSense.Component.EyePointOfInterest.Common {
+namespace OpenSense.Components.EyePointOfInterest.Common {
     public interface IPoiOnDisplayEstimator {
 
         string Name { get; set; }

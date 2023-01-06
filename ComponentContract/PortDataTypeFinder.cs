@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OpenSense.Component.Contract {
+namespace OpenSense.Components.Contract {
     public static class PortDataTypeFinder {
         
     }

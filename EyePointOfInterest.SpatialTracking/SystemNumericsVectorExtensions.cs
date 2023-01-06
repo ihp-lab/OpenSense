@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using MathNet.Spatial.Euclidean;
 
-namespace OpenSense.Component.EyePointOfInterest.SpatialTracking {
+namespace OpenSense.Components.EyePointOfInterest.SpatialTracking {
     public static class SystemNumericsVectorExtensions {
 
         public static Point2D ToMathNetPoint2D(this Vector2 vec) => new Point2D(vec.X, vec.Y);

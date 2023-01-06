@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.Psi;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Emotion.Visualizer {
+namespace OpenSense.Components.Emotion.Visualizer {
     [Serializable]
     public class EmotionVisualizerConfiguration : ConventionalComponentConfiguration {
 

@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.Psi;
 using Microsoft.Psi.Components;
 
-namespace OpenSense.Component.Builtin.Visualizer {
+namespace OpenSense.Components.Builtin.Visualizer {
     public sealed class BooleanVisualizer : IConsumerProducer<bool?, string>, INotifyPropertyChanged {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Composition;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Emotion {
+namespace OpenSense.Components.Emotion {
     [Export(typeof(IComponentMetadata))]
     public class EmotionDetectorMetadata : ConventionalComponentMetadata {
 

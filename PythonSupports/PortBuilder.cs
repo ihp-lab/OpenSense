@@ -1,7 +1,7 @@
 ﻿using System;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.PythonSupports {
+namespace OpenSense.Components.PythonSupports {
 
     public sealed class PortBuilder {
 

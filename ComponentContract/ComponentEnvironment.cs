@@ -1,4 +1,4 @@
-﻿namespace OpenSense.Component.Contract {
+﻿namespace OpenSense.Components.Contract {
 
     public class ComponentEnvironment {
 

@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.Psi;
 using Microsoft.Psi.Speech;
 
-namespace OpenSense.Component.Psi.Speech.Visualizer {
+namespace OpenSense.Components.Psi.Speech.Visualizer {
     public sealed class StreamingSpeechRecognitionVisualizer : IConsumer<IStreamingSpeechRecognitionResult>, INotifyPropertyChanged {
 
         #region Settings

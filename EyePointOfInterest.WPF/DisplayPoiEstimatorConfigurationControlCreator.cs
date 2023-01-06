@@ -1,10 +1,10 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Component.Contract;
-using OpenSense.Component.EyePointOfInterest;
-using OpenSense.WPF.Component.Contract;
+using OpenSense.Components.Contract;
+using OpenSense.Components.EyePointOfInterest;
+using OpenSense.WPF.Components.Contract;
 
-namespace OpenSense.WPF.Component.EyePointOfInterest {
+namespace OpenSense.WPF.Components.EyePointOfInterest {
     [Export(typeof(IConfigurationControlCreator))]
     public class DisplayPoiEstimatorConfigurationControlCreator : IConfigurationControlCreator {
 

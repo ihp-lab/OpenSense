@@ -1,9 +1,9 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Component.OpenFace.Visualizer;
-using OpenSense.WPF.Component.Contract;
+using OpenSense.Components.OpenFace.Visualizer;
+using OpenSense.WPF.Components.Contract;
 
-namespace OpenSense.WPF.Component.OpenFace.Visualizer {
+namespace OpenSense.WPF.Components.OpenFace.Visualizer {
     [Export(typeof(IInstanceControlCreator))]
     public class OpenFaceVisualizerInstanceControlCreator : IInstanceControlCreator {
 

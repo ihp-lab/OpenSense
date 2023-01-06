@@ -4,7 +4,7 @@
 <!--Usage: call "nuget pack"-->
 <package >
   <metadata>
-    <id>OpenFaceInterop</id><!-- <id>OpenSense.Component.OpenFace.Interop</id> -->
+    <id>OpenFaceInterop</id><!-- <id>OpenSense.Components.OpenFace.Interop</id> -->
     <version>1.0.0</version>
     <!-- <title>$title$</title> -->
     <authors>Unknown</authors>

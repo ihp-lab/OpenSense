@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Composition;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.WPF.Component.MediaPipe.NET.Visualizer {
+namespace OpenSense.WPF.Components.MediaPipe.NET.Visualizer {
     [Export(typeof(IComponentMetadata))]
     public sealed class NormalizedLandmarkListVectorVisualizerMetadata : ConventionalComponentMetadata  {
         public override string Description => "Visualizes MediaPipe Normalized Landmark List Vector outputs. Requires MediaPipe outputs.";

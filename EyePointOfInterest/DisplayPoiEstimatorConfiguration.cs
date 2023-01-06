@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.Psi;
-using OpenSense.Component.Contract;
-using OpenSense.Component.EyePointOfInterest.Common;
+using OpenSense.Components.Contract;
+using OpenSense.Components.EyePointOfInterest.Common;
 
-namespace OpenSense.Component.EyePointOfInterest {
+namespace OpenSense.Components.EyePointOfInterest {
     [Serializable]
     public class DisplayPoiEstimatorConfiguration : ConventionalComponentConfiguration {
 

@@ -7,7 +7,7 @@ using Mediapipe.Net.Framework.Packets;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace OpenSense.WPF.Component.MediaPipe.NET {
+namespace OpenSense.WPF.Components.MediaPipe.NET {
     internal sealed class JTokenRule : ValidationRule {
 
         public PacketType? PacketType { get; set; }

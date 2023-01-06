@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Psi;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 using OpenSense.Pipeline;
 
 namespace OpenSense.WPF.Pipeline {

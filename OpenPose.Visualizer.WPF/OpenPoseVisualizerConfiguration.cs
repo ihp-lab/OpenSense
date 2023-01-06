@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.Psi;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.OpenPose.Visualizer {
+namespace OpenSense.Components.OpenPose.Visualizer {
     [Serializable]
     public class OpenPoseVisualizerConfiguration : ConventionalComponentConfiguration {
 

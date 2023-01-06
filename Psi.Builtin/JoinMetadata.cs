@@ -2,9 +2,9 @@
 using System.Composition;
 using System.Diagnostics;
 using System.Linq;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi {
+namespace OpenSense.Components.Psi {
     [Export(typeof(IComponentMetadata))]
     public sealed class JoinMetadata : IComponentMetadata {
 

@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.WPF.Component.Builtin.Visualizer</AssemblyName>
-        <RootNamespace>OpenSense.WPF.Component.Builtin.Visualizer</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Components.Builtin.Visualizer</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.Builtin.Visualizer</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

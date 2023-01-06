@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
-using OpenSense.Component.Contract;
-using OpenSense.Component.OpenPose.PInvoke.Configuration;
+using OpenSense.Components.Contract;
+using OpenSense.Components.OpenPose.PInvoke.Configuration;
 
-namespace OpenSense.Component.OpenPose {
+namespace OpenSense.Components.OpenPose {
     [Serializable]
     public class OpenPoseConfiguration : ConventionalComponentConfiguration {
 

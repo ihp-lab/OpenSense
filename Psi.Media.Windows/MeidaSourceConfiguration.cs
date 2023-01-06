@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.Psi.Media;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi.Media {
+namespace OpenSense.Components.Psi.Media {
     [Serializable]
     public class MediaSourceConfiguration : ConventionalComponentConfiguration {
 

@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.Psi;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 using OpenSense.Pipeline.JsonConverters;
 
 namespace OpenSense.Pipeline {

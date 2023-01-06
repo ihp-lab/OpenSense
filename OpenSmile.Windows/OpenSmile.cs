@@ -5,11 +5,11 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Microsoft.Psi;
 using Microsoft.Psi.Audio;
-using OpenSense.Component.OpenSmile.Common;
-using OpenSense.Component.OpenSmile.Utility;
+using OpenSense.Components.OpenSmile.Common;
+using OpenSense.Components.OpenSmile.Utility;
 using Environment = OpenSmileInterop.Environment;
 
-namespace OpenSense.Component.OpenSmile {
+namespace OpenSense.Components.OpenSmile {
 
     public class OpenSmile : INotifyPropertyChanged {
         #region INotifyPropertyChanged

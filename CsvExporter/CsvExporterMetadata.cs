@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Composition;
-using OpenSense.Component.Contract;
-using OpenSense.Component.Psi;
+using OpenSense.Components.Contract;
+using OpenSense.Components.Psi;
 
-namespace OpenSense.Component.CsvExporter {
+namespace OpenSense.Components.CsvExporter {
     [Export(typeof(IComponentMetadata))]
     public class CsvExporterMetadata : IComponentMetadata {
 

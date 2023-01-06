@@ -1,9 +1,9 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Component.BodyGestureDetectors;
-using OpenSense.WPF.Component.Contract;
+using OpenSense.Components.BodyGestureDetectors;
+using OpenSense.WPF.Components.Contract;
 
-namespace OpenSense.WPF.Component.BodyGestureDetectors {
+namespace OpenSense.WPF.Components.BodyGestureDetectors {
     [Export(typeof(IInstanceControlCreator))]
     public class ArmsProximityDetectorInstanceControlCreator : IInstanceControlCreator {
 

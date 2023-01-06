@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace OpenSense.Component.Contract {
+namespace OpenSense.Components.Contract {
     /// <summary>
     /// Metadata of a component.
     /// Contains information that not need to be serialized.

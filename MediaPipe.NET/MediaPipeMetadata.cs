@@ -3,9 +3,9 @@
 using System;
 using System.Collections.Generic;
 using System.Composition;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.MediaPipe.NET {
+namespace OpenSense.Components.MediaPipe.NET {
     [Export(typeof(IComponentMetadata))]
     public class MediaPipeMetadata : IComponentMetadata {
 

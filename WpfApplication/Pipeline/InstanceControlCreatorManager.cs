@@ -5,8 +5,8 @@ using System.Composition.Hosting;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
-using OpenSense.Component.Contract;
-using OpenSense.WPF.Component.Contract;
+using OpenSense.Components.Contract;
+using OpenSense.WPF.Components.Contract;
 
 namespace OpenSense.WPF.Pipeline {
     public class InstanceControlCreatorManager{

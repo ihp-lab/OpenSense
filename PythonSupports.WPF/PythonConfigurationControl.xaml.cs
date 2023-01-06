@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
-using OpenSense.Component.PythonSupports;
+using OpenSense.Components.PythonSupports;
 
-namespace OpenSense.WPF.Component.PythonSupports {
+namespace OpenSense.WPF.Components.PythonSupports {
     public partial class PythonConfigurationControl : UserControl {
 
         private PythonConfiguration Conf => DataContext as PythonConfiguration;

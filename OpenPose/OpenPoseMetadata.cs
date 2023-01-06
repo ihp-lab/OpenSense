@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Composition;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.OpenPose {
+namespace OpenSense.Components.OpenPose {
     [Export(typeof(IComponentMetadata))]
     public class OpenPoseMetadata : ConventionalComponentMetadata {
 

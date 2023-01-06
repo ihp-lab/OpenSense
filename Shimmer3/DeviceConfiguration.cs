@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 
-namespace OpenSense.Component.Shimmer3 {
+namespace OpenSense.Components.Shimmer3 {
     public class DeviceConfiguration : INotifyPropertyChanged {
 
         public static readonly double[] SupportedSampleRates = { 1, 10.2, 51.2, 102.4, 204.8, 256, 512, 1024, };

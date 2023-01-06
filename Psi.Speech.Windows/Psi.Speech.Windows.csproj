@@ -2,8 +2,8 @@
 
     <PropertyGroup>
         <TargetFrameworks>net6.0-windows;net48</TargetFrameworks>
-        <AssemblyName>OpenSense.Component.Psi.Speech.Windows</AssemblyName>
-        <RootNamespace>OpenSense.Component.Psi.Speech</RootNamespace>
+        <AssemblyName>OpenSense.Components.Psi.Speech.Windows</AssemblyName>
+        <RootNamespace>OpenSense.Components.Psi.Speech</RootNamespace>
         <LangVersion>10.0</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>

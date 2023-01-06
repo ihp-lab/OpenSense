@@ -1,7 +1,7 @@
 ﻿using System;
-using OpenSense.Component.EyePointOfInterest.Common;
+using OpenSense.Components.EyePointOfInterest.Common;
 
-namespace OpenSense.Component.EyePointOfInterest.SpatialTracking {
+namespace OpenSense.Components.EyePointOfInterest.SpatialTracking {
     [Serializable]
     public class SpatialTrackingPoiOnDisplayEstimatorConfiguration : PoiOnDisplayEstimatorConfiguration {
         public int Order { get; set; }

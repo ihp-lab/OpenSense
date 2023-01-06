@@ -1,10 +1,10 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Component.Contract;
-using OpenSense.Component.Psi.Media;
-using OpenSense.WPF.Component.Contract;
+using OpenSense.Components.Contract;
+using OpenSense.Components.Psi.Media;
+using OpenSense.WPF.Components.Contract;
 
-namespace OpenSense.WPF.Component.Psi.Media {
+namespace OpenSense.WPF.Components.Psi.Media {
     [Export(typeof(IConfigurationControlCreator))]
     public class MediaCaptureConfigurationControlCreator : IConfigurationControlCreator {
 

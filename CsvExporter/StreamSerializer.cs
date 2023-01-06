@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Psi;
 
-namespace OpenSense.Component.CsvExporter {
+namespace OpenSense.Components.CsvExporter {
 
     internal abstract class StreamSerializer : IProducer<SerializedStreamData> {
 

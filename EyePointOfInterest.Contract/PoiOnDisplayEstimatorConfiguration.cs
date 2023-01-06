@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OpenSense.Component.EyePointOfInterest.Common {
+namespace OpenSense.Components.EyePointOfInterest.Common {
     [Serializable]
     public abstract class PoiOnDisplayEstimatorConfiguration {
 

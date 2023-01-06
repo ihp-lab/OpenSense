@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Composition;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Imaging {
+namespace OpenSense.Components.Imaging {
     [Export(typeof(IComponentMetadata))]
     public class FlipColorVideoMetadata : ConventionalComponentMetadata {
 

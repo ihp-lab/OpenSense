@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Composition;
 using Microsoft.Psi.Imaging;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi.Imaging {
+namespace OpenSense.Components.Psi.Imaging {
     [Export(typeof(IComponentMetadata))]
     public class ImageEncoderMetadata : ConventionalComponentMetadata {
 

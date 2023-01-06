@@ -1,4 +1,4 @@
-﻿namespace OpenSense.Component.OpenPose.PInvoke.Configuration {
+﻿namespace OpenSense.Components.OpenPose.PInvoke.Configuration {
     public class GuiConfiguration : IStaticConfiguration {
 		public DisplayMode DisplayMode { get; set; } = DisplayMode.NoDisplay;
 		public bool GuiVerbose { get; set; } = false;

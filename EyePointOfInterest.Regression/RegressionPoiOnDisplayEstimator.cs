@@ -6,10 +6,10 @@ using System.Numerics;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Trainers.FastTree;
-using OpenSense.Component.EyePointOfInterest.Common;
-using OpenSense.Component.OpenFace.Common;
+using OpenSense.Components.EyePointOfInterest.Common;
+using OpenSense.Components.OpenFace.Common;
 
-namespace OpenSense.Component.EyePointOfInterest.Regression {
+namespace OpenSense.Components.EyePointOfInterest.Regression {
     [Export(typeof(IPoiOnDisplayEstimator))]
     public class RegressionPoiOnDisplayEstimator : IPoiOnDisplayEstimator {
         private const string FEATURE_COLUMN_NAME = nameof(RegressionRecord.Cause);

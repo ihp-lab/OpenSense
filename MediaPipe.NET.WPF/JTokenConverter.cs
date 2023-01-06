@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
-namespace OpenSense.WPF.Component.MediaPipe.NET {
+namespace OpenSense.WPF.Components.MediaPipe.NET {
     internal sealed class JTokenConverter : IValueConverter {
 
         private static readonly JsonConverter[] Converters = {

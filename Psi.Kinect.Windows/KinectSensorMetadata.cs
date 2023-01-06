@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Composition;
 using Microsoft.Psi.Kinect;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi.Kinect {
+namespace OpenSense.Components.Psi.Kinect {
     [Export(typeof(IComponentMetadata))]
     public class KinectSensorMetadata : ConventionalComponentMetadata {
 

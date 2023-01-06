@@ -1,10 +1,10 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Component.Contract;
-using OpenSense.Component.OpenSmile;
-using OpenSense.WPF.Component.Contract;
+using OpenSense.Components.Contract;
+using OpenSense.Components.OpenSmile;
+using OpenSense.WPF.Components.Contract;
 
-namespace OpenSense.WPF.Component.OpenSmile {
+namespace OpenSense.WPF.Components.OpenSmile {
     [Export(typeof(IConfigurationControlCreator))]
     public class OpenSmileConfigurationControlCreator : IConfigurationControlCreator {
 

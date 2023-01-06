@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.Psi;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi {
+namespace OpenSense.Components.Psi {
     [Serializable]
     public sealed class StandardDeviationConfiguration : OperatorConfiguration {
 

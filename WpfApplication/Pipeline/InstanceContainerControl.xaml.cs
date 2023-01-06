@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
 namespace OpenSense.WPF.Pipeline {
     public partial class InstanceContainerControl : UserControl {

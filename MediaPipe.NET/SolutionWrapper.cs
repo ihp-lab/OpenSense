@@ -13,7 +13,7 @@ using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
 using Newtonsoft.Json.Linq;
 
-namespace OpenSense.Component.MediaPipe.NET {
+namespace OpenSense.Components.MediaPipe.NET {
     internal sealed class SolutionWrapper : IDisposable {
 
         private readonly ILogger<SolutionWrapper>? _logger;

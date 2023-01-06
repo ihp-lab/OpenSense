@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Composition;
 using System.Windows;
-using OpenSense.Component.Contract;
-using OpenSense.Component.Psi;
-using OpenSense.WPF.Component.Contract;
+using OpenSense.Components.Contract;
+using OpenSense.Components.Psi;
+using OpenSense.WPF.Components.Contract;
 
-namespace OpenSense.WPF.Component.Psi {
+namespace OpenSense.WPF.Components.Psi {
     [Export(typeof(IConfigurationControlCreator))]
     public class PsiStoreExporterConfigurationControlCreator : IConfigurationControlCreator {
         public bool CanCreate(ComponentConfiguration configuration) => configuration is PsiStoreExporterConfiguration;

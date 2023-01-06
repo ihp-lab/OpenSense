@@ -1,9 +1,9 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Component.Builtin.Visualizer;
-using OpenSense.WPF.Component.Contract;
+using OpenSense.Components.Builtin.Visualizer;
+using OpenSense.WPF.Components.Contract;
 
-namespace OpenSense.WPF.Component.Builtin.Visualizer {
+namespace OpenSense.WPF.Components.Builtin.Visualizer {
     [Export(typeof(IInstanceControlCreator))]
     public class BooleanVisualizerInstanceControlCreator : IInstanceControlCreator {
 

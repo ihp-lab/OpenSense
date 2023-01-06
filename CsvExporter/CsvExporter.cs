@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using Microsoft.Psi;
 
-namespace OpenSense.Component.CsvExporter {
+namespace OpenSense.Components.CsvExporter {
 
     public class CsvExporter : Subpipeline, INotifyPropertyChanged {
 

@@ -2,7 +2,7 @@
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
 namespace OpenSense.Pipeline.JsonConverters {
     internal class ComponentConfigurationJsonConverter : JsonConverter {

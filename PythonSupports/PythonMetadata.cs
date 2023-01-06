@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Composition;
 using System.Diagnostics;
 using System.Linq;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.PythonSupports {
+namespace OpenSense.Components.PythonSupports {
     [Export(typeof(IComponentMetadata))]
     public sealed class PythonMetadata : IComponentMetadata {
 

@@ -4,7 +4,7 @@
 // Copyright (c) USC ICT. All rights reserved.
 // </copyright>
 
-namespace OpenSense.WPF.Component.Audio.Visualizer.Common {
+namespace OpenSense.WPF.Components.Audio.Visualizer.Common {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;

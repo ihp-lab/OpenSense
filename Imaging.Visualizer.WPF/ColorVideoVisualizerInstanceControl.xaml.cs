@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using OpenSense.Component.Imaging.Visualizer;
+using OpenSense.Components.Imaging.Visualizer;
 
-namespace OpenSense.WPF.Component.Imaging.Visualizer {
+namespace OpenSense.WPF.Components.Imaging.Visualizer {
     public partial class ColorVideoVisualizerInstanceControl : UserControl {
 
         private ColorVideoVisualizer ViewModel => (ColorVideoVisualizer)DataContext;

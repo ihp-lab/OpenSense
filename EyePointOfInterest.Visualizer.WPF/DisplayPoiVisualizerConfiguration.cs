@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.Psi;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.EyePointOfInterest.Visualizer {
+namespace OpenSense.Components.EyePointOfInterest.Visualizer {
     [Serializable]
     public class DisplayPoiVisualizerConfiguration : ConventionalComponentConfiguration {
 

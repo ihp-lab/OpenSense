@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.Psi;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.AzureKinect.Visualizer {
+namespace OpenSense.Components.AzureKinect.Visualizer {
     [Serializable]
     public class AzureKinectBodyTrackerVisualizerConfiguration : ConventionalComponentConfiguration {
 

@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace OpenSense.WPF.Component.OpenSmile.Visualizer {
+namespace OpenSense.WPF.Components.OpenSmile.Visualizer {
     /// <summary>
     /// DisplayAudio is a helper class that is used to bind a WPF <image/> to a Psi audio.
     /// </summary>

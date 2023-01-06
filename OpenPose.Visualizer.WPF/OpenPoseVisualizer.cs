@@ -7,11 +7,11 @@ using System.Windows.Media.Imaging;
 using Microsoft.Psi;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
-using OpenSense.Component.Imaging.Visualizer.Common;
-using OpenSense.Component.OpenPose.Common;
+using OpenSense.Components.Imaging.Visualizer.Common;
+using OpenSense.Components.OpenPose.Common;
 using Image = Microsoft.Psi.Imaging.Image;
 
-namespace OpenSense.Component.OpenPose.Visualizer {
+namespace OpenSense.Components.OpenPose.Visualizer {
     public class OpenPoseVisualizer : Subpipeline, IProducer<Shared<Image>>, INotifyPropertyChanged {
 
         #region INotifyPropertyChanged

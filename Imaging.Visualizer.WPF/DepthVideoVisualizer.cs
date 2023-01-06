@@ -7,9 +7,9 @@ using System.Windows.Media.Imaging;
 using Microsoft.Psi;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
-using OpenSense.Component.Imaging.Visualizer.Common;
+using OpenSense.Components.Imaging.Visualizer.Common;
 
-namespace OpenSense.Component.Imaging.Visualizer {
+namespace OpenSense.Components.Imaging.Visualizer {
     public class DepthVideoVisualizer : IConsumerProducer<Shared<DepthImage>, Shared<Image>>, INotifyPropertyChanged {
 
         #region INotifyPropertyChanged

@@ -2,8 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <AssemblyName>OpenSense.Component.CsvExporter</AssemblyName>
-        <RootNamespace>OpenSense.Component.CsvExporter</RootNamespace>
+        <AssemblyName>OpenSense.Components.CsvExporter</AssemblyName>
+        <RootNamespace>OpenSense.Components.CsvExporter</RootNamespace>
         <LangVersion>10.0</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>

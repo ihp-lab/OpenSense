@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.Psi;
 using Microsoft.Psi.Kinect;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi.Kinect {
+namespace OpenSense.Components.Psi.Kinect {
     [Serializable]
     public class KinectSensorConfiguration : ConventionalComponentConfiguration {
 

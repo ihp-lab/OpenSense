@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace OpenSense.WPF.Component.Psi.Data {
+namespace OpenSense.WPF.Components.Psi.Data {
     public partial class JsonStoreImporterConfigurationControl : UserControl {
 
         public JsonStoreImporterConfigurationControl() {

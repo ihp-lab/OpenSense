@@ -1,10 +1,10 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Component.Contract;
-using OpenSense.Component.PythonSupports;
-using OpenSense.WPF.Component.Contract;
+using OpenSense.Components.Contract;
+using OpenSense.Components.PythonSupports;
+using OpenSense.WPF.Components.Contract;
 
-namespace OpenSense.WPF.Component.PythonSupports {
+namespace OpenSense.WPF.Components.PythonSupports {
     [Export(typeof(IConfigurationControlCreator))]
     public class PythonConfigurationControlCreator : IConfigurationControlCreator {
         public bool CanCreate(ComponentConfiguration configuration) => configuration is PythonConfiguration;

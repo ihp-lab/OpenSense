@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Composition;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi.Speech.Visualizer {
+namespace OpenSense.Components.Psi.Speech.Visualizer {
     [Export(typeof(IComponentMetadata))]
     public class StreamingSpeechRecognitionVisualizerMetadata : ConventionalComponentMetadata {
 

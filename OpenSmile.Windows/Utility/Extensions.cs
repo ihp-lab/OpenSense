@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using OpenSense.Component.OpenSmile.Common;
+using OpenSense.Components.OpenSmile.Common;
 
-namespace OpenSense.Component.OpenSmile.Utility {
+namespace OpenSense.Components.OpenSmile.Utility {
     internal static class Extensions {
         public static Vector<T> CreateVector<T>(this OpenSmileInterop.Vector rawVector, Func<byte[], T> bitConverter) {
             if (rawVector.DataType != typeof(T)) {

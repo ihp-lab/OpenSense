@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.Psi;
 
-namespace OpenSense.Component.Contract {
+namespace OpenSense.Components.Contract {
     [Serializable]
     public abstract class OperatorConfiguration : ComponentConfiguration {
 

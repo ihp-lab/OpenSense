@@ -11,12 +11,12 @@ using Microsoft.ML.Transforms.Onnx;
 using Microsoft.Psi;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
-using OpenSense.Component.Emotion.Common;
-using OpenSense.Component.OpenFace.Common;
+using OpenSense.Components.Emotion.Common;
+using OpenSense.Components.OpenFace.Common;
 using OpenSense.DataWriter.Contract;
 using static Microsoft.ML.Transforms.Image.ImagePixelExtractingEstimator;
 
-namespace OpenSense.Component.Emotion {
+namespace OpenSense.Components.Emotion {
     /// <summary>
     /// This detector is reorganized based on Baiyu's implementation
     /// It should be further rewrite totally

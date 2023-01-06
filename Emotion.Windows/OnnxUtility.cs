@@ -2,7 +2,7 @@
 using System.Reflection;
 
 
-namespace OpenSense.Component.Emotion {
+namespace OpenSense.Components.Emotion {
     internal static class OnnxUtility {
 
         private const string MODEL_PATH = "Models";

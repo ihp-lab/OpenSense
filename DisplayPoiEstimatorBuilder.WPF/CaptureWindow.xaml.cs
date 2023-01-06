@@ -16,9 +16,9 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using Microsoft.Psi;
 using Microsoft.Psi.Media;
-using OpenSense.Component.EyePointOfInterest.Common;
-using OpenSense.Component.Imaging;
-using OpenSense.Component.OpenFace;
+using OpenSense.Components.EyePointOfInterest.Common;
+using OpenSense.Components.Imaging;
+using OpenSense.Components.OpenFace;
 
 namespace OpenSense.WPF.Widget.DisplayPoiEstimatorBuilder {
 

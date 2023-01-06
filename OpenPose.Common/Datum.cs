@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace OpenSense.Component.OpenPose.Common {
+namespace OpenSense.Components.OpenPose.Common {
     /*
         Data struct for OP output
         Comments are from OpenPose

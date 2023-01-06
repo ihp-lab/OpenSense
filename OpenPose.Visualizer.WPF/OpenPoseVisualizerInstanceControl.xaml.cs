@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using OpenSense.Component.OpenPose.Visualizer;
+using OpenSense.Components.OpenPose.Visualizer;
 
-namespace OpenSense.WPF.Component.OpenPose.Visualizer {
+namespace OpenSense.WPF.Components.OpenPose.Visualizer {
     public sealed partial class OpenPoseVisualizerInstanceControl : UserControl {
         private OpenPoseVisualizer ViewModel => (OpenPoseVisualizer)DataContext;
 

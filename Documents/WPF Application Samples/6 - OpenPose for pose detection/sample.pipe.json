@@ -9,7 +9,7 @@
 	},
 	Instances: [
 		{
-			ComponentType: "OpenSense.Component.Psi.Media.MediaCaptureConfiguration, OpenSense.Component.Psi.Media.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			ComponentType: "OpenSense.Components.Psi.Media.MediaCaptureConfiguration, OpenSense.Components.Psi.Media.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
 			Name: "Media Capture",
 			Description: "",
 			Inputs: [],
@@ -68,7 +68,7 @@
 			Id: "ca337198-ad00-4117-b21a-3f0b541275c7"
 		},
 		{
-			ComponentType: "OpenSense.Component.OpenPose.OpenPoseConfiguration, OpenSense.Component.OpenPose, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			ComponentType: "OpenSense.Components.OpenPose.OpenPoseConfiguration, OpenSense.Components.OpenPose, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
 			Name: "OpenPose",
 			Description: "",
 			Inputs: [
@@ -206,7 +206,7 @@
 			Id: "3157db77-feb8-457b-a67a-a9dd822408de"
 		},
 		{
-			ComponentType: "OpenSense.Component.OpenPose.Visualizer.OpenPoseVisualizerConfiguration, OpenSense.WPF.Component.OpenPose.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			ComponentType: "OpenSense.Components.OpenPose.Visualizer.OpenPoseVisualizerConfiguration, OpenSense.WPF.Components.OpenPose.Visualizer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
 			Name: "OpenPose Visualizer",
 			Description: "",
 			Inputs: [

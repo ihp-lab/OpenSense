@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Psi;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
 namespace OpenSense.WPF.Pipeline {
     public partial class InstanceConnectionControl : UserControl {

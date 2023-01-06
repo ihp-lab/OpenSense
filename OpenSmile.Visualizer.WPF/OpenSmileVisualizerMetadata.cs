@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Composition;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.OpenSmile.Visualizer {
+namespace OpenSense.Components.OpenSmile.Visualizer {
     [Export(typeof(IComponentMetadata))]
     public class OpenSmileVisualizerMetadata : ConventionalComponentMetadata {
 

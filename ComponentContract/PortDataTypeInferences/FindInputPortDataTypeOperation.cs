@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace OpenSense.Component.Contract.PortDataTypeInferences {
+namespace OpenSense.Components.Contract.PortDataTypeInferences {
 
     internal sealed class InferenceOutputPort : InferencePort {
 

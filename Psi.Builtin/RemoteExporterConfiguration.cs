@@ -2,9 +2,9 @@
 using Microsoft.Psi;
 using Microsoft.Psi.Data;
 using Microsoft.Psi.Remoting;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi {
+namespace OpenSense.Components.Psi {
     [Serializable]
     public class RemoteExporterConfiguration : PsiExporterConfiguration {
 

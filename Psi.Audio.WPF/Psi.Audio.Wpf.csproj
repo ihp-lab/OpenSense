@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.WPF.Component.Psi.Audio</AssemblyName>
-        <RootNamespace>OpenSense.WPF.Component.Psi.Audio</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Components.Psi.Audio</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.Psi.Audio</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

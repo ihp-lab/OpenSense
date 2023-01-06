@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace OpenSense.Component.OpenPose.PInvoke.Configuration {
+namespace OpenSense.Components.OpenPose.PInvoke.Configuration {
     public class PoseConfiguration : IStaticConfiguration {
 		public PoseMode PoseMode { get; set; } = PoseMode.Enabled;
 		public Vector2Int? NetResolution { get; set; } = new Vector2Int(-1, Const.DefaultNetInput1DimResolution);

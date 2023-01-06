@@ -5,7 +5,7 @@ using Mediapipe.Net.Framework;
 using Mediapipe.Net.Framework.Packets;
 using Microsoft.Psi;
 
-namespace OpenSense.Component.MediaPipe.NET {
+namespace OpenSense.Components.MediaPipe.NET {
     internal sealed class InputProcessor<T> where T : notnull {
         private readonly string _name;
         private readonly Func<T, Envelope, Packet> _conv;

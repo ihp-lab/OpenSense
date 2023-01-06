@@ -5,8 +5,8 @@
         <UseWPF>true</UseWPF>
         <Platforms>x64</Platforms>
         <PlatformTarget>x64</PlatformTarget>
-        <AssemblyName>OpenSense.WPF.Component.OpenSmile.Windows</AssemblyName>
-        <RootNamespace>OpenSense.WPF.Component.OpenSmile</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Components.OpenSmile.Windows</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.OpenSmile</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

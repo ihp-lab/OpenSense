@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace OpenSense.Component.Contract.PortDataTypeInferences {
+namespace OpenSense.Components.Contract.PortDataTypeInferences {
     internal abstract class InferencePorts : InferenceOperation<IList<Type>> {
 
         protected InferencePorts(

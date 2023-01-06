@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace OpenSense.Component.Emotion.Common {
+namespace OpenSense.Components.Emotion.Common {
     public class Emotions {
 
         public Emotions(IList<float> emotions) {

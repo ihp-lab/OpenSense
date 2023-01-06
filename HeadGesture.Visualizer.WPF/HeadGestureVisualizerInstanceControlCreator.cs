@@ -1,9 +1,9 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Component.HeadGesture.Visualizer;
-using OpenSense.WPF.Component.Contract;
+using OpenSense.Components.HeadGesture.Visualizer;
+using OpenSense.WPF.Components.Contract;
 
-namespace OpenSense.WPF.Component.HeadGesture.Visualizer {
+namespace OpenSense.WPF.Components.HeadGesture.Visualizer {
     [Export(typeof(IInstanceControlCreator))]
     public class HeadGestureVisualizerInstanceControlCreator : IInstanceControlCreator {
 

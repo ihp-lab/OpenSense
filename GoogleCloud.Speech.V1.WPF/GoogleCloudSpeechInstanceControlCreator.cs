@@ -1,9 +1,9 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Component.GoogleCloud.Speech.V1;
-using OpenSense.WPF.Component.Contract;
+using OpenSense.Components.GoogleCloud.Speech.V1;
+using OpenSense.WPF.Components.Contract;
 
-namespace OpenSense.WPF.Component.GoogleCloud.Speech.V1 {
+namespace OpenSense.WPF.Components.GoogleCloud.Speech.V1 {
     [Export(typeof(IInstanceControlCreator))]
     public class GoogleCloudSpeechInstanceControlCreator : IInstanceControlCreator {
 

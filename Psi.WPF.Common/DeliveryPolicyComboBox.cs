@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
 using Microsoft.Psi;
 
-namespace OpenSense.WPF.Component.Psi.Common {
+namespace OpenSense.WPF.Components.Psi.Common {
     public class DeliveryPolicyComboBox : ComboBox {
 
         public DeliveryPolicyComboBox() {

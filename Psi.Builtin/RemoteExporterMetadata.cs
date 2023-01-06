@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Composition;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi {
+namespace OpenSense.Components.Psi {
     [Export(typeof(IComponentMetadata))]
     public class RemoteExporterMetadata : IComponentMetadata {
 

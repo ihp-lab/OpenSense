@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 
-namespace OpenSense.Component.Contract.PortDataTypeInferences {
+namespace OpenSense.Components.Contract.PortDataTypeInferences {
     internal abstract class InferenceOperation {
 
         protected readonly ComponentConfiguration _config;

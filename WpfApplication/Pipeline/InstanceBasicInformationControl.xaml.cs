@@ -10,7 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
 namespace OpenSense.WPF.Pipeline {
     public partial class InstanceBasicInformationControl : UserControl {

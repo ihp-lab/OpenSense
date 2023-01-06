@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.Psi;
 using Microsoft.Psi.Data.Json;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi.Data {
+namespace OpenSense.Components.Psi.Data {
     [Serializable]
     public class JsonStoreExporterConfiguration : ExporterConfiguration {//In /psi JsonExporter is not a subclass of Exporter, so we cannot inherit from PsiExporterConfiguration.
 

@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Microsoft.Psi;
-using OpenSense.Component.OpenSmile.Common;
+using OpenSense.Components.OpenSmile.Common;
 
-namespace OpenSense.Component.OpenSmile.Visualizer {
+namespace OpenSense.Components.OpenSmile.Visualizer {
     public class OpenSmileVisualizer : IConsumer<Vector<float>>, INotifyPropertyChanged {
 
         public Receiver<Vector<float>> In { get; private set; }

@@ -1,9 +1,9 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Component.EyePointOfInterest.Visualizer;
-using OpenSense.WPF.Component.Contract;
+using OpenSense.Components.EyePointOfInterest.Visualizer;
+using OpenSense.WPF.Components.Contract;
 
-namespace OpenSense.WPF.Component.EyePointOfInterest.Visualizer {
+namespace OpenSense.WPF.Components.EyePointOfInterest.Visualizer {
     [Export(typeof(IInstanceControlCreator))]
     public class DisplayPoiVisualizerInstanceControlCreator : IInstanceControlCreator {
 

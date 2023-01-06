@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace OpenSense.Component.Contract {
+namespace OpenSense.Components.Contract {
     public interface IPortMetadata {
 
         object Identifier { get; }

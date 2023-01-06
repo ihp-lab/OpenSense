@@ -9,7 +9,7 @@
 	},
 	Instances: [
 		{
-			ComponentType: "OpenSense.Component.Psi.Media.MediaCaptureConfiguration, OpenSense.Component.Psi.Media.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			ComponentType: "OpenSense.Components.Psi.Media.MediaCaptureConfiguration, OpenSense.Components.Psi.Media.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
 			Name: "Media Capture",
 			Description: "",
 			Inputs: [],
@@ -68,7 +68,7 @@
 			Id: "988bad00-b7b5-49f8-b187-b543893e308b"
 		},
 		{
-			ComponentType: "OpenSense.Component.Psi.PsiStoreExporterConfiguration, OpenSense.Component.Psi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			ComponentType: "OpenSense.Components.Psi.PsiStoreExporterConfiguration, OpenSense.Components.Psi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
 			StoreName: "sample",
 			RootPath: "{path_to_save_data}",
 			CreateSubdirectory: false,

@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Mediapipe.Net.Framework.Packets;
 
-namespace OpenSense.Component.MediaPipe.NET {
+namespace OpenSense.Components.MediaPipe.NET {
     public sealed class OutputStreamConfiguration : INotifyPropertyChanged {
 
         private string identifier = "output_identifier";

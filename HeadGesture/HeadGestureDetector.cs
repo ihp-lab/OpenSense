@@ -1,9 +1,9 @@
 ﻿using Microsoft.Psi;
 using Microsoft.Psi.Components;
-using OpenSense.Component.OpenFace.Common;
-using HeadGestureData = OpenSense.Component.OpenFace.Common.Gesture;
+using OpenSense.Components.OpenFace.Common;
+using HeadGestureData = OpenSense.Components.OpenFace.Common.Gesture;
 
-namespace OpenSense.Component.HeadGesture {
+namespace OpenSense.Components.HeadGesture {
     public class HeadGestureDetector : Subpipeline, IConsumerProducer<Pose, HeadGestureData> {
         private const string INPUT_NAME = "masking_1_input";
         private const string OUTPUT_NAME = "time_distributed_1";

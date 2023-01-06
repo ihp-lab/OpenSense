@@ -10,7 +10,7 @@ using Microsoft.Psi.Imaging;
 using Microsoft.Psi.Media;
 using Microsoft.Psi.Media_Interop;
 
-namespace OpenSense.Component.Media.Writer {
+namespace OpenSense.Components.Media.Writer {
     /// <summary>
     /// This component will write multiple mp4 files when the activity indicator is on.
     /// </summary>

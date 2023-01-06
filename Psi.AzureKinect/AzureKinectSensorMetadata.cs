@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Composition;
 using Microsoft.Psi.AzureKinect;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi.AzureKinect {
+namespace OpenSense.Components.Psi.AzureKinect {
     [Export(typeof(IComponentMetadata))]
     public class AzureKinectSensorMetadata : ConventionalComponentMetadata {
 

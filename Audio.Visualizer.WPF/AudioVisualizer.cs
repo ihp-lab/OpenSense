@@ -8,7 +8,7 @@ using System.Windows.Media.Imaging;
 using Microsoft.Psi;
 using Microsoft.Psi.Audio;
 
-namespace OpenSense.Component.Audio.Visualizer {
+namespace OpenSense.Components.Audio.Visualizer {
     public class AudioVisualizer : Subpipeline, IConsumer<AudioBuffer>, INotifyPropertyChanged {
 
         #region Settings

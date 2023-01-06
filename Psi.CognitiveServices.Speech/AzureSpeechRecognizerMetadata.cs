@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Composition;
 using Microsoft.Psi.CognitiveServices.Speech;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi.CognitiveServices.Speech {
+namespace OpenSense.Components.Psi.CognitiveServices.Speech {
     [Export(typeof(IComponentMetadata))]
     public class AzureSpeechRecognizerMetadata : ConventionalComponentMetadata {
 

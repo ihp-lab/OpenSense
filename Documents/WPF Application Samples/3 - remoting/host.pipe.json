@@ -9,7 +9,7 @@
 	},
 	Instances: [
 		{
-			ComponentType: "OpenSense.Component.Psi.Media.MediaCaptureConfiguration, OpenSense.Component.Psi.Media.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			ComponentType: "OpenSense.Components.Psi.Media.MediaCaptureConfiguration, OpenSense.Components.Psi.Media.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
 			Raw: {
 				CaptureAudio: false,
 				BacklightCompensation: {
@@ -68,7 +68,7 @@
 			Inputs: []
 		},
 		{
-			ComponentType: "OpenSense.Component.Psi.RemoteExporterConfiguration, OpenSense.Component.Psi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+			ComponentType: "OpenSense.Components.Psi.RemoteExporterConfiguration, OpenSense.Components.Psi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
 			Port: 11411,
 			Transport: 2,
 			MaxBytesPerSecond: 9223372036854775807,

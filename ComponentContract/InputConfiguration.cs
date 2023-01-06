@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Microsoft.Psi;
 
-namespace OpenSense.Component.Contract {
+namespace OpenSense.Components.Contract {
     [Serializable]
     public class InputConfiguration : INotifyPropertyChanged {
 

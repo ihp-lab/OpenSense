@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Composition;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Audio.Visualizer {
+namespace OpenSense.Components.Audio.Visualizer {
     [Export(typeof(IComponentMetadata))]
     public class AudioVisualizerMetadata : ConventionalComponentMetadata {
 

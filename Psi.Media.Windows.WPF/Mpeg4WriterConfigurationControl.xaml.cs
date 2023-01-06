@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using OpenSense.Component.Psi.Media;
+using OpenSense.Components.Psi.Media;
 
-namespace OpenSense.WPF.Component.Psi.Media {
+namespace OpenSense.WPF.Components.Psi.Media {
     public partial class Mpeg4WriterConfigurationControl : UserControl {
         public Mpeg4WriterConfigurationControl() {
             InitializeComponent();

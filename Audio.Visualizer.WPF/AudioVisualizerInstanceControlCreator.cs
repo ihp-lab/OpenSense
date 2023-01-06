@@ -1,9 +1,9 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Component.Audio.Visualizer;
-using OpenSense.WPF.Component.Contract;
+using OpenSense.Components.Audio.Visualizer;
+using OpenSense.WPF.Components.Contract;
 
-namespace OpenSense.WPF.Component.Audio.Visualizer {
+namespace OpenSense.WPF.Components.Audio.Visualizer {
     [Export(typeof(IInstanceControlCreator))]
     public class AudioVisualizerInstanceControlCreator : IInstanceControlCreator {
 

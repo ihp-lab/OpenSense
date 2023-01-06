@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.WPF.Component.Psi.Speech.Windows</AssemblyName>
-        <RootNamespace>OpenSense.WPF.Component.Psi.Speech</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Components.Psi.Speech.Windows</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.Psi.Speech</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

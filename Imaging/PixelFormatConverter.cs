@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
 
-namespace OpenSense.Component.Imaging {
+namespace OpenSense.Components.Imaging {
     public class PixelFormatConverter: IConsumer<Shared<Image>>, IProducer<Shared<Image>>, INotifyPropertyChanged {
 
         private PixelFormat targetPixelFormat = PixelFormat.BGR_24bpp;

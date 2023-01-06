@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace OpenSense.Component.Contract {
+namespace OpenSense.Components.Contract {
     public enum PortDirection {
         Input,
         Output,

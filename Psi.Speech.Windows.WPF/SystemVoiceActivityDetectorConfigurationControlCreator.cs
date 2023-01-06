@@ -1,10 +1,10 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Component.Contract;
-using OpenSense.Component.Psi.Speech;
-using OpenSense.WPF.Component.Contract;
+using OpenSense.Components.Contract;
+using OpenSense.Components.Psi.Speech;
+using OpenSense.WPF.Components.Contract;
 
-namespace OpenSense.WPF.Component.Psi.Speech {
+namespace OpenSense.WPF.Components.Psi.Speech {
     [Export(typeof(IConfigurationControlCreator))]
     public class SystemVoiceActivityDetectorConfigurationControlCreator : IConfigurationControlCreator {
 

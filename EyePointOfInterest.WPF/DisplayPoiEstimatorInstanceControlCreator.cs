@@ -1,9 +1,9 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Component.EyePointOfInterest;
-using OpenSense.WPF.Component.Contract;
+using OpenSense.Components.EyePointOfInterest;
+using OpenSense.WPF.Components.Contract;
 
-namespace OpenSense.WPF.Component.EyePointOfInterest {
+namespace OpenSense.WPF.Components.EyePointOfInterest {
     [Export(typeof(IInstanceControlCreator))]
     public class DisplayPoiEstimatorInstanceControlCreator : IInstanceControlCreator {
 

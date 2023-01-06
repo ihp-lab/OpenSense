@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace OpenSense.Component.OpenPose.PInvoke.Configuration {
+namespace OpenSense.Components.OpenPose.PInvoke.Configuration {
     public class InputConfiguration : IStaticConfiguration {
 		public ProducerType InputType { get; set; } = ProducerType.Webcam;
 		public string ProducerString { get; set; } = "-1";

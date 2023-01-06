@@ -2,9 +2,9 @@
 
 using System;
 using System.Collections.Generic;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.MediaPipe.NET {
+namespace OpenSense.Components.MediaPipe.NET {
     internal sealed class PortMetadata : IPortMetadata {
 
         private readonly string _name;

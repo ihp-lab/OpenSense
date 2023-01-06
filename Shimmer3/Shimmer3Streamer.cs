@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using ShimmerAPI;
 
-namespace OpenSense.Component.Shimmer3 {
+namespace OpenSense.Components.Shimmer3 {
     public class Shimmer3Streamer: IDisposable, INotifyPropertyChanged {
 
         protected const int Shimmer3ClockFrequency = 32768;//CalibrateTimeStamp() in ShimmerDevice.cs

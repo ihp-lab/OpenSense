@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-namespace OpenSense.Component.OpenFace.Common {
+namespace OpenSense.Components.OpenFace.Common {
     [Serializable]
     public class Face : IEquatable<Face> {
 

@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="OpenSense.WPF.Component.MediaPipe.NET.Visualizer.NormalizedLandmarkListVectorVisualizerConfigurationControl"
+    x:Class="OpenSense.WPF.Components.MediaPipe.NET.Visualizer.NormalizedLandmarkListVectorVisualizerConfigurationControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Composition;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.OpenPose.Visualizer {
+namespace OpenSense.Components.OpenPose.Visualizer {
     [Export(typeof(IComponentMetadata))]
     public class OpenPoseVisualizerMetadata : ConventionalComponentMetadata {
 

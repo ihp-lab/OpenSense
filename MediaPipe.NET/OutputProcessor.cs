@@ -6,7 +6,7 @@ using Mediapipe.Net.Framework.Packets;
 using Mediapipe.Net.Framework.Port;
 using Microsoft.Psi;
 
-namespace OpenSense.Component.MediaPipe.NET {
+namespace OpenSense.Components.MediaPipe.NET {
     internal sealed class OutputProcessor<T> where T : notnull {
 
         private delegate void TypeSetterMethod(Packet obj, PacketType value);

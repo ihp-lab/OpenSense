@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace OpenSense.WPF.Component.BodyGestureDetectors {
+namespace OpenSense.WPF.Components.BodyGestureDetectors {
     public partial class ArmsProximityDetectorInstanceControl : UserControl {
 
 

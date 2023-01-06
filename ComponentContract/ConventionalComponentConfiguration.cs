@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using PsiPipeline = Microsoft.Psi.Pipeline;
 
-namespace OpenSense.Component.Contract {
+namespace OpenSense.Components.Contract {
     [Serializable]
     public abstract class ConventionalComponentConfiguration : ComponentConfiguration {
 

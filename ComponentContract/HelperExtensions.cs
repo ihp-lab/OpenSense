@@ -8,7 +8,7 @@ using System.Reflection.Metadata;
 using System.Reflection.PortableExecutable;
 using Microsoft.Psi;
 
-namespace OpenSense.Component.Contract {
+namespace OpenSense.Components.Contract {
     public static class HelperExtensions {
 
         public static IEnumerable<IPortMetadata> InputPorts(this IComponentMetadata componentMetadata) {

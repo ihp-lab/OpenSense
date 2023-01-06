@@ -2,7 +2,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace OpenSense.Component.OpenPose.PInvoke {
+namespace OpenSense.Components.OpenPose.PInvoke {
     /*
      * Bind to OpenPose C++ library (openpose.dll)
      * Do not use the functions in this class unless you really understand them

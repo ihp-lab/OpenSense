@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi.Imaging {
+namespace OpenSense.Components.Psi.Imaging {
     [Serializable]
     public class ImageEncoderConfiguration : ConventionalComponentConfiguration {
 

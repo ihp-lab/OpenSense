@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using PsiPipeline = Microsoft.Psi.Pipeline;
-namespace OpenSense.Component.Contract {
+namespace OpenSense.Components.Contract {
     /// <summary>
     /// Base class of component configurations.
     /// </summary>

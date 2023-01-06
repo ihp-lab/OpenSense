@@ -1,9 +1,9 @@
-﻿using OpenSense.Component.Contract;
-using OpenSense.WPF.Component.Contract;
+﻿using OpenSense.Components.Contract;
+using OpenSense.WPF.Components.Contract;
 using System.Composition;
 using System.Windows;
 
-namespace OpenSense.WPF.Component.MediaPipe.NET.Visualizer {
+namespace OpenSense.WPF.Components.MediaPipe.NET.Visualizer {
     [Export(typeof(IConfigurationControlCreator))]
     public sealed class NormalizedLandmarkListVectorVisualizerConfigurationControlCreator : IConfigurationControlCreator {
 

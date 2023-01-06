@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace OpenSense.Component.Contract {
+namespace OpenSense.Components.Contract {
     public abstract class OperatorPortMetadata : IPortMetadata {
 
         public OperatorPortMetadata(string name, PortDirection direction, string description = null) {

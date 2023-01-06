@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.WPF.Component.OpenFace.Visualizer</AssemblyName>
-        <RootNamespace>OpenSense.WPF.Component.OpenFace.Visualizer</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Components.OpenFace.Visualizer</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.OpenFace.Visualizer</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

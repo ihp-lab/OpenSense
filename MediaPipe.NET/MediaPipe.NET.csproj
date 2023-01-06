@@ -2,8 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <RootNamespace>OpenSense.Component.MediaPipe.NET</RootNamespace>
-        <AssemblyName>OpenSense.Component.MediaPipe.NET</AssemblyName>
+        <RootNamespace>OpenSense.Components.MediaPipe.NET</RootNamespace>
+        <AssemblyName>OpenSense.Components.MediaPipe.NET</AssemblyName>
         <LangVersion>10.0</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
         <!--Note:

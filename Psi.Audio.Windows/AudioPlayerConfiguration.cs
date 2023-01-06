@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.Psi;
 using Microsoft.Psi.Audio;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi.Audio {
+namespace OpenSense.Components.Psi.Audio {
     [Serializable]
     public class AudioPlayerConfiguration : ConventionalComponentConfiguration {
 

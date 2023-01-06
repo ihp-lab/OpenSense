@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
-using OpenSense.Component.Psi;
+using OpenSense.Components.Psi;
 
-namespace OpenSense.WPF.Component.Psi {
+namespace OpenSense.WPF.Components.Psi {
     public partial class PsiStoreImporterConfigurationControl : UserControl {
 
         public PsiStoreImporterConfigurationControl() {

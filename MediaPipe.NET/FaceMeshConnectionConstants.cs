@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OpenSense.Component.MediaPipe.NET {
+namespace OpenSense.Components.MediaPipe.NET {
 
     /// <remarks>Base on <see href="https://github.com/google/mediapipe/blob/master/mediapipe/python/solutions/face_mesh_connections.py">face_mesh_connections</see></remarks>
     public static class FaceMeshConnectionConstants {

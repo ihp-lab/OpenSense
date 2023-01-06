@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Composition;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Shimmer3 {
+namespace OpenSense.Components.Shimmer3 {
     [Export(typeof(IComponentMetadata))]
     public class Shimmer3StreamerMetadata : ConventionalComponentMetadata {
 

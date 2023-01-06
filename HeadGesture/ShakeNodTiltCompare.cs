@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Psi;
-using HeadGestureData = OpenSense.Component.OpenFace.Common.Gesture;
+using HeadGestureData = OpenSense.Components.OpenFace.Common.Gesture;
 
-namespace OpenSense.Component.HeadGesture {
+namespace OpenSense.Components.HeadGesture {
     /// <summary>
     /// comparing shake nod and tilt, the category of highest value get stream out
     /// </summary>

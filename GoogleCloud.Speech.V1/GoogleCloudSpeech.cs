@@ -14,7 +14,7 @@ using Microsoft.Psi.Audio;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Speech;
 
-namespace OpenSense.Component.GoogleCloud.Speech.V1 {
+namespace OpenSense.Components.GoogleCloud.Speech.V1 {
 
     public sealed class GoogleCloudSpeech : IConsumerProducer<(AudioBuffer, bool), IStreamingSpeechRecognitionResult> {
 

@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Shimmer3 {
+namespace OpenSense.Components.Shimmer3 {
     [Serializable]
     public class Shimmer3StreamerConfiguration : ConventionalComponentConfiguration {
 

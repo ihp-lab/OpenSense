@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace OpenSense.WPF.Component.Converters {
+namespace OpenSense.WPF.Components.Converters {
     public sealed class IntAbsoluteValueConverter : IValueConverter {
 
         public string Format { get; set; }

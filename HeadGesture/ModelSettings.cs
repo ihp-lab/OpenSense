@@ -1,4 +1,4 @@
-﻿namespace OpenSense.Component.HeadGesture {
+﻿namespace OpenSense.Components.HeadGesture {
     /// <summary>
     /// for checking Model input and  output  parameter names,
     ///you can use tools like Netron, 

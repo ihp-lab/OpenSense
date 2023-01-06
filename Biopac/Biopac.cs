@@ -3,7 +3,7 @@ using BiopacInterop;
 using Microsoft.Psi;
 using Microsoft.Psi.Components;
 
-namespace OpenSense.Component.Biopac {
+namespace OpenSense.Components.Biopac {
     /// <summary>
     /// StringProducer class.
     /// </summary>

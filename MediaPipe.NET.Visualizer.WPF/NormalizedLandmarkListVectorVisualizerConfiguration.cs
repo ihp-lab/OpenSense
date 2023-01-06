@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.Psi;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.WPF.Component.MediaPipe.NET.Visualizer {
+namespace OpenSense.WPF.Components.MediaPipe.NET.Visualizer {
     [Serializable]
     public sealed class NormalizedLandmarkListVectorVisualizerConfiguration : ConventionalComponentConfiguration {
         private bool mute = false;

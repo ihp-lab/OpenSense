@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.Psi;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.HeadGesture.Visualizer {
+namespace OpenSense.Components.HeadGesture.Visualizer {
     [Serializable]
     public class HeadGestureVisualizerConfiguration : ConventionalComponentConfiguration {
 

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Composition;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.HeadGesture.Visualizer {
+namespace OpenSense.Components.HeadGesture.Visualizer {
     [Export(typeof(IComponentMetadata))]
     public class HeadGestureVisualizerMetadata : ConventionalComponentMetadata {
 

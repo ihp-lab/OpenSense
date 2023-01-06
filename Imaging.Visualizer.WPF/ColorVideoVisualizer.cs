@@ -1,8 +1,8 @@
 ﻿using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
-using OpenSense.Component.Imaging.Visualizer.Common;
+using OpenSense.Components.Imaging.Visualizer.Common;
 
-namespace OpenSense.Component.Imaging.Visualizer {
+namespace OpenSense.Components.Imaging.Visualizer {
     public class ColorVideoVisualizer : ImageVisualizer, IConsumer<Shared<Image>> {
 
         #region Settings

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
 namespace OpenSense.WPF.Pipeline {
     public partial class PortSelectionWindow : Window {

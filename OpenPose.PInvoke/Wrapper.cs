@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
-using OpenSense.Component.OpenPose.Common;
+using OpenSense.Components.OpenPose.Common;
 using UnityEngine;
 
-namespace OpenSense.Component.OpenPose.PInvoke {
+namespace OpenSense.Components.OpenPose.PInvoke {
 	/*
      * OPWrapper wraps OpenPose API and provide a friendly user function set
      */

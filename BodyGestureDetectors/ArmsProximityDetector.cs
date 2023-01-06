@@ -9,7 +9,7 @@ using Microsoft.Psi;
 using Microsoft.Psi.AzureKinect;
 using Microsoft.Psi.Components;
 
-namespace OpenSense.Component.BodyGestureDetectors {
+namespace OpenSense.Components.BodyGestureDetectors {
     public sealed class ArmsProximityDetector : IConsumerProducer<List<AzureKinectBody>, double> {
 
         private const double DoubleFloatingPointTolerance = double.Epsilon * 2;

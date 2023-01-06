@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Psi;
 
-namespace OpenSense.Component.Contract {
+namespace OpenSense.Components.Contract {
     public abstract class ConventionalComponentMetadata : IComponentMetadata {
 
         protected abstract Type ComponentType { get; }

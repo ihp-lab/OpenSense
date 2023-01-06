@@ -10,12 +10,12 @@ using Mediapipe.Net.Solutions;
 using Microsoft.Psi;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
-using OpenSense.Component.Imaging.Visualizer.Common;
-using OpenSense.Component.MediaPipe.NET;
+using OpenSense.Components.Imaging.Visualizer.Common;
+using OpenSense.Components.MediaPipe.NET;
 using Color = System.Drawing.Color;
 using Image = Microsoft.Psi.Imaging.Image;
 
-namespace OpenSense.WPF.Component.MediaPipe.NET.Visualizer {
+namespace OpenSense.WPF.Components.MediaPipe.NET.Visualizer {
     /// <remarks>Base on <see href="https://github.com/google/mediapipe/blob/26a7ca5c64cd885978677931a7218d33cd7d1dec/mediapipe/python/solutions/drawing_utils.py#L119">draw_landmarks()</see>.</remarks>
     public sealed class NormalizedLandmarkListVectorVisualizer : Subpipeline, IProducer<Shared<Image>>, INotifyPropertyChanged {
 

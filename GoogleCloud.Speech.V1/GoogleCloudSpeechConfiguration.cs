@@ -2,9 +2,9 @@
 using System.IO;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.GoogleCloud.Speech.V1 {
+namespace OpenSense.Components.GoogleCloud.Speech.V1 {
     [Serializable]
     public class GoogleCloudSpeechConfiguration : ConventionalComponentConfiguration {
 

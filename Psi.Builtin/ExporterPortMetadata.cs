@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi {
+namespace OpenSense.Components.Psi {
     public class ExporterPortMetadata : IPortMetadata {
 
         public object Identifier => Name;

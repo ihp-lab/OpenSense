@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Composition;
 using Microsoft.Psi.Audio;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi.Audio {
+namespace OpenSense.Components.Psi.Audio {
     [Export(typeof(IComponentMetadata))]
     public class WaveFileAudioSourceMetadata : ConventionalComponentMetadata {
 

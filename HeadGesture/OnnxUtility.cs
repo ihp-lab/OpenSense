@@ -2,7 +2,7 @@
 using System.Reflection;
 
 
-namespace OpenSense.Component.HeadGesture {
+namespace OpenSense.Components.HeadGesture {
     internal static class OnnxUtility {
 
         private const string MODEL_PATH = "Models";

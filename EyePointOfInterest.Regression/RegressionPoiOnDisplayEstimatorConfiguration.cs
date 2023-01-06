@@ -1,7 +1,7 @@
 ﻿using System;
-using OpenSense.Component.EyePointOfInterest.Common;
+using OpenSense.Components.EyePointOfInterest.Common;
 
-namespace OpenSense.Component.EyePointOfInterest.Regression {
+namespace OpenSense.Components.EyePointOfInterest.Regression {
     public class RegressionPoiOnDisplayEstimatorConfiguration : PoiOnDisplayEstimatorConfiguration {
 
         public byte[] PredictorX { get; set; }

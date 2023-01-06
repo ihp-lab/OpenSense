@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace OpenSense.WPF.Component.Converters {
+namespace OpenSense.WPF.Components.Converters {
     public sealed class BooleanToCollapsedVisibilityConverter : IValueConverter {
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {

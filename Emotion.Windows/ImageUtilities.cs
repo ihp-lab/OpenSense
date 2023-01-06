@@ -1,5 +1,5 @@
 ﻿
-namespace OpenSense.Component.Emotion {
+namespace OpenSense.Components.Emotion {
     using System;
     using System.Windows;
 

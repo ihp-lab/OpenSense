@@ -1,10 +1,10 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Component.Contract;
-using OpenSense.Component.Psi.Imaging;
-using OpenSense.WPF.Component.Contract;
+using OpenSense.Components.Contract;
+using OpenSense.Components.Psi.Imaging;
+using OpenSense.WPF.Components.Contract;
 
-namespace OpenSense.WPF.Component.Psi.Imaging {
+namespace OpenSense.WPF.Components.Psi.Imaging {
     [Export(typeof(IConfigurationControlCreator))]
     public class ImageEncoderConfigurationControlCreator : IConfigurationControlCreator {
 

@@ -12,10 +12,10 @@ using Microsoft.Psi.AzureKinect;
 using Microsoft.Psi.Calibration;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
-using OpenSense.Component.Imaging.Visualizer.Common;
+using OpenSense.Components.Imaging.Visualizer.Common;
 using Image = Microsoft.Psi.Imaging.Image;
 
-namespace OpenSense.Component.AzureKinect.Visualizer {
+namespace OpenSense.Components.AzureKinect.Visualizer {
     public class AzureKinectBodyTrackerVisualizer : Subpipeline, IProducer<Shared<Image>>, INotifyPropertyChanged {
 
         #region INotifyPropertyChanged

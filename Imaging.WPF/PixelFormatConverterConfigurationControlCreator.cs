@@ -1,10 +1,10 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Component.Contract;
-using OpenSense.Component.Imaging;
-using OpenSense.WPF.Component.Contract;
+using OpenSense.Components.Contract;
+using OpenSense.Components.Imaging;
+using OpenSense.WPF.Components.Contract;
 
-namespace OpenSense.WPF.Component.Imaging {
+namespace OpenSense.WPF.Components.Imaging {
     [Export(typeof(IConfigurationControlCreator))]
     public class PixelFormatConverterConfigurationControlCreator : IConfigurationControlCreator {
 

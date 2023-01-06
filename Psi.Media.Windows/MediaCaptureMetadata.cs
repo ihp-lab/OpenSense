@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Composition;
 using Microsoft.Psi.Media;
-using OpenSense.Component.Contract;
+using OpenSense.Components.Contract;
 
-namespace OpenSense.Component.Psi.Media {
+namespace OpenSense.Components.Psi.Media {
     [Export(typeof(IComponentMetadata))]
     public class MediaCaptureMetadata : ConventionalComponentMetadata {
 
