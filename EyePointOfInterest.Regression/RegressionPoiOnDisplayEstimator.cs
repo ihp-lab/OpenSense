@@ -7,7 +7,7 @@ using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Trainers.FastTree;
 using OpenSense.Component.EyePointOfInterest.Common;
-using OpenSense.Component.Head.Common;
+using OpenSense.Component.OpenFace.Common;
 
 namespace OpenSense.Component.EyePointOfInterest.Regression {
     [Export(typeof(IPoiOnDisplayEstimator))]

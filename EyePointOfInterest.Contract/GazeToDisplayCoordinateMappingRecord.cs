@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 using System.Text.Json.Serialization;
-using OpenSense.Component.Head.Common;
+using OpenSense.Component.OpenFace.Common;
 
 namespace OpenSense.Component.EyePointOfInterest.Common {
 

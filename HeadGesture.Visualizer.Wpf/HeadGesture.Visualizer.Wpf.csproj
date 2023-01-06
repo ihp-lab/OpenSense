@@ -14,7 +14,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
-        <ProjectReference Include="..\Head.Common\Head.Common.csproj" />
+        <ProjectReference Include="..\OpenFace.Common\OpenFace.Common.csproj" />
         <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>
 

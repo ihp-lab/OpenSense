@@ -90,7 +90,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Audio.Visualizer.Wpf.Common
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Audio.Visualizer.Wpf", "Audio.Visualizer.Wpf\Audio.Visualizer.Wpf.csproj", "{F0D0145C-9C22-41F1-AFBB-9BA04D43B40E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Head.Common", "Head.Common\Head.Common.csproj", "{4D223CCD-F0E9-4695-89C9-6D6FA684B53D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenFace.Common", "OpenFace.Common\OpenFace.Common.csproj", "{4D223CCD-F0E9-4695-89C9-6D6FA684B53D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emotion.Common", "Emotion.Common\Emotion.Common.csproj", "{D212FBA5-E203-4C9D-BBA3-15F47FE88273}"
 EndProject

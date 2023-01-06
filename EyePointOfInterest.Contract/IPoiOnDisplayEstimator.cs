@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
-using OpenSense.Component.Head.Common;
+using OpenSense.Component.OpenFace.Common;
 
 namespace OpenSense.Component.EyePointOfInterest.Common {
     public interface IPoiOnDisplayEstimator {

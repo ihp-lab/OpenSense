@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace OpenSense.Component.Head.Common {
+namespace OpenSense.Component.OpenFace.Common {
     [Serializable]
     public class PoseAndEyeAndFace : IEquatable<PoseAndEyeAndFace> {
 

@@ -6,7 +6,7 @@ using MathNet.Numerics;
 using MathNet.Spatial.Euclidean;
 using MathNet.Spatial.Units;
 using OpenSense.Component.EyePointOfInterest.Common;
-using OpenSense.Component.Head.Common;
+using OpenSense.Component.OpenFace.Common;
 using static System.Math;
 
 namespace OpenSense.Component.EyePointOfInterest.SpatialTracking {

@@ -7,7 +7,7 @@ using System.Windows.Media.Imaging;
 using Microsoft.Psi;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
-using OpenSense.Component.Head.Common;
+using OpenSense.Component.OpenFace.Common;
 using OpenSense.Component.Imaging.Visualizer.Common;
 using Image = Microsoft.Psi.Imaging.Image;
 

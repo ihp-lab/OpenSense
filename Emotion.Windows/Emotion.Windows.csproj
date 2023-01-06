@@ -22,7 +22,7 @@
         <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
         <ProjectReference Include="..\DataWriterContract\DataWriterContract.csproj" />
         <ProjectReference Include="..\Emotion.Common\Emotion.Common.csproj" />
-        <ProjectReference Include="..\Head.Common\Head.Common.csproj" />
+        <ProjectReference Include="..\OpenFace.Common\OpenFace.Common.csproj" />
     </ItemGroup>
 
     <ItemGroup>
