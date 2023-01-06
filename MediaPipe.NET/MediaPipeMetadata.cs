@@ -23,7 +23,7 @@ namespace OpenSense.Component.MediaPipe.NET {
 
         public string Name => "MediaPipe";
 
-        public string Description => "[Experimental] Runs a MediaPipe pipeline. The backend is MediaPipe.Net and it's CPU only.";
+        public string Description => "Runs a MediaPipe pipeline. The backend is MediaPipe.Net which is based on MediaPipeUnityPlugin, and it's CPU only. Custom types are not supported, this is a limitation of MediaPipe.Net. To request supports of standard types, please create a github issue.";
 
         public IReadOnlyList<IPortMetadata> Ports => _getPortsCallback();
 

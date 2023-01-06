@@ -22,9 +22,9 @@ namespace OpenSense.Component.PythonSupports {
         #endregion
 
         #region IComponentMetadata
-        public string Name => "Python";
+        public string Name => "Python 3";
 
-        public string Description => "[Experimental] Define an OpenSense component by Python3 code.";
+        public string Description => "Uses Python 3 codes as a OpenSense component. The backend is IronPython3, and it supports Python 3.4 features.";
 
         public IReadOnlyList<IPortMetadata> Ports => _getPortsCallback();
 
