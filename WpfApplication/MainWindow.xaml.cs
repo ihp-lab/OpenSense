@@ -15,8 +15,8 @@ namespace OpenSense.WPF {
             editor.Show();
         }
 
-        private void ButtonPipelineExecuter_Click(object sender, RoutedEventArgs e) {
-            var executor = new PipelineExecuterWindow();
+        private void ButtonPipelineRunner_Click(object sender, RoutedEventArgs e) {
+            var executor = new PipelineRunnerWindow();
             executor.Show();
         }
 

@@ -11,13 +11,13 @@ This sample contains a pipeline for recording video & audio to a local path, and
 + Open `recording.pipe.json` configuration file using a `Pipeline Editor` window.
 + Click the `Media Capture` instance, and select the camera you want to use.
 + Click the `\psi Store Exporter` instance, set `Root path` to the path you want to put the recorded data.
-+ Execute the pipeline for a while, then stop the pipeline.
++ Run the pipeline for a while, then stop the pipeline.
 
 ### Playback
 
 + Open `playback.pipe.json` configuration file  using a `Pipeline Editor` window.
 + Click the `\psi Store Importer` instance, set `Root path` to the path you set before.
-+ Execute the pipeline, you will see recorded video and audio.
++ Run the pipeline, you will see recorded video and audio.
 
 ## Steps to replicate
 
@@ -50,5 +50,5 @@ This sample contains a pipeline for recording video & audio to a local path, and
 ## Tips
 
 + The recorded binary data can also be opened by [Psi Studio](https://github.com/microsoft/psi/wiki/Psi-Studio).
-+ With the default setting, you will see error message if you want to execute the recording pipeline the second time. You can delete recorded files or change to another path to reset. To enable multiple executions without changing the configuration, we recommand you select the `Create subdirectory` option. This option will help creating a unique subdirectory for each execution. If you selected this option, the playback path should be adjusted to one of the subdirectories.
++ With the default setting, you will see error message if you want to run the recording pipeline the second time. You can delete recorded files or change to another path to reset. To enable multiple executions without changing the configuration, we recommand you select the `Create subdirectory` option. This option will help creating a unique subdirectory for each execution. If you selected this option, the playback path should be adjusted to one of the subdirectories.
 + For aggregated input/output ports, indexers are required to sepcify concrete input/output ports. For list type based aggregated ports, indexers are 0-based numeric indexes. For dictionary type based agregated ports, indexers are strings.

@@ -43,11 +43,11 @@ namespace OpenSense.WPF.Pipeline {
             }
         }
 
-        private void ButtonExecute_Click(object sender, RoutedEventArgs e) {
+        private void ButtonRun_Click(object sender, RoutedEventArgs e) {
             if (Configuration is null) {
                 return;
             }
-            var win = new PipelineExecuterWindow(Configuration);
+            var win = new PipelineRunnerWindow(Configuration);
             win.ShowDialog();
             Configuration = win.Configuration;
         }

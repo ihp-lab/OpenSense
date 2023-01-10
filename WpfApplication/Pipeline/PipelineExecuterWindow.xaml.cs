@@ -16,7 +16,7 @@ using OpenSense.Pipeline;
 using Serilog.Extensions.Logging;
 
 namespace OpenSense.WPF.Pipeline {
-    public partial class PipelineExecuterWindow : Window, INotifyPropertyChanged {
+    public partial class PipelineRunnerWindow : Window, INotifyPropertyChanged {
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -39,13 +39,13 @@ namespace OpenSense.WPF.Pipeline {
             private set => SetProperty(ref running, value);
         }
 
-        public PipelineExecuterWindow(PipelineConfiguration config) {
+        public PipelineRunnerWindow(PipelineConfiguration config) {
             InitializeComponent();
             GridPipelineRuntime.DataContext = this;
             Load(config);
         }
 
-        public PipelineExecuterWindow() : this(new PipelineConfiguration()) { }
+        public PipelineRunnerWindow() : this(new PipelineConfiguration()) { }
 
         private void HandlePipelineException(object sender, PipelineExceptionNotHandledEventArgs e) {
             Dispatcher.Invoke(() => {

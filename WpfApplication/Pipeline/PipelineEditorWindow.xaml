@@ -20,8 +20,8 @@
                 <MenuItem Header="_Open" Click="ButtonLoad_Click"/>
                 <MenuItem Header="_Save as" Click="ButtonSave_Click"/>
             </MenuItem>
-            <MenuItem Header="_Execute">
-                <MenuItem Header="_Execute" Click="ButtonExecute_Click"/>
+            <MenuItem Header="_Run">
+                <MenuItem Header="_Run" Click="ButtonRun_Click"/>
             </MenuItem>
         </Menu>
         <Grid DockPanel.Dock="Bottom">

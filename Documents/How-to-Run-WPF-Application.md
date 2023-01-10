@@ -117,7 +117,7 @@ OpenSense WPF Application will pop a dialog box after the pipeline comes to a co
 Pipeline Editor will help create pipelines.
 It can load and save pipelines.
 
-Pipeline Executer is for loading and running pipelines.
+Pipeline Runner is for loading and running pipelines.
 
 If hardware related settings such as file paths and specific devices are set when creating a pipeline, when loading the saved pipeline on another machine, these settings need to be adjusted accordingly.
 
@@ -127,8 +127,8 @@ To load a pipeline, click `File` - `Open` then select a pipeline configuration f
 To save the current pipeline, click `File` - `Save as` then enter a filename for the configuration file.
 If you edited a loaded pipeline, remember to use `Save as` function to save changes.
 Changes are not automatically saved backed to its source file.
-You can provide a name for the pipeline, this name will be shown in the Pipeline Executer.
-A name can help identifying a pipeline if multiple pipelines are loaded into Pipeline Executer windows.
+You can provide a name for the pipeline, this name will be shown in the Pipeline Runner.
+A name can help identifying a pipeline if multiple pipelines are loaded into Pipeline Runner windows.
 You can also set a default Delivery Policy for the pipeline.
 
 To add a component, click the `Add` on the left.
@@ -153,14 +153,14 @@ By selecting a input port, the ports accepted data type, connection's Delivery P
 Select an output port to confirm the connection.
 The red colored input port will change to black, indicating a valid connection exists for that port.
 
-There is a shortcut loading the current pipeline in Pipeline Editor into Pipeline Executer.
-Clicking `Execute` - `Execute` will open a Pipeline Executer window with the current pipeline loaded.
+There is a shortcut loading the current pipeline in Pipeline Editor into Pipeline Runner.
+Clicking `Run` - `Run` will open a Pipeline Runner window with the current pipeline loaded.
 
-# Pipeline Executer
+# Pipeline Runner
 
 To load a pipeline, click `File` - `Open`.
-Once the pipeline is loaded, you can run it by clicking `Execute` - `Run`.
+Once the pipeline is loaded, you can run it by clicking `Run/Stop` - `Run`.
 Some components may have runtime UI shown in the bottom of the window, providing capabilities to modify their configurations and/or visualize their status.
-To stop a pipeline, click `Execute` - `Stop` or simply close the window.
+To stop a pipeline, click `Run/Stop` - `Stop` or simply close the window.
 The window will freeze until the pipeline comes to a complete stop.
 A dialog box will pop out indicating the pipeline is stopped.

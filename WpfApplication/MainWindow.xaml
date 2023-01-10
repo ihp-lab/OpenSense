@@ -46,12 +46,12 @@
             </Button>
 
             <Button Grid.Row="1" 
-                    Name="ButtonPipelineExecuter" 
+                    Name="ButtonPipelineRunner" 
                     Style="{StaticResource StyleLargeButton}"
                     ToolTip="Execute saved pipelines."
-                    Click="ButtonPipelineExecuter_Click"
+                    Click="ButtonPipelineRunner_Click"
                     >
-                Pipeline Executer
+                Pipeline Runner
             </Button>
 
             <ItemsControl Grid.Row="2"

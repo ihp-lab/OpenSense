@@ -6,8 +6,8 @@ This sample contains a pipeline for sending video to remote client pipelines and
 
 ## How to use
 
-+ Open `host.pipe.json` configuration file using a `Pipeline Executer` (not `Pipeline Editor`) window.
-+ Open `client.pipe.json` configuration file using another `Pipeline Executer` window.
++ Open `host.pipe.json` configuration file using a `Pipeline Runner` (not `Pipeline Editor`) window.
++ Open `client.pipe.json` configuration file using another `Pipeline Runner` window.
 + Run the host pipeline first, then run the client pipeline. If the client pipeline is started first, the application will block for establishing a connection, the UI will freeze. You can run the client pipeline first if you open two sample pipelines in separate OpenSense WPF application instances, the connection timeout is set to 60 seconds in the sample client configuration.
 
 ## Steps to replicate

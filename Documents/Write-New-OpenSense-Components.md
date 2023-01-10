@@ -56,7 +56,7 @@ The following types of public properties of the /psi component can be detected a
 
 Finally, copy and paste the DLL file.
 
-If you want to add a component that knows its transmitting data types only after the pipeline is assemblied (and before the pipelien is executed), this will be a little bit harder.
+If you want to add a component that knows its transmitting data types only after the pipeline is assembled (and before the pipeline is run), this will be a little bit harder.
 Check the implementation of `Join Operator` and/or `PsiStoreExporter` for a reference.
 
 ## Write UI
@@ -73,7 +73,7 @@ Use the following template to implement the interfaces:
 
 ```C#
 [Export(typeof(IConfigurationControlCreator))]
-public class MyComponentConfigurationControlCreator : IConfigurationControlCreator { //This is for modifing options of the component
+public class MyComponentConfigurationControlCreator : IConfigurationControlCreator { //This is for modifying options of the component
 
     public bool CanCreate(ComponentConfiguration configuration) => configuration is MyComponentConfiguration;
 
