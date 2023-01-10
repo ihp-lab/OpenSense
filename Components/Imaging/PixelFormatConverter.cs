@@ -37,7 +37,7 @@ namespace OpenSense.Components.Imaging {
             }
             var result = ImagePool.GetOrCreate(frame.Resource.Width, frame.Resource.Height, TargetPixelFormat);
             frame.Resource.CopyTo(result.Resource);//psi internal implementation: https://github.com/microsoft/psi/blob/master/Sources/Imaging/Microsoft.Psi.Imaging/ToPixelFormat.cs
-            Out.Post(frame, envelope.OriginatingTime);
+            Out.Post(result, envelope.OriginatingTime);
         }
 
         #region INotifyPropertyChanged
