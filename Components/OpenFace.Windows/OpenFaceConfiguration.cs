@@ -43,6 +43,13 @@ namespace OpenSense.Components.OpenFace {
             set => SetProperty(ref cameraCalibCy, value);
         }
 
+        private bool autoAdjustCenter = false;
+
+        public bool AutoAdjustCenter {
+            get => autoAdjustCenter;
+            set => SetProperty(ref autoAdjustCenter, value);
+        }
+
         public override IComponentMetadata GetMetadata() => new OpenFaceMetadata();
 
         protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new OpenFace(pipeline) {
@@ -52,6 +59,7 @@ namespace OpenSense.Components.OpenFace {
             CameraCalibFy = CameraCalibFy,
             CameraCalibCx = CameraCalibCx,
             CameraCalibCy = CameraCalibCy,
+            AutoAdjustCenter = AutoAdjustCenter,
         };
     }
 }

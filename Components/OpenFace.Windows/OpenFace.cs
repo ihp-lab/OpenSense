@@ -109,6 +109,13 @@ namespace OpenSense.Components.OpenFace {
             set => SetProperty(ref cameraCalibCy, value);
         }
 
+        private bool autoAdjustCenter = false;
+
+        public bool AutoAdjustCenter {
+            get => autoAdjustCenter;
+            set => SetProperty(ref autoAdjustCenter, value);
+        }
+
         private IDataWriter<PoseAndEyeAndFace> dataWriter;
 
         public IDataWriter<PoseAndEyeAndFace> DataWriter {
@@ -149,6 +156,10 @@ namespace OpenSense.Components.OpenFace {
             try {
                 var width = input.Resource.Width;
                 var height = input.Resource.Height;
+                if (AutoAdjustCenter) {
+                    CameraCalibCx = width / 2f;
+                    CameraCalibCy = height / 2f;
+                }
                 static Vector2 pointToVector2(Point p) {
                     return new Vector2((float)p.X, (float)p.Y);
                 }

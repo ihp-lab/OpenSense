@@ -1,38 +1,77 @@
-﻿<UserControl x:Class="OpenSense.WPF.Components.OpenFace.OpenFaceConfigurationControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:OpenSense.WPF.Components.OpenFace"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+﻿<UserControl
+    x:Class="OpenSense.WPF.Components.OpenFace.OpenFaceConfigurationControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:OpenSense.WPF.Components.OpenFace"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition
+                Width="auto" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="0">Mute</Label>
-        <CheckBox Grid.Row="0" Grid.Column="1" IsChecked="{Binding Mute}"/>
+        <Label
+            Grid.Row="0">Mute</Label>
+        <CheckBox
+            Grid.Row="0"
+            Grid.Column="1"
+            IsChecked="{Binding Mute}" />
 
-        <Label Grid.Row="1">Camera calibration Fx</Label>
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CameraCalibFx}"/>
+        <Label
+            Grid.Row="1">Camera Calibration Fx</Label>
+        <TextBox
+            Grid.Row="1"
+            Grid.Column="1"
+            Text="{Binding CameraCalibFx}" />
 
-        <Label Grid.Row="2">Camera calibration Fy</Label>
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CameraCalibFy}"/>
+        <Label
+            Grid.Row="2">Camera Calibration Fy</Label>
+        <TextBox
+            Grid.Row="2"
+            Grid.Column="1"
+            Text="{Binding CameraCalibFy}" />
 
-        <Label Grid.Row="3">Camera calibration Cy</Label>
-        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding CameraCalibCx}"/>
+        <Label
+            Grid.Row="3">Camera Calibration Cy</Label>
+        <TextBox
+            Grid.Row="3"
+            Grid.Column="1"
+            Text="{Binding CameraCalibCx}" />
 
-        <Label Grid.Row="4">Camera calibration Cy</Label>
-        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding CameraCalibCy}"/>
+        <Label
+            Grid.Row="4">Camera Calibration Cy</Label>
+        <TextBox
+            Grid.Row="4"
+            Grid.Column="1"
+            Text="{Binding CameraCalibCy}" />
+
+        <Label
+            Grid.Row="5">Auto Cx Cy by Input Size</Label>
+        <CheckBox
+            Grid.Row="5"
+            Grid.Column="1"
+            IsChecked="{Binding AutoAdjustCenter}" />
+
     </Grid>
 </UserControl>
