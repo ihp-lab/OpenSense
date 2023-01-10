@@ -107,17 +107,17 @@ namespace OpenSense.WPF.Pipeline {
             ContentControlDisplay.Children.Clear();
         }
 
-        private const int SPLITTER_THICHNESS = 2;
-
         private void AllocateRowsAndColumns(int rows, int cols) {
             for (var i = 0; i < rows; i++) {
                 ContentControlDisplay.RowDefinitions.Add(new RowDefinition());
             }
+            var rowStyle = (Style)ContentControlDisplay.Resources["styleSplitterRow"];
+            Debug.Assert(rowStyle is not null);
             for (var i = 0; i < rows - 1; i++) {
-                var splitter = new GridSplitter();
-                splitter.VerticalAlignment = VerticalAlignment.Bottom;
-                splitter.HorizontalAlignment = HorizontalAlignment.Stretch;
-                splitter.Height = SPLITTER_THICHNESS;
+                var splitter = new GridSplitter() { 
+                    Style = rowStyle,
+                    Tag = i,
+                };
                 Grid.SetRow(splitter, i);
                 Grid.SetColumnSpan(splitter, cols);
                 ContentControlDisplay.Children.Add(splitter);
@@ -125,11 +125,13 @@ namespace OpenSense.WPF.Pipeline {
             for (var i = 0; i < cols; i++) {
                 ContentControlDisplay.ColumnDefinitions.Add(new ColumnDefinition());
             }
+            var colStyle = (Style)ContentControlDisplay.Resources["styleSplitterCol"];
+            Debug.Assert(colStyle is not null);
             for (var i = 0; i < cols - 1; i++) {
-                var splitter = new GridSplitter();
-                splitter.VerticalAlignment = VerticalAlignment.Stretch;
-                splitter.HorizontalAlignment = HorizontalAlignment.Right;
-                splitter.Width = SPLITTER_THICHNESS;
+                var splitter = new GridSplitter() { 
+                    Style = colStyle,
+                    Tag = i,
+                };
                 Grid.SetColumn(splitter, i);
                 Grid.SetRowSpan(splitter, rows);
                 ContentControlDisplay.Children.Add(splitter);
@@ -155,7 +157,9 @@ namespace OpenSense.WPF.Pipeline {
                     scrollViewer.Content = stackPanel;
                     foreach (var compEnv in Env.Instances) {
                         var control = new InstanceControlCreatorManager().Create(compEnv.Instance);
-                        var container = new InstanceContainerControl(compEnv.Configuration.Name, control);
+                        var container = new InstanceContainerControl() { 
+                            DataContext = Tuple.Create(compEnv.Configuration.Name, compEnv.Instance, control),
+                        };
                         stackPanel.Children.Add(container);
                     }
                     break;
@@ -164,7 +168,9 @@ namespace OpenSense.WPF.Pipeline {
                     var positions = graph.CalcPositions();
                     foreach (var compEnv in Env.Instances) {
                         var control = new InstanceControlCreatorManager().Create(compEnv.Instance);
-                        var container = new InstanceContainerControl(compEnv.Configuration.Name, control);
+                        var container = new GridViewCellControl() {
+                            DataContext = Tuple.Create(compEnv.Configuration.Name, compEnv.Instance, control),
+                        };
                         var position = positions[compEnv.Configuration.Id];
                         AddControl(container, position.Hierachy, position.Offset);
                     }

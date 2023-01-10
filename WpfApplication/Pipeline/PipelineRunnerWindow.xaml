@@ -123,7 +123,36 @@
 
             <Grid
                 Grid.Row="1"
-                Name="ContentControlDisplay" />
+                Name="ContentControlDisplay">
+                <Grid.Resources>
+                    <Style
+                        x:Key="styleSplitterRow"
+                        TargetType="GridSplitter">
+                        <Setter
+                            Property="VerticalAlignment"
+                            Value="Bottom" />
+                        <Setter
+                            Property="HorizontalAlignment"
+                            Value="Stretch" />
+                        <Setter
+                            Property="Height"
+                            Value="2" />
+                    </Style>
+                    <Style
+                        x:Key="styleSplitterCol"
+                        TargetType="GridSplitter">
+                        <Setter
+                            Property="VerticalAlignment"
+                            Value="Stretch" />
+                        <Setter
+                            Property="HorizontalAlignment"
+                            Value="Right" />
+                        <Setter
+                            Property="Width"
+                            Value="2" />
+                    </Style>
+                </Grid.Resources>
+            </Grid>
 
         </Grid>
     </DockPanel>
