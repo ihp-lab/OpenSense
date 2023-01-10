@@ -1,62 +1,90 @@
-﻿<UserControl x:Class="OpenSense.WPF.Pipeline.InstanceConnectionControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:OpenSense.WPF.Pipeline"
-             xmlns:common="clr-namespace:OpenSense.WPF.Components.Psi.Common;assembly=OpenSense.WPF.Components.Psi.Common"
-             xmlns:psi="clr-namespace:Microsoft.Psi;assembly=Microsoft.Psi"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+﻿<UserControl
+    x:Class="OpenSense.WPF.Pipeline.InstanceConnectionControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:OpenSense.WPF.Pipeline"
+    xmlns:common="clr-namespace:OpenSense.WPF.Components.Psi.Common;assembly=OpenSense.WPF.Components.Psi.Common"
+    xmlns:psi="clr-namespace:Microsoft.Psi;assembly=Microsoft.Psi"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
 
-    <Grid >
+    <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition
+                Width="*" />
+            <ColumnDefinition
+                Width="2*" />
         </Grid.ColumnDefinitions>
 
-        <GroupBox Grid.Column="0" Header="Inputs">
-            <DockPanel >
-                <Grid DockPanel.Dock="Top">
+        <GroupBox
+            Grid.Column="0"
+            Header="Inputs">
+            <DockPanel>
+                <Grid
+                    DockPanel.Dock="Top">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Name="ButtonAdd" Click="ButtonAdd_Click">Add</Button>
-                    <Button Grid.Column="1" Name="ButtonDelete" Click="ButtonDelete_Click" >Delete</Button>
+                    <Button
+                        Grid.Column="0"
+                        Name="ButtonAdd"
+                        Click="ButtonAdd_Click">Add</Button>
+                    <Button
+                        Grid.Column="1"
+                        Name="ButtonDelete"
+                        Click="ButtonDelete_Click">Delete</Button>
                 </Grid>
-                <ListBox DockPanel.Dock="Bottom" 
-                         Name="ListBoxInputs" 
-                         HorizontalContentAlignment="Stretch"
-                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                         SelectedIndex="0"
-                         ItemsSource="{Binding Inputs}" 
-                         SelectionChanged="ListBoxInputs_SelectionChanged">
+                <ListBox
+                    DockPanel.Dock="Bottom"
+                    Name="ListBoxInputs"
+                    HorizontalContentAlignment="Stretch"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    SelectedIndex="0"
+                    ItemsSource="{Binding Inputs}"
+                    SelectionChanged="ListBoxInputs_SelectionChanged">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition
+                                        Width="auto" />
+                                    <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding LocalPort.Identifier}">
+                                <TextBlock
+                                    Text="{Binding LocalPort.Identifier}">
                                     <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
+                                        <Style
+                                            TargetType="TextBlock">
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding RemoteId}" Value="{x:Static sys:Guid.Empty}">
-                                                    <Setter Property="Foreground" Value="Red"/>
+                                                <DataTrigger
+                                                    Binding="{Binding RemoteId}"
+                                                    Value="{x:Static sys:Guid.Empty}">
+                                                    <Setter
+                                                        Property="Foreground"
+                                                        Value="Red" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
-                                <TextBox Grid.Column="1" Text="{Binding LocalPort.Index, UpdateSourceTrigger=PropertyChanged}">
+                                <TextBox
+                                    Grid.Column="1"
+                                    Text="{Binding LocalPort.Index, UpdateSourceTrigger=PropertyChanged}">
                                     <TextBox.Style>
-                                        <Style TargetType="TextBox">
+                                        <Style
+                                            TargetType="TextBox">
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding LocalPort.Index}" Value="{x:Null}">
-                                                    <Setter Property="Visibility" Value="Hidden"/>
+                                                <DataTrigger
+                                                    Binding="{Binding LocalPort.Index}"
+                                                    Value="{x:Null}">
+                                                    <Setter
+                                                        Property="Visibility"
+                                                        Value="Hidden" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
@@ -69,37 +97,55 @@
             </DockPanel>
         </GroupBox>
 
-        <GridSplitter Grid.Column="0" Width="3"/>
+        <GridSplitter
+            Grid.Column="0"
+            Width="3" />
 
-        <GroupBox Grid.Column="1" Header="Connect To">
+        <GroupBox
+            Grid.Column="1"
+            Header="Connect To">
             <Grid>
                 <Grid.Style>
-                    <Style TargetType="Grid">
-                        <Setter Property="Visibility" Value="Visible"/>
+                    <Style
+                        TargetType="Grid">
+                        <Setter
+                            Property="Visibility"
+                            Value="Visible" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding ElementName=ListBoxInputs, Path=SelectedIndex}" Value="-1">
-                                <Setter Property="Visibility" Value="Collapsed"/>
+                            <DataTrigger
+                                Binding="{Binding ElementName=ListBoxInputs, Path=SelectedIndex}"
+                                Value="-1">
+                                <Setter
+                                    Property="Visibility"
+                                    Value="Collapsed" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition/>
+                    <RowDefinition
+                        Height="auto" />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
 
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition
+                            Width="auto" />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
                     <Label>Delivery policy</Label>
-                    <common:DeliveryPolicyComboBox Grid.Column="1" x:Name="ComboBoxDeliveryPolicy" SelectionChanged="ComboBoxDeliveryPolicy_SelectionChanged"/>
+                    <common:DeliveryPolicyComboBox
+                        Grid.Column="1"
+                        x:Name="ComboBoxDeliveryPolicy"
+                        SelectionChanged="ComboBoxDeliveryPolicy_SelectionChanged" />
                 </Grid>
-                
-                <Grid Grid.Row="1"  Name="ContentControlConnection"/>
+
+                <Grid
+                    Grid.Row="1"
+                    Name="ContentControlConnection" />
             </Grid>
         </GroupBox>
     </Grid>

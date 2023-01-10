@@ -1,85 +1,130 @@
-﻿<Window x:Class="OpenSense.WPF.Pipeline.PipelineRunnerWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:OpenSense.WPF.Pipeline"
-        mc:Ignorable="d"
-        Title="Pipeline Runner" 
-        Height="450" Width="800"
-        Unloaded="Window_Unloaded"
-        >
+﻿<Window
+    x:Class="OpenSense.WPF.Pipeline.PipelineRunnerWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:OpenSense.WPF.Pipeline"
+    mc:Ignorable="d"
+    Title="Pipeline Runner"
+    Height="450"
+    Width="800"
+    Unloaded="Window_Unloaded">
     <DockPanel>
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="_File">
-                <MenuItem Header="_New" Name="ButtonNew" Click="ButtonNew_Click"/>
-                <MenuItem Header="_Open" Name="ButtonLoad" Click="ButtonLoad_Click"/>
+        <Menu
+            DockPanel.Dock="Top">
+            <MenuItem
+                Header="_File">
+                <MenuItem
+                    Header="_New"
+                    Name="ButtonNew"
+                    Click="ButtonNew_Click" />
+                <MenuItem
+                    Header="_Open"
+                    Name="ButtonLoad"
+                    Click="ButtonLoad_Click" />
             </MenuItem>
-            <MenuItem Header="_Edit">
-                <MenuItem Header="_Edit" Name="ButtonEdit" Click="ButtonEdit_Click"/>
+            <MenuItem
+                Header="_Edit">
+                <MenuItem
+                    Header="_Edit"
+                    Name="ButtonEdit"
+                    Click="ButtonEdit_Click" />
             </MenuItem>
-            <MenuItem Header="_Run/Stop">
-                <MenuItem Header="_Run" Name="ButtonRun" Click="ButtonRun_Click"/>
-                <MenuItem Header="_Stop" Name="ButtonStop" Click="ButtonStop_Click"/>
+            <MenuItem
+                Header="_Run/Stop">
+                <MenuItem
+                    Header="_Run"
+                    Name="ButtonRun"
+                    Click="ButtonRun_Click" />
+                <MenuItem
+                    Header="_Stop"
+                    Name="ButtonStop"
+                    Click="ButtonStop_Click" />
             </MenuItem>
         </Menu>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition/>
+                <RowDefinition
+                    Height="auto" />
+                <RowDefinition />
             </Grid.RowDefinitions>
 
-            <Expander Header="Pipeline info" IsExpanded="True"
-                      Margin="3" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
+            <Expander
+                Header="Pipeline info"
+                IsExpanded="True"
+                Margin="3"
+                BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
                     </Grid.RowDefinitions>
-                    <Grid Name="GridPipelineConfiguration">
+                    <Grid
+                        Name="GridPipelineConfiguration">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition
+                                Width="auto" />
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
+                            <RowDefinition
+                                Height="auto" />
+                            <RowDefinition
+                                Height="auto" />
                         </Grid.RowDefinitions>
 
                         <Label>Name:</Label>
-                        <TextBlock Grid.Column="1" Text="{Binding Name}"/>
+                        <TextBlock
+                            Grid.Column="1"
+                            Text="{Binding Name}" />
                     </Grid>
-                    <Grid Grid.Row="1" Name="GridPipelineRuntime">
+                    <Grid
+                        Grid.Row="1"
+                        Name="GridPipelineRuntime">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition
+                                Width="auto" />
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
+                            <RowDefinition
+                                Height="auto" />
+                            <RowDefinition
+                                Height="auto" />
                         </Grid.RowDefinitions>
 
                         <Label>Running:</Label>
-                        <TextBlock Grid.Column="1" Text="{Binding Running}"/>
+                        <TextBlock
+                            Grid.Column="1"
+                            Text="{Binding Running}" />
 
-                        <Label Grid.Row="1">
+                        <Label
+                            Grid.Row="1">
                             View style:
                         </Label>
-                        <ComboBox Grid.Row="1" Grid.Column="1"
-                                  Name="ComboBoxView"
-                                  SelectedIndex="0"
-                                  SelectionChanged="ComboBoxView_SelectionChanged"
-                                  >
-                            <ComboBoxItem Content="Grid"/>
-                            <ComboBoxItem Content="List"/>
+                        <ComboBox
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Name="ComboBoxView"
+                            SelectedIndex="0"
+                            SelectionChanged="ComboBoxView_SelectionChanged">
+                            <ComboBoxItem
+                                Content="Grid" />
+                            <ComboBoxItem
+                                Content="List" />
                         </ComboBox>
 
                     </Grid>
                 </Grid>
             </Expander>
-            
-            <Grid Grid.Row="1" Name="ContentControlDisplay"/>
-            
+
+            <Grid
+                Grid.Row="1"
+                Name="ContentControlDisplay" />
+
         </Grid>
     </DockPanel>
 </Window>
