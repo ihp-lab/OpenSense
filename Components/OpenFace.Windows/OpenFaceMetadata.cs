@@ -15,7 +15,9 @@ namespace OpenSense.Components.OpenFace {
         protected override string GetPortDescription(string portName) {
             switch (portName) {
                 case nameof(OpenFace.In):
-                    return "[Required] Images.";
+                    return "[Required] Images. Only supports BGR 24bpp format.";
+                case nameof(OpenFace.CalibrationIn):
+                    return "[Optional] Camera calibration parameters.";
                 case nameof(OpenFace.Out):
                     return "[Composite] All kinds of outputs combined together.";
                 case nameof(OpenFace.PoseOut):

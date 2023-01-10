@@ -157,6 +157,9 @@ namespace OpenSense.Components.OpenFace {
             if (Mute) {
                 return;
             }
+            if (input.Resource.PixelFormat != PixelFormat.BGR_24bpp) {
+                throw new NotSupportedException($"Image format {input.Resource.PixelFormat} is not supported.");
+            }
             try {
                 var width = input.Resource.Width;
                 var height = input.Resource.Height;
