@@ -94,8 +94,12 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition />
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition
+                                    Width="auto"
+                                    MinWidth="16"/>
+                                <ColumnDefinition
+                                    Width="auto"
+                                    MinWidth="16" />
                             </Grid.ColumnDefinitions>
                             <Button
                                 Grid.Column="0"
