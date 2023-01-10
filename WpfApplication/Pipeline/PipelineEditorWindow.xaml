@@ -94,6 +94,8 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition />
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
                             <Button
                                 Grid.Column="0"
@@ -103,6 +105,18 @@
                                 Grid.Column="1"
                                 Name="ButtonDelete"
                                 Click="ButtonDelete_Click">Delete</Button>
+                            <Button
+                                Grid.Column="2"
+                                Name="ButtonMoveUp"
+                                Click="ButtonMoveUp_Click">
+                                ↑
+                            </Button>
+                            <Button
+                                Grid.Column="3"
+                                Name="ButtonMoveDown"
+                                Click="ButtonMoveDown_Click">
+                                ↓
+                            </Button>
                         </Grid>
                         <ListBox
                             DockPanel.Dock="Bottom"

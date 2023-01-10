@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -143,6 +142,32 @@ namespace OpenSense.WPF.Pipeline {
                 var json = Configuration.ToJson();
                 File.WriteAllText(saveFileDialog.FileName, json);
             }
+        }
+
+        private void ButtonMoveUp_Click(object sender, RoutedEventArgs e) {
+            var configuration = ListBoxInstances.SelectedItem as ComponentConfiguration;
+            if (configuration is null) {
+                return;
+            }
+            var oldIndex = Configuration.Instances.IndexOf(configuration);
+            var newIndex = Math.Max(0, oldIndex - 1);
+            if (oldIndex == newIndex) {
+                return;
+            }
+            Configuration.Instances.Move(oldIndex, newIndex);
+        }
+
+        private void ButtonMoveDown_Click(object sender, RoutedEventArgs e) {
+            var configuration = ListBoxInstances.SelectedItem as ComponentConfiguration;
+            if (configuration is null) {
+                return;
+            }
+            var oldIndex = Configuration.Instances.IndexOf(configuration);
+            var newIndex = Math.Min(Configuration.Instances.Count - 1, oldIndex + 1);
+            if (oldIndex == newIndex) {
+                return;
+            }
+            Configuration.Instances.Move(oldIndex, newIndex);
         }
     }
 }
