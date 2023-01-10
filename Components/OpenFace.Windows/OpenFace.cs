@@ -36,7 +36,9 @@ namespace OpenSense.Components.OpenFace {
         /// <param name="pipeline">The pipeline.</param>
         public OpenFace(Pipeline pipeline) {
             // Image receiver.
-            In = pipeline.CreateReceiver<Shared<Image>>(this, ReceiveImage, nameof(In));
+            In = pipeline.CreateReceiver<Shared<Image>>(this, ProcessImage, nameof(In));
+
+            CalibrationIn = pipeline.CreateReceiver<CameraCalibration>(this, ProcessCalibration, nameof(CalibrationIn));
 
             // Pose data emitter.
             PoseOut = pipeline.CreateEmitter<Pose>(this, nameof(PoseOut));
@@ -81,32 +83,32 @@ namespace OpenSense.Components.OpenFace {
             set => SetProperty(ref mute, value);
         }
 
-        private float cameraCalibFx = 500;
+        private float focalLengthX = 500;
 
-        public float CameraCalibFx {
-            get => cameraCalibFx;
-            set => SetProperty(ref cameraCalibFx, value);
+        public float FocalLengthX {
+            get => focalLengthX;
+            set => SetProperty(ref focalLengthX, value);
         }
 
-        private float cameraCalibFy = 500;
+        private float focalLengthY = 500;
 
-        public float CameraCalibFy {
-            get => cameraCalibFy;
-            set => SetProperty(ref cameraCalibFy, value);
+        public float FocalLengthY {
+            get => focalLengthY;
+            set => SetProperty(ref focalLengthY, value);
         }
 
-        private float cameraCalibCx = 640 / 2f;
+        private float centerX = 640 / 2f;
 
-        public float CameraCalibCx {
-            get => cameraCalibCx;
-            set => SetProperty(ref cameraCalibCx, value);
+        public float CenterX {
+            get => centerX;
+            set => SetProperty(ref centerX, value);
         }
 
-        private float cameraCalibCy = 480 / 2f;
+        private float centerY = 480 / 2f;
 
-        public float CameraCalibCy {
-            get => cameraCalibCy;
-            set => SetProperty(ref cameraCalibCy, value);
+        public float CenterY {
+            get => centerY;
+            set => SetProperty(ref centerY, value);
         }
 
         private bool autoAdjustCenter = false;
@@ -127,6 +129,8 @@ namespace OpenSense.Components.OpenFace {
         /// Gets. Receiver that encapsulates the shared image input stream.
         /// </summary>
         public Receiver<Shared<Image>> In { get; private set; }
+
+        public Receiver<CameraCalibration> CalibrationIn { get; private set; }
 
         /// <summary>
         /// Gets. Emitter that encapsulates the pose data output stream.
@@ -149,7 +153,7 @@ namespace OpenSense.Components.OpenFace {
         /// The receive method for the ImageIn receiver.
         /// This executes every time a message arrives on ImageIn.
         /// </summary>
-        private void ReceiveImage(Shared<Image> input, Envelope envelope) {
+        private void ProcessImage(Shared<Image> input, Envelope envelope) {
             if (Mute) {
                 return;
             }
@@ -157,8 +161,8 @@ namespace OpenSense.Components.OpenFace {
                 var width = input.Resource.Width;
                 var height = input.Resource.Height;
                 if (AutoAdjustCenter) {
-                    CameraCalibCx = width / 2f;
-                    CameraCalibCy = height / 2f;
+                    CenterX = width / 2f;
+                    CenterY = height / 2f;
                 }
                 static Vector2 pointToVector2(Point p) {
                     return new Vector2((float)p.X, (float)p.Y);
@@ -192,11 +196,11 @@ namespace OpenSense.Components.OpenFace {
                                 .CalculateVisibleLandmarks()
                                 .Select(tupleToVector2);
                             var landmarks3D = landmarkDetector
-                                .Calculate3DLandmarks(CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy)
+                                .Calculate3DLandmarks(FocalLengthX, FocalLengthY, CenterX, CenterY)
                                 .Select(m => new Vector3(m.Item1, m.Item2, m.Item3));
                             var poseData = new List<float>();
-                            landmarkDetector.GetPose(poseData, CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy);
-                            var box = landmarkDetector.CalculateBox(CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy);
+                            landmarkDetector.GetPose(poseData, FocalLengthX, FocalLengthY, CenterX, CenterY);
+                            var box = landmarkDetector.CalculateBox(FocalLengthX, FocalLengthY, CenterX, CenterY);
                             var boxConverted = box.Select(line => {
                                 var a = pointToVector2(line.Item1);
                                 var b = pointToVector2(line.Item2);
@@ -206,7 +210,7 @@ namespace OpenSense.Components.OpenFace {
                             PoseOut.Post(headPose, envelope.OriginatingTime);
 
                             // Gaze.
-                            gazeAnalyser.AddNextFrame(landmarkDetector, success: true, CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy);
+                            gazeAnalyser.AddNextFrame(landmarkDetector, success: true, FocalLengthX, FocalLengthY, CenterX, CenterY);
                             var eyeLandmarks = landmarkDetector
                                 .CalculateAllEyeLandmarks()
                                 .Select(tupleToVector2);
@@ -214,11 +218,11 @@ namespace OpenSense.Components.OpenFace {
                                 .CalculateVisibleEyeLandmarks()
                                 .Select(tupleToVector2);
                             var eyeLandmarks3D = landmarkDetector
-                                .CalculateAllEyeLandmarks3D(CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy)
+                                .CalculateAllEyeLandmarks3D(FocalLengthX, FocalLengthY, CenterX, CenterY)
                                 .Select(m => new Vector3(m.Item1, m.Item2, m.Item3));
                             var (leftPupil, rightPupil) = gazeAnalyser.GetGazeCamera();
                             var (angleX, angleY) = gazeAnalyser.GetGazeAngle();//Not accurate
-                            var gazeLines = gazeAnalyser.CalculateGazeLines(CameraCalibFx, CameraCalibFy, CameraCalibCx, CameraCalibCy);
+                            var gazeLines = gazeAnalyser.CalculateGazeLines(FocalLengthX, FocalLengthY, CenterX, CenterY);
                             var gazeLinesConverted = gazeLines.Select(line => {
                                 var a = pointToVector2(line.Item1);
                                 var b = pointToVector2(line.Item2);
@@ -257,6 +261,13 @@ namespace OpenSense.Components.OpenFace {
                 Logger?.LogError(ex, "OpenFace exception");
                 Mute = true;
             }
+        }
+
+        private void ProcessCalibration(CameraCalibration calibration, Envelope envelope) {
+            FocalLengthX = calibration.FocalLengthX;
+            FocalLengthY = calibration.FocalLengthY;
+            CenterX = calibration.CenterX;
+            CenterY = calibration.CenterY;
         }
 
         private void OnPipelineCompleted(object sender, PipelineCompletedEventArgs e) {

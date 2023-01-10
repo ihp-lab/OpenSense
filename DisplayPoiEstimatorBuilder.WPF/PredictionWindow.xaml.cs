@@ -81,7 +81,7 @@ namespace OpenSense.WPF.Widget.DisplayPoiEstimatorBuilder {
             var source = new MediaCapture(pipeline, webcamConfig);
             var flip = new FlipColorVideo(pipeline) { FlipHorizontal = FlipX, FlipVertical = FlipY };
             source.PipeTo(flip.In, DeliveryPolicy.LatestMessage);
-            var openface = new OpenFace(pipeline) { CameraCalibFx = WebcamFx, CameraCalibFy = WebcamFy, CameraCalibCx = WebcamCx, CameraCalibCy = WebcamCy };
+            var openface = new OpenFace(pipeline) { FocalLengthX = WebcamFx, FocalLengthY = WebcamFy, CenterX = WebcamCx, CenterY = WebcamCy };
             flip.PipeTo(openface.In, DeliveryPolicy.LatestMessage);
             var dispFlip = new FlipColorVideo(pipeline) { FlipHorizontal = !FlipX, FlipVertical = FlipY };// mirror display
             source.PipeTo(dispFlip.In, DeliveryPolicy.LatestMessage);

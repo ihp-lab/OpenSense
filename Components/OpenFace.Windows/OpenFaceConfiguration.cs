@@ -15,32 +15,32 @@ namespace OpenSense.Components.OpenFace {
             set => SetProperty(ref mute, value);
         }
 
-        private float cameraCalibFx = 500;
+        private float focalLengthX = 500;
 
-        public float CameraCalibFx {
-            get => cameraCalibFx;
-            set => SetProperty(ref cameraCalibFx, value);
+        public float FocalLengthX {
+            get => focalLengthX;
+            set => SetProperty(ref focalLengthX, value);
         }
 
-        private float cameraCalibFy = 500;
+        private float focalLengthY = 500;
 
-        public float CameraCalibFy {
-            get => cameraCalibFy;
-            set => SetProperty(ref cameraCalibFy, value);
+        public float FocalLengthY {
+            get => focalLengthY;
+            set => SetProperty(ref focalLengthY, value);
         }
 
-        private float cameraCalibCx = 640 / 2f;
+        private float centerX = 640 / 2f;
 
-        public float CameraCalibCx {
-            get => cameraCalibCx;
-            set => SetProperty(ref cameraCalibCx, value);
+        public float CenterX {
+            get => centerX;
+            set => SetProperty(ref centerX, value);
         }
 
-        private float cameraCalibCy = 480 / 2f;
+        private float centerY = 480 / 2f;
 
-        public float CameraCalibCy {
-            get => cameraCalibCy;
-            set => SetProperty(ref cameraCalibCy, value);
+        public float CenterY {
+            get => centerY;
+            set => SetProperty(ref centerY, value);
         }
 
         private bool autoAdjustCenter = false;
@@ -55,10 +55,10 @@ namespace OpenSense.Components.OpenFace {
         protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new OpenFace(pipeline) {
             Logger = (serviceProvider?.GetService(typeof(ILoggerFactory)) as ILoggerFactory)?.CreateLogger(Name),
             Mute = Mute,
-            CameraCalibFx = CameraCalibFx,
-            CameraCalibFy = CameraCalibFy,
-            CameraCalibCx = CameraCalibCx,
-            CameraCalibCy = CameraCalibCy,
+            FocalLengthX = FocalLengthX,
+            FocalLengthY = FocalLengthY,
+            CenterX = CenterX,
+            CenterY = CenterY,
             AutoAdjustCenter = AutoAdjustCenter,
         };
     }

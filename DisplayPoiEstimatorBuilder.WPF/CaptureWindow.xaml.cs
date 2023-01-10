@@ -250,7 +250,7 @@ namespace OpenSense.WPF.Widget.DisplayPoiEstimatorBuilder {
             var source = new MediaCapture(pipeline, webcamConfig);
             var flip = new FlipColorVideo(pipeline) { FlipHorizontal = FlipX, FlipVertical = FlipY };
             source.PipeTo(flip.In, DeliveryPolicy.SynchronousOrThrottle);
-            var openface = new OpenFace(pipeline) { CameraCalibFx = WebcamFx, CameraCalibFy = WebcamFy, CameraCalibCx = WebcamCx, CameraCalibCy = WebcamCy };
+            var openface = new OpenFace(pipeline) { FocalLengthX = WebcamFx, FocalLengthY = WebcamFy, CenterX = WebcamCx, CenterY = WebcamCy };
             flip.PipeTo(openface.In, DeliveryPolicy.SynchronousOrThrottle);
             generator = new DisplayCoordianteGenerator(pipeline);
             var record = openface.Out.Join(generator.Out, Reproducible.Nearest<Vector2>(), (gp, display) => new GazeToDisplayCoordinateMappingRecord(gp, display), DeliveryPolicy.SynchronousOrThrottle, DeliveryPolicy.SynchronousOrThrottle);
