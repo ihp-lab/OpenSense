@@ -11,8 +11,7 @@ using Microsoft.ML.Transforms.Onnx;
 using Microsoft.Psi;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
-using OpenSense.Components.Emotion.Common;
-using OpenSense.Components.OpenFace.Common;
+using OpenSense.Components.OpenFace;
 using OpenSense.DataWriter.Contract;
 using static Microsoft.ML.Transforms.Image.ImagePixelExtractingEstimator;
 
