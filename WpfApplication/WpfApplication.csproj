@@ -10,8 +10,8 @@
         <AssemblyName>OpenSense.WPF</AssemblyName>
         <EmbedAllSources>true</EmbedAllSources>
         <ApplicationIcon>Resource\Icon\usc.ico</ApplicationIcon>
-        <AssemblyVersion>2.1.0</AssemblyVersion>
-        <Version>2.1.0</Version>
+        <AssemblyVersion>3.0.0</AssemblyVersion>
+        <Version>3.0.0</Version>
         <AssemblyName>OpenSense.WPF</AssemblyName>
     </PropertyGroup>
 
