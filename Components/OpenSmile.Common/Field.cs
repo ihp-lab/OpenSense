@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace OpenSense.Components.OpenSmile.Common {
+namespace OpenSense.Components.OpenSmile {
     [Serializable]
     public class Field<T> {
         public string Name { get; private set; }

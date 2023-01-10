@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Microsoft.Psi;
-using OpenSense.Components.Emotion.Common;
 
 namespace OpenSense.Components.Emotion.Visualizer {
     public class EmotionVisualizer: IConsumer<Emotions>, INotifyPropertyChanged {

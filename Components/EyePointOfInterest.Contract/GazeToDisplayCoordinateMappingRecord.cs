@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Numerics;
 using System.Text.Json.Serialization;
-using OpenSense.Components.OpenFace.Common;
+using OpenSense.Components.OpenFace;
 
-namespace OpenSense.Components.EyePointOfInterest.Common {
+namespace OpenSense.Components.EyePointOfInterest {
 
     [Serializable]
     public class GazeToDisplayCoordinateMappingRecord : IEquatable<GazeToDisplayCoordinateMappingRecord> {

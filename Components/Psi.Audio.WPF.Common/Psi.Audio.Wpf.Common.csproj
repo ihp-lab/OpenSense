@@ -4,7 +4,7 @@
         <TargetFramework>net7.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
         <AssemblyName>OpenSense.WPF.Components.Psi.Audio.Common</AssemblyName>
-        <RootNamespace>OpenSense.WPF.Components.Psi.Audio.Common</RootNamespace>
+        <RootNamespace>OpenSense.WPF.Components.Psi.Audio</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

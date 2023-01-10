@@ -6,7 +6,7 @@ using System.Windows.Data;
 using Microsoft.Psi;
 using OpenSense.WPF.Components.Controls;
 
-namespace OpenSense.WPF.Components.Psi.Common {
+namespace OpenSense.WPF.Components.Psi {
     public partial class IntervalEndpointControl_TimeSpan : UserControl {
 
         #region Dependency Properties

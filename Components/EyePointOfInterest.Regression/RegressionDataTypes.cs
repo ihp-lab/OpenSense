@@ -1,7 +1,6 @@
 ﻿using System.Numerics;
 using Microsoft.ML.Data;
-using OpenSense.Components.EyePointOfInterest.Common;
-using OpenSense.Components.OpenFace.Common;
+using OpenSense.Components.OpenFace;
 
 namespace OpenSense.Components.EyePointOfInterest.Regression {
 

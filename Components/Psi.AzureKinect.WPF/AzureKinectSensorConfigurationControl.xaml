@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:OpenSense.WPF.Components.Psi.AzureKinect"
              xmlns:util="clr-namespace:OpenSense.WPF.Components.Utility;assembly=OpenSense.WPF.Components.Contract"
-             xmlns:common="clr-namespace:OpenSense.WPF.Components.Psi.Common;assembly=OpenSense.WPF.Components.Psi.Common"
+             xmlns:common="clr-namespace:OpenSense.WPF.Components.Psi;assembly=OpenSense.WPF.Components.Psi.Common"
              xmlns:kinect="clr-namespace:Microsoft.Azure.Kinect.Sensor;assembly=Microsoft.Azure.Kinect.Sensor"
              xmlns:psi="clr-namespace:Microsoft.Psi.AzureKinect;assembly=Microsoft.Psi.AzureKinect.x64"
              mc:Ignorable="d" 

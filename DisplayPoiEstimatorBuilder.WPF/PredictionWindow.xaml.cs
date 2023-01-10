@@ -9,8 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Microsoft.Psi;
 using Microsoft.Psi.Media;
-using OpenSense.Components.EyePointOfInterest.Common;
-using OpenSense.Components.OpenFace.Common;
+using OpenSense.Components.EyePointOfInterest;
 using OpenSense.Components.Imaging;
 using OpenSense.Components.OpenFace;
 

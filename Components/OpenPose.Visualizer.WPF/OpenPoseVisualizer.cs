@@ -7,8 +7,7 @@ using System.Windows.Media.Imaging;
 using Microsoft.Psi;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
-using OpenSense.Components.Imaging.Visualizer.Common;
-using OpenSense.Components.OpenPose.Common;
+using OpenSense.Components.Imaging.Visualizer;
 using Image = Microsoft.Psi.Imaging.Image;
 
 namespace OpenSense.Components.OpenPose.Visualizer {

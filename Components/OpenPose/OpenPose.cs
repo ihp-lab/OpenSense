@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
-using OpenSense.Components.OpenPose.Common;
 using OpenSense.Components.OpenPose.PInvoke;
 using OpenSense.Components.OpenPose.PInvoke.Configuration;
 using OpenSense.Components.OpenPose.PInvoke.Session;

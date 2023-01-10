@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Microsoft.Psi;
-using OpenSense.Components.OpenSmile.Common;
 
 namespace OpenSense.Components.OpenSmile.Visualizer {
     public class OpenSmileVisualizer : IConsumer<Vector<float>>, INotifyPropertyChanged {

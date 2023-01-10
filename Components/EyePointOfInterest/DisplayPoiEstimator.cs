@@ -4,8 +4,7 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using Microsoft.Psi;
 using Microsoft.Psi.Components;
-using OpenSense.Components.EyePointOfInterest.Common;
-using OpenSense.Components.OpenFace.Common;
+using OpenSense.Components.OpenFace;
 
 namespace OpenSense.Components.EyePointOfInterest {
     public class DisplayPoiEstimator : IConsumerProducer<PoseAndEyeAndFace, Vector2> {

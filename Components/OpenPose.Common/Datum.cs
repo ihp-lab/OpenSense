@@ -1,10 +1,8 @@
 ﻿// OpenPose Unity Plugin v1.0.0alpha-1.5.0
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace OpenSense.Components.OpenPose.Common {
+namespace OpenSense.Components.OpenPose {
     /*
         Data struct for OP output
         Comments are from OpenPose

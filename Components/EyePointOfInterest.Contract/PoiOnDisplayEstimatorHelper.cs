@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text.Json.Nodes;
 
-namespace OpenSense.Components.EyePointOfInterest.Common {
+namespace OpenSense.Components.EyePointOfInterest {
     public static class PoiOnDisplayEstimatorHelper {
 
         public static IPoiOnDisplayEstimator LoadEstimator(string filename) {//Note: Not tested after moving from Json.Net to System.Text.Json

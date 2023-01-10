@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.ML;
 using Microsoft.Psi;
 using Microsoft.Psi.Components;
-using OpenSense.Components.OpenFace.Common;
+using OpenSense.Components.OpenFace;
 
 namespace OpenSense.Components.HeadGesture {
     internal class HeadposeRNN : IConsumerProducer<Pose, float> {

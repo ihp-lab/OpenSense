@@ -3,14 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
-using OpenSense.Components.OpenPose.Common;
 using UnityEngine;
 
 namespace OpenSense.Components.OpenPose.PInvoke {
-	/*
+    /*
      * OPWrapper wraps OpenPose API and provide a friendly user function set
      */
-	public class Wrapper {
+    public class Wrapper {
 
 		#region Properties
 		// OpenPose state

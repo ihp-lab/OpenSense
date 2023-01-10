@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using OpenSense.Components.Psi.Audio;
-using OpenSense.WPF.Components.Psi.Audio.Common;
 
 namespace OpenSense.WPF.Components.Psi.Audio {
     public partial class AudioCaptureConfigurationControl : UserControl {

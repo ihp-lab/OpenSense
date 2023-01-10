@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Psi;
 using OpenSense.Components.Contract;
-using OpenSense.Components.EyePointOfInterest.Common;
 
 namespace OpenSense.Components.EyePointOfInterest {
     [Serializable]

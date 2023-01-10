@@ -1,7 +1,7 @@
 ﻿using Microsoft.Psi;
 using Microsoft.Psi.Components;
-using OpenSense.Components.OpenFace.Common;
-using HeadGestureData = OpenSense.Components.OpenFace.Common.Gesture;
+using OpenSense.Components.OpenFace;
+using HeadGestureData = OpenSense.Components.OpenFace.Gesture;
 
 namespace OpenSense.Components.HeadGesture {
     public class HeadGestureDetector : Subpipeline, IConsumerProducer<Pose, HeadGestureData> {

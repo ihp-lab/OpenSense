@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using Newtonsoft.Json;
-using OpenSense.Components.EyePointOfInterest.Common;
+using OpenSense.Components.EyePointOfInterest;
 using OpenSense.Components.EyePointOfInterest.Regression;
 using OpenSense.Components.EyePointOfInterest.SpatialTracking;
-using OpenSense.WPF.Components.EyePointOfInterest.Common;
+using OpenSense.WPF.Components.EyePointOfInterest;
 
 namespace OpenSense.WPF.Widget.DisplayPoiEstimatorBuilder {
     public partial class CalibratorWindow : Window {

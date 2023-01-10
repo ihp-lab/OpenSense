@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using Microsoft.Psi;
 
-namespace OpenSense.WPF.Components.Psi.Common {
+namespace OpenSense.WPF.Components.Psi {
     public partial class RelativeTimeIntervalControl : UserControl {
 
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(

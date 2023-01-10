@@ -5,7 +5,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text.Json.Serialization;
 
-namespace OpenSense.Components.OpenFace.Common {
+namespace OpenSense.Components.OpenFace {
     //[JsonObject]
     public class Pose /*: IEnumerable<double>, IEquatable<Pose>*/ {//Interfaces removed since no support for JsonObjectAttribute after Json.Net is removed
 

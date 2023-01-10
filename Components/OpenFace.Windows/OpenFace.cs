@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
 using OpenFaceInterop;
-using OpenSense.Components.OpenFace.Common;
 using OpenSense.DataWriter.Contract;
 
 namespace OpenSense.Components.OpenFace {

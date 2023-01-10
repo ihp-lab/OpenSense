@@ -1,5 +1,4 @@
 ﻿using System;
-using OpenSense.Components.EyePointOfInterest.Common;
 
 namespace OpenSense.Components.EyePointOfInterest.SpatialTracking {
     [Serializable]

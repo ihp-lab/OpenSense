@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:OpenSense.WPF.Pipeline"
-    xmlns:common="clr-namespace:OpenSense.WPF.Components.Psi.Common;assembly=OpenSense.WPF.Components.Psi.Common"
+    xmlns:common="clr-namespace:OpenSense.WPF.Components.Psi;assembly=OpenSense.WPF.Components.Psi.Common"
     mc:Ignorable="d"
     Title="Pipeline Editor"
     Height="600"

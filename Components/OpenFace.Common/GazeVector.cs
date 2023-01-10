@@ -2,7 +2,7 @@
 using System.Numerics;
 using System.Text.Json.Serialization;
 
-namespace OpenSense.Components.OpenFace.Common {
+namespace OpenSense.Components.OpenFace {
     [Serializable]
     public class GazeVector : IEquatable<GazeVector> {
 

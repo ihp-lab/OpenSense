@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using Microsoft.Psi.Audio;
 
-namespace OpenSense.WPF.Components.Psi.Audio.Common {
+namespace OpenSense.WPF.Components.Psi.Audio {
     public partial class WaveFormatControl : UserControl {
 
         private WaveFormat Format;

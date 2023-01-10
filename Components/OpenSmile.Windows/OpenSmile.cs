@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Microsoft.Psi;
 using Microsoft.Psi.Audio;
-using OpenSense.Components.OpenSmile.Common;
 using OpenSense.Components.OpenSmile.Utility;
 using Environment = OpenSmileInterop.Environment;
 

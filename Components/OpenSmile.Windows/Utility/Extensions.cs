@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using OpenSense.Components.OpenSmile.Common;
 
 namespace OpenSense.Components.OpenSmile.Utility {
     internal static class Extensions {

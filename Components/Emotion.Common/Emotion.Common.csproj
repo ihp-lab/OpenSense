@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <AssemblyName>OpenSense.Components.Emotion.Common</AssemblyName>
-        <RootNamespace>OpenSense.Components.Emotion.Common</RootNamespace>
+        <RootNamespace>OpenSense.Components.Emotion</RootNamespace>
         <LangVersion>11.0</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>

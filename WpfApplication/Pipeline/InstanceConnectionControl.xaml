@@ -6,7 +6,7 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:OpenSense.WPF.Pipeline"
-    xmlns:common="clr-namespace:OpenSense.WPF.Components.Psi.Common;assembly=OpenSense.WPF.Components.Psi.Common"
+    xmlns:common="clr-namespace:OpenSense.WPF.Components.Psi;assembly=OpenSense.WPF.Components.Psi.Common"
     xmlns:psi="clr-namespace:Microsoft.Psi;assembly=Microsoft.Psi"
     mc:Ignorable="d"
     d:DesignHeight="450"

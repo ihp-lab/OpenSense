@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using OpenSense.Components.OpenPose.Common;
 using OpenSense.Components.OpenPose.PInvoke.Configuration;
 
 namespace OpenSense.Components.OpenPose.PInvoke.Session {

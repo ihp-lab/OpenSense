@@ -6,7 +6,7 @@ using System.Windows.Media.Imaging;
 using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
 
-namespace OpenSense.Components.Imaging.Visualizer.Common {
+namespace OpenSense.Components.Imaging.Visualizer {
     public class ImageVisualizer : INotifyPropertyChanged {
 
         #region INotifyPropertyChanged

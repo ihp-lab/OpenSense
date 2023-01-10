@@ -1,4 +1,4 @@
-﻿namespace OpenSense.Components.OpenFace.Common {
+﻿namespace OpenSense.Components.OpenFace {
     public enum Gesture {
         None,
         Nod,

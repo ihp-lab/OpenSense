@@ -1,8 +1,7 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using OpenSense.Components.Psi.CognitiveServices.Speech;
-using OpenSense.WPF.Components.Psi.Audio.Common;
+using OpenSense.WPF.Components.Psi.Audio;
 
 namespace OpenSense.WPF.Components.Psi.CognitiveServices.Speech {
     public partial class AzureSpeechRecognizerConfigurationControl : UserControl {

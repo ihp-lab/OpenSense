@@ -1,6 +1,5 @@
 ﻿using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
-using OpenSense.Components.Imaging.Visualizer.Common;
 
 namespace OpenSense.Components.Imaging.Visualizer {
     public class ColorVideoVisualizer : ImageVisualizer, IConsumer<Shared<Image>> {
