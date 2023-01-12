@@ -7,9 +7,9 @@ using OpenSense.Components.Contract;
 namespace OpenSense.Components.Psi {
 
     [Serializable]
-    public sealed class JoinConfiguration : OperatorConfiguration {
+    public sealed class JoinOperatorConfiguration : OperatorConfiguration {
 
-        public override IComponentMetadata GetMetadata() => new JoinMetadata();
+        public override IComponentMetadata GetMetadata() => new JoinOperatorMetadata();
 
         public override object Instantiate(Pipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents, IServiceProvider serviceProvider) {
             var producers = GetRemoteProducers(instantiatedComponents);

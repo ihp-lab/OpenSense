@@ -8,7 +8,7 @@ using Microsoft.Psi.Imaging;
 
 namespace OpenSense.Components.Imaging {
 
-    public class FlipImage : IConsumer<Shared<Image>>, IProducer<Shared<Image>>, INotifyPropertyChanged {
+    public class FlipImageOperator : IConsumer<Shared<Image>>, IProducer<Shared<Image>>, INotifyPropertyChanged {
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -25,28 +25,28 @@ namespace OpenSense.Components.Imaging {
 
         public Emitter<Shared<Image>> Out { get; private set; }
 
-        private bool flipHorizontal = false;
+        private bool horizontal = false;
 
-        public bool FlipHorizontal {
-            get => flipHorizontal;
-            set => SetProperty(ref flipHorizontal, value);
+        public bool Horizontal {
+            get => horizontal;
+            set => SetProperty(ref horizontal, value);
         }
 
-        private bool flipVertical = false;
+        private bool vertical = false;
 
-        public bool FlipVertical {
-            get => flipVertical;
-            set => SetProperty(ref flipVertical, value);
+        public bool Vertical {
+            get => vertical;
+            set => SetProperty(ref vertical, value);
         }
 
-        public FlipImage(Pipeline pipeline) {
+        public FlipImageOperator(Pipeline pipeline) {
             // psi pipeline
             In = pipeline.CreateReceiver<Shared<Image>>(this, PorcessFrame, nameof(In));
             Out = pipeline.CreateEmitter<Shared<Image>>(this, nameof(Out));
         }
 
         private void PorcessFrame(Shared<Image> frame, Envelope envelope) {
-            var flip = (FlipHorizontal, FlipVertical);
+            var flip = (Horizontal, Vertical);
             if (flip == (false, false)) {
                 Out.Post(frame, envelope.OriginatingTime);
                 return;

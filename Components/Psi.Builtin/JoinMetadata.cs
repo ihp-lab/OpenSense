@@ -6,7 +6,7 @@ using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Psi {
     [Export(typeof(IComponentMetadata))]
-    public sealed class JoinMetadata : IComponentMetadata {
+    public sealed class JoinOperatorMetadata : IComponentMetadata {
 
         public string Name => "Join Operator";
 
@@ -18,7 +18,7 @@ namespace OpenSense.Components.Psi {
             new FusionPortMetadata("Out", PortDirection.Output, "Paired primary and secondary tuples."),
         };
 
-        public ComponentConfiguration CreateConfiguration() => new JoinConfiguration();
+        public ComponentConfiguration CreateConfiguration() => new JoinOperatorConfiguration();
 
         public object GetConnector<T>(object instance, PortConfiguration portConfiguration) {
             Debug.Assert(Equals(this.OutputPorts().Single().Identifier, portConfiguration.Identifier));

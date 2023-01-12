@@ -43,7 +43,7 @@ namespace OpenSense.Components.AzureKinect.Visualizer {
 
         public Emitter<Shared<Image>> Out { get; private set; }
 
-        private DisplayImage display = new DisplayImage();
+        private ImageDisplay display = new ImageDisplay();
 
         public WriteableBitmap Image {
             get => display.VideoImage;

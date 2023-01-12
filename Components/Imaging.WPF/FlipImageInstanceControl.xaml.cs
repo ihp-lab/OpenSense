@@ -1,8 +1,8 @@
 ﻿using System.Windows.Controls;
 
 namespace OpenSense.WPF.Components.Imaging {
-    public partial class FlipImageInstanceControl : UserControl {
-        public FlipImageInstanceControl() {
+    public partial class FlipImageOperatorInstanceControl : UserControl {
+        public FlipImageOperatorInstanceControl() {
             InitializeComponent();
         }
     }

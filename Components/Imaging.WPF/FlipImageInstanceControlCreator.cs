@@ -5,10 +5,10 @@ using OpenSense.WPF.Components.Contract;
 
 namespace OpenSense.WPF.Components.Imaging {
     [Export(typeof(IInstanceControlCreator))]
-    public class FlipImageInstanceControlCreator : IInstanceControlCreator {
+    public class FlipImageOperatorInstanceControlCreator : IInstanceControlCreator {
 
-        public bool CanCreate(object instance) => instance is FlipImage;
+        public bool CanCreate(object instance) => instance is FlipImageOperator;
 
-        public UIElement Create(object instance) => new FlipImageInstanceControl() { DataContext = instance };
+        public UIElement Create(object instance) => new FlipImageOperatorInstanceControl() { DataContext = instance };
     }
 }

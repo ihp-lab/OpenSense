@@ -6,10 +6,10 @@ using OpenSense.WPF.Components.Contract;
 
 namespace OpenSense.WPF.Components.Imaging {
     [Export(typeof(IConfigurationControlCreator))]
-    public class FlipImageConfigurationControlCreator : IConfigurationControlCreator {
+    public class FlipImageOperatorConfigurationControlCreator : IConfigurationControlCreator {
 
-        public bool CanCreate(ComponentConfiguration configuration) => configuration is FlipImageConfiguration;
+        public bool CanCreate(ComponentConfiguration configuration) => configuration is FlipImageOperatorConfiguration;
 
-        public UIElement Create(ComponentConfiguration configuration) => new FlipImageConfigurationControl() { DataContext = configuration };
+        public UIElement Create(ComponentConfiguration configuration) => new FlipImageOperatorConfigurationControl() { DataContext = configuration };
     }
 }

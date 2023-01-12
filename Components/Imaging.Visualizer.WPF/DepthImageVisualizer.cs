@@ -22,7 +22,7 @@ namespace OpenSense.Components.Imaging.Visualizer {
         }
         #endregion
 
-        private DisplayImage display = new DisplayImage();
+        private ImageDisplay display = new ImageDisplay();
 
         public Receiver<Shared<DepthImage>> In { get; private set; }
 

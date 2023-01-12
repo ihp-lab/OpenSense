@@ -4,24 +4,27 @@ using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Imaging {
     [Serializable]
-    public class FlipImageConfiguration : ConventionalComponentConfiguration {
+    public class FlipImageOperatorConfiguration : ConventionalComponentConfiguration {
 
-        private bool flipHorizontal = false;
+        private bool horizontal = false;
 
-        public bool FlipHorizontal {
-            get => flipHorizontal;
-            set => SetProperty(ref flipHorizontal, value);
+        public bool Horizontal {
+            get => horizontal;
+            set => SetProperty(ref horizontal, value);
         }
 
-        private bool flipVertical = false;
+        private bool vertical = false;
 
-        public bool FlipVertical {
-            get => flipVertical;
-            set => SetProperty(ref flipVertical, value);
+        public bool Vertical {
+            get => vertical;
+            set => SetProperty(ref vertical, value);
         }
 
-        public override IComponentMetadata GetMetadata() => new FlipImageMetadata();
+        public override IComponentMetadata GetMetadata() => new FlipImageOperatorMetadata();
 
-        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new FlipImage(pipeline) { FlipHorizontal = FlipHorizontal, FlipVertical = FlipVertical };
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new FlipImageOperator(pipeline) { 
+            Horizontal = Horizontal, 
+            Vertical = Vertical
+        };
     }
 }
