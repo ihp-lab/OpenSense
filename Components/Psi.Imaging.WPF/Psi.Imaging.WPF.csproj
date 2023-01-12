@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net7.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <RootNamespace>OpenSense.WPF.Components.MediaPipe.NET.Visualizer</RootNamespace>
-        <AssemblyName>OpenSense.WPF.Components.MediaPipe.NET.Visualizer</AssemblyName>
+        <AssemblyName>OpenSense.WPF.Components.Psi.Imaging</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.Psi.Imaging</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
@@ -13,9 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\ComponentContract\ComponentContract.csproj" />
-        <ProjectReference Include="..\Psi.Imaging.Visualizer.WPF.Common\Psi.Imaging.Visualizer.WPF.Common.csproj" />
-        <ProjectReference Include="..\MediaPipe.NET\MediaPipe.NET.csproj" />
+        <ProjectReference Include="..\Psi.Imaging\Psi.Imaging.csproj" />
         <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>
 

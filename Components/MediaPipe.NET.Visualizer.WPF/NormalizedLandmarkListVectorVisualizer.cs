@@ -9,8 +9,8 @@ using Mediapipe.Net.Framework.Protobuf;
 using Microsoft.Psi;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
-using OpenSense.Components.Imaging.Visualizer;
 using OpenSense.Components.MediaPipe.NET;
+using OpenSense.WPF.Components.Psi.Imaging.Visualizer;
 using Color = System.Drawing.Color;
 using Image = Microsoft.Psi.Imaging.Image;
 

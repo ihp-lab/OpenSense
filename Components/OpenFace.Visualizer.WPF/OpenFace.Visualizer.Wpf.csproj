@@ -15,7 +15,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\OpenFace.Common\OpenFace.Common.csproj" />
-        <ProjectReference Include="..\Imaging.Visualizer.WPF.Common\Imaging.Visualizer.WPF.Common.csproj" />
+        <ProjectReference Include="..\Psi.Imaging.Visualizer.WPF.Common\Psi.Imaging.Visualizer.WPF.Common.csproj" />
         <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>
 

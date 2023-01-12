@@ -12,7 +12,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Psi.Media.Windows.x64" Version="0.17.52.1-beta" >
+        <PackageReference Include="Microsoft.Psi.Media.Windows.x64" Version="0.17.52.1-beta">
             <NoWarn>NU1701</NoWarn><!--Only a .net framework package is available-->
         </PackageReference>
         <PackageReference Include="System.Composition" Version="7.0.0" />
@@ -22,7 +22,7 @@
         <ProjectReference Include="..\Components\EyePointOfInterest.Regression\EyePointOfInterest.Regression.csproj" />
         <ProjectReference Include="..\Components\EyePointOfInterest.SpatialTracking\EyePointOfInterest.SpatialTracking.csproj" />
         <ProjectReference Include="..\Components\EyePointOfInterest.WPF.Common\EyePointOfInterest.WPF.Common.csproj" />
-        <ProjectReference Include="..\Components\Imaging\Imaging.csproj" />
+        <ProjectReference Include="..\Components\Psi.Imaging\Psi.Imaging.csproj" />
         <ProjectReference Include="..\Components\OpenFace.Windows\OpenFace.Windows.csproj" />
         <ProjectReference Include="..\WpfWidgetContract\WpfWidgetContract.csproj" />
     </ItemGroup>

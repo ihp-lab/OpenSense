@@ -12,7 +12,7 @@ using Microsoft.Psi.AzureKinect;
 using Microsoft.Psi.Calibration;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
-using OpenSense.Components.Imaging.Visualizer;
+using OpenSense.WPF.Components.Psi.Imaging.Visualizer;
 using Image = Microsoft.Psi.Imaging.Image;
 
 namespace OpenSense.Components.AzureKinect.Visualizer {
