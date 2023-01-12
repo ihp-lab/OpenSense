@@ -8,7 +8,7 @@ using Microsoft.Psi.Imaging;
 
 namespace OpenSense.Components.Imaging {
 
-    public class FlipColorVideo : IConsumer<Shared<Image>>, IProducer<Shared<Image>>, INotifyPropertyChanged {
+    public class FlipImage : IConsumer<Shared<Image>>, IProducer<Shared<Image>>, INotifyPropertyChanged {
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -39,7 +39,7 @@ namespace OpenSense.Components.Imaging {
             set => SetProperty(ref flipVertical, value);
         }
 
-        public FlipColorVideo(Pipeline pipeline) {
+        public FlipImage(Pipeline pipeline) {
             // psi pipeline
             In = pipeline.CreateReceiver<Shared<Image>>(this, PorcessFrame, nameof(In));
             Out = pipeline.CreateEmitter<Shared<Image>>(this, nameof(Out));

@@ -88,7 +88,7 @@ namespace OpenSense.Components.OpenPose.Visualizer {
         public double? FrameRate => imageVisualizer.FrameRate;
         #endregion
 
-        private ImageVisualizer imageVisualizer = new ImageVisualizer();
+        private ImageHolder imageVisualizer = new ImageHolder();
 
         public OpenPoseVisualizer(Pipeline pipeline): base(pipeline) {
             DataInConnector = CreateInputConnectorFrom<Datum>(pipeline, nameof(DataIn));

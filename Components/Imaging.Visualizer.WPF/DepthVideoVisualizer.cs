@@ -9,7 +9,7 @@ using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
 
 namespace OpenSense.Components.Imaging.Visualizer {
-    public class DepthVideoVisualizer : IConsumerProducer<Shared<DepthImage>, Shared<Image>>, INotifyPropertyChanged {
+    public class DepthImageVisualizer : IConsumerProducer<Shared<DepthImage>, Shared<Image>>, INotifyPropertyChanged {
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -22,7 +22,7 @@ namespace OpenSense.Components.Imaging.Visualizer {
         }
         #endregion
 
-        private DisplayVideo display = new DisplayVideo();
+        private DisplayImage display = new DisplayImage();
 
         public Receiver<Shared<DepthImage>> In { get; private set; }
 
@@ -57,7 +57,7 @@ namespace OpenSense.Components.Imaging.Visualizer {
             set => SetProperty(ref maxValue, value);
         }
 
-        public DepthVideoVisualizer(Pipeline pipeline) {
+        public DepthImageVisualizer(Pipeline pipeline) {
             In = pipeline.CreateReceiver<Shared<DepthImage>>(this, Process, nameof(In));
             Out = pipeline.CreateEmitter<Shared<Image>>(this, nameof(Out));
             pipeline.PipelineCompleted += PipelineCompleted;

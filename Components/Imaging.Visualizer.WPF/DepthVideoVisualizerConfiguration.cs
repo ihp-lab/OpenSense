@@ -4,10 +4,10 @@ using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Imaging.Visualizer {
     [Serializable]
-    public class DepthVideoVisualizerConfiguration : ConventionalComponentConfiguration {
+    public class DepthImageVisualizerConfiguration : ConventionalComponentConfiguration {
 
-        public override IComponentMetadata GetMetadata() => new DepthVideoVisualizerMetadata();
+        public override IComponentMetadata GetMetadata() => new DepthImageVisualizerMetadata();
 
-        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new DepthVideoVisualizer(pipeline);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new DepthImageVisualizer(pipeline);
     }
 }

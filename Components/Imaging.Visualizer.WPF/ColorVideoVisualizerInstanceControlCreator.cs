@@ -5,10 +5,10 @@ using OpenSense.WPF.Components.Contract;
 
 namespace OpenSense.WPF.Components.Imaging.Visualizer {
     [Export(typeof(IInstanceControlCreator))]
-    public class ColorVideoVisualizerInstanceControlCreator : IInstanceControlCreator {
+    public class ImageVisualizerInstanceControlCreator : IInstanceControlCreator {
 
-        public bool CanCreate(object instance) => instance is ColorVideoVisualizer;
+        public bool CanCreate(object instance) => instance is ImageVisualizer;
 
-        public UIElement Create(object instance) => new ColorVideoVisualizerInstanceControl() { DataContext = instance };
+        public UIElement Create(object instance) => new ImageVisualizerInstanceControl() { DataContext = instance };
     }
 }

@@ -248,7 +248,7 @@ namespace OpenSense.WPF.Widget.DisplayPoiEstimatorBuilder {
             webcamConfig.Framerate = 30;
             webcamConfig.UseInSharedMode = true;
             var source = new MediaCapture(pipeline, webcamConfig);
-            var flip = new FlipColorVideo(pipeline) { FlipHorizontal = FlipX, FlipVertical = FlipY };
+            var flip = new FlipImage(pipeline) { FlipHorizontal = FlipX, FlipVertical = FlipY };
             source.PipeTo(flip.In, DeliveryPolicy.SynchronousOrThrottle);
             var openface = new OpenFace(pipeline) { FocalLengthX = WebcamFx, FocalLengthY = WebcamFy, CenterX = WebcamCx, CenterY = WebcamCy };
             flip.PipeTo(openface.In, DeliveryPolicy.SynchronousOrThrottle);

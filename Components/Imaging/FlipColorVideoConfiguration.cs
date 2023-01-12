@@ -4,7 +4,7 @@ using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Imaging {
     [Serializable]
-    public class FlipColorVideoConfiguration : ConventionalComponentConfiguration {
+    public class FlipImageConfiguration : ConventionalComponentConfiguration {
 
         private bool flipHorizontal = false;
 
@@ -20,8 +20,8 @@ namespace OpenSense.Components.Imaging {
             set => SetProperty(ref flipVertical, value);
         }
 
-        public override IComponentMetadata GetMetadata() => new FlipColorVideoMetadata();
+        public override IComponentMetadata GetMetadata() => new FlipImageMetadata();
 
-        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new FlipColorVideo(pipeline) { FlipHorizontal = FlipHorizontal, FlipVertical = FlipVertical };
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new FlipImage(pipeline) { FlipHorizontal = FlipHorizontal, FlipVertical = FlipVertical };
     }
 }

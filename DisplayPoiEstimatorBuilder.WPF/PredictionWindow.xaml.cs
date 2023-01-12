@@ -79,11 +79,11 @@ namespace OpenSense.WPF.Widget.DisplayPoiEstimatorBuilder {
             webcamConfig.Framerate = 30;
             webcamConfig.UseInSharedMode = true;
             var source = new MediaCapture(pipeline, webcamConfig);
-            var flip = new FlipColorVideo(pipeline) { FlipHorizontal = FlipX, FlipVertical = FlipY };
+            var flip = new FlipImage(pipeline) { FlipHorizontal = FlipX, FlipVertical = FlipY };
             source.PipeTo(flip.In, DeliveryPolicy.LatestMessage);
             var openface = new OpenFace(pipeline) { FocalLengthX = WebcamFx, FocalLengthY = WebcamFy, CenterX = WebcamCx, CenterY = WebcamCy };
             flip.PipeTo(openface.In, DeliveryPolicy.LatestMessage);
-            var dispFlip = new FlipColorVideo(pipeline) { FlipHorizontal = !FlipX, FlipVertical = FlipY };// mirror display
+            var dispFlip = new FlipImage(pipeline) { FlipHorizontal = !FlipX, FlipVertical = FlipY };// mirror display
             source.PipeTo(dispFlip.In, DeliveryPolicy.LatestMessage);
             var joinedVideoFrame = openface.Out.Join(dispFlip.Out, Reproducible.Exact<Shared<Microsoft.Psi.Imaging.Image>>(), (dataPoint, frame) => new Tuple<PoseAndEyeAndFace, Shared<Microsoft.Psi.Imaging.Image>>(dataPoint, frame), DeliveryPolicy.LatestMessage, DeliveryPolicy.LatestMessage);
             joinedVideoFrame.Do(UpdateDisplay, DeliveryPolicy.LatestMessage);

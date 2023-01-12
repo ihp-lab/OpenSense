@@ -93,7 +93,7 @@ namespace OpenSense.Components.OpenFace.Visualizer {
         public double? FrameRate => imageVisualizer.FrameRate;
         #endregion
 
-        private ImageVisualizer imageVisualizer = new ImageVisualizer();
+        private ImageHolder imageVisualizer = new ImageHolder();
 
         public OpenFaceVisualizer(Pipeline pipeline) : base(pipeline) {
             DataInConnector = CreateInputConnectorFrom<PoseAndEyeAndFace>(pipeline, nameof(DataIn));

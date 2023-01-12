@@ -1,8 +1,8 @@
 ﻿using System.Windows.Controls;
 
 namespace OpenSense.WPF.Components.Imaging.Visualizer {
-    public partial class DepthVideoVisualizerInstanceControl : UserControl {
-        public DepthVideoVisualizerInstanceControl() {
+    public partial class DepthImageVisualizerInstanceControl : UserControl {
+        public DepthImageVisualizerInstanceControl() {
             InitializeComponent();
         }
     }

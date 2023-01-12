@@ -4,10 +4,10 @@ using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Imaging.Visualizer {
     [Serializable]
-    public class ColorVideoVisualizerConfiguration : ConventionalComponentConfiguration {
+    public class ImageVisualizerConfiguration : ConventionalComponentConfiguration {
 
-        public override IComponentMetadata GetMetadata() => new ColorVideoVisualizerMetadata();
+        public override IComponentMetadata GetMetadata() => new ImageVisualizerMetadata();
 
-        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new ColorVideoVisualizer(pipeline);
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new ImageVisualizer(pipeline);
     }
 }

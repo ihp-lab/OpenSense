@@ -2,7 +2,7 @@
 using Microsoft.Psi.Imaging;
 
 namespace OpenSense.Components.Imaging.Visualizer {
-    public class ColorVideoVisualizer : ImageVisualizer, IConsumer<Shared<Image>> {
+    public class ImageVisualizer : ImageHolder, IConsumer<Shared<Image>> {
 
         #region Settings
 
@@ -16,7 +16,7 @@ namespace OpenSense.Components.Imaging.Visualizer {
         
         #endregion
 
-        public ColorVideoVisualizer(Pipeline pipeline) {
+        public ImageVisualizer(Pipeline pipeline) {
             In = pipeline.CreateReceiver<Shared<Image>>(this, Process, nameof(In));
         }
 

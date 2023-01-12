@@ -7,10 +7,7 @@ using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
 
 namespace OpenSense.Components.Imaging.Visualizer {
-    /// <summary>
-    /// DisplayVideo class.
-    /// </summary>
-    public class DisplayVideo : INotifyPropertyChanged {
+    public class DisplayImage : INotifyPropertyChanged {
         private Shared<Image> psiImage;
         private Image psiDecodedImage;
         private WriteableBitmap bmpImage;
@@ -21,9 +18,9 @@ namespace OpenSense.Components.Imaging.Visualizer {
         private readonly object bmpLock;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DisplayVideo"/> class.
+        /// Initializes a new instance of the <see cref="DisplayImage"/> class.
         /// </summary>
-        public DisplayVideo() : base() {
+        public DisplayImage() : base() {
             renderedFrames = new FrameCounter();
             receivedFrames = new FrameCounter();
 

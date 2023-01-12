@@ -144,7 +144,7 @@ namespace OpenSense.WPF.Components.MediaPipe.NET.Visualizer {
         public double? FrameRate => imageVisualizer.FrameRate;
         #endregion
 
-        private ImageVisualizer imageVisualizer = new ImageVisualizer();
+        private ImageHolder imageVisualizer = new ImageHolder();
 
         public NormalizedLandmarkListVectorVisualizer(Pipeline pipeline, string name = null, DeliveryPolicy defaultDeliveryPolicy = null) : base(pipeline, name, defaultDeliveryPolicy) {
             DataInConnector = CreateInputConnectorFrom<IReadOnlyList<NormalizedLandmarkList>>(pipeline, nameof(DataIn));

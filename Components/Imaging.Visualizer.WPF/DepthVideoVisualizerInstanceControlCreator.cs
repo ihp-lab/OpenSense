@@ -5,10 +5,10 @@ using OpenSense.WPF.Components.Contract;
 
 namespace OpenSense.WPF.Components.Imaging.Visualizer {
     [Export(typeof(IInstanceControlCreator))]
-    public class DepthVideoVisualizerInstanceControlCreator : IInstanceControlCreator {
+    public class DepthImageVisualizerInstanceControlCreator : IInstanceControlCreator {
 
-        public bool CanCreate(object instance) => instance is DepthVideoVisualizer;
+        public bool CanCreate(object instance) => instance is DepthImageVisualizer;
 
-        public UIElement Create(object instance) => new DepthVideoVisualizerInstanceControl() { DataContext = instance };
+        public UIElement Create(object instance) => new DepthImageVisualizerInstanceControl() { DataContext = instance };
     }
 }

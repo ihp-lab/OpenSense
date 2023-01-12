@@ -7,7 +7,7 @@ using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
 
 namespace OpenSense.Components.Imaging.Visualizer {
-    public class ImageVisualizer : INotifyPropertyChanged {
+    public class ImageHolder : INotifyPropertyChanged {
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
