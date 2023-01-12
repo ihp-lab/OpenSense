@@ -78,8 +78,6 @@
         <ProjectReference Include="..\Components\GoogleCloud.Speech.V1.WPF\GoogleCloud.Speech.V1.WPF.csproj" />
         <ProjectReference Include="..\Components\HeadGesture\HeadGesture.csproj" /><!--No settings available, thus no related WPF project here-->
         <ProjectReference Include="..\Components\HeadGesture.Visualizer.WPF\HeadGesture.Visualizer.WPF.csproj" />
-        <ProjectReference Include="..\Components\Imaging.Visualizer.WPF\Imaging.Visualizer.WPF.csproj" />
-        <ProjectReference Include="..\Components\Imaging.WPF\Imaging.WPF.csproj" />
         <ProjectReference Include="..\Components\MediaPipe.Net.Visualizer.WPF\MediaPipe.NET.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\MediaPipe.NET.WPF\MediaPipe.NET.WPF.csproj" />
         <ProjectReference Include="..\Components\OpenFace.Visualizer.WPF\OpenFace.Visualizer.WPF.csproj" />
@@ -94,6 +92,8 @@
         <ProjectReference Include="..\Components\Psi.CognitiveServices.Face.WPF\Psi.CognitiveServices.Face.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.CognitiveServices.Speech.WPF\Psi.CognitiveServices.Speech.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Data.WPF\Psi.Data.WPF.csproj" />
+        <ProjectReference Include="..\Components\Psi.Imaging.Visualizer.WPF\Psi.Imaging.Visualizer.WPF.csproj" />
+        <ProjectReference Include="..\Components\Psi.Imaging.WPF\Psi.Imaging.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Imaging.Windows.WPF\Psi.Imaging.Windows.WPF.csproj" />
         <!--<ProjectReference Include="..\Components\Psi.Kinect.Windows.WPF\Psi.Kinect.Windows.WPF.csproj" />--><!--removed because it may add difficulty of start using this application-->
         <ProjectReference Include="..\Components\Psi.Media.Windows.WPF\Psi.Media.Windows.WPF.csproj" />

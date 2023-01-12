@@ -26,13 +26,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Interoperations", "Interope
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Media.Windows", "Components\Psi.Media.Windows\Psi.Media.Windows.csproj", "{0D30E1E8-E5E3-4B9C-8BD7-4310614C65BD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imaging", "Components\Imaging\Imaging.csproj", "{736E1DE9-D1FB-40DD-9371-FB6E2066964D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Imaging", "Components\Imaging\Psi.Imaging.csproj", "{736E1DE9-D1FB-40DD-9371-FB6E2066964D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfComponentContract", "WpfComponentContract\WpfComponentContract.csproj", "{0651C283-314F-481A-901D-7AF4366E40D3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Media.Windows.WPF", "Components\Psi.Media.Windows.WPF\Psi.Media.Windows.WPF.csproj", "{37C0BA0E-AC85-4C61-A187-1C7CF7E690D8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imaging.Visualizer.WPF", "Components\Imaging.Visualizer.WPF\Imaging.Visualizer.WPF.csproj", "{B7369973-9984-480E-94B7-498D3C72E4AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Imaging.Visualizer.WPF", "Components\Imaging.Visualizer.WPF\Psi.Imaging.Visualizer.WPF.csproj", "{B7369973-9984-480E-94B7-498D3C72E4AF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Legacy", "Legacy", "{8F6A4B36-5588-4C25-8900-6F969C345F3C}"
 EndProject
@@ -80,7 +80,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Builtin.Visualizer.WPF", "C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureKinect.Visualizer.WPF", "Components\AzureKinect.Visualizer.WPF\AzureKinect.Visualizer.WPF.csproj", "{36605049-7FF6-4FFB-AEC1-DDA12278F520}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imaging.Visualizer.WPF.Common", "Components\Imaging.Visualizer.WPF.Common\Imaging.Visualizer.WPF.Common.csproj", "{577E31CE-3C09-4C71-9DE8-7F52BF116135}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Imaging.Visualizer.WPF.Common", "Components\Imaging.Visualizer.WPF.Common\Psi.Imaging.Visualizer.WPF.Common.csproj", "{577E31CE-3C09-4C71-9DE8-7F52BF116135}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Speech.Visualizer.WPF", "Components\Psi.Speech.Visualizer.WPF\Psi.Speech.Visualizer.WPF.csproj", "{9384C4B6-BC0F-4237-966B-B9FF3A3911B7}"
 EndProject
@@ -114,7 +114,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPose.Visualizer.WPF", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPose.WPF", "Components\OpenPose.WPF\OpenPose.WPF.csproj", "{94D99E12-8CAB-44B2-9A76-C50F2067E5B5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imaging.WPF", "Components\Imaging.WPF\Imaging.WPF.csproj", "{22D8CC85-CEBF-4A8A-8E8B-5ABEB7B8A5DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Psi.Imaging.WPF", "Components\Imaging.WPF\Psi.Imaging.WPF.csproj", "{22D8CC85-CEBF-4A8A-8E8B-5ABEB7B8A5DD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenFace.Windows", "Components\OpenFace.Windows\OpenFace.Windows.csproj", "{CD6F286C-4EDC-4D3C-9E82-52F1D3812756}"
 EndProject
