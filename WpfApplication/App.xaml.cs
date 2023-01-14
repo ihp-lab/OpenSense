@@ -1,11 +1,14 @@
 ﻿using System.Windows;
 using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
 
-namespace WpfApplication {
+namespace OpenSense.WPF {
     public partial class App : Application {
+
         private void Application_Startup(object sender, StartupEventArgs e) {
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.Debug()
+                .WriteTo.Console(theme: SystemConsoleTheme.Colored)
                 .CreateLogger();
         }
 
