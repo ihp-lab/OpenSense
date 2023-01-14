@@ -7,6 +7,7 @@
     xmlns:local="clr-namespace:OpenSense.WPF.Pipeline"
     mc:Ignorable="d"
     Title="Pipeline Runner"
+    WindowStartupLocation="CenterScreen"
     Height="450"
     Width="800"
     Unloaded="Window_Unloaded">

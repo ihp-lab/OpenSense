@@ -227,9 +227,11 @@ namespace OpenSense.WPF.Pipeline {
                 MessageBox.Show("Pipeline is running");
                 return;
             }
-            var win = new PipelineEditorWindow(Configuration);
-            win.ShowDialog();
-            Load(Configuration);
+            var win = new PipelineEditorWindow(Configuration) { 
+                Owner = Owner,
+            };
+            win.Show();
+            Close();
         }
 
         private void ButtonRun_Click(object sender, RoutedEventArgs e) {

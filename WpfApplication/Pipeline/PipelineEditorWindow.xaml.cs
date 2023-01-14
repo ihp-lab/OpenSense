@@ -46,9 +46,11 @@ namespace OpenSense.WPF.Pipeline {
             if (Configuration is null) {
                 return;
             }
-            var win = new PipelineRunnerWindow(Configuration);
-            win.ShowDialog();
-            Configuration = win.Configuration;
+            var win = new PipelineRunnerWindow(Configuration) { 
+                Owner = Owner,
+            };
+            win.Show();
+            Close();
         }
 
         private void ButtonNew_Click(object sender, RoutedEventArgs e) {

@@ -8,6 +8,7 @@
     xmlns:common="clr-namespace:OpenSense.WPF.Components.Psi;assembly=OpenSense.WPF.Components.Psi.Common"
     mc:Ignorable="d"
     Title="Pipeline Editor"
+    WindowStartupLocation="CenterScreen"
     Height="600"
     Width="1000"
     Unloaded="Window_Unloaded"

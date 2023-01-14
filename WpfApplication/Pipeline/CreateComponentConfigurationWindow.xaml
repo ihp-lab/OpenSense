@@ -8,6 +8,7 @@
     mc:Ignorable="d"
     Title="Add Instance"
     SizeToContent="Height"
+    WindowStartupLocation="CenterScreen"
     Height="600"
     Width="800">
     <Grid
