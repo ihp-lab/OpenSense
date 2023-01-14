@@ -38,7 +38,17 @@ namespace OpenSense.Components.PythonSupports {
             if (selfDataType is null) {
                 return false;
             }
-            var result = selfDataType.CanBeCastTo(remoteEndPointDataType);
+            bool result;
+            switch (Direction) {
+                case PortDirection.Input:
+                    result = remoteEndPointDataType.CanBeCastTo(selfDataType);
+                    break;
+                case PortDirection.Output:
+                    result = selfDataType.CanBeCastTo(remoteEndPointDataType);
+                    break;
+                default:
+                    throw new InvalidOperationException();
+            }
             return result;
         }
         #endregion

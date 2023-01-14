@@ -46,10 +46,11 @@ namespace OpenSense.Components.PythonSupports {
             };
             _engine = Python.CreateEngine(options);
             Debug.Assert(_engine.Runtime.Setup.DebugMode);
+            _engine.Runtime.IO.RedirectToConsole();
 
             /** Add default assemblies
              */
-            _engine.Runtime.LoadAssembly(Assembly.GetAssembly(typeof(int)));
+            _engine.Runtime.LoadAssembly(Assembly.GetAssembly(typeof(object)));
             _engine.Runtime.LoadAssembly(Assembly.GetAssembly(typeof(Pipeline)));
             _engine.Runtime.LoadAssembly(Assembly.GetAssembly(typeof(HelperExtensions)));
             _engine.Runtime.LoadAssembly(Assembly.GetAssembly(typeof(PythonConfiguration)));
