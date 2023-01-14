@@ -34,11 +34,8 @@
                     Click="ButtonSave_Click" />
             </MenuItem>
             <MenuItem
-                Header="_Run">
-                <MenuItem
-                    Header="_Run"
-                    Click="ButtonRun_Click" />
-            </MenuItem>
+                Header="_Runner"
+                Click="ButtonRun_Click" />
         </Menu>
         <Grid
             DockPanel.Dock="Bottom">

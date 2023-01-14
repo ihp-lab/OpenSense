@@ -36,14 +36,14 @@ namespace OpenSense.WPF {
 
         private void ButtonPipelineEditor_Click(object sender, RoutedEventArgs e) {
             var editor = new PipelineEditorWindow() { 
-                Owner = this,
+                //Owner = this,
             };
             editor.Show();
         }
 
         private void ButtonPipelineRunner_Click(object sender, RoutedEventArgs e) {
             var executor = new PipelineRunnerWindow() { 
-                Owner = this,
+                //Owner = this,
             };
             executor.Show();
         }

@@ -5,6 +5,7 @@
     xmlns:local="clr-namespace:OpenSense.WPF"
     StartupUri="MainWindow.xaml"
     Startup="Application_Startup"
+    ShutdownMode="OnLastWindowClose"
     DispatcherUnhandledException="Application_DispatcherUnhandledException"
     Exit="Application_Exit">
     <Application.Resources>

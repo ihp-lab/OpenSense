@@ -26,12 +26,9 @@
                     Click="ButtonLoad_Click" />
             </MenuItem>
             <MenuItem
-                Header="_Edit">
-                <MenuItem
-                    Header="_Edit"
-                    Name="ButtonEdit"
-                    Click="ButtonEdit_Click" />
-            </MenuItem>
+                Header="_Editor"
+                Name="ButtonEdit"
+                Click="ButtonEdit_Click" />
             <MenuItem
                 Header="_Run/Stop">
                 <MenuItem

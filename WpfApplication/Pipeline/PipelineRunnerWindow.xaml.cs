@@ -229,6 +229,11 @@ namespace OpenSense.WPF.Pipeline {
             }
             var win = new PipelineEditorWindow(Configuration) { 
                 Owner = Owner,
+                WindowStartupLocation = WindowStartupLocation.Manual,
+                Left = Left,
+                Top = Top,
+                Width = Width,
+                Height = Height,
             };
             win.Show();
             Close();
