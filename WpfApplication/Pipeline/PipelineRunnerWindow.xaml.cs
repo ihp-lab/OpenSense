@@ -89,7 +89,10 @@ namespace OpenSense.WPF.Pipeline {
         private void Instantiate() {
             try {
                 var collection = new ServiceCollection();
-                collection.AddSingleton<ILoggerProvider, SerilogLoggerProvider>();//use the static serilog logger
+                var providers = new ILoggerProvider[] {
+                    new SerilogLoggerProvider(),//use the static serilog logger
+                };
+                collection.AddSingleton<ILoggerFactory, LoggerFactory>(sp => new LoggerFactory(providers));
                 var serviceProvider = collection.BuildServiceProvider();
                 Env = new PipelineEnvironment(Configuration, serviceProvider);
                 GenerateControls();

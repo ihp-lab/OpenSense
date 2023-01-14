@@ -6,11 +6,13 @@ using OpenSense.Components.Contract;
 using PsiPipeline = Microsoft.Psi.Pipeline;
 
 namespace OpenSense.Pipeline {
-    public class PipelineEnvironment : IDisposable {
+    public sealed class PipelineEnvironment : IDisposable {
 
-        public readonly PsiPipeline Pipeline;
+        public IServiceProvider ServiceProvider { get; }
 
-        public readonly IReadOnlyList<ComponentEnvironment> Instances;
+        public PsiPipeline Pipeline { get; }
+
+        public IReadOnlyList<ComponentEnvironment> Instances { get; }
 
         private static bool ReadyToInstantiate(ComponentConfiguration config, IReadOnlyList<ComponentEnvironment> instantiatedEnvs) {
             var instantiatedConfigs = instantiatedEnvs.Select(e => e.Configuration).ToArray();
@@ -44,6 +46,7 @@ namespace OpenSense.Pipeline {
                 throw new ArgumentNullException(nameof(configuration));
             }
             Debug.WriteLineIf(serviceProvider is null, "no IServiceProvider is provided to the pipeline environment");
+            ServiceProvider = serviceProvider;
             Pipeline = PsiPipeline.Create(configuration.Name, configuration.DeliveryPolicy);
             var instEnvs = new List<ComponentEnvironment>();
             Instances = instEnvs;
@@ -64,12 +67,14 @@ namespace OpenSense.Pipeline {
             }
         }
 
+        #region IDisposable
         private bool disposed;
 
         public void Dispose() {
             if (disposed) {
                 return;
             }
+
             Pipeline.Dispose();//psi pipeline will dispose any components
             foreach (var instObj in Instances.Select(i => i.Instance).OfType<IDisposable>()) {
                 //but some components will still not be disposed by pipeline dispose
@@ -82,7 +87,12 @@ namespace OpenSense.Pipeline {
             foreach (var instObj in Instances.Select(i => i.Configuration).OfType<IDisposable>()) {
                 instObj.Dispose();
             }
+            if (ServiceProvider is IDisposable disposable) {
+                disposable.Dispose();
+            }
+
             disposed = true;
-        }
+        } 
+        #endregion
     }
 }
