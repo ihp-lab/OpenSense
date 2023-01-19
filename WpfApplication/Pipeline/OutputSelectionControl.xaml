@@ -22,10 +22,11 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
-            <Label>Port data type</Label>
+            <Label>Port Data Type</Label>
             <TextBlock
                 Grid.Column="1"
-                Name="TextBlockPortDataType" />
+                Name="TextBlockPortDataType"
+                TextWrapping="Wrap"/>
 
         </Grid>
 

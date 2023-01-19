@@ -50,12 +50,16 @@
             <Button
                 Grid.Column="0"
                 Name="ButtonYes"
-                Click="ButtonYes_Click">Ok</Button>
+                IsDefault="True"
+                Click="ButtonYes_Click">
+                Ok
+            </Button>
             <Button
                 Grid.Column="1"
                 Name="ButtonNo"
-                IsDefault="True"
-                IsCancel="True">Cancel</Button>
+                IsCancel="True">
+                Cancel
+            </Button>
         </Grid>
     </Grid>
 </Window>

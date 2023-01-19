@@ -38,27 +38,28 @@
 
             <Label
                 Grid.Row="1"
-                Grid.Column="0">Description</Label>
-            <TextBlock
-                Grid.Row="1"
-                Grid.Column="1"
-                Name="TextBlockDescription" />
-
-            <Label
-                Grid.Row="2"
                 Grid.Column="0">Name</Label>
             <TextBox
-                Grid.Row="2"
+                Grid.Row="1"
                 Grid.Column="1"
                 Text="{Binding Name}" />
 
             <Label
-                Grid.Row="3"
+                Grid.Row="2"
                 Grid.Column="0">Memo</Label>
             <TextBox
-                Grid.Row="3"
+                Grid.Row="2"
                 Grid.Column="1"
                 Text="{Binding Description}" />
+
+            <Label
+                Grid.Row="3"
+                Grid.Column="0">Description</Label>
+            <TextBlock
+                Grid.Row="3"
+                Grid.Column="1"
+                Name="TextBlockDescription"
+                TextWrapping="Wrap" />
         </Grid>
     </DockPanel>
 </UserControl>

@@ -49,7 +49,7 @@
             </Grid.RowDefinitions>
 
             <Expander
-                Header="Pipeline info"
+                Header="Pipeline Info"
                 IsExpanded="True"
                 Margin="3"
                 BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
@@ -101,7 +101,7 @@
 
                         <Label
                             Grid.Row="1">
-                            View style:
+                            View Style:
                         </Label>
                         <ComboBox
                             Grid.Row="1"

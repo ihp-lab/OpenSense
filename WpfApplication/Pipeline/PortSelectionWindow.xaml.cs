@@ -7,6 +7,9 @@ namespace OpenSense.WPF.Pipeline {
         public PortSelectionWindow(IList<IPortMetadata> ports) {
             InitializeComponent();
             DataGridInputs.ItemsSource = ports;
+            if (ports.Count > 0) {
+                DataGridInputs.SelectedIndex = 0;
+            }
         }
 
         public IPortMetadata Result { get; private set; }

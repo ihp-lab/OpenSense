@@ -29,15 +29,20 @@ namespace OpenSense.WPF.Pipeline {
         }
 
         private void TextBoxFilter_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e) {
-            IEnumerable<IComponentMetadata> data;
+            IComponentMetadata[] data;
             var text = TextBoxFilter.Text.Trim();
             if (string.IsNullOrEmpty(text)) {
                 data = components;
             } else {
                 var tokens = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                data = components.Where(c => tokens.All(t => c.Name.Contains(t, StringComparison.InvariantCultureIgnoreCase))).ToArray();
+                data = components.Where(c => tokens.All(t => c.Name.Contains(t, StringComparison.InvariantCultureIgnoreCase)))
+                    .ToArray();
             }
+            var previousLength = (DataGridComponents.ItemsSource as IReadOnlyCollection<IComponentMetadata>)?.Count;
             DataGridComponents.ItemsSource = data;
+            if (data.Length > 0 && previousLength.HasValue && data.Length != previousLength.Value) {
+                DataGridComponents.SelectedIndex = 0;
+            }
         }
     }
 }
