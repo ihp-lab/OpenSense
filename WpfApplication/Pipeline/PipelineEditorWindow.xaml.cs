@@ -53,6 +53,7 @@ namespace OpenSense.WPF.Pipeline {
                 Top = Top,
                 Width = Width,
                 Height = Height,
+                WindowState = WindowState,
             };
             win.Show();
             Close();
