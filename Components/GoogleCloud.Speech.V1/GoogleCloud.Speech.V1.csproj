@@ -10,7 +10,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
-        <PackageReference Include="Microsoft.Psi.Speech" Version="0.17.52.1-beta" />
+        <PackageReference Include="Microsoft.Psi.Speech" Version="0.18.72.1-beta" />
         <PackageReference Include="Google.Cloud.Speech.V1" Version="3.0.0" />
         <PackageReference Include="System.Composition" Version="7.0.0" />
     </ItemGroup>

@@ -102,7 +102,6 @@ namespace OpenSense.Components.PythonSupports {
                             this,
                             @delegate,
                             portMetadata.Name,
-                            false, //autoClone
                         });
                         _receivers[portMetadata.Identifier] = receiver;
                         break;

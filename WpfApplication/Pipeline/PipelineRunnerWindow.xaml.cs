@@ -249,6 +249,7 @@ namespace OpenSense.WPF.Pipeline {
                 env = InstantiatePipeline(Configuration);
             } catch (Exception ex) {
                 MessageBox.Show(ex.ToString(), "Pipeline Instantiation Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+                Debug.Assert(false);
                 return;
             }
             Env = env;

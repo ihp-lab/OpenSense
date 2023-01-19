@@ -182,22 +182,40 @@ namespace OpenSense.Components.PythonSupports {
 
         #region Code Templates
         private const string MetadataCodeTemplate = @"# Define ports in PORTS list variable.
-# (TO BE RESOLVED) Better error handling when editing codes.
-# (TO BE RESOLVED) Ports will only be visiable after reloading the UI control.
-# (TO BE RESOLVED) Read PORTS as iterator.
-# (TO BE RESOLVED) Provide helper methods for creating array inputs.
+
+''' Uncommnet to import types from other assemblies
+import clr
+clr.AddReference(""Assembly_Name_Here"")
+from Name_Space_Here import Type_Name_Here
+'''
+
 import OpenSense.Components.PythonSupports.PortBuilder as pb
 PORTS = [
     pb.Create().AsInput().WithName(""In"").WithType(float).Build(), # Python's float is mapped to .NET's System.Double.
     pb.Create().AsOutput().WithName(""Out"").WithType(int).Build(), # Python's int is mapped to .NET's System.Numerics.BigInteger.
 ]
+
+''' Notes
+This experimental Python component has following aspects that need to be improved in future versions:
+    1. OpenSense crashes if port definition code has syntax errors or throws exceptions when got evaluated.
+    2. Code modifications will only write back after textboxes lose focus, be careful when you save.
+    3. Defined ports are only visible after textboxes lose focus.
+    4. print() does not print to std out, this is a bug of IronPython3.
+    5. Read PORTS as an python iterator, now it will be cast to python list first.
+    6. Add DebugMode option, now it is disabled for the sake of speed.
+    7. Need a better port definition builder, such as one supporting arrays.
+'''
 ";
 
         private const string RuntimeCodeTemplate = @"# Define functions for inputs.
-# (TO BE RESOLVED) A runtime code and ports visualization.
 def In(value, envelope): # Parameter envelope is of type Microsoft.Psi.Envelope.
     val = int(value)
     Out.Post(val, envelope.OriginatingTime)
+
+''' Uncomment to do the cleaning
+def Dispose():
+    pass # Your code goes here.
+'''
 ";
         #endregion
     }

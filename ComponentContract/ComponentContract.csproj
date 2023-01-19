@@ -10,7 +10,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
-        <PackageReference Include="Microsoft.Psi.Runtime" Version="0.17.52.1-beta" />
+        <PackageReference Include="Microsoft.Psi.Runtime" Version="0.18.72.1-beta" />
         <PackageReference Include="System.Reflection.Metadata" Version="7.0.0" />
     </ItemGroup>
 
