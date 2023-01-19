@@ -53,7 +53,7 @@ namespace OpenSense.WPF.Pipeline {
                 Env = null;//Stop();
             }, DispatcherPriority.Normal, CancellationToken.None, TimeSpan.FromMilliseconds(500));
             Dispatcher.Invoke(() => {
-                MessageBox.Show(e.Exception.ToString(), "Pipeline runtime exception", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(e.Exception.ToString(), "Pipeline Runtime Exception", MessageBoxButton.OK, MessageBoxImage.Error);
             });
         }
 
@@ -63,7 +63,7 @@ namespace OpenSense.WPF.Pipeline {
                 Env = null;//Stop();
             }, DispatcherPriority.Normal, CancellationToken.None, TimeSpan.FromMilliseconds(500));
             Dispatcher.Invoke(() => {
-                MessageBox.Show("Pipeline stopped", "Pipeline stopped", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show($"Pipeline stopped", "Pipeline Stopped", MessageBoxButton.OK, MessageBoxImage.Information);
             });
         }
 
@@ -71,9 +71,7 @@ namespace OpenSense.WPF.Pipeline {
             try {
                 Env?.Dispose();
             } catch (Exception ex) {
-                var message = ex.ToString();
-                Console.WriteLine(message);
-                Debug.WriteLine(message);
+                MessageBox.Show(ex.ToString(), "Pipeline Termination Exception", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             Env = null;
         }
@@ -88,20 +86,15 @@ namespace OpenSense.WPF.Pipeline {
             });
         }
 
-        private void Instantiate() {
-            try {
-                var collection = new ServiceCollection();
-                var providers = new ILoggerProvider[] {
+        private static PipelineEnvironment InstantiatePipeline(PipelineConfiguration configuration) {
+            var collection = new ServiceCollection();
+            var providers = new ILoggerProvider[] {
                     new SerilogLoggerProvider(),//use the static serilog logger
                 };
-                collection.AddSingleton<ILoggerFactory, LoggerFactory>(sp => new LoggerFactory(providers));
-                var serviceProvider = collection.BuildServiceProvider();
-                Env = new PipelineEnvironment(Configuration, serviceProvider);
-                GenerateControls();
-            } catch (Exception ex) {
-                Stop();
-                MessageBox.Show(ex.ToString(), "Pipeline instantiation exception", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            collection.AddSingleton<ILoggerFactory, LoggerFactory>(sp => new LoggerFactory(providers));
+            var serviceProvider = collection.BuildServiceProvider();
+            var result = new PipelineEnvironment(configuration, serviceProvider);
+            return result;
         }
 
         #region gen controls
@@ -251,10 +244,15 @@ namespace OpenSense.WPF.Pipeline {
                 MessageBox.Show("Pipeline is running");
                 return;
             }
-            Instantiate();
-            if (Env is null) {
+            PipelineEnvironment env;
+            try {
+                env = InstantiatePipeline(Configuration);
+            } catch (Exception ex) {
+                MessageBox.Show(ex.ToString(), "Pipeline Instantiation Exception", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+            Env = env;
+            GenerateControls();
             Env.Pipeline.PipelineExceptionNotHandled += HandlePipelineException;
             Env.Pipeline.PipelineCompleted += HandlePipelineCompeleted;
             Env.Pipeline.RunAsync();
