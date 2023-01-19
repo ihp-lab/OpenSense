@@ -13,6 +13,9 @@
                     Value="True" />
             <Setter Property="TextWrapping"
                     Value="NoWrap" />
+            <Setter
+                Property="HorizontalScrollBarVisibility"
+                Value="Auto" />
         </Style>
     </UserControl.Resources>
     <Grid Grid.IsSharedSizeScope="True">

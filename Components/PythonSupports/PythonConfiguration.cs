@@ -201,6 +201,7 @@ This experimental Python component has following aspects that need to be improve
     - Read PORTS as an python iterator, now it will be cast to python list first.
     - Add DebugMode option, now it is disabled for the sake of speed.
     - Need a better port definition builder, such as one supporting arrays.
+    - No syntax highlight, no debugger.
 '''
 ";
 
