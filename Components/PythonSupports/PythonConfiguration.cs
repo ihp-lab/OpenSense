@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using IronPython.Hosting;
 using IronPython.Runtime;
+using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
-using Microsoft.Scripting.Runtime;
 using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.PythonSupports {
@@ -87,7 +85,9 @@ namespace OpenSense.Components.PythonSupports {
         );
 
         public override object Instantiate(Pipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents, IServiceProvider serviceProvider) {
-            var result = new PythonRuntimeObject(pipeline, _engine, RuntimeCode, ComponentPorts);
+            var loggerFactory = (ILoggerFactory)serviceProvider?.GetService(typeof(ILoggerFactory));
+            var pythonLogger = loggerFactory?.CreateLogger($"Python Runtime [{Name}]");
+            var result = new PythonRuntimeObject(pipeline, _engine, RuntimeCode, ComponentPorts, pythonLogger);
 
             /** Connect
              */
@@ -183,7 +183,7 @@ namespace OpenSense.Components.PythonSupports {
         #region Code Templates
         private const string MetadataCodeTemplate = @"# Define ports in PORTS list variable.
 # (TO BE RESOLVED) Better error handling when editing codes.
-# (TO BE RESOLVED) Ports will be visiable after reloading the UI control.
+# (TO BE RESOLVED) Ports will only be visiable after reloading the UI control.
 # (TO BE RESOLVED) Read PORTS as iterator.
 # (TO BE RESOLVED) Provide helper methods for creating array inputs.
 import OpenSense.Components.PythonSupports.PortBuilder as pb

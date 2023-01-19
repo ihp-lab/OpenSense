@@ -71,7 +71,9 @@ namespace OpenSense.WPF.Pipeline {
             try {
                 Env?.Dispose();
             } catch (Exception ex) {
-                Debug.WriteLine(ex.ToString());
+                var message = ex.ToString();
+                Console.WriteLine(message);
+                Debug.WriteLine(message);
             }
             Env = null;
         }

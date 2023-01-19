@@ -4,13 +4,17 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
 using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.PythonSupports {
-    public sealed class PythonRuntimeObject : INotifyPropertyChanged {
+    public sealed class PythonRuntimeObject : IDisposable, INotifyPropertyChanged {
+
+        private const string DisposeMethodName = "Dispose";
+        private const string LoggerVariableName = "Logger";
 
         private readonly ScriptEngine _engine;
         private readonly ScriptScope _scope;
@@ -21,15 +25,23 @@ namespace OpenSense.Components.PythonSupports {
 
         public IReadOnlyDictionary<object, object> Consumers => _receivers;
 
-        internal PythonRuntimeObject(Pipeline pipeline, ScriptEngine engine, string code, IReadOnlyList<PythonPortMetadata> ports) {
+        internal PythonRuntimeObject(
+            Pipeline pipeline, 
+            ScriptEngine engine, 
+            string code, 
+            IReadOnlyList<PythonPortMetadata> ports, 
+            ILogger pythonLogger
+            ) {
             _engine = engine;
             _scope = _engine.CreateScope(/*dict*/);
 
             /** Add default variables here
              */
-            //None
+            if (pythonLogger is not null) {
+                _scope.SetVariable(LoggerVariableName, pythonLogger);
+            }
 
-            /** Add emitters
+            /** Add producers
              */
             foreach (var portMetadata in ports) {
                 switch (portMetadata.Direction) {
@@ -65,7 +77,7 @@ namespace OpenSense.Components.PythonSupports {
                 }
             }
 
-            /** Add producers
+            /** Add receivers
              */
             foreach (var portMetadata in ports) {
                 switch (portMetadata.Direction) {
@@ -108,6 +120,22 @@ namespace OpenSense.Components.PythonSupports {
                 field = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+        #endregion
+
+        #region IDisposable
+        private bool disposed;
+
+        public void Dispose() {
+            if (disposed) {
+                return;
+            }
+
+            if (_scope.TryGetVariable<Action>(DisposeMethodName, out var callable)) {
+                callable();
+            }
+
+            disposed = true;
         }
         #endregion
     }
