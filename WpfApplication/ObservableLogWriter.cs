@@ -17,8 +17,6 @@ namespace OpenSense.WPF {
 
         private readonly StringBuilder _buffer = new StringBuilder();
 
-        public TextWriter? ForwardWriter { get; set; }
-
         public string Text => _buffer.ToString();
 
         public void Clear() {
@@ -41,7 +39,6 @@ namespace OpenSense.WPF {
             if (value is null) {
                 return;
             }
-            ForwardWriter?.Write(value);
             lock (_bufferLock) {
                 _buffer.Append(value);
                 if (_buffer.Length > KeepLenght) {

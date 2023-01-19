@@ -2,6 +2,7 @@
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using OpenSense.WPF.Pipeline;
@@ -14,6 +15,9 @@ namespace OpenSense.WPF {
 
         private readonly ObservableLogWriter logWriter = new ObservableLogWriter();
 
+        private TextWriter? stdOut;
+        private TextWriter? stdErr;
+
         /// <summary>
         /// Use as binding target, must be public.
         /// </summary>
@@ -24,14 +28,19 @@ namespace OpenSense.WPF {
         }
 
         private void Window_Initialized(object sender, EventArgs e) {
-            logWriter.ForwardWriter = Console.Out;
+            stdOut = Console.Out;
+            stdErr = Console.Error;
             Console.SetOut(logWriter);
+            Console.SetError(logWriter);
         }
 
         private void Window_Closed(object sender, EventArgs e) {
-            Debug.Assert(logWriter.ForwardWriter is not null);
-            Console.SetOut(logWriter.ForwardWriter);
-            logWriter.ForwardWriter = null;
+            Debug.Assert(stdOut is not null);
+            Debug.Assert(stdErr is not null);
+            Console.SetOut(stdOut);
+            Console.SetError(stdErr);
+            stdOut = null;
+            stdErr = null;
         }
 
         private void ButtonPipelineEditor_Click(object sender, RoutedEventArgs e) {
