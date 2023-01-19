@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using IronPython.Hosting;
 using IronPython.Runtime;
 using Microsoft.Psi;
@@ -39,21 +41,31 @@ namespace OpenSense.Components.PythonSupports {
         private ScriptScope MetadataScope => metadataScope?.Value;
 
         public PythonConfiguration() {
-            /** Initialize engine.
+            /** Create runtime 
              */
             var options = new Dictionary<string, object> {
-                { "Debug", ScriptingRuntimeHelpers.True }
+                //{ "Debug", ScriptingRuntimeHelpers.True }, //TODO: make it become an option.
             };
-            _engine = Python.CreateEngine(options);
-            Debug.Assert(_engine.Runtime.Setup.DebugMode);
-            _engine.Runtime.IO.RedirectToConsole();
+            var runtime = Python.CreateRuntime(options);
+            //Debug.Assert(runtime.Setup.DebugMode);
+
+            /** Redirect outputs.
+             * Need to be done before Passing it to Engine.
+             */
+            //Nothing need to be done here. The default behavior is redirecting to Console.
+            //Note: IronPython3 has a bug that output redirection not working, so we cannot use print(). See https://github.com/IronLanguages/ironpython3/issues/1311.
 
             /** Add default assemblies
              */
-            _engine.Runtime.LoadAssembly(Assembly.GetAssembly(typeof(object)));
-            _engine.Runtime.LoadAssembly(Assembly.GetAssembly(typeof(Pipeline)));
-            _engine.Runtime.LoadAssembly(Assembly.GetAssembly(typeof(HelperExtensions)));
-            _engine.Runtime.LoadAssembly(Assembly.GetAssembly(typeof(PythonConfiguration)));
+            runtime.LoadAssembly(Assembly.GetAssembly(typeof(object)));
+            runtime.LoadAssembly(Assembly.GetAssembly(typeof(Pipeline)));
+            runtime.LoadAssembly(Assembly.GetAssembly(typeof(HelperExtensions)));
+            runtime.LoadAssembly(Assembly.GetAssembly(typeof(PythonConfiguration)));
+
+            /** Initialize engine.
+             */
+
+            _engine = Python.GetEngine(runtime);
 
             /** Add default paths
              */
