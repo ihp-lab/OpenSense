@@ -38,7 +38,7 @@
                 <TextBox Grid.Row="0"
                          Grid.Column="0"
                          Grid.ColumnSpan="2"
-                         Text="{Binding MetadataCode}"
+                         Text="{Binding MetadataCode,UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource codeBoxStyle}"/>
             </Grid>
         </Expander>
@@ -60,7 +60,7 @@
                 <TextBox Grid.Row="0"
                          Grid.Column="0"
                          Grid.ColumnSpan="2"
-                         Text="{Binding RuntimeCode}"
+                         Text="{Binding RuntimeCode,UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource codeBoxStyle}"/>
             </Grid>
         </Expander>
