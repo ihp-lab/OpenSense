@@ -197,13 +197,12 @@ PORTS = [
 
 ''' Notes
 This experimental Python component has following aspects that need to be improved in future versions:
-    1. OpenSense crashes if port definition code has syntax errors or throws exceptions when got evaluated.
-    2. Code modifications will only write back after textboxes lose focus, be careful when you save.
-    3. Defined ports are only visible after textboxes lose focus.
-    4. print() does not print to std out, this is a bug of IronPython3.
-    5. Read PORTS as an python iterator, now it will be cast to python list first.
-    6. Add DebugMode option, now it is disabled for the sake of speed.
-    7. Need a better port definition builder, such as one supporting arrays.
+    - Code modifications will only write back after textboxes lose focus, be careful when you save.
+    - Defined ports are only visible after textboxes lose focus.
+    - print() does not print to std out, this is a bug of IronPython3.
+    - Read PORTS as an python iterator, now it will be cast to python list first.
+    - Add DebugMode option, now it is disabled for the sake of speed.
+    - Need a better port definition builder, such as one supporting arrays.
 '''
 ";
 

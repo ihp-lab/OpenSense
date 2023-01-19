@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,7 +23,15 @@ namespace OpenSense.WPF.Pipeline {
 
         private void ButtonAdd_Click(object sender, RoutedEventArgs e) {
             var metadata = Configuration.GetMetadata();
-            var filteredInputs = metadata.InputPorts().Where(p => p.Aggregation != PortAggregation.Object || Configuration.Inputs.All(c => !Equals(c.LocalPort.Identifier, p.Identifier))).ToList();
+            List<IPortMetadata> filteredInputs;
+            try {
+                filteredInputs = metadata.InputPorts()
+                .Where(p => p.Aggregation != PortAggregation.Object || Configuration.Inputs.All(c => !Equals(c.LocalPort.Identifier, p.Identifier)))
+                .ToList();
+            } catch (Exception ex) {
+                MessageBox.Show(ex.ToString(), "Port Evaluation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             if (filteredInputs.Count == 0) {
                 MessageBox.Show("No floating input port");
                 return;
@@ -46,12 +56,17 @@ namespace OpenSense.WPF.Pipeline {
             }
         }
 
-        private void ListBoxInputs_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+        private void ListBoxInputs_SelectionChanged(object sender, SelectionChangedEventArgs e) {//TODO: Use template, do not new controls.
             ContentControlConnection.Children.Clear();
             var config = (InputConfiguration)ListBoxInputs.SelectedItem;
             if (config != null) {
-                var control = new OutputSelectionControl(Configuration, config, Configurations);
-                ContentControlConnection.Children.Add(control);
+                try {
+                    var control = new OutputSelectionControl(Configuration, config, Configurations);
+                    ContentControlConnection.Children.Add(control);
+                } catch (Exception ex) {
+                    ContentControlConnection.Children.Add(new ErrorOccurredOutputSelectionControl());
+                    MessageBox.Show(ex.ToString(), "Port Evaluation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
             ComboBoxDeliveryPolicy.SelectedItem = ComboBoxDeliveryPolicy.Items.Cast<ComboBoxItem>().Single(i => i.Tag as DeliveryPolicy == config?.DeliveryPolicy);
         }
