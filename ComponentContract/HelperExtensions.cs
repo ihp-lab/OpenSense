@@ -509,9 +509,16 @@ jump:;
             var files = Directory.EnumerateFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
             foreach (var file in files) {
                 /** Test if it is a valid .NET assembly without throwing any exception.
+                 * Code from https://learn.microsoft.com/en-us/dotnet/standard/assembly/identify
                  */
                 using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
                     using var peReader = new PEReader(fs);
+                    try {//Example no longer work, here is a fix (but we lose performance boost)
+                        _ = peReader.PEHeaders;//force initialize
+                    } catch (BadImageFormatException ex) {
+                        Debug.Assert(ex.Message == "Image is too small.");
+                        continue;
+                    }
                     if (!peReader.HasMetadata) {
                         continue;
                     }
