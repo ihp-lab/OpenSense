@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -12,7 +14,7 @@ namespace OpenSense.Components.Contract {
     public abstract class ComponentConfiguration : INotifyPropertyChanged {
 
         #region INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         protected void SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null) {
             if (!EqualityComparer<T>.Default.Equals(field, value)) {
@@ -68,7 +70,7 @@ namespace OpenSense.Components.Contract {
         /// <param name="instantiatedComponents">Other instances that are already instantiated.</param>
         /// <param name="serviceProvider">A <see cref="IServiceProvider"/> can be used as needed. Can be <see cref="null"/>.</param>
         /// <returns>An instance of the component initialized using the current configuration. Can be <see cref="null"/>.</returns>
-        public abstract object Instantiate(PsiPipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents, IServiceProvider serviceProvider);
+        public abstract object Instantiate(PsiPipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents, IServiceProvider? serviceProvider);
 
     }
 }
