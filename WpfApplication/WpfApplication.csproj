@@ -10,9 +10,16 @@
         <AssemblyName>OpenSense.WPF</AssemblyName>
         <EmbedAllSources>true</EmbedAllSources>
         <ApplicationIcon>Resource\Icon\usc.ico</ApplicationIcon>
-        <AssemblyVersion>3.0.0</AssemblyVersion>
-        <Version>3.0.0</Version>
+        <AssemblyVersion>3.0.1</AssemblyVersion>
+        <Version>3.0.1</Version>
         <AssemblyName>OpenSense.WPF</AssemblyName>
+        <!--Note:
+        The Azure Kinect package of /psi contains onnxruntime DLLs while not referencing it as a dependency. 
+        And these files conflit with other components having onnxruntime as a dependency.
+        This should be a temporary fix.
+        And we should maintain the version of onnxruntime dependency of our components carefully so that it aligns with those in Azure Kinect package.
+        -->
+        <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
     </PropertyGroup>
 
     <ItemGroup>
@@ -77,7 +84,8 @@
         <ProjectReference Include="..\Components\EyePointOfInterest.Visualizer.WPF\EyePointOfInterest.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\EyePointOfInterest.WPF\EyePointOfInterest.WPF.csproj" />
         <ProjectReference Include="..\Components\GoogleCloud.Speech.V1.WPF\GoogleCloud.Speech.V1.WPF.csproj" />
-        <ProjectReference Include="..\Components\HeadGesture\HeadGesture.csproj" /><!--No settings available, thus no related WPF project here-->
+        <ProjectReference Include="..\Components\HeadGesture\HeadGesture.csproj" />
+        <!--No settings available, thus no related WPF project here-->
         <ProjectReference Include="..\Components\HeadGesture.Visualizer.WPF\HeadGesture.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\MediaPipe.Net.Visualizer.WPF\MediaPipe.NET.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\MediaPipe.NET.WPF\MediaPipe.NET.WPF.csproj" />
@@ -96,7 +104,8 @@
         <ProjectReference Include="..\Components\Psi.Imaging.Visualizer.WPF\Psi.Imaging.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Imaging.WPF\Psi.Imaging.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Imaging.Windows.WPF\Psi.Imaging.Windows.WPF.csproj" />
-        <!--<ProjectReference Include="..\Components\Psi.Kinect.Windows.WPF\Psi.Kinect.Windows.WPF.csproj" />--><!--removed because it may add difficulty of start using this application-->
+        <!--<ProjectReference Include="..\Components\Psi.Kinect.Windows.WPF\Psi.Kinect.Windows.WPF.csproj" />-->
+        <!--removed because it may add difficulty of start using this application-->
         <ProjectReference Include="..\Components\Psi.Media.Windows.WPF\Psi.Media.Windows.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Speech.Visualizer.WPF\Psi.Speech.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Speech.Windows.WPF\Psi.Speech.Windows.WPF.csproj" />
