@@ -7,12 +7,12 @@ using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Psi {
     [Serializable]
-    public sealed class StandardDeviationConfiguration : OperatorConfiguration {
+    public sealed class StandardDeviationConfiguration : ComponentConfiguration {
 
         public override IComponentMetadata GetMetadata() => new StandardDeviationMetadata();
 
         public override object Instantiate(Pipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents, IServiceProvider serviceProvider) {
-            var producers = GetRemoteProducers(instantiatedComponents);
+            var producers = this.GetRemoteProducers(instantiatedComponents);
             Debug.Assert(producers.Count == 1);
             var producer = Operators.Std(producers.Single(), Inputs.Single().DeliveryPolicy);
             return producer;

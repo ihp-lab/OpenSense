@@ -359,6 +359,25 @@ namespace OpenSense.Components.Contract {
             }
         }
 
+        /// <summary>
+        /// A helper method to get remote side producers given this component's input connections and instantiated components by far.
+        /// </summary>
+        public static IReadOnlyList<dynamic> GetRemoteProducers(this ComponentConfiguration componentConfiguration, IReadOnlyList<ComponentEnvironment> instantiatedComponents) {
+            var configurations = instantiatedComponents.Select(e => e.Configuration).ToArray();
+            var result = new List<dynamic>();
+            foreach (var inputConfig in componentConfiguration.Inputs) {
+                var remoteEnv = instantiatedComponents.Single(env => env.Configuration.Id == inputConfig.RemoteId);
+                var remotePortMeta = remoteEnv.Configuration.GetMetadata().FindPortMetadata(inputConfig.RemotePort);
+                var remoteDataType = remoteEnv.Configuration.FindOutputPortDataType(remotePortMeta, configurations);
+                Debug.Assert(remoteDataType != null);
+                var getRemoteProducerFunc = typeof(HelperExtensions).GetMethod(nameof(HelperExtensions.GetProducer)).MakeGenericMethod(remoteDataType);
+                dynamic producer = getRemoteProducerFunc.Invoke(null, new object[] { remoteEnv, inputConfig.RemotePort });
+                result.Add(producer);
+            }
+            Debug.Assert(result.Count == componentConfiguration.Inputs.Count);
+            return result;
+        }
+
         #region data type finder
         public static Type FindInputPortDataType(this ComponentConfiguration config, IPortMetadata portMetadata, IReadOnlyList<ComponentConfiguration> configs, params Tuple<ComponentConfiguration, IPortMetadata>[] exclude) {
             var dataType = portMetadata.GetTransmissionDataType(null, Array.Empty<Type>(), Array.Empty<Type>());

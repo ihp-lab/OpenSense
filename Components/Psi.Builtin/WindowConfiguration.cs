@@ -7,7 +7,7 @@ using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Psi {
     [Serializable]
-    public sealed class WindowConfiguration : OperatorConfiguration {
+    public sealed class WindowConfiguration : ComponentConfiguration {
 
         private RelativeTimeInterval relativeTimeInterval = RelativeTimeInterval.Empty;
 
@@ -19,7 +19,7 @@ namespace OpenSense.Components.Psi {
         public override IComponentMetadata GetMetadata() => new WindowMetadata();
 
         public override object Instantiate(Pipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents, IServiceProvider serviceProvider) {
-            var producers = GetRemoteProducers(instantiatedComponents);
+            var producers = this.GetRemoteProducers(instantiatedComponents);
             Debug.Assert(producers.Count == 1);
             var producer = Operators.Window(producers.Single(), RelativeTimeInterval, Inputs.Single().DeliveryPolicy);
             return producer;

@@ -14,7 +14,7 @@ using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.PythonSupports {
     [Serializable]
-    public sealed class PythonConfiguration : OperatorConfiguration {
+    public sealed class PythonConfiguration : ComponentConfiguration {
 
         private readonly ScriptEngine _engine;
 

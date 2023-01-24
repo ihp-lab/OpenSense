@@ -13,7 +13,7 @@ using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.MediaPipe.NET {
     [Serializable]
-    public class MediaPipeConfiguration : OperatorConfiguration {
+    public class MediaPipeConfiguration : ComponentConfiguration {
 
         private string graph = "mediapipe/modules/face_landmark/face_landmark_front_cpu.pbtxt";
 
