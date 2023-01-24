@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Composition;
+using Microsoft.Psi;
 using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.MediaPipe.NET {
@@ -29,7 +30,7 @@ namespace OpenSense.Components.MediaPipe.NET {
 
         public ComponentConfiguration CreateConfiguration() => new MediaPipeConfiguration();
 
-        public object GetConnector<T>(object instance, PortConfiguration portConfiguration) {
+        public IProducer<T> GetProducer<T>(object instance, PortConfiguration portConfiguration) {
             var pipe = (SolutionWrapper)instance;
             var key = (string)portConfiguration.Identifier;
             var producer = pipe.Outputs[key];

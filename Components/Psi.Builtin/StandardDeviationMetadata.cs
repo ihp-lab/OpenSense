@@ -2,6 +2,7 @@
 using System.Composition;
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.Psi;
 using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Psi {
@@ -18,7 +19,7 @@ namespace OpenSense.Components.Psi {
 
         public ComponentConfiguration CreateConfiguration() => new StandardDeviationConfiguration();
 
-        public object GetConnector<T>(object instance, PortConfiguration portConfiguration) {
+        public IProducer<T> GetProducer<T>(object instance, PortConfiguration portConfiguration) {
             Debug.Assert(Equals(this.OutputPorts().Single().Identifier, portConfiguration.Identifier));
             Debug.Assert(instance != null && HelperExtensions.CanProducerResultBeCastTo<T>(instance));
             var result = HelperExtensions.CastProducerResult<T>(instance);

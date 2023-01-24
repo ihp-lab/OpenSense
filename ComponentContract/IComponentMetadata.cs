@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.Psi;
 
 namespace OpenSense.Components.Contract {
     /// <summary>
@@ -18,6 +19,6 @@ namespace OpenSense.Components.Contract {
         /// </summary>
         ComponentConfiguration CreateConfiguration();
 
-        object GetConnector<T>(object instance, PortConfiguration portConfiguration);
+        IProducer<T> GetProducer<T>(object instance, PortConfiguration portConfiguration);
     }
 }

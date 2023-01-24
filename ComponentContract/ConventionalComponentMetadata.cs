@@ -67,6 +67,6 @@ namespace OpenSense.Components.Contract {
 
         public abstract ComponentConfiguration CreateConfiguration();
 
-        public object GetConnector<T>(object instance, PortConfiguration portConfiguration) => this.GetStaticProducer<T>(instance, portConfiguration);
+        public IProducer<T> GetProducer<T>(object instance, PortConfiguration portConfiguration) => this.GetStaticProducer<T>(instance, portConfiguration);
     }
 }

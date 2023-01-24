@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Composition;
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.Psi;
 using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.PythonSupports {
@@ -30,7 +31,7 @@ namespace OpenSense.Components.PythonSupports {
 
         public ComponentConfiguration CreateConfiguration() => new PythonConfiguration();
 
-        public object GetConnector<T>(object instance, PortConfiguration portConfiguration) {
+        public IProducer<T> GetProducer<T>(object instance, PortConfiguration portConfiguration) {
             var portMetadata = this.OutputPorts()
                 .Single(p => Equals(p.Identifier, portConfiguration.Identifier));//Do not use ==
             var obj = (PythonRuntimeObject)instance;

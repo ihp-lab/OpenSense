@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Composition;
+using Microsoft.Psi;
 using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Psi {
@@ -17,6 +18,6 @@ namespace OpenSense.Components.Psi {
 
         public ComponentConfiguration CreateConfiguration() => new RemoteExporterConfiguration();
 
-        public object GetConnector<T>(object instance, PortConfiguration portConfiguration) => throw new InvalidOperationException();
+        public IProducer<T> GetProducer<T>(object instance, PortConfiguration portConfiguration) => throw new InvalidOperationException();
     }
 }

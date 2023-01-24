@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Composition;
+using Microsoft.Psi;
 using Microsoft.Psi.Data.Json;
 using OpenSense.Components.Contract;
 
@@ -17,7 +18,7 @@ namespace OpenSense.Components.Psi.Data {
 
         public ComponentConfiguration CreateConfiguration() => new JsonStoreImporterConfiguration();
 
-        public object GetConnector<T>(object instance, PortConfiguration portConfiguration) {
+        public IProducer<T> GetProducer<T>(object instance, PortConfiguration portConfiguration) {
             var importer = (JsonGenerator)instance;
             var streamName = (string)portConfiguration.Index;
             return importer.OpenStream<T>(streamName);

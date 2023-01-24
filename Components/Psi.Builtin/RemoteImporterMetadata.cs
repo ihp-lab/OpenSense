@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Composition;
 using System.Text;
+using Microsoft.Psi;
 using Microsoft.Psi.Remoting;
 using OpenSense.Components.Contract;
 
@@ -19,7 +20,7 @@ namespace OpenSense.Components.Psi {
 
         public ComponentConfiguration CreateConfiguration() => new RemoteImporterConfiguration();
 
-        public object GetConnector<T>(object instance, PortConfiguration portConfiguration) {
+        public IProducer<T> GetProducer<T>(object instance, PortConfiguration portConfiguration) {
             var importer = (RemoteImporter)instance;
             var streamName = (string)portConfiguration.Index;
             return importer.Importer.OpenStream<T>(streamName);

@@ -39,18 +39,8 @@ namespace OpenSense.Components.Contract {
             return portStaticMetadata.GetStaticProducer<T>(portConfiguration, instance);
         }
 
-        private static object GetConnector<T>(this ComponentEnvironment componentEnvironment, PortConfiguration port) {
-            return componentEnvironment.Configuration.GetMetadata().GetConnector<T>(componentEnvironment.Instance, port);
-        }
-
         public static IProducer<T> GetProducer<T>(this ComponentEnvironment componentEnvironment, PortConfiguration port) {
-            var connector = GetConnector<T>(componentEnvironment, port);
-            return (IProducer<T>)connector;
-        }
-
-        public static IConsumer<T> GetConsumer<T>(this ComponentEnvironment componentEnvironment, PortConfiguration port) {
-            var connector = GetConnector<T>(componentEnvironment, port);
-            return (IConsumer<T>)connector;
+            return componentEnvironment.Configuration.GetMetadata().GetProducer<T>(componentEnvironment.Instance, port);
         }
 
         private static dynamic GetStaticConnector(this object instance, StaticPortMetadata portMetadata, PortConfiguration portConfiguration) {
