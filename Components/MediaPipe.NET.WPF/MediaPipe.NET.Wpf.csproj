@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Imaging.Visualizer.WPF.Common\Psi.Imaging.Visualizer.WPF.Common.csproj" />
+        <ProjectReference Include="..\Psi.Imaging.Visualizer.WPF.Common\Psi.Imaging.Visualizer.WPF.Common.csproj" />
         <ProjectReference Include="..\MediaPipe.NET\MediaPipe.NET.csproj" />
         <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>
