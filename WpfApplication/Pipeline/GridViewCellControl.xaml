@@ -11,15 +11,28 @@
     <DockPanel
         Margin="3">
 
-        <Button
-            DockPanel.Dock="Top"
-            Name="ButtonMoveUp"
-            Height="16"
-            MaxWidth="64"
-            VerticalAlignment="Top"
-            Click="ButtonMove_Click">
-            ▲
-        </Button>
+        <Grid
+            DockPanel.Dock="Top">
+
+            <Button
+                Name="ButtonMoveUp"
+                Height="16"
+                MaxWidth="64"
+                VerticalAlignment="Top"
+                Click="ButtonMove_Click">
+                ▲
+            </Button>
+
+            <Button
+                Name="ButtonMoveTopLeftMost"
+                Width="16"
+                Height="16"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Click="ButtonMoveTopLeftMost_Click">
+                ◤
+            </Button>
+        </Grid>
 
         <Button
             DockPanel.Dock="Bottom"

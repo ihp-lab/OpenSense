@@ -12,6 +12,12 @@ namespace OpenSense.WPF.Pipeline {
             InitializeComponent();
         }
 
+        private void ButtonMoveTopLeftMost_Click(object sender, RoutedEventArgs e) {
+            Grid.SetRow(this, 0);
+            Grid.SetColumn(this, 0);
+            AdjustGridDefinitions();
+        }
+
         private void ButtonMove_Click(object sender, RoutedEventArgs e) {
             if (sender == ButtonMoveUp) {
                 var oldRow = Grid.GetRow(this);
