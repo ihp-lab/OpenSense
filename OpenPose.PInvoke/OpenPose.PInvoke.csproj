@@ -10,7 +10,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\OpenPose.Common\OpenPose.Common.csproj" />
+        <ProjectReference Include="..\Components\OpenPose.Common\OpenPose.Common.csproj" />
     </ItemGroup>
 
     <ItemGroup>
