@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <AssemblyName>OpenSense.Components.PortableFACS</AssemblyName>
+        <RootNamespace>OpenSense.Components.PortableFACS</RootNamespace>
+        <LangVersion>11.0</LangVersion>
+        <EmbedAllSources>true</EmbedAllSources>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!--Note:
+        Follow the version of Mediapipe.Net component.
+        -->
+        <PackageReference Include="Mediapipe.Net" Version="1.0.0-alpha2" />
+        <PackageReference Include="Microsoft.Psi.Imaging" Version="0.18.72.1-beta" />
+        <PackageReference Include="System.Composition" Version="7.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\ComponentContract\ComponentContract.csproj" />
+        <ProjectReference Include="..\..\PortableFACS\PortableFACS.csproj" />
+    </ItemGroup>
+
+</Project>
