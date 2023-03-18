@@ -12,7 +12,7 @@ using OpenFaceInterop;
 using OpenSense.DataWriter.Contract;
 
 namespace OpenSense.Components.OpenFace {
-    public sealed class OpenFace : IConsumer<Shared<Image>>, IProducer<PoseAndEyeAndFace>, INotifyPropertyChanged {
+    public sealed class OpenFace : IConsumer<Shared<Image>>, IProducer<PoseAndEyeAndFace>, INotifyPropertyChanged, IDisposable {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -55,6 +55,7 @@ namespace OpenSense.Components.OpenFace {
         }
 
         private void Initialize(object sender, PipelineRunEventArgs e) {
+            ThrowIfDisposed();
 
             string rootDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
@@ -160,6 +161,7 @@ namespace OpenSense.Components.OpenFace {
             if (input.Resource.PixelFormat != PixelFormat.BGR_24bpp) {
                 throw new NotSupportedException($"Image format {input.Resource.PixelFormat} is not supported.");
             }
+            ThrowIfDisposed();
             try {
                 var width = input.Resource.Width;
                 var height = input.Resource.Height;
@@ -275,5 +277,29 @@ namespace OpenSense.Components.OpenFace {
 
         private void OnPipelineCompleted(object sender, PipelineCompletedEventArgs e) {
         }
+
+        #region IDisposable
+        private void ThrowIfDisposed() {
+            if (disposed) {
+                throw new ObjectDisposedException(nameof(OpenFace));
+            }
+        }
+
+        private bool disposed;
+
+        public void Dispose() {
+            if (disposed) {
+                return;
+            }
+
+            gazeAnalyser?.Dispose();
+            faceAnalyser?.Dispose();
+            landmarkDetector?.Dispose();
+            faceDetector?.Dispose();
+            faceModelParameters?.Dispose();
+
+            disposed = true;
+        }
+        #endregion
     }
 }
