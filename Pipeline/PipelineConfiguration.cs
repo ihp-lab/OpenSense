@@ -20,6 +20,7 @@ namespace OpenSense.Pipeline {
             new TimeSpanJsonConverter(),
             new RelativeTimeIntervalJsonConverter(),
             new IntervalEndpointJsonConverter(),
+            new DeliveryPolicyJsonConverter(),
         };
 
         #region INotifyPropertyChanged

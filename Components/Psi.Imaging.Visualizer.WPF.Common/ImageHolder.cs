@@ -77,17 +77,18 @@ namespace OpenSense.WPF.Components.Psi.Imaging.Visualizer {
             }
         }
 
-        private static System.Windows.Media.PixelFormat ConvertPixelFormat(PixelFormat pixelFormat) => pixelFormat switch {
+        private static System.Windows.Media.PixelFormat MapPixelFormat(PixelFormat pixelFormat) => pixelFormat switch {
             PixelFormat.Gray_8bpp => System.Windows.Media.PixelFormats.Gray8,
             PixelFormat.Gray_16bpp => System.Windows.Media.PixelFormats.Gray16,
             PixelFormat.BGR_24bpp => System.Windows.Media.PixelFormats.Bgr24,
             PixelFormat.BGRX_32bpp => System.Windows.Media.PixelFormats.Bgr32,
             PixelFormat.BGRA_32bpp => System.Windows.Media.PixelFormats.Bgra32,
-            _ => throw new InvalidOperationException("Unsupported /psi pixel format"),
+            PixelFormat.RGB_24bpp => System.Windows.Media.PixelFormats.Rgb24,
+            _ => throw new InvalidOperationException($"Unsupported /psi image pixel format {Enum.GetName(pixelFormat)}."),
         };
 
         private static WriteableBitmap CreateEmptyBitmap(Image image) {
-            var pixelFormat = ConvertPixelFormat(image.PixelFormat);
+            var pixelFormat = MapPixelFormat(image.PixelFormat);
             var width = image.Width;
             var height = image.Height;
             var result = new WriteableBitmap(width, height, dpiX: 96, dpiY: 96, pixelFormat, palette: null);
@@ -95,7 +96,7 @@ namespace OpenSense.WPF.Components.Psi.Imaging.Visualizer {
         }
 
         private static void WriteToBitmap(Image source, WriteableBitmap destination) {
-            if (destination.PixelWidth != source.Width || destination.PixelHeight != source.Height || destination.Format != ConvertPixelFormat(source.PixelFormat)) {
+            if (destination.PixelWidth != source.Width || destination.PixelHeight != source.Height || destination.Format != MapPixelFormat(source.PixelFormat)) {
                 throw new InvalidOperationException("Frame size/format in-consistant");
             }
             var width = source.Width;
