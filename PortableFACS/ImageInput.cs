@@ -58,8 +58,8 @@ namespace PortableFACS {
                     }
                 }
             }
-
-            _tensor = new Lazy<DenseTensor<float>>(() => new DenseTensor<float>(_buffer[..BufferLength].AsMemory(), Dims), LazyThreadSafetyMode.PublicationOnly);
+            DenseTensor<float> createTensor() => new DenseTensor<float>(_buffer[..BufferLength].AsMemory(), Dims);
+            _tensor = new Lazy<DenseTensor<float>>(createTensor, LazyThreadSafetyMode.PublicationOnly);
         }
 
         #region IDisposable

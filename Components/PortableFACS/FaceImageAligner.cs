@@ -1,24 +1,22 @@
 ﻿using System;
 using System.Buffers;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Numerics;
-using System.Runtime.CompilerServices;
 using System.Text;
-using Google.Protobuf.WellKnownTypes;
-using Mediapipe.Net.Framework;
 using Mediapipe.Net.Framework.Protobuf;
 using Microsoft.Psi;
-using Microsoft.Psi.Arrays;
 using Microsoft.Psi.Imaging;
+using PortableFACS;
 
 namespace OpenSense.Components.PortableFACS {
     public sealed class FaceImageAligner : 
         IConsumer<(IReadOnlyList<NormalizedLandmarkList>, Shared<Image>)>, 
         IProducer<IReadOnlyList<Shared<Image>>> 
         {
+
+        private const int AlignOutputSize = 256;
+        private const int CropOutputSize = 224;
 
         private static readonly IReadOnlyList<int> LeftEyeIndices;
         private static readonly IReadOnlyList<int> RightEyeIndices;
@@ -85,7 +83,8 @@ namespace OpenSense.Components.PortableFACS {
             var result = new List<Shared<Image>>();
             foreach (var face in faces.Select(l => l.Landmark)) {
                 var (leftEye, rightEye, mouthOuter) = SplitLandmarks(face, width, height);
-                var img = Align(image.Resource, leftEye, rightEye, mouthOuter);
+                using var aligned = Align(image.Resource, leftEye, rightEye, mouthOuter);
+                var img = CenterCrop(aligned.Resource, CropOutputSize);
                 result.Add(img);
             }
 
@@ -111,7 +110,7 @@ namespace OpenSense.Components.PortableFACS {
         internal static Shared<Image> Align(in Image image, IEnumerable<Float2> leftEyeLMs, IEnumerable<Float2> rightEyeLMs, IEnumerable<Float2> mouthOuterLMs) {
             (leftEyeLMs, rightEyeLMs) = (rightEyeLMs, leftEyeLMs);//Note: The python code's naming is wrong, here we follow the wrong naming.
             Debug.Assert(image is not null);
-            Debug.Assert(image.PixelFormat == PixelFormat.RGB_24bpp);
+            Debug.Assert(image.PixelFormat == PixelFormat.RGB_24bpp);//Must be RGB format, BGR is not acceptable and will produce wrong result.
             var pImg_1 = print(image);
             var width = image.Width;
             var height = image.Height;
@@ -143,7 +142,7 @@ namespace OpenSense.Components.PortableFACS {
                 c + x4 - y
             );
             var qSize = np_hypot(x4) * 2;
-            const int outputSize = 256;
+            const int outputSize = AlignOutputSize;
             var temp13 = qSize / outputSize * 0.5f;
             var temp14 = np_floor(temp13);
             var shrink = (int)temp14;
@@ -239,6 +238,16 @@ namespace OpenSense.Components.PortableFACS {
             PIL_transform_Qud_Bilinear_(ref result, temp72, temp73);
             var temp75 = (outputSize, outputSize);
             PIL_resize_(ref result, temp75);
+            return result;
+        }
+
+        internal static Shared<Image> CenterCrop(in Image image, int size) {
+            Debug.Assert(image.Width == AlignOutputSize);
+            Debug.Assert(image.Width == image.Height);
+            Debug.Assert(image.Width >= size);
+            var result = ImagePool.GetOrCreate(size, size, image.PixelFormat);
+            int offset = (image.Width - size) / 2;
+            image.Crop(result.Resource, offset, offset, size, size);
             return result;
         }
 

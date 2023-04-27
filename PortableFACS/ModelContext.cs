@@ -26,19 +26,16 @@ namespace PortableFACS {
             _session = new InferenceSession(ModelFilename, _options);
         }
 
-        public IEnumerable<FacsOutput> Run(IEnumerable<ImageInput> images) {
+        public FacsOutput Run(ImageInput image) {
             if (disposed) {
                 throw new ObjectDisposedException(nameof(ModelContext));
             }
-
             var inputs = new NamedOnnxValue[1];
-            foreach (var image in images) {
-                inputs[0] = NamedOnnxValue.CreateFromTensor(InputName, image.Tensor);
-                using var outputs = _session.Run(inputs);
-                var output = outputs.Single(o => o.Name == OutputName);
-                var result = new FacsOutput(output);
-                yield return result;
-            }
+            inputs[0] = NamedOnnxValue.CreateFromTensor(InputName, image.Tensor);
+            using var outputs = _session.Run(inputs);
+            var output = outputs.Single(o => o.Name == OutputName);
+            var result = new FacsOutput(output);
+            return result;
         }
 
         #region IDisposable

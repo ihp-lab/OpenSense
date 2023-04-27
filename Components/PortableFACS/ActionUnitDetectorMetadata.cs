@@ -12,7 +12,7 @@ namespace OpenSense.Components.PortableFACS {
 
         public override string Name => "Action Unit Detector";
 
-        protected override string GetPortDescription(string portName) {
+        protected override string? GetPortDescription(string portName) {
             switch (portName) {
                 case nameof(ActionUnitDetector.DataIn):
                     return "[Required] Face landmark detection results from MediaPipe.";
@@ -20,6 +20,8 @@ namespace OpenSense.Components.PortableFACS {
                     return "[Required] Images. Same as those were sent to MediaPipe.";
                 case nameof(ActionUnitDetector.Out):
                     return "A list of Action Units of detected faces.";
+                case nameof(ActionUnitDetector.AlignedImagesOut):
+                    return "A list of aligned face images. For debug purpose.";
                 default:
                     return null;
             }

@@ -28,6 +28,7 @@ namespace PortableFACS.Tests {
             using var groundTruthRgb = groundTruth.Convert(PixelFormat.RGB_24bpp);
             var mae = FaceImageAligner.mean_absolute_error(result.Resource, groundTruthRgb);
             Assert.True(mae < 2);
+            result.Resource.Save("Resources/SN032/rst00001.jpg");
         }
 
         [Fact]

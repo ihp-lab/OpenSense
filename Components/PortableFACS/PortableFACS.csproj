@@ -5,7 +5,9 @@
         <AssemblyName>OpenSense.Components.PortableFACS</AssemblyName>
         <RootNamespace>OpenSense.Components.PortableFACS</RootNamespace>
         <LangVersion>11.0</LangVersion>
+        <Nullable>enable</Nullable>
         <EmbedAllSources>true</EmbedAllSources>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
