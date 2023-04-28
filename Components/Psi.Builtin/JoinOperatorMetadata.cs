@@ -14,8 +14,8 @@ namespace OpenSense.Components.Psi {
         public string Description => "Joins the primary stream with values from a secondary stream.";
 
         public IReadOnlyList<IPortMetadata> Ports => new[] {
-            new FusionPortMetadata("Primary", PortDirection.Input, "Primary stream."),
-            new FusionPortMetadata("Secondary", PortDirection.Input, "Secondary stream."),
+            new FusionPortMetadata("Primary", PortDirection.Input, "[Required] Primary stream."),
+            new FusionPortMetadata("Secondary", PortDirection.Input, "[Required] Secondary stream."),
             new FusionPortMetadata("Out", PortDirection.Output, "Paired primary and secondary tuples."),
         };
 
