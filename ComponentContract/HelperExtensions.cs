@@ -201,7 +201,19 @@ namespace OpenSense.Components.Contract {
             return result;
         }
 
-        private static Type GetProducerResultType(object instance) {
+        public static IReadOnlyList<Type> FindElementTypesOfCollectionType(Type collectionType) {
+            var result = new List<Type>();
+            var interfaces = collectionType.GetInterfaces();
+            foreach (var i in interfaces) {
+                if (i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>)) {
+                    var type = i.GenericTypeArguments[0];
+                    result.Add(type);
+                }
+            }
+            return result;
+        }
+
+        public static Type GetProducerResultType(object instance) {
             var instanceType = instance.GetType();
             if (!instanceType.IsGenericType) {
                 throw new InvalidOperationException("The instance is not a generic type.");
@@ -377,32 +389,35 @@ namespace OpenSense.Components.Contract {
                     return null;
                 }
                 foreach (var other in configs) {
-                    if (Equals(i.RemoteId, other.Id)) {
-                        var newExclude = new Tuple<ComponentConfiguration, IPortMetadata>[exclude.Length + 1];
-                        Array.Copy(exclude, newExclude, exclude.Length);
-                        var oMetadata = other.FindPortMetadata(i.RemotePort);
-                        newExclude[exclude.Length] = new Tuple<ComponentConfiguration, IPortMetadata>(other, oMetadata);
-                        var otherInput = FindInputPortDataTypes(other, configs, newExclude);
-                        var otherOutput = FindOutputPortDataTypes(other, configs, newExclude);
-                        var otherEnd = oMetadata.GetTransmissionDataType(null, otherInput, otherOutput);
-                        if (otherEnd != null) {
-                            dataType = portMetadata.GetTransmissionDataType(otherEnd, Array.Empty<Type>(), Array.Empty<Type>());
-                            if (dataType != null) {
-                                goto jump;
-                            }
-                            newExclude[exclude.Length] = new Tuple<ComponentConfiguration, IPortMetadata>(config, portMetadata);
-                            var selfOutput = FindOutputPortDataTypes(config, configs, newExclude);
-                            dataType = portMetadata.GetTransmissionDataType(otherEnd, selfOutput, Array.Empty<Type>());
-                            if (dataType != null) {
-                                goto jump;
-                            }
-                            var selfInput = FindInputPortDataTypes(config, configs, newExclude);
-                            dataType = portMetadata.GetTransmissionDataType(otherEnd, selfOutput, selfInput);
-                            if (dataType != null) {
-                                goto jump;
-                            }
+                    if (other.Id == config.Id) {//same config
+                        continue;
+                    }
+                    if (!Equals(i.RemoteId, other.Id)) {
+                        continue;
+                    }
+                    var newExclude = new Tuple<ComponentConfiguration, IPortMetadata>[exclude.Length + 1];
+                    Array.Copy(exclude, newExclude, exclude.Length);
+                    var oMetadata = other.FindPortMetadata(i.RemotePort);
+                    newExclude[exclude.Length] = new Tuple<ComponentConfiguration, IPortMetadata>(other, oMetadata);
+                    var otherInput = FindInputPortDataTypes(other, configs, newExclude);
+                    var otherOutput = FindOutputPortDataTypes(other, configs, newExclude);
+                    var otherEnd = oMetadata.GetTransmissionDataType(null, otherInput, otherOutput);
+                    if (otherEnd != null) {
+                        dataType = portMetadata.GetTransmissionDataType(otherEnd, Array.Empty<Type>(), Array.Empty<Type>());
+                        if (dataType != null) {
+                            goto jump;
                         }
-
+                        newExclude[exclude.Length] = new Tuple<ComponentConfiguration, IPortMetadata>(config, portMetadata);
+                        var selfOutput = FindOutputPortDataTypes(config, configs, newExclude);
+                        dataType = portMetadata.GetTransmissionDataType(otherEnd, selfOutput, Array.Empty<Type>());
+                        if (dataType != null) {
+                            goto jump;
+                        }
+                        var selfInput = FindInputPortDataTypes(config, configs, newExclude);
+                        dataType = portMetadata.GetTransmissionDataType(otherEnd, selfOutput, selfInput);
+                        if (dataType != null) {
+                            goto jump;
+                        }
                     }
                 }
 jump:;
@@ -446,40 +461,45 @@ jump:;
 
             if (dataType is null) {
                 foreach (var other in configs) {
+                    if (other.Id == config.Id) {//same config
+                        continue;
+                    }
                     foreach (var i in other.Inputs) {
                         var iMetadata = other.FindPortMetadata(i.LocalPort);
-                        if (Equals(i.RemoteId, config.Id) && Equals(i.RemotePort.Identifier, portMetadata.Identifier)) {
-                            var newExclude = new Tuple<ComponentConfiguration, IPortMetadata>[exclude.Length + 1];
-                            Array.Copy(exclude, newExclude, exclude.Length);
-                            newExclude[exclude.Length] = new Tuple<ComponentConfiguration, IPortMetadata>(other, iMetadata);
-                            var otherOutput = FindOutputPortDataTypes(other, configs, newExclude);
-                            var otherInput = FindInputPortDataTypes(other, configs, newExclude);
-                            var otherEnd = iMetadata.GetTransmissionDataType(null, otherOutput, otherInput);
-                            if (otherEnd != null) {
-                                /** Try with only remote input type given
-                                 */
-                                dataType = portMetadata.GetTransmissionDataType(otherEnd, Array.Empty<Type>(), Array.Empty<Type>());
-                                if (dataType != null) {
-                                    goto jump;
-                                }
+                        if (!Equals(i.RemoteId, config.Id) || !Equals(i.RemotePort.Identifier, portMetadata.Identifier)) {
+                            continue;
+                        }
+                        var newExclude = new Tuple<ComponentConfiguration, IPortMetadata>[exclude.Length + 1];
+                        Array.Copy(exclude, newExclude, exclude.Length);
+                        newExclude[exclude.Length] = new Tuple<ComponentConfiguration, IPortMetadata>(other, iMetadata);
+                        var otherOutput = FindOutputPortDataTypes(other, configs, newExclude);
+                        var otherInput = FindInputPortDataTypes(other, configs, newExclude);
+                        var otherEnd = iMetadata.GetTransmissionDataType(null, otherOutput, otherInput);
+                        if (otherEnd is null) {
+                            continue;
+                        }
+                        /** Try with only remote input type given
+                         */
+                        dataType = portMetadata.GetTransmissionDataType(otherEnd, Array.Empty<Type>(), Array.Empty<Type>());
+                        if (dataType != null) {
+                            goto jump;
+                        }
 
-                                /** Try with remote input type and local input types given
-                                 */
-                                newExclude[exclude.Length] = new Tuple<ComponentConfiguration, IPortMetadata>(config, portMetadata);
-                                var selfInput = FindInputPortDataTypes(config, configs, newExclude);
-                                dataType = portMetadata.GetTransmissionDataType(otherEnd, selfInput, Array.Empty<Type>());
-                                if (dataType != null) {
-                                    goto jump;
-                                }
+                        /** Try with remote input type and local input types given
+                         */
+                        newExclude[exclude.Length] = new Tuple<ComponentConfiguration, IPortMetadata>(config, portMetadata);
+                        var selfInput = FindInputPortDataTypes(config, configs, newExclude);
+                        dataType = portMetadata.GetTransmissionDataType(otherEnd, selfInput, Array.Empty<Type>());
+                        if (dataType != null) {
+                            goto jump;
+                        }
 
-                                /** Try with remote input type, local input types and local output types given
-                                 */
-                                var selfOutput = FindOutputPortDataTypes(config, configs, newExclude);
-                                dataType = portMetadata.GetTransmissionDataType(otherEnd, selfInput, selfOutput);
-                                if (dataType != null) {
-                                    goto jump;
-                                }
-                            }
+                        /** Try with remote input type, local input types and local output types given
+                         */
+                        var selfOutput = FindOutputPortDataTypes(config, configs, newExclude);
+                        dataType = portMetadata.GetTransmissionDataType(otherEnd, selfInput, selfOutput);
+                        if (dataType != null) {
+                            goto jump;
                         }
                     }
                 }
@@ -489,19 +509,126 @@ jump:;
         }
 
         public static IList<Type> FindOutputPortDataTypes(this ComponentConfiguration config, IReadOnlyList<ComponentConfiguration> configs, params Tuple<ComponentConfiguration, IPortMetadata>[] exclude) {
-            var result = config
-                .GetMetadata()
-                .OutputPorts()
-                .Select(oMetadata => {
-                    var ret = FindOutputPortDataType(config, oMetadata, configs, exclude);
-                    return ret;
-                })
-                .ToArray();
+            var outputPorts = config.GetMetadata().OutputPorts().ToArray();
+            var result = new Type[outputPorts.Length];
+            var idx = 0;
+            foreach (var iMetadata in outputPorts) {
+                Type dataType;
+                if (exclude != null && exclude.Any(ex => ex.Item1.Id == config.Id && Equals(ex.Item2.Identifier, iMetadata.Identifier))) {
+                    dataType = null;
+                } else {
+                    dataType = FindInputPortDataType(config, iMetadata, configs, exclude);
+                }
+                result[idx] = dataType;
+                idx++;
+            }
             return result;
         }
 
         public static IList<Type> FindOutputPortDataTypes(this ComponentConfiguration config, IReadOnlyList<ComponentConfiguration> configs, IPortMetadata exclude) {
             return FindOutputPortDataTypes(config, configs, new Tuple<ComponentConfiguration, IPortMetadata>(config, exclude));
+        }
+        #endregion
+
+        #region Component Port Detection
+        /// <summary>
+        /// Given a component type, find all the properties that can be treated as a input/output port or collection of ports.
+        /// </summary>
+        public static IReadOnlyList<PropertyInfo> FindPortProperties(Type componentType) {
+            var result = new List<PropertyInfo>();
+            var props = componentType
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(p => p.CanRead)
+                .ToArray();
+
+            try {
+                //regular
+                var basicTypes = new Type[] { typeof(IConsumer<>), typeof(IProducer<>) };
+                var regular = props
+                    .Where(p =>
+                        basicTypes.Any(t => p.PropertyType.IsAssignableToGenericType(t))
+                    );
+                result.AddRange(regular);
+                //list
+                var list = props
+                    .Where(p =>
+                        p.PropertyType.IsAssignableToGenericType(typeof(IReadOnlyList<>))
+                            && basicTypes.Any(t => p.PropertyType.GetGenericArguments()[0].IsAssignableToGenericType(t))
+                    );
+                result.AddRange(list);
+                //dict
+                var dict = props
+                    .Where(p =>
+                        p.PropertyType.IsAssignableToGenericType(typeof(IReadOnlyDictionary<,>))
+                            && p.PropertyType.GetGenericArguments()[0] == typeof(string)
+                            && basicTypes.Any(t => p.PropertyType.GetGenericArguments()[1].IsAssignableToGenericType(t))
+                    );
+                result.AddRange(dict);
+            } catch (FileNotFoundException ex) {// missing dependent dll
+                throw new Exception("Missing dependent DLLs", ex);
+            }
+
+            return result;
+        }
+
+        public static PortAggregation FindPortAggregation(PropertyInfo property) {
+            var interfaces = property.PropertyType.GetInterfaces();
+            if (interfaces.Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IReadOnlyList<>))) {
+                return PortAggregation.List;
+            }
+            if (interfaces.Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IReadOnlyDictionary<,>))) {
+                return PortAggregation.Dictionary;
+            }
+            return PortAggregation.Object;
+        }
+
+        public static PortDirection FindPortDirection(PropertyInfo property, PortAggregation portAggregation) {
+            var propType = property.PropertyType;
+            static PortDirection byConsumerOrProducer(Type propType) {
+                if (propType.IsAssignableToGenericType(typeof(IConsumer<>))) {
+                    return PortDirection.Input;
+                }
+                if (propType.IsAssignableToGenericType(typeof(IProducer<>))) {
+                    return PortDirection.Output;
+                }
+                throw new InvalidOperationException();
+            }
+            switch (portAggregation) {
+                case PortAggregation.List:
+                    var itemType = propType.GetGenericArguments().Single();
+                    return byConsumerOrProducer(itemType);
+                case PortAggregation.Dictionary:
+                    var keyType = propType.GetGenericArguments()[0];
+                    var valType = propType.GetGenericArguments()[1];
+                    Debug.Assert(keyType == typeof(string));
+                    return byConsumerOrProducer(valType);
+                case PortAggregation.Object:
+                    return byConsumerOrProducer(propType);
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
+
+        public static Type FindPortDataType(PropertyInfo property, PortAggregation portAggregation) {
+            var propType = property.PropertyType;
+            static Type getProducerOrEmitterNestedDataType(Type propType) {
+                Debug.Assert(new[] { typeof(IConsumer<>), typeof(IProducer<>) }.Any(t => propType.IsAssignableToGenericType(t)));
+                return propType.GetGenericArguments().Single();
+            }
+            switch (portAggregation) {
+                case PortAggregation.List:
+                    var itemType = propType.GetGenericArguments().Single();
+                    return getProducerOrEmitterNestedDataType(itemType);
+                case PortAggregation.Dictionary:
+                    var keyType = propType.GetGenericArguments()[0];
+                    var valType = propType.GetGenericArguments()[1];
+                    Debug.Assert(keyType == typeof(string));
+                    return getProducerOrEmitterNestedDataType(valType);
+                case PortAggregation.Object:
+                    return getProducerOrEmitterNestedDataType(propType);
+                default:
+                    throw new InvalidOperationException();
+            }
         }
         #endregion
 
