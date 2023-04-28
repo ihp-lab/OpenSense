@@ -86,14 +86,18 @@ namespace OpenSense.Components.Contract {
                 if (inputStaticMetadata is null) {
                     continue;
                 }
-                var dataType = inputStaticMetadata.DataType;
-                var getConsumerFunc = typeof(HelperExtensions).GetMethod(nameof(GetStaticConsumer)).MakeGenericMethod(dataType);
+                var consumerDataType = inputStaticMetadata.DataType;
+                var getConsumerFunc = typeof(HelperExtensions)
+                    .GetMethod(nameof(GetStaticConsumer))
+                    .MakeGenericMethod(consumerDataType);
                 dynamic consumer = getConsumerFunc.Invoke(null, new object[] { inputStaticMetadata, inputConfig.LocalPort, instance });
 
                 var remoteEnvironment = instantiatedComponents.Single(e => inputConfig.RemoteId == e.Configuration.Id);
                 var remoteOutputMetadata = remoteEnvironment.FindPortMetadata(inputConfig.RemotePort);
                 Debug.Assert(remoteOutputMetadata.Direction == PortDirection.Output);
-                var getProducerFunc = typeof(HelperExtensions).GetMethod(nameof(GetProducer)).MakeGenericMethod(dataType);
+                var getProducerFunc = typeof(HelperExtensions)
+                    .GetMethod(nameof(GetProducer))
+                    .MakeGenericMethod(consumerDataType);//Note: not producer data type, so that type conversion is applied when needed
                 dynamic producer = getProducerFunc.Invoke(null, new object[] { remoteEnvironment, inputConfig.RemotePort});
 
                 Operators.PipeTo(producer, consumer, inputConfig.DeliveryPolicy);
@@ -219,6 +223,20 @@ namespace OpenSense.Components.Contract {
                 throw new InvalidOperationException("The instance is not a generic type.");
             }
             var interfaceName = typeof(IProducer<>).Name;//should be "IProducer`1"
+            var @interface = instanceType.GetInterface(interfaceName);
+            if (@interface is null) {
+                throw new InvalidOperationException("The instance does not implement IProducer<>.");
+            }
+            var typeArg = @interface.GetGenericArguments().Single();
+            return typeArg;
+        }
+
+        public static Type GetConsumerResultType(object instance) {
+            var instanceType = instance.GetType();
+            if (!instanceType.IsGenericType) {
+                throw new InvalidOperationException("The instance is not a generic type.");
+            }
+            var interfaceName = typeof(IConsumer<>).Name;//should be "IConsumer`1"
             var @interface = instanceType.GetInterface(interfaceName);
             if (@interface is null) {
                 throw new InvalidOperationException("The instance does not implement IProducer<>.");
