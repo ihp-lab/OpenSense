@@ -12,11 +12,11 @@ namespace OpenSense.Components.Contract {
 
         public object Identifier => Name;
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
-        public string Description { get; private set; }
+        public string Description { get; }
 
-        public PortDirection Direction { get; private set; }
+        public PortDirection Direction { get; }
 
         public PortAggregation Aggregation => PortAggregation.Object;
 
