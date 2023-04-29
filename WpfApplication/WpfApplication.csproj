@@ -96,7 +96,7 @@
         <ProjectReference Include="..\Components\OpenPose.WPF\OpenPose.WPF.csproj" />
         <ProjectReference Include="..\Components\OpenSmile.Visualizer.WPF\OpenSmile.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\OpenSmile.Windows.WPF\OpenSmile.Windows.WPF.csproj" />
-        <ProjectReference Include="..\Components\PortableFACS\PortableFACS.csproj" />
+        <ProjectReference Include="..\Components\PortableFACS.Visualizer.WPF\PortableFACS.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Audio.Windows.WPF\Psi.Audio.Windows.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Audio.WPF\Psi.Audio.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.AzureKinect.WPF\Psi.AzureKinect.WPF.csproj" />
