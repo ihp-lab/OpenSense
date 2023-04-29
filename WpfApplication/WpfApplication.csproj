@@ -79,6 +79,7 @@
         <ProjectReference Include="..\Components\Biopac.Visualizer.WPF\Biopac.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\BodyGestureDetectors.WPF\BodyGestureDetectors.WPF.csproj" />
         <ProjectReference Include="..\Components\Builtin.Visualizer.WPF\Builtin.Visualizer.WPF.csproj" />
+        <ProjectReference Include="..\Components\CollectionOperators.WPF\CollectionOperators.WPF.csproj" />
         <ProjectReference Include="..\Components\CsvExporter.WPF\CsvExporter.WPF.csproj" />
         <ProjectReference Include="..\Components\Emotion.Visualizer.WPF\Emotion.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\EyePointOfInterest.Visualizer.WPF\EyePointOfInterest.Visualizer.WPF.csproj" />
