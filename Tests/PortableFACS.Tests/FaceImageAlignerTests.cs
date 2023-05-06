@@ -9,7 +9,7 @@ namespace PortableFACS.Tests {
         [Fact]
         public void TestAlign() {
             using var image = Image.FromFile("Resources/SN032/img00001.jpg");
-            using var groundTruth = Image.FromFile("Resources/SN032/rst00001.jpg");
+            using var groundTruth = Image.FromFile("Resources/SN032/gt00001.jpg");
             using var stream = new FileStream("Resources/SN032/lmk00001.json", FileMode.Open);
             var facesArr = (JsonArray?)JsonNode.Parse(stream);
             Debug.Assert(facesArr is not null);
