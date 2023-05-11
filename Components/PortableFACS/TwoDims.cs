@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Buffers;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace OpenSense.Components.PortableFACS {
     internal struct TwoDims<T>: IDisposable
@@ -37,6 +38,8 @@ namespace OpenSense.Components.PortableFACS {
             var result = row * Columns + column;
             return result;
         }
+
+        public Span<T> AsSpan() => data.AsSpan();
 
         #region IDisposable
         private bool disposed;

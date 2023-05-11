@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Numerics;
 using System.Text.Json.Nodes;
 using Mediapipe.Net.Framework.Protobuf;
 using Microsoft.Psi.Imaging;
@@ -65,11 +66,11 @@ namespace PortableFACS.Tests {
                 new []{ 30, 32, 34, 36, 38},
                 new []{ 40, 42, 44, 46, 48},
             };
-            var input = new TwoDims<Float3>(5, 5);
+            var input = new TwoDims<Vector3>(5, 5);
             for (var i = 0; i < 5; i++) {
                 for (var j = 0; j < 5; j++) {
                     var v = (float)inputRaw[i][j];
-                    input[i, j] = new Float3(v, v, v);
+                    input[i, j] = new Vector3(v, v, v);
                 }
             }
             //var inputPrint = FaceImageAligner.print(ref input);
@@ -80,17 +81,17 @@ namespace PortableFACS.Tests {
                 new []{ 30.175861 , 31.457424 , 33.32178  , 35.18614  , 36.4677 },
                 new []{ 36.58367  , 37.865234 , 39.72959  , 41.59395  , 42.87551 },
             };
-            var groundTruth = new TwoDims<Float3>(5, 5);
+            var groundTruth = new TwoDims<Vector3>(5, 5);
             for (var i = 0; i < 5; i++) {
                 for (var j = 0; j < 5; j++) {
                     var v = (float)groundTruthRaw[i][j];
-                    groundTruth[i, j] = new Float3(v, v, v);
+                    groundTruth[i, j] = new Vector3(v, v, v);
                 }
             }
             //var groundTruthPrint = FaceImageAligner.print(ref groundTruth);
 
-            var interim = new TwoDims<Float3>(5, 5);
-            var result = new TwoDims<Float3>(5, 5);
+            var interim = new TwoDims<Vector3>(5, 5);
+            var result = new TwoDims<Vector3>(5, 5);
             try {
                 FaceImageAligner.gaussian_filter(ref input, (1, 1, 0), ref interim, ref result);
                 var resultPrint = FaceImageAligner.print(ref result);

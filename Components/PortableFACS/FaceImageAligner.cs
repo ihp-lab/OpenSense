@@ -3,11 +3,12 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Text;
 using Mediapipe.Net.Framework.Protobuf;
 using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
-using PortableFACS;
 
 namespace OpenSense.Components.PortableFACS {
     public sealed class FaceImageAligner : 
@@ -208,13 +209,13 @@ namespace OpenSense.Components.PortableFACS {
                     output: ref temp_float_h_w_01//mask
                 );
                 var blur = qSize * 0.02f;
-                var temp_float_3_h_w_01 = new TwoDims<Float3>(rows: h, columns: w);
+                var temp_float_3_h_w_01 = new TwoDims<Vector3>(rows: h, columns: w);
                 np_float32(
                     img: temp_image_01,//result
                     ref temp_float_3_h_w_01//imgF
                 );
-                var temp_float_3_h_w_02 = new TwoDims<Float3>(rows: h, columns: w);
-                var temp_float_3_h_w_03 = new TwoDims<Float3>(rows: h, columns: w);
+                var temp_float_3_h_w_02 = new TwoDims<Vector3>(rows: h, columns: w);
+                var temp_float_3_h_w_03 = new TwoDims<Vector3>(rows: h, columns: w);
                 gaussian_filter(
                     img: ref temp_float_3_h_w_01, 
                     sigmas: (blur, blur, 0), 
@@ -365,10 +366,10 @@ namespace OpenSense.Components.PortableFACS {
         private static float np_rint(float value) =>
             MathF.Round(value);
 
-        private static Float3 np_rint(Float3 value) => 
-            new Float3(np_rint(value.I0), np_rint(value.I1), np_rint(value.I2));
+        private static Vector3 np_rint(Vector3 value) =>
+            new Vector3(np_rint(value.X), np_rint(value.Y), np_rint(value.Z));
 
-        private static void np_rint__(ref TwoDims<Float3> value) {
+        private static void np_rint__(ref TwoDims<Vector3> value) {
             for (var i = 0; i < value.Rows; i++) {
                 for (var j = 0; j < value.Columns; j++) {
                     value[i, j] = np_rint(value[i, j]);
@@ -387,13 +388,18 @@ namespace OpenSense.Components.PortableFACS {
         private static float np_clip(float value, float min, float max) =>
             MathF.Max(min, MathF.Min(max, value));
 
-        private static Float3 np_clip(Float3 value, float min, float max) =>
-            new Float3(np_clip(value.I0, min, max), np_clip(value.I1, min, max), np_clip(value.I2, min, max));
+        private static Vector3 np_clip(Vector3 value, float min, float max) => 
+            _np_clip(value, new(min, min, min), new(max, max, max));
 
-        private static void np_clip__(ref TwoDims<Float3> value, float min, float max) {
+        private static Vector3 _np_clip(Vector3 value, Vector3 min, Vector3 max) =>
+            Vector3.Clamp(value, min, max);
+
+        private static void np_clip__(ref TwoDims<Vector3> value, float min, float max) {
+            var vMin = new Vector3(min, min, min);
+            var vMax = new Vector3(max, max, max);
             for (var i = 0; i < value.Rows; i++) {
                 for (var j = 0; j < value.Columns; j++) {
-                    value[i, j] = np_clip(value[i, j], min, max);
+                    value[i, j] = _np_clip(value[i, j], vMin, vMax);
                 }
             }
         }
@@ -407,7 +413,7 @@ namespace OpenSense.Components.PortableFACS {
             }
         }
 
-        private static void np_op_mult__left(ref TwoDims<Float3> left, ref TwoDims<float> right) {
+        private static void np_op_mult__left(ref TwoDims<Vector3> left, ref TwoDims<float> right) {
             Debug.Assert(left.Rows == right.Rows);
             Debug.Assert(left.Columns == right.Columns);
 
@@ -430,7 +436,7 @@ namespace OpenSense.Components.PortableFACS {
             }
         }
 
-        private static void np_op_minus(ref TwoDims<Float3> left, ref TwoDims<Float3> right, ref TwoDims<Float3> output) {
+        private static void np_op_minus(ref TwoDims<Vector3> left, ref TwoDims<Vector3> right, ref TwoDims<Vector3> output) {
             Debug.Assert(left.Rows == right.Rows);
             Debug.Assert(left.Columns == right.Columns);
             Debug.Assert(output.Rows == left.Rows && output.Columns == left.Columns);
@@ -442,7 +448,7 @@ namespace OpenSense.Components.PortableFACS {
             }
         }
 
-        private static void np_op_minus(Float3 left, ref TwoDims<Float3> right, ref TwoDims<Float3> output) {
+        private static void np_op_minus(Vector3 left, ref TwoDims<Vector3> right, ref TwoDims<Vector3> output) {
             Debug.Assert(output.Rows == right.Rows && output.Columns == right.Columns);
             for (var i = 0; i < right.Rows; i++) {
                 for (var j = 0; j < right.Columns; j++) {
@@ -468,7 +474,7 @@ namespace OpenSense.Components.PortableFACS {
             return result;
         }
 
-        private static void np_op_add__left(ref TwoDims<Float3> left, ref TwoDims<Float3> right) {
+        private static void np_op_add__left(ref TwoDims<Vector3> left, ref TwoDims<Vector3> right) {
             Debug.Assert(left.Rows == right.Rows);
             Debug.Assert(left.Columns == right.Columns);
             for (var i = 0; i < left.Rows; i++) {
@@ -507,36 +513,40 @@ namespace OpenSense.Components.PortableFACS {
             }
         }
 
-        private static void np_float32(Shared<Image> img, ref TwoDims<Float3> output) {
+        private static unsafe void np_float32(Shared<Image> img, ref TwoDims<Vector3> output) {
             Debug.Assert(img.Resource.PixelFormat == PixelFormat.RGB_24bpp);
             Debug.Assert(output.Rows == img.Resource.Height && output.Columns == img.Resource.Width);
+            var span = new ReadOnlySpan<byte>(img.Resource.ImageData.ToPointer(), img.Resource.Size);
+            var stride = img.Resource.Stride;
             for (var i = 0; i < img.Resource.Height; i++) {
                 for (var j = 0; j < img.Resource.Width; j++) {
-                    var pixel = img.Resource.GetPixel(j, i);
-                    output[i, j] = (pixel.r, pixel.g, pixel.b);
+                    output[i, j] = _get_pixel(span, stride, j, i);
                 }
             }
         }
 
-        private static void np_uint8(ref TwoDims<Float3> value, Shared<Image> output) {
+        private static unsafe void np_uint8(ref TwoDims<Vector3> value, Shared<Image> output) {
             Debug.Assert(value.Rows == output.Resource.Height);
             Debug.Assert(value.Columns == output.Resource.Width);
             Debug.Assert(output.Resource.PixelFormat == PixelFormat.RGB_24bpp);
+            var span = new Span<byte>(output.Resource.ImageData.ToPointer(), output.Resource.Size);
+            var stride = output.Resource.Stride;
 
             for (var i = 0; i < value.Rows; i++) {
                 for (var j = 0; j < value.Columns; j++) {
-                    Debug.Assert(0 <= value[i, j].I0 && value[i, j].I0 <= byte.MaxValue);
-                    Debug.Assert(0 <= value[i, j].I1 && value[i, j].I1 <= byte.MaxValue);
-                    Debug.Assert(0 <= value[i, j].I2 && value[i, j].I2 <= byte.MaxValue);
-                    output.Resource.SetPixel(x: j, y: i, r: (int)value[i, j].I0, g: (int)value[i, j].I1, b: (int)value[i, j].I2, a: 0);
+                    var v = value[i, j];
+                    Debug.Assert(0 <= v.X && v.X <= byte.MaxValue);
+                    Debug.Assert(0 <= v.Y && v.Y <= byte.MaxValue);
+                    Debug.Assert(0 <= v.Z && v.Z <= byte.MaxValue);
+                    _set_pixel(span, stride, j, i, v);
                 }
             }
         }
 
-        private static Float3 np_median(TwoDims<Float3> value, (int, int) axis) {
+        private static Vector3 np_median(TwoDims<Vector3> value, (int, int) axis) {
             Debug.Assert(axis == (0, 1));
             var result = new float[3];
-            for (var k = 0; k < Float3.Length; k++) {
+            for (var k = 0; k < 3; k++) {
                 var channelValues = Enumerable
                     .Range(0, value.Rows)
                     .SelectMany(i =>
@@ -553,7 +563,7 @@ namespace OpenSense.Components.PortableFACS {
                     result[k] = (channelValues[channelValues.Length / 2 - 1] + channelValues[channelValues.Length / 2]) / 2;
                 }
             }
-            return (result[0], result[1], result[2]);
+            return new (result[0], result[1], result[2]);
         }
 
         private static void PIL_resize_(ref Shared<Image> img, (int, int) sizes) {
@@ -632,7 +642,7 @@ namespace OpenSense.Components.PortableFACS {
                     var (xx, yy) = quad_transform(x - x0, y - y0, data);
                     var pixel = bilinear_interpolation(imgIn, yy, xx);
                     pixel = np_clip(np_rint(pixel), 0, byte.MaxValue);
-                    imgOut.SetPixel(x, y, r: (int)pixel.I0, g: (int)pixel.I1, b: (int)pixel.I2, a: 0);
+                    imgOut.SetPixel(x, y, r: (int)pixel.X, g: (int)pixel.Y, b: (int)pixel.Z, a: 0);
                 }
             }
         }
@@ -648,7 +658,7 @@ namespace OpenSense.Components.PortableFACS {
             img = temp;
         }
 
-        internal static void gaussian_filter(ref TwoDims<Float3> img, Float3 sigmas, ref TwoDims<Float3> interim, ref TwoDims<Float3> output) {
+        internal static void gaussian_filter(ref TwoDims<Vector3> img, Float3 sigmas, ref TwoDims<Vector3> interim, ref TwoDims<Vector3> output) {
             Debug.Assert(sigmas.I2 == 0);//Do not apply to color channels
             Debug.Assert(sigmas.I0 == sigmas.I1);
             Debug.Assert(interim.Rows == img.Rows && interim.Columns == img.Columns);
@@ -665,7 +675,7 @@ namespace OpenSense.Components.PortableFACS {
             correlate1d(img: ref interim, weights: weights, axis: 1, output: ref output);
         }
 
-        private static void correlate1d(ref TwoDims<Float3> img, float[] weights, int axis, ref TwoDims<Float3> output) {//Note: the original code uses float64, and we do see precision loss here
+        private static void correlate1d(ref TwoDims<Vector3> img, float[] weights, int axis, ref TwoDims<Vector3> output) {//Note: the original code uses float64, and we do see precision loss here
             Debug.Assert(output.Rows == img.Rows && output.Columns == img.Columns);
             Debug.Assert(weights.Length % 2 == 1);
             var half = weights.Length / 2;
@@ -673,7 +683,7 @@ namespace OpenSense.Components.PortableFACS {
                 case 0:
                     for (var j = 0; j < img.Columns; j++) {
                         for (var i = 0; i < img.Rows; i++) {
-                            var sum = new Float3();
+                            var sum = new Vector3();
                             for (var k = 0; k < weights.Length; k++) {
                                 var (ii, jj) = extension_mode_reflect(i - half + k, j, img.Rows, img.Columns);
                                 var val = img[ii, jj];
@@ -687,7 +697,7 @@ namespace OpenSense.Components.PortableFACS {
                 case 1:
                     for (var i = 0; i < img.Rows; i++) {
                         for (var j = 0; j < img.Columns; j++) {
-                            var sum = new Float3();
+                            var sum = new Vector3();
                             for (var k = 0; k < weights.Length; k++) {
                                 var (ii, jj) = extension_mode_reflect(i, j - half + k, img.Rows, img.Columns);
                                 var val = img[ii, jj];
@@ -829,18 +839,18 @@ namespace OpenSense.Components.PortableFACS {
             return (y, x);
         }
 
-        private static Float3 bilinear_interpolation(TwoDims<Float3> image, float y, float x) {
+        private static Vector3 bilinear_interpolation(TwoDims<Vector3> image, float y, float x) {
             /* mirror (not reflect) */
             (y, x) = extension_mode_reflect(y, x, image.Rows, image.Columns);
 
-            static Float3 linear_interpolation(Float3 v1, float w1, Float3 v2, float w2) => v1 * w1 + v2 * w2;
+            static Vector3 linear_interpolation(Vector3 v1, float w1, Vector3 v2, float w2) => v1 * w1 + v2 * w2;
             var x1 = (int)MathF.Floor(x);
             var x2 = (int)MathF.Ceiling(x);
             var y1 = (int)MathF.Floor(y);
             var y2 = (int)MathF.Ceiling(y);
             var needX = x1 != x2;
             var needY = y1 != y2;
-            Float3 result;
+            Vector3 result;
             switch (needX, needY) {
                 case (false, false):
                     result = image[y1, x1];
@@ -860,35 +870,61 @@ namespace OpenSense.Components.PortableFACS {
             return result;
         }
 
-        private static Float3 bilinear_interpolation(in Image image, float y, float x) {
+        private static Vector3 bilinear_interpolation(in Image image, float y, float x) {
             /* mirror (not reflect) */
             (y, x) = extension_mode_reflect(y, x, image.Height, image.Width);
-
-            static Float3 linear_interpolation(Float3 v1, float w1, Float3 v2, float w2) => v1 * w1 + v2 * w2;
+            static Vector3 linear_interpolation(Vector3 v1, float w1, Vector3 v2, float w2) => v1 * w1 + v2 * w2;
             var x1 = (int)MathF.Floor(x);
             var x2 = (int)MathF.Ceiling(x);
             var y1 = (int)MathF.Floor(y);
             var y2 = (int)MathF.Ceiling(y);
             var needX = x1 != x2;
             var needY = y1 != y2;
-            Float3 result;
+            Vector3 result;
             switch (needX, needY) {
                 case (false, false):
-                    result = (Float3)image.GetPixel(x1, y1);
+                    result = get_pixel(image, x1, y1);
                     break;
                 case (true, false):
-                    result = linear_interpolation((Float3)image.GetPixel(x1, y1), x2 - x, (Float3)image.GetPixel(x2, y1), x - x1);
+                    result = linear_interpolation(get_pixel(image, x1, y1), x2 - x, get_pixel(image, x2, y1), x - x1);
                     break;
                 case (false, true):
-                    result = linear_interpolation((Float3)image.GetPixel(x1, y1), y2 - y, (Float3)image.GetPixel(x1, y2), y - y1);
+                    result = linear_interpolation(get_pixel(image, x1, y1), y2 - y, get_pixel(image, x1, y2), y - y1);
                     break;
                 case (true, true):
-                    var r1 = linear_interpolation((Float3)image.GetPixel(x1, y1), x2 - x, (Float3)image.GetPixel(x2, y1), x - x1);
-                    var r2 = linear_interpolation((Float3)image.GetPixel(x1, y2), x2 - x, (Float3)image.GetPixel(x2, y2), x - x1);
+                    var r1 = linear_interpolation(get_pixel(image, x1, y1), x2 - x, get_pixel(image, x2, y1), x - x1);
+                    var r2 = linear_interpolation(get_pixel(image, x1, y2), x2 - x, get_pixel(image, x2, y2), x - x1);
                     result = linear_interpolation(r1, y2 - y, r2, y - y1);
                     break;
             }
             return result;
+        }
+
+        private static unsafe Vector3 get_pixel(in Image image, int x, int y) {
+            Debug.Assert(image.PixelFormat == PixelFormat.RGB_24bpp);
+            var span = new ReadOnlySpan<byte>(image.ImageData.ToPointer(), image.Size);
+            var result = _get_pixel(span, image.Stride, x, y);
+            return result;
+        }
+
+        private static Vector3 _get_pixel(ReadOnlySpan<byte> span, int stride, int x, int y) {
+            var offset = y * stride + x * 3;
+            var result = new Vector3(span[offset], span[offset + 1], span[offset + 2]);
+            return result;
+        }
+
+        private static unsafe void set_pixel(in Image image, int x, int y, Vector3 value) {
+            Debug.Assert(image.PixelFormat == PixelFormat.RGB_24bpp);
+            var span = new Span<byte>(image.ImageData.ToPointer(), image.Size);
+            _set_pixel(span, image.Stride, x, y, value);
+        }
+
+
+        private static void _set_pixel(Span<byte> span, int stride, int x, int y, Vector3 value) {
+            var offset = y * stride + x * 3;
+            span[offset] = (byte)value.X;
+            span[offset + 1] = (byte)value.Y;
+            span[offset + 2] = (byte)value.Z;
         }
 
         private static string print(Image img) {
@@ -920,14 +956,14 @@ namespace OpenSense.Components.PortableFACS {
             return sb.ToString();
         }
 
-        internal static string print(ref TwoDims<Float3> img) {
+        internal static string print(ref TwoDims<Vector3> img) {
             var sb = new StringBuilder();
             sb.Append("{");
             for (var i = 0; i < img.Rows; i++) {
                 var empty = true;
                 for (var j = 0; j < img.Columns; j++) {
                     var p = img[i, j];
-                    if (p.I0 != 0 || p.I1 != 0 || p.I2 != 0) {
+                    if (p.X != 0 || p.Y != 0 || p.Z != 0) {
                         empty = false;
                         break;
                     }
@@ -938,10 +974,10 @@ namespace OpenSense.Components.PortableFACS {
                 sb.Append($"r{i}:{{");
                 for (var j = 0; j < img.Columns; j++) {
                     var p = img[i, j];
-                    if (p.I0 == 0 && p.I1 == 0 && p.I2 == 0) {
+                    if (p.X == 0 && p.Y == 0 && p.Z == 0) {
                         continue;
                     }
-                    sb.Append($"c{j}:[{p.I0},{p.I1},{p.I2}],");
+                    sb.Append($"c{j}:[{p.X},{p.Y},{p.Z}],");
                 }
                 sb.AppendLine("},");
             }
@@ -949,7 +985,7 @@ namespace OpenSense.Components.PortableFACS {
             return sb.ToString();
         }
 
-        internal static bool is_close(TwoDims<Float3> left, TwoDims<Float3> right) {
+        internal static bool is_close(TwoDims<Vector3> left, TwoDims<Vector3> right) {
             if (left.Rows != right.Rows || left.Columns != right.Columns) {
                 return false;
             }
@@ -957,13 +993,13 @@ namespace OpenSense.Components.PortableFACS {
                 for (var j = 0; j < left.Columns; j++) {
                     var l = left[i, j];
                     var r = right[i, j];
-                    if (Math.Abs(l.I0 - r.I0) > 0.0001) {
+                    if (Math.Abs(l.X - r.X) > 0.0001) {
                         return false;
                     }
-                    if (Math.Abs(l.I1 - r.I1) > 0.0001) {
+                    if (Math.Abs(l.Y - r.Y) > 0.0001) {
                         return false;
                     }
-                    if (Math.Abs(l.I2 - r.I2) > 0.0001) {
+                    if (Math.Abs(l.Z - r.Z) > 0.0001) {
                         return false;
                     }
                 }
