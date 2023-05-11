@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Buffers;
 using System.Diagnostics;
-using System.Text;
 
 namespace OpenSense.Components.PortableFACS {
-    internal sealed class TwoDims<T>: IDisposable
+    internal struct TwoDims<T>: IDisposable
         where T: struct 
     {
 
@@ -42,26 +41,14 @@ namespace OpenSense.Components.PortableFACS {
         #region IDisposable
         private bool disposed;
 
-        private void Dispose(bool disposing) {
+        public void Dispose() {
             if (disposed) {
                 return;
             }
 
-            if (disposing) {
-                
-            }
             ArrayPool<T>.Shared.Return(data);
 
             disposed = true;
-        }
-
-        ~TwoDims() {
-            Dispose(disposing: false);
-        }
-
-        public void Dispose() {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
         }
         #endregion
     }

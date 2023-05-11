@@ -113,7 +113,7 @@ namespace OpenSense.Components.PortableFACS {
             Debug.Assert(image.PixelFormat == PixelFormat.RGB_24bpp);//Must be RGB format, BGR is not acceptable and will produce wrong result.
             var width = image.Width;
             var height = image.Height;
-            var result = ImagePool.GetOrCreate(width, height, image.PixelFormat);
+            var temp_image_01 = ImagePool.GetOrCreate(width, height, image.PixelFormat);
             var leftEye = np_mean(leftEyeLMs, axis: 0);
             var rightEye = np_mean(rightEyeLMs, axis: 0);
             var eyeAvg = (leftEye + rightEye) * 0.5f;
@@ -145,14 +145,14 @@ namespace OpenSense.Components.PortableFACS {
             var temp13 = qSize / outputSize * 0.5f;
             var temp14 = np_floor(temp13);
             var shrink = (int)temp14;
-            image.CopyTo(result.Resource);
+            image.CopyTo(temp_image_01.Resource);
             if (shrink > 1) {
                 var temp16 = width / (float)shrink;
                 var temp17 = (int)np_rint(temp16);
                 var temp18 = height / (float)shrink;
                 var temp19 = (int)np_rint(temp18);
                 var rSize = (Width: temp17, Height: temp19);
-                PIL_resize_(ref result, rSize);
+                PIL_resize_(ref temp_image_01, rSize);
                 np_op_div_(ref quad, shrink);
                 qSize = qSize / shrink;
             }
@@ -171,7 +171,7 @@ namespace OpenSense.Components.PortableFACS {
             var temp32 = crop2.I2 - crop2.I0;
             var temp33 = crop2.I3 - crop2.I1;
             if (temp32 < width || temp33 < height) {
-                PIL_crop_(ref result, crop2);
+                PIL_crop_(ref temp_image_01, crop2);
                 np_op_minus_(ref quad, np_op_slice(crop2, 0, 2));
             }
             var temp35 = (int)np_floor(op_min(quad[":,0"]));
@@ -188,9 +188,9 @@ namespace OpenSense.Components.PortableFACS {
             if (enablePadding && op_max(pad2) > border - 4) {
                 var temp45 = (int)np_rint(qSize * 0.3f);
                 var pad3 = np_maximum(pad2, temp45);
-                np_pad_(ref result, ((pad3.I1, pad3.I3), (pad3.I0, pad3.I2)));
-                var h = result.Resource.Height;
-                var w = result.Resource.Width;
+                np_pad_(ref temp_image_01, ((pad3.I1, pad3.I3), (pad3.I0, pad3.I2)));
+                var h = temp_image_01.Resource.Height;
+                var w = temp_image_01.Resource.Width;
                 var xOGrid = Enumerable.Range(0, w).Select(i => (float)i);
                 var yOGrid = Enumerable.Range(0, h).Select(i => (float)i);
                 var temp48 = xOGrid.Select(v => v / pad3.I0);
@@ -201,24 +201,93 @@ namespace OpenSense.Components.PortableFACS {
                 var temp52 = yOGrid.Select(v => (h - 1 - v) / pad3.I3);
                 var temp53 = np_minimum(temp51, temp52)
                     .Select(v => 1f - v);
-                using var mask = np_maximum2D(cols: temp50.ToArray(), rows: temp53.ToArray());//TODO: optimize, reduce the need of instantiation
+                var temp_float_h_w_01 = new TwoDims<float>(rows: h, columns: w);
+                np_maximum2D(
+                    cols: temp50.ToArray(), 
+                    rows: temp53.ToArray(), 
+                    output: ref temp_float_h_w_01//mask
+                );
                 var blur = qSize * 0.02f;
-                using var imgF = np_float32(result);
-                using var temp55 = gaussian_filter(imgF, (blur, blur, 0));
-                using var temp56 = np_op_minus(temp55, imgF);
-                using var temp57 = np_op_mult(mask, 3);
-                using var temp58 = np_op_add(temp57, 1);
-                using var temp59 = np_clip(temp58, 0, 1);
-                using var temp60 = np_op_mult(temp56, temp59);
-                np_op_add_(imgF, temp60);
-                var temp62 = np_median(imgF, (0, 1));
-                using var temp63 = np_op_minus(temp62, imgF);
-                using var temp64 = np_clip(mask, 0, 1);
-                using var temp65 = np_op_mult(temp63, temp64);
-                np_op_add_(imgF, temp65);
-                using var temp67 = np_rint(imgF);
-                using var temp68 = np_clip(temp67, 0, 255);
-                np_uint8(temp68, result);
+                var temp_float_3_h_w_01 = new TwoDims<Float3>(rows: h, columns: w);
+                np_float32(
+                    img: temp_image_01,//result
+                    ref temp_float_3_h_w_01//imgF
+                );
+                var temp_float_3_h_w_02 = new TwoDims<Float3>(rows: h, columns: w);
+                var temp_float_3_h_w_03 = new TwoDims<Float3>(rows: h, columns: w);
+                gaussian_filter(
+                    img: ref temp_float_3_h_w_01, 
+                    sigmas: (blur, blur, 0), 
+                    interim: ref temp_float_3_h_w_02, 
+                    output: ref temp_float_3_h_w_03//temp55
+                );
+                np_op_minus(
+                    left: ref temp_float_3_h_w_03,//temp55
+                    right: ref temp_float_3_h_w_01,//imgF
+                    output: ref temp_float_3_h_w_02//temp56
+                );
+                var temp_float_h_w_02 = new TwoDims<float>(rows: h, columns: w);
+                np_op_mult(
+                    left: ref temp_float_h_w_01,//mask
+                    right: 3,
+                    output: ref temp_float_h_w_02//temp57
+                );
+                var temp_float_h_w_03 = new TwoDims<float>(rows: h, columns: w);
+                np_op_add(
+                    left: ref temp_float_h_w_02,//temp57
+                    right: 1,
+                    output: ref temp_float_h_w_03//temp58
+                );
+                np_clip(
+                    value: ref temp_float_h_w_03,//temp58
+                    min: 0, 
+                    max: 1,
+                    output: ref temp_float_h_w_02//temp59
+                );
+                np_op_mult(
+                    left: ref temp_float_3_h_w_02,//temp56
+                    right: ref temp_float_h_w_02,//temp59
+                    output: ref temp_float_3_h_w_03//temp60
+                );
+                np_op_add_left(
+                    left: ref temp_float_3_h_w_01,//imgF
+                    right: ref temp_float_3_h_w_03//temp60
+                );
+                var temp62 = np_median(temp_float_3_h_w_01, (0, 1));
+                np_op_minus(
+                    left: temp62,
+                    right: ref temp_float_3_h_w_01,//imgF
+                    output: ref temp_float_3_h_w_02//temp63
+                );
+                np_clip(
+                    value: ref temp_float_h_w_01,//mask
+                    min: 0, 
+                    max: 1,
+                    output: ref temp_float_h_w_02//temp64
+                );
+                np_op_mult(
+                    left: ref temp_float_3_h_w_02,//temp63
+                    right: ref temp_float_h_w_02,//temp64
+                    output: ref temp_float_3_h_w_03//temp65
+                );
+                np_op_add_left(
+                    left: ref temp_float_3_h_w_01,//imgF
+                    right: ref temp_float_3_h_w_03//temp65
+                );
+                np_rint(
+                    value: ref temp_float_3_h_w_01, //imgF
+                    output: ref temp_float_3_h_w_02//temp67
+                );
+                np_clip(
+                    value: ref temp_float_3_h_w_02,//temp67
+                    min: 0, 
+                    max: 255,
+                    output: ref temp_float_3_h_w_03//temp68
+                );
+                np_uint8(
+                    value: ref temp_float_3_h_w_03, //temp68
+                    output: temp_image_01//result
+                );
                 const bool alpha = false;
                 if (alpha) {
                     throw new NotImplementedException();
@@ -227,14 +296,21 @@ namespace OpenSense.Components.PortableFACS {
                 }
                 var temp70 = np_op_slice(pad3, 0, 2);
                 np_op_add_(ref quad, temp70);
+
+                temp_float_h_w_03.Dispose();
+                temp_float_h_w_02.Dispose();
+                temp_float_3_h_w_03.Dispose();
+                temp_float_3_h_w_02.Dispose();
+                temp_float_3_h_w_01.Dispose();
+                temp_float_h_w_01.Dispose();
             }
             const int transformSize = 4096;
             var temp72 = (transformSize, transformSize);
             var temp73 = np_op_add(quad, 0.5f);
-            PIL_transform_Qud_Bilinear_(ref result, temp72, temp73);
+            PIL_transform_Qud_Bilinear_(ref temp_image_01, temp72, temp73);
             var temp75 = (outputSize, outputSize);
-            PIL_resize_(ref result, temp75);
-            return result;
+            PIL_resize_(ref temp_image_01, temp75);
+            return temp_image_01;
         }
 
         internal static Shared<Image> CenterCrop(in Image image, int size) {
@@ -298,24 +374,22 @@ namespace OpenSense.Components.PortableFACS {
         private static Float3 np_rint(Float3 value) => 
             new Float3(np_rint(value.I0), np_rint(value.I1), np_rint(value.I2));
 
-        private static TwoDims<Float3> np_rint(TwoDims<Float3> value) {
-            var result = new TwoDims<Float3>(value.Rows, value.Columns);
+        private static void np_rint(ref TwoDims<Float3> value, ref TwoDims<Float3> output) {
+            Debug.Assert(output.Rows == value.Rows && output.Columns == value.Columns);
             for (var i = 0; i < value.Rows; i++) {
                 for (var j = 0; j < value.Columns; j++) {
-                    result[i, j] = np_rint(value[i, j]);
+                    output[i, j] = np_rint(value[i, j]);
                 }
             }
-            return result;
         }
 
-        private static TwoDims<float> np_clip(TwoDims<float> left, float min, float max) {
-            var result = new TwoDims<float>(left.Rows, left.Columns);
-            for (var i = 0; i < left.Rows; i++) {
-                for (var j = 0; j < left.Columns; j++) {
-                    result[i, j] = MathF.Max(min, MathF.Min(max, left[i, j]));
+        private static void np_clip(ref TwoDims<float> value, float min, float max, ref TwoDims<float> output) {
+            Debug.Assert(output.Rows == value.Rows && output.Columns == value.Columns);
+            for (var i = 0; i < value.Rows; i++) {
+                for (var j = 0; j < value.Columns; j++) {
+                    output[i, j] = MathF.Max(min, MathF.Min(max, value[i, j]));
                 }
             }
-            return result;
         }
 
         private static float np_clip(float value, float min, float max) =>
@@ -324,37 +398,34 @@ namespace OpenSense.Components.PortableFACS {
         private static Float3 np_clip(Float3 value, float min, float max) =>
             new Float3(np_clip(value.I0, min, max), np_clip(value.I1, min, max), np_clip(value.I2, min, max));
 
-        private static TwoDims<Float3> np_clip(TwoDims<Float3> value, float min, float max) {
-            var result = new TwoDims<Float3>(value.Rows, value.Columns);
+        private static void np_clip(ref TwoDims<Float3> value, float min, float max, ref TwoDims<Float3> output) {
+            Debug.Assert(output.Rows == value.Rows && output.Columns == value.Columns);
             for (var i = 0; i < value.Rows; i++) {
                 for (var j = 0; j < value.Columns; j++) {
-                    result[i, j] = np_clip(value[i, j], min, max);
+                    output[i, j] = np_clip(value[i, j], min, max);
                 }
             }
-            return result;
         }
 
-        private static TwoDims<float> np_op_mult(TwoDims<float> left, float right) {
-            var result = new TwoDims<float>(left.Rows, left.Columns);
+        private static void np_op_mult(ref TwoDims<float> left, float right, ref TwoDims<float> output) {
+            Debug.Assert(output.Rows == left.Rows && output.Columns == left.Columns);
             for (var i = 0; i < left.Rows; i++) {
                 for (var j = 0; j < left.Columns; j++) {
-                    result[i, j] = left[i, j] * right;
+                    output[i, j] = left[i, j] * right;
                 }
             }
-            return result;
         }
 
-        private static TwoDims<Float3> np_op_mult(TwoDims<Float3> left, TwoDims<float> right) {
+        private static void np_op_mult(ref TwoDims<Float3> left, ref TwoDims<float> right, ref TwoDims<Float3> output) {
             Debug.Assert(left.Rows == right.Rows);
             Debug.Assert(left.Columns == right.Columns);
+            Debug.Assert(output.Rows == left.Rows && output.Columns == left.Columns);
 
-            var result = new TwoDims<Float3>(left.Rows, left.Columns);
             for (var i = 0; i < left.Rows; i++) {
                 for (var j = 0; j < left.Columns; j++) {
-                    result[i, j] = left[i, j] * right[i, j];
+                    output[i, j] = left[i, j] * right[i, j];
                 }
             }
-            return result;
         }
         
         private static void np_op_div_(ref Quad left, float right) {
@@ -369,37 +440,34 @@ namespace OpenSense.Components.PortableFACS {
             }
         }
 
-        private static TwoDims<Float3> np_op_minus(TwoDims<Float3> left, TwoDims<Float3> right) {
+        private static void np_op_minus(ref TwoDims<Float3> left, ref TwoDims<Float3> right, ref TwoDims<Float3> output) {
             Debug.Assert(left.Rows == right.Rows);
             Debug.Assert(left.Columns == right.Columns);
+            Debug.Assert(output.Rows == left.Rows && output.Columns == left.Columns);
 
-            var result = new TwoDims<Float3>(left.Rows, left.Columns);
             for (var i = 0; i < left.Rows; i++) {
                 for (var j = 0; j < left.Columns; j++) {
-                    result[i, j] = left[i, j] - right[i, j];
+                    output[i, j] = left[i, j] - right[i, j];
                 }
             }
-            return result;
         }
 
-        private static TwoDims<Float3> np_op_minus(Float3 left, TwoDims<Float3> right) {
-            var result = new TwoDims<Float3>(right.Rows, right.Columns);
+        private static void np_op_minus(Float3 left, ref TwoDims<Float3> right, ref TwoDims<Float3> output) {
+            Debug.Assert(output.Rows == right.Rows && output.Columns == right.Columns);
             for (var i = 0; i < right.Rows; i++) {
                 for (var j = 0; j < right.Columns; j++) {
-                    result[i, j] = left - right[i, j];
+                    output[i, j] = left - right[i, j];
                 }
             }
-            return result;
         }
 
-        private static TwoDims<float> np_op_add(TwoDims<float> left, float right) {
-            var result = new TwoDims<float>(left.Rows, left.Columns);
+        private static void np_op_add(ref TwoDims<float> left, float right, ref TwoDims<float> output) {
+            Debug.Assert(output.Rows == left.Rows && output.Columns == left.Columns);
             for (var i = 0; i < left.Rows; i++) {
                 for (var j = 0; j < left.Columns; j++) {
-                    result[i, j] = left[i, j] + right;
+                    output[i, j] = left[i, j] + right;
                 }
             }
-            return result;
         }
 
         private static Quad np_op_add(Quad left, float right) {
@@ -410,7 +478,7 @@ namespace OpenSense.Components.PortableFACS {
             return result;
         }
 
-        private static void np_op_add_(TwoDims<Float3> left, TwoDims<Float3> right) {
+        private static void np_op_add_left(ref TwoDims<Float3> left, ref TwoDims<Float3> right) {
             Debug.Assert(left.Rows == right.Rows);
             Debug.Assert(left.Columns == right.Columns);
             for (var i = 0; i < left.Rows; i++) {
@@ -440,29 +508,27 @@ namespace OpenSense.Components.PortableFACS {
             return left.Zip(right).Select(t => MathF.Min(t.First, t.Second));
         }
 
-        private static TwoDims<float> np_maximum2D(IReadOnlyList<float> rows, IReadOnlyList<float> cols) {
-            var result = new TwoDims<float>(rows.Count, cols.Count);
+        private static void np_maximum2D(IReadOnlyList<float> rows, IReadOnlyList<float> cols, ref TwoDims<float> output) {
+            Debug.Assert(output.Rows == rows.Count && output.Columns == cols.Count);
             for (var i = 0; i < rows.Count; i++) {
                 for (var j = 0; j < cols.Count; j++) {
-                    result[i, j] = MathF.Max(rows[i], cols[j]);
+                    output[i, j] = MathF.Max(rows[i], cols[j]);
                 }
             }
-            return result;
         }
 
-        private static TwoDims<Float3> np_float32(Shared<Image> img) {
+        private static void np_float32(Shared<Image> img, ref TwoDims<Float3> output) {
             Debug.Assert(img.Resource.PixelFormat == PixelFormat.RGB_24bpp);
-            var result = new TwoDims<Float3>(img.Resource.Height, img.Resource.Width);
+            Debug.Assert(output.Rows == img.Resource.Height && output.Columns == img.Resource.Width);
             for (var i = 0; i < img.Resource.Height; i++) {
                 for (var j = 0; j < img.Resource.Width; j++) {
                     var pixel = img.Resource.GetPixel(j, i);
-                    result[i, j] = (pixel.r, pixel.g, pixel.b);
+                    output[i, j] = (pixel.r, pixel.g, pixel.b);
                 }
             }
-            return result;
         }
 
-        private static void np_uint8(TwoDims<Float3> value, Shared<Image> output) {
+        private static void np_uint8(ref TwoDims<Float3> value, Shared<Image> output) {
             Debug.Assert(value.Rows == output.Resource.Height);
             Debug.Assert(value.Columns == output.Resource.Width);
             Debug.Assert(output.Resource.PixelFormat == PixelFormat.RGB_24bpp);
@@ -592,9 +658,11 @@ namespace OpenSense.Components.PortableFACS {
             img = temp;
         }
 
-        internal static TwoDims<Float3> gaussian_filter(TwoDims<Float3> img, Float3 sigmas) {
+        internal static void gaussian_filter(ref TwoDims<Float3> img, Float3 sigmas, ref TwoDims<Float3> interim, ref TwoDims<Float3> output) {
             Debug.Assert(sigmas.I2 == 0);//Do not apply to color channels
             Debug.Assert(sigmas.I0 == sigmas.I1);
+            Debug.Assert(interim.Rows == img.Rows && interim.Columns == img.Columns);
+            Debug.Assert(output.Rows == img.Rows && output.Columns == img.Columns);
 
             var sd = sigmas.I0;
             const float truncate = 4;
@@ -603,13 +671,12 @@ namespace OpenSense.Components.PortableFACS {
             var weights = gaussian_kernel_1d(sd, order, lw);
             //Array.Reverse(weights);
 
-            using var interResult = correlate1d(img, weights, axis: 0);
-            var result = correlate1d(interResult, weights, axis: 1);
-            return result;
+            correlate1d(img: ref img, weights: weights, axis: 0, output: ref interim);
+            correlate1d(img: ref interim, weights: weights, axis: 1, output: ref output);
         }
 
-        private static TwoDims<Float3> correlate1d(TwoDims<Float3> img, float[] weights, int axis) {//Note: the original code uses float64, and we do see precision loss here
-            var result = new TwoDims<Float3>(img.Rows, img.Columns);
+        private static void correlate1d(ref TwoDims<Float3> img, float[] weights, int axis, ref TwoDims<Float3> output) {//Note: the original code uses float64, and we do see precision loss here
+            Debug.Assert(output.Rows == img.Rows && output.Columns == img.Columns);
             Debug.Assert(weights.Length % 2 == 1);
             var half = weights.Length / 2;
             switch (axis) {
@@ -623,7 +690,7 @@ namespace OpenSense.Components.PortableFACS {
                                 var add = val * weights[k];
                                 sum += add;
                             }
-                            result[i, j] = sum;
+                            output[i, j] = sum;
                         }
                     }
                     break;
@@ -637,14 +704,13 @@ namespace OpenSense.Components.PortableFACS {
                                 var add = val * weights[k];
                                 sum += add;
                             }
-                            result[i, j] = sum;
+                            output[i, j] = sum;
                         }
                     }
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(axis));
             }
-            return result;
         }
 
         /// <remarks>
@@ -864,7 +930,7 @@ namespace OpenSense.Components.PortableFACS {
             return sb.ToString();
         }
 
-        internal static string print(TwoDims<Float3> img) {
+        internal static string print(ref TwoDims<Float3> img) {
             var sb = new StringBuilder();
             sb.Append("{");
             for (var i = 0; i < img.Rows; i++) {

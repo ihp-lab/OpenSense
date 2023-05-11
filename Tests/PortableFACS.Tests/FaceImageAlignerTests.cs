@@ -72,7 +72,7 @@ namespace PortableFACS.Tests {
                     input[i, j] = new Float3(v, v, v);
                 }
             }
-            var inputPrint = FaceImageAligner.print(input);
+            //var inputPrint = FaceImageAligner.print(ref input);
             var groundTruthRaw = new double[][] {
                 new []{ 5.1244917,  6.4060535,  8.27041  , 10.134766 , 11.416327 },
                 new []{ 11.532303 , 12.813865 , 14.678221 , 16.542576 , 17.824139 },
@@ -87,11 +87,20 @@ namespace PortableFACS.Tests {
                     groundTruth[i, j] = new Float3(v, v, v);
                 }
             }
-            var groundTruthPrint = FaceImageAligner.print(groundTruth);
+            //var groundTruthPrint = FaceImageAligner.print(ref groundTruth);
 
-            var result = FaceImageAligner.gaussian_filter(input, (1, 1, 0));
-            var resultPrint = FaceImageAligner.print(result);
-            Assert.True(FaceImageAligner.is_close(result, groundTruth));
+            var interim = new TwoDims<Float3>(5, 5);
+            var result = new TwoDims<Float3>(5, 5);
+            try {
+                FaceImageAligner.gaussian_filter(ref input, (1, 1, 0), ref interim, ref result);
+                var resultPrint = FaceImageAligner.print(ref result);
+                Assert.True(FaceImageAligner.is_close(result, groundTruth));
+            } finally {
+                input.Dispose();
+                groundTruth.Dispose();
+                interim.Dispose();
+                result.Dispose();
+            }
         }
 
         #region IDisposable
