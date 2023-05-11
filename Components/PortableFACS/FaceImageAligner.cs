@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using Mediapipe.Net.Framework.Protobuf;
@@ -319,24 +320,31 @@ namespace OpenSense.Components.PortableFACS {
         }
 
         #region Functions
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static float op_min(Float4 value) =>
             MathF.Min(MathF.Min(value.I0, value.I1), MathF.Min(value.I2, value.I3));
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static int op_min(int left, int right) =>
         Math.Min(left, right);
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static float op_max(Float4 value) =>
             MathF.Max(MathF.Max(value.I0, value.I1), MathF.Max(value.I2, value.I3));
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static float op_max(float left, float right) =>
             MathF.Max(left, right);
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static int op_max(int left, int right) =>
             Math.Max(left, right);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static int op_max(Int4 value) =>
             Math.Max(Math.Max(value.I0, value.I1), Math.Max(value.I2, value.I3));
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Float2 np_mean(IEnumerable<Float2> value, int axis) {
             Debug.Assert(axis == 0);
             var count = 0;
@@ -350,25 +358,32 @@ namespace OpenSense.Components.PortableFACS {
             var result = new Float2((float)(x / count), (float)(y / count));
             return result;
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Float2 np_flipud(Float2 value) =>
             new Float2(value.I1, value.I0);
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static float np_hypot(Float2 value) =>
             MathF.Sqrt(value.I0 * value.I0 + value.I1 * value.I1);
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static float np_floor(float value) =>
             MathF.Floor(value);
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static float np_ceil(float value) =>
             MathF.Ceiling(value);
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static float np_rint(float value) =>
             MathF.Round(value);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Vector3 np_rint(Vector3 value) =>
             new Vector3(np_rint(value.X), np_rint(value.Y), np_rint(value.Z));
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void np_rint__(ref TwoDims<Vector3> value) {
             for (var i = 0; i < value.Rows; i++) {
                 for (var j = 0; j < value.Columns; j++) {
@@ -377,6 +392,7 @@ namespace OpenSense.Components.PortableFACS {
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void np_clip__(ref TwoDims<float> value, float min, float max) {
             for (var i = 0; i < value.Rows; i++) {
                 for (var j = 0; j < value.Columns; j++) {
@@ -385,15 +401,19 @@ namespace OpenSense.Components.PortableFACS {
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static float np_clip(float value, float min, float max) =>
             MathF.Max(min, MathF.Min(max, value));
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Vector3 np_clip(Vector3 value, float min, float max) => 
             _np_clip(value, new(min, min, min), new(max, max, max));
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Vector3 _np_clip(Vector3 value, Vector3 min, Vector3 max) =>
             Vector3.Clamp(value, min, max);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void np_clip__(ref TwoDims<Vector3> value, float min, float max) {
             var vMin = new Vector3(min, min, min);
             var vMax = new Vector3(max, max, max);
@@ -404,6 +424,7 @@ namespace OpenSense.Components.PortableFACS {
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void np_op_mult(ref TwoDims<float> left, float right, ref TwoDims<float> output) {
             Debug.Assert(output.Rows == left.Rows && output.Columns == left.Columns);
             for (var i = 0; i < left.Rows; i++) {
@@ -413,6 +434,7 @@ namespace OpenSense.Components.PortableFACS {
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void np_op_mult__left(ref TwoDims<Vector3> left, ref TwoDims<float> right) {
             Debug.Assert(left.Rows == right.Rows);
             Debug.Assert(left.Columns == right.Columns);
@@ -423,19 +445,22 @@ namespace OpenSense.Components.PortableFACS {
                 }
             }
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void np_op_div_(ref Quad left, float right) {
             for (var i = 0; i < Quad.Count; i++) {
                 left[i] = left[i] / right;
             }
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void np_op_minus_(ref Quad left, Float2 right) {
             for (var i = 0; i < Quad.Count; i++) {
                 left[i] = left[i] - right;
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void np_op_minus(ref TwoDims<Vector3> left, ref TwoDims<Vector3> right, ref TwoDims<Vector3> output) {
             Debug.Assert(left.Rows == right.Rows);
             Debug.Assert(left.Columns == right.Columns);
@@ -448,6 +473,7 @@ namespace OpenSense.Components.PortableFACS {
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void np_op_minus(Vector3 left, ref TwoDims<Vector3> right, ref TwoDims<Vector3> output) {
             Debug.Assert(output.Rows == right.Rows && output.Columns == right.Columns);
             for (var i = 0; i < right.Rows; i++) {
@@ -457,6 +483,7 @@ namespace OpenSense.Components.PortableFACS {
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void np_op_add(ref TwoDims<float> left, float right, ref TwoDims<float> output) {
             Debug.Assert(output.Rows == left.Rows && output.Columns == left.Columns);
             for (var i = 0; i < left.Rows; i++) {
@@ -466,6 +493,7 @@ namespace OpenSense.Components.PortableFACS {
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Quad np_op_add(Quad left, float right) {
             var result = new Quad();
             for (var i = 0; i < Quad.Count; i++) {
@@ -474,6 +502,7 @@ namespace OpenSense.Components.PortableFACS {
             return result;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void np_op_add__left(ref TwoDims<Vector3> left, ref TwoDims<Vector3> right) {
             Debug.Assert(left.Rows == right.Rows);
             Debug.Assert(left.Columns == right.Columns);
@@ -484,26 +513,31 @@ namespace OpenSense.Components.PortableFACS {
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void np_op_add_(ref Quad left, Float2 right) {
             for (var i = 0; i < Quad.Count; i++) {
                 left[i] += right;
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Float2 np_op_slice(Int4 left, int start, int end) {
             Debug.Assert(start == 0);
             Debug.Assert(end == 2);
             return new Float2(left.I0, left.I1);
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Int4 np_maximum(Int4 left, int right) =>
             (Math.Max(left.I0, right), Math.Max(left.I1, right), Math.Max(left.I2, right), Math.Max(left.I3, right));
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable<float> np_minimum(IEnumerable<float> left, IEnumerable<float> right) {
             Debug.Assert(left.Count() == right.Count());
             return left.Zip(right).Select(t => MathF.Min(t.First, t.Second));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void np_maximum2D(IReadOnlyList<float> rows, IReadOnlyList<float> cols, ref TwoDims<float> output) {
             Debug.Assert(output.Rows == rows.Count && output.Columns == cols.Count);
             for (var i = 0; i < rows.Count; i++) {
@@ -513,6 +547,7 @@ namespace OpenSense.Components.PortableFACS {
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static unsafe void np_float32(Shared<Image> img, ref TwoDims<Vector3> output) {
             Debug.Assert(img.Resource.PixelFormat == PixelFormat.RGB_24bpp);
             Debug.Assert(output.Rows == img.Resource.Height && output.Columns == img.Resource.Width);
@@ -520,11 +555,12 @@ namespace OpenSense.Components.PortableFACS {
             var stride = img.Resource.Stride;
             for (var i = 0; i < img.Resource.Height; i++) {
                 for (var j = 0; j < img.Resource.Width; j++) {
-                    output[i, j] = _get_pixel(span, stride, j, i);
+                    output[i, j] = get_pixel(span, stride, j, i);
                 }
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static unsafe void np_uint8(ref TwoDims<Vector3> value, Shared<Image> output) {
             Debug.Assert(value.Rows == output.Resource.Height);
             Debug.Assert(value.Columns == output.Resource.Width);
@@ -538,11 +574,12 @@ namespace OpenSense.Components.PortableFACS {
                     Debug.Assert(0 <= v.X && v.X <= byte.MaxValue);
                     Debug.Assert(0 <= v.Y && v.Y <= byte.MaxValue);
                     Debug.Assert(0 <= v.Z && v.Z <= byte.MaxValue);
-                    _set_pixel(span, stride, j, i, v);
+                    set_pixel(span, stride, j, i, v);
                 }
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Vector3 np_median(TwoDims<Vector3> value, (int, int) axis) {
             Debug.Assert(axis == (0, 1));
             var result = new float[3];
@@ -566,6 +603,7 @@ namespace OpenSense.Components.PortableFACS {
             return new (result[0], result[1], result[2]);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void PIL_resize_(ref Shared<Image> img, (int, int) sizes) {
             var temp = ImagePool.GetOrCreate(sizes.Item1, sizes.Item2, img.Resource.PixelFormat);
             img.Resource.Resize(temp.Resource, sizes.Item1, sizes.Item2, SamplingMode.Bicubic);
@@ -573,6 +611,7 @@ namespace OpenSense.Components.PortableFACS {
             img = temp;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void PIL_crop_(ref Shared<Image> img, Int4 edges) {
             var (left, upper, right, lower) = edges;
             var width = right - left;
@@ -586,6 +625,7 @@ namespace OpenSense.Components.PortableFACS {
         /// <remarks>
         /// https://github.com/python-pillow/Pillow/blob/d1f4917eb41abbb6e3e6ca822050cbab12ee1dfe/src/PIL/Image.py#L2683
         /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void PIL_transform_Qud_Bilinear_(ref Shared<Image> img, (int, int) outputSize, Quad quad) {
             Debug.Assert(outputSize.Item1 == outputSize.Item2);
             var (w, h) = outputSize;
@@ -612,6 +652,7 @@ namespace OpenSense.Components.PortableFACS {
         /// <remarks>
         /// https://github.com/python-pillow/Pillow/blob/95cff6e959bb3c37848158ed2145d49d49806a31/src/libImaging/Geometry.c#L420
         /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static (float x, float y) quad_transform(int x, int y, in (float, float, float, float, float, float, float, float) data) {//Note: the original code uses float64
             var (a0, a1, a2, a3, a4, a5, a6, a7) = data;
             float xin = x + 0.5f;
@@ -625,13 +666,22 @@ namespace OpenSense.Components.PortableFACS {
         ///<remarks>
         ///https://github.com/python-pillow/Pillow/blob/95cff6e959bb3c37848158ed2145d49d49806a31/src/libImaging/Geometry.c#L774
         ///</remarks>
-        private static void ImagingGenericTransform_quad_transform(
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static unsafe void ImagingGenericTransform_quad_transform(
             in Image imgOut,
             in Image imgIn,
             (float, float, float, float, float, float, float, float) data
         ) {
             Debug.Assert(imgIn.PixelFormat == PixelFormat.RGB_24bpp);
             Debug.Assert(imgOut.PixelFormat == PixelFormat.RGB_24bpp);
+            var spanIn = new ReadOnlySpan<byte>(imgIn.ImageData.ToPointer(), imgIn.Size);
+            var spanOut = new Span<byte>(imgOut.ImageData.ToPointer(), imgOut.Size);
+            var strideIn = imgIn.Stride;
+            var strideOut = imgOut.Stride;
+            var widthIn = imgIn.Width;
+            var widthOut = imgOut.Width;
+            var heightIn = imgOut.Height;
+            var heightOut = imgOut.Height;
             const int fill = 1;
             const int x0 = 0;
             const int y0 = 0;
@@ -640,13 +690,14 @@ namespace OpenSense.Components.PortableFACS {
             for (var y = y0; y < y1; y++) {
                 for (var x = x0; x < x1; x++) {
                     var (xx, yy) = quad_transform(x - x0, y - y0, data);
-                    var pixel = bilinear_interpolation(imgIn, yy, xx);
+                    var pixel = bilinear_interpolation(spanIn, strideIn, widthIn, heightIn, yy, xx);
                     pixel = np_clip(np_rint(pixel), 0, byte.MaxValue);
-                    imgOut.SetPixel(x, y, r: (int)pixel.X, g: (int)pixel.Y, b: (int)pixel.Z, a: 0);
+                    set_pixel(spanOut, strideOut, x, y, pixel);
                 }
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void np_pad_(ref Shared<Image> img, ((int, int), (int, int)) values) {
             var ((heightPadBefore, heightPadAfter), (widthPadBefore, widthPadAfter)) = values;
             var width = img.Resource.Width + widthPadBefore + widthPadAfter;
@@ -658,6 +709,7 @@ namespace OpenSense.Components.PortableFACS {
             img = temp;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static void gaussian_filter(ref TwoDims<Vector3> img, Float3 sigmas, ref TwoDims<Vector3> interim, ref TwoDims<Vector3> output) {
             Debug.Assert(sigmas.I2 == 0);//Do not apply to color channels
             Debug.Assert(sigmas.I0 == sigmas.I1);
@@ -675,6 +727,7 @@ namespace OpenSense.Components.PortableFACS {
             correlate1d(img: ref interim, weights: weights, axis: 1, output: ref output);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void correlate1d(ref TwoDims<Vector3> img, float[] weights, int axis, ref TwoDims<Vector3> output) {//Note: the original code uses float64, and we do see precision loss here
             Debug.Assert(output.Rows == img.Rows && output.Columns == img.Columns);
             Debug.Assert(weights.Length % 2 == 1);
@@ -716,6 +769,7 @@ namespace OpenSense.Components.PortableFACS {
         /// <remarks>
         /// https://github.com/scipy/scipy/blob/c1ed5ece8ffbf05356a22a8106affcd11bd3aee0/scipy/ndimage/_filters.py#L180
         /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static float[] gaussian_kernel_1d(float sigma, int order, int radius) {//Note: the original code uses float64, and we do see precision loss here
             Debug.Assert(order == 0);
             var sigma2 = sigma * sigma;
@@ -727,6 +781,7 @@ namespace OpenSense.Components.PortableFACS {
             return phi_x;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static (float y, float x) extension_mode_reflect(float y, float x, int rows, int columns) {
             bool updated;
             do {
@@ -771,6 +826,7 @@ namespace OpenSense.Components.PortableFACS {
             return (y, x);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static (int y, int x) extension_mode_reflect(int y, int x, int rows, int columns) {
             bool updated;
             do {
@@ -815,6 +871,7 @@ namespace OpenSense.Components.PortableFACS {
             return (y, x);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static (float y, float x) extension_mode_mirror(float y, float x, int rows, int columns) {
             bool updated;
             do {
@@ -839,88 +896,55 @@ namespace OpenSense.Components.PortableFACS {
             return (y, x);
         }
 
-        private static Vector3 bilinear_interpolation(TwoDims<Vector3> image, float y, float x) {
-            /* mirror (not reflect) */
-            (y, x) = extension_mode_reflect(y, x, image.Rows, image.Columns);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static Vector3 linear_interpolation(Vector3 v1, float w1, Vector3 v2, float w2) => v1 * w1 + v2 * w2;
 
-            static Vector3 linear_interpolation(Vector3 v1, float w1, Vector3 v2, float w2) => v1 * w1 + v2 * w2;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static Vector3 bilinear_interpolation(ReadOnlySpan<byte> span, int stride, int width, int height, float y, float x) {
+            /* mirror (not reflect) */
+            (y, x) = extension_mode_reflect(y, x, height, width);
             var x1 = (int)MathF.Floor(x);
             var x2 = (int)MathF.Ceiling(x);
             var y1 = (int)MathF.Floor(y);
             var y2 = (int)MathF.Ceiling(y);
+            Vector3 result;
+
+            /*
             var needX = x1 != x2;
             var needY = y1 != y2;
-            Vector3 result;
             switch (needX, needY) {
                 case (false, false):
-                    result = image[y1, x1];
+                    result = get_pixel(span, stride, x1, y1);
                     break;
                 case (true, false):
-                    result = linear_interpolation(image[y1, x1], x2 - x, image[y1, x2], x - x1);
+                    result = linear_interpolation(get_pixel(span, stride, x1, y1), x2 - x, get_pixel(span, stride, x2, y1), x - x1);
                     break;
                 case (false, true):
-                    result = linear_interpolation(image[y1, x1], y2 - y, image[y2, x1], y - y1);
+                    result = linear_interpolation(get_pixel(span, stride, x1, y1), y2 - y, get_pixel(span, stride, x1, y2), y - y1);
                     break;
                 case (true, true):
-                    var r1 = linear_interpolation(image[y1, x1], x2 - x, image[y1, x2], x - x1);
-                    var r2 = linear_interpolation(image[y2, x1], x2 - x, image[y2, x2], x - x1);
+                    var r1 = linear_interpolation(get_pixel(span, stride, x1, y1), x2 - x, get_pixel(span, stride, x2, y1), x - x1);
+                    var r2 = linear_interpolation(get_pixel(span, stride, x1, y2), x2 - x, get_pixel(span, stride, x2, y2), x - x1);
                     result = linear_interpolation(r1, y2 - y, r2, y - y1);
                     break;
             }
+            */
+            var r1 = linear_interpolation(get_pixel(span, stride, x1, y1), x2 - x, get_pixel(span, stride, x2, y1), x - x1);
+            var r2 = linear_interpolation(get_pixel(span, stride, x1, y2), x2 - x, get_pixel(span, stride, x2, y2), x - x1);
+            result = linear_interpolation(r1, y2 - y, r2, y - y1);
+
             return result;
         }
 
-        private static Vector3 bilinear_interpolation(in Image image, float y, float x) {
-            /* mirror (not reflect) */
-            (y, x) = extension_mode_reflect(y, x, image.Height, image.Width);
-            static Vector3 linear_interpolation(Vector3 v1, float w1, Vector3 v2, float w2) => v1 * w1 + v2 * w2;
-            var x1 = (int)MathF.Floor(x);
-            var x2 = (int)MathF.Ceiling(x);
-            var y1 = (int)MathF.Floor(y);
-            var y2 = (int)MathF.Ceiling(y);
-            var needX = x1 != x2;
-            var needY = y1 != y2;
-            Vector3 result;
-            switch (needX, needY) {
-                case (false, false):
-                    result = get_pixel(image, x1, y1);
-                    break;
-                case (true, false):
-                    result = linear_interpolation(get_pixel(image, x1, y1), x2 - x, get_pixel(image, x2, y1), x - x1);
-                    break;
-                case (false, true):
-                    result = linear_interpolation(get_pixel(image, x1, y1), y2 - y, get_pixel(image, x1, y2), y - y1);
-                    break;
-                case (true, true):
-                    var r1 = linear_interpolation(get_pixel(image, x1, y1), x2 - x, get_pixel(image, x2, y1), x - x1);
-                    var r2 = linear_interpolation(get_pixel(image, x1, y2), x2 - x, get_pixel(image, x2, y2), x - x1);
-                    result = linear_interpolation(r1, y2 - y, r2, y - y1);
-                    break;
-            }
-            return result;
-        }
-
-        private static unsafe Vector3 get_pixel(in Image image, int x, int y) {
-            Debug.Assert(image.PixelFormat == PixelFormat.RGB_24bpp);
-            var span = new ReadOnlySpan<byte>(image.ImageData.ToPointer(), image.Size);
-            var result = _get_pixel(span, image.Stride, x, y);
-            return result;
-        }
-
-        private static Vector3 _get_pixel(ReadOnlySpan<byte> span, int stride, int x, int y) {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static Vector3 get_pixel(ReadOnlySpan<byte> span, int stride, int x, int y) {
             var offset = y * stride + x * 3;
             var result = new Vector3(span[offset], span[offset + 1], span[offset + 2]);
             return result;
         }
 
-        private static unsafe void set_pixel(in Image image, int x, int y, Vector3 value) {
-            Debug.Assert(image.PixelFormat == PixelFormat.RGB_24bpp);
-            var span = new Span<byte>(image.ImageData.ToPointer(), image.Size);
-            _set_pixel(span, image.Stride, x, y, value);
-        }
-
-
-        private static void _set_pixel(Span<byte> span, int stride, int x, int y, Vector3 value) {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void set_pixel(Span<byte> span, int stride, int x, int y, Vector3 value) {
             var offset = y * stride + x * 3;
             span[offset] = (byte)value.X;
             span[offset + 1] = (byte)value.Y;
