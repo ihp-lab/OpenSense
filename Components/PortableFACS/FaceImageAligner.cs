@@ -111,7 +111,6 @@ namespace OpenSense.Components.PortableFACS {
             (leftEyeLMs, rightEyeLMs) = (rightEyeLMs, leftEyeLMs);//Note: The python code's naming is wrong, here we follow the wrong naming.
             Debug.Assert(image is not null);
             Debug.Assert(image.PixelFormat == PixelFormat.RGB_24bpp);//Must be RGB format, BGR is not acceptable and will produce wrong result.
-            var pImg_1 = print(image);
             var width = image.Width;
             var height = image.Height;
             var result = ImagePool.GetOrCreate(width, height, image.PixelFormat);
@@ -121,11 +120,11 @@ namespace OpenSense.Components.PortableFACS {
             var eyeToEye = rightEye - leftEye;
             var mouthAvg = (mouthOuterLMs.MinBy(l => l.I0) + mouthOuterLMs.MaxBy(l => l.I0)) * 0.5f;
             var eyeToMouth = mouthAvg - eyeAvg;
-            var temp1 = np_flipud(eyeToMouth);
-            var temp2 = temp1 * (-1, 1);
-            var x1 = eyeToEye - temp2;
-            var temp4 = np_hypot(x1);
-            var x2 = x1 / temp4;
+            var float2_01 = np_flipud(eyeToMouth);
+            var float2_02 = float2_01 * (-1, 1);
+            var x1 = eyeToEye - float2_02;
+            var float_01 = np_hypot(x1);
+            var x2 = x1 / float_01;
             var temp6 = op_max(np_hypot(eyeToEye) * 2.0f, np_hypot(eyeToMouth) * 1.8f);
             var x3 = x2 * temp6;
             const float xScale = 1f;
@@ -147,7 +146,6 @@ namespace OpenSense.Components.PortableFACS {
             var temp14 = np_floor(temp13);
             var shrink = (int)temp14;
             image.CopyTo(result.Resource);
-            var pImg_2 = print(result.Resource);
             if (shrink > 1) {
                 var temp16 = width / (float)shrink;
                 var temp17 = (int)np_rint(temp16);
@@ -191,7 +189,6 @@ namespace OpenSense.Components.PortableFACS {
                 var temp45 = (int)np_rint(qSize * 0.3f);
                 var pad3 = np_maximum(pad2, temp45);
                 np_pad_(ref result, ((pad3.I1, pad3.I3), (pad3.I0, pad3.I2)));
-                var pImg_3 = print(result.Resource);
                 var h = result.Resource.Height;
                 var w = result.Resource.Width;
                 var xOGrid = Enumerable.Range(0, w).Select(i => (float)i);
@@ -207,7 +204,6 @@ namespace OpenSense.Components.PortableFACS {
                 using var mask = np_maximum2D(cols: temp50.ToArray(), rows: temp53.ToArray());//TODO: optimize, reduce the need of instantiation
                 var blur = qSize * 0.02f;
                 using var imgF = np_float32(result);
-                var pImg_4 = print(result.Resource);
                 using var temp55 = gaussian_filter(imgF, (blur, blur, 0));
                 using var temp56 = np_op_minus(temp55, imgF);
                 using var temp57 = np_op_mult(mask, 3);
