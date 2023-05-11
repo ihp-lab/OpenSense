@@ -5,15 +5,25 @@ using Microsoft.Psi.Imaging;
 using OpenSense.Components.PortableFACS;
 
 namespace PortableFACS.Tests {
-    public sealed class FaceImageAlignerTests {
-        [Fact]
-        public void TestAlign() {
-            using var image = Image.FromFile("Resources/SN032/img00001.jpg");
-            using var groundTruth = Image.FromFile("Resources/SN032/gt00001.jpg");
+    public sealed class FaceImageAlignerTests : IDisposable {
+
+        /* Inputs */
+        private readonly Image _image = Image.FromFile("Resources/SN032/img00001.jpg");
+        private readonly Image _groundTruth = Image.FromFile("Resources/SN032/gt00001.jpg");
+        private readonly NormalizedLandmark[][] _faces;
+
+        /* Interim */
+        private readonly Float2[] _leftEye;
+        private readonly Float2[] _rightEye;
+        private readonly Float2[] _mouthOuter;
+        private readonly Image _imageRgb;
+
+        public FaceImageAlignerTests() {
+
             using var stream = new FileStream("Resources/SN032/lmk00001.json", FileMode.Open);
             var facesArr = (JsonArray?)JsonNode.Parse(stream);
             Debug.Assert(facesArr is not null);
-            var faces = facesArr.Cast<JsonArray>()
+            _faces = facesArr.Cast<JsonArray>()
                 .Select(lmArr =>
                     lmArr
                     .Cast<JsonArray>()
@@ -22,13 +32,28 @@ namespace PortableFACS.Tests {
                 )
                 .ToArray();
 
-            var (leftEye, rightEye, mouthOuter) = FaceImageAligner.SplitLandmarks(faces.Single(), image.Width, image.Height);
-            using var imageRgb = image.Convert(PixelFormat.RGB_24bpp);
+
+            var (leftEye, rightEye, mouthOuter) = FaceImageAligner.SplitLandmarks(_faces.Single(), _image.Width, _image.Height);
+            _leftEye = leftEye.ToArray();
+            _rightEye = rightEye.ToArray();
+            _mouthOuter = mouthOuter.ToArray();
+            _imageRgb = _image.Convert(PixelFormat.RGB_24bpp);
+        }
+
+        [Fact]
+        public void TestAlign() {
+            var (leftEye, rightEye, mouthOuter) = FaceImageAligner.SplitLandmarks(_faces.Single(), _image.Width, _image.Height);
+            using var imageRgb = _image.Convert(PixelFormat.RGB_24bpp);
             using var result = FaceImageAligner.Align(imageRgb, leftEye, rightEye, mouthOuter);
-            using var groundTruthRgb = groundTruth.Convert(PixelFormat.RGB_24bpp);
+            using var groundTruthRgb = _groundTruth.Convert(PixelFormat.RGB_24bpp);
             var mae = FaceImageAligner.mean_absolute_error(result.Resource, groundTruthRgb);
             Assert.True(mae < 2);
             result.Resource.Save("Resources/SN032/rst00001.jpg");
+        }
+
+        [Fact]
+        public void ProfileAlignCore() {
+            using var result = FaceImageAligner.Align(_imageRgb, _leftEye, _rightEye, _mouthOuter);
         }
 
         [Fact]
@@ -68,5 +93,12 @@ namespace PortableFACS.Tests {
             var resultPrint = FaceImageAligner.print(result);
             Assert.True(FaceImageAligner.is_close(result, groundTruth));
         }
+
+        #region IDisposable
+        public void Dispose() {
+            _image.Dispose();
+            _groundTruth.Dispose();
+        }
+        #endregion
     }
 }
