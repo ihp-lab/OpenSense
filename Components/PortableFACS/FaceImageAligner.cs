@@ -3,6 +3,7 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -406,11 +407,11 @@ namespace OpenSense.Components.PortableFACS {
             MathF.Max(min, MathF.Min(max, value));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Vector3 np_clip(Vector3 value, float min, float max) => 
-            _np_clip(value, new(min, min, min), new(max, max, max));
+        private static Vector3 np_clip(Vector3 value, float min, float max) =>
+            np_clip(value, new(min, min, min), (Vector3)new(max, max, max));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Vector3 _np_clip(Vector3 value, Vector3 min, Vector3 max) =>
+        private static Vector3 np_clip(Vector3 value, Vector3 min, Vector3 max) =>
             Vector3.Clamp(value, min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -419,7 +420,7 @@ namespace OpenSense.Components.PortableFACS {
             var vMax = new Vector3(max, max, max);
             for (var i = 0; i < value.Rows; i++) {
                 for (var j = 0; j < value.Columns; j++) {
-                    value[i, j] = _np_clip(value[i, j], vMin, vMax);
+                    value[i, j] = np_clip(value[i, j], vMin, vMax);
                 }
             }
         }
@@ -687,11 +688,13 @@ namespace OpenSense.Components.PortableFACS {
             const int y0 = 0;
             var x1 = imgOut.Width;
             var y1 = imgOut.Height;
+            var min = Vector3.Zero;
+            var max = new Vector3(byte.MaxValue, byte.MaxValue, byte.MaxValue);
             for (var y = y0; y < y1; y++) {
                 for (var x = x0; x < x1; x++) {
                     var (xx, yy) = quad_transform(x - x0, y - y0, data);
                     var pixel = bilinear_interpolation(spanIn, strideIn, widthIn, heightIn, yy, xx);
-                    pixel = np_clip(np_rint(pixel), 0, byte.MaxValue);
+                    pixel = np_clip(np_rint(pixel), min, max);
                     set_pixel(spanOut, strideOut, x, y, pixel);
                 }
             }
@@ -783,91 +786,35 @@ namespace OpenSense.Components.PortableFACS {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static (float y, float x) extension_mode_reflect(float y, float x, int rows, int columns) {
-            bool updated;
-            do {
-                updated = false;
-                if (y < 0) {
-                    if (y <= -1) {
-                        y = -y - 1;
-                        updated = true;
-                    } else {
-                        y = 0;
-                        updated = true;
-                    }
-                }
-                if (x < 0) {
-                    if (x <= -1) {
-                        x = -x - 1;
-                        updated = true;
-                    } else {
-                        x = 0;
-                        updated = true;
-                    }
-                }
-                if (y > rows - 1) {
-                    if (y > rows) {
-                        y = (rows - 1) - (y - rows);
-                        updated = true;
-                    } else {
-                        y = rows - 1;
-                        updated = true;
-                    }
-                }
-                if (x > columns - 1) { 
-                    if (x > columns) {
-                        x = (columns - 1) - (x - columns);
-                        updated = true;
-                    } else {
-                        x = columns - 1;
-                        updated = true;
-                    }
-                }
-            } while (updated);
+            if (y < 0) {
+                y = y <= -1 ? -y - 1 : 0;
+            }
+            if (x < 0) {
+                x = x <= -1 ? -x - 1 : 0;
+            }
+            if (y >= rows) {
+                y = y >= rows ? (rows - 1) - (y - rows) : rows - 1;
+            }
+            if (x >= columns) {
+                x = x >= columns ? (columns - 1) - (x - columns) : columns - 1;
+            }
             return (y, x);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static (int y, int x) extension_mode_reflect(int y, int x, int rows, int columns) {
-            bool updated;
-            do {
-                updated = false;
-                if (y < 0) {
-                    if (y <= -1) {
-                        y = -y - 1;
-                        updated = true;
-                    } else {
-                        y = 0;
-                        updated = true;
-                    }
-                }
-                if (x < 0) {
-                    if (x <= -1) {
-                        x = -x - 1;
-                        updated = true;
-                    } else {
-                        x = 0;
-                        updated = true;
-                    }
-                }
-                if (y > rows - 1) {
-                    if (y > rows) {
-                        y = (rows - 1) - (y - rows);
-                        updated = true;
-                    } else {
-                        y = rows - 1;
-                        updated = true;
-                    }
-                }
-                if (x > columns - 1) {
-                    if (x > columns) {
-                        x = (columns - 1) - (x - columns);
-                        updated = true;
-                    } else {
-                        x = columns - 1;
-                        updated = true;
-                    }
-                }
-            } while (updated);
+            if (y < 0) {
+                y = y <= -1 ? -y - 1 : 0;
+            }
+            if (x < 0) {
+                x = x <= -1 ? -x - 1 : 0;
+            }
+            if (y >= rows) {
+                y = y >= rows ? (rows - 1) - (y - rows) : rows - 1;
+            }
+            if (x >= columns) {
+                x = x >= columns ? (columns - 1) - (x - columns) : columns - 1;
+            }
             return (y, x);
         }
 
@@ -908,7 +855,6 @@ namespace OpenSense.Components.PortableFACS {
             var y1 = (int)MathF.Floor(y);
             var y2 = (int)MathF.Ceiling(y);
             Vector3 result;
-
             /*
             var needX = x1 != x2;
             var needY = y1 != y2;
@@ -929,17 +875,27 @@ namespace OpenSense.Components.PortableFACS {
                     break;
             }
             */
-            var r1 = linear_interpolation(get_pixel(span, stride, x1, y1), x2 - x, get_pixel(span, stride, x2, y1), x - x1);
-            var r2 = linear_interpolation(get_pixel(span, stride, x1, y2), x2 - x, get_pixel(span, stride, x2, y2), x - x1);
-            result = linear_interpolation(r1, y2 - y, r2, y - y1);
+            var offset = y1 * stride + x1 * 3;
+            var sx = (x2 - x1) * 3;
+            var sy = (y2 - y1) * stride;
+            var f = x - x1;
+            var r1 = Vector3.Lerp(get_pixel(span, offset), get_pixel(span, offset + sx), f);
+            var r2 = Vector3.Lerp(get_pixel(span, offset + sy), get_pixel(span, offset + sy + sx), f);
+            result = Vector3.Lerp(r1, r2, y - y1);
 
+            return result;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static Vector3 get_pixel(ReadOnlySpan<byte> span, int offset) {
+            var result = new Vector3(span[offset], span[offset + 1], span[offset + 2]);
             return result;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Vector3 get_pixel(ReadOnlySpan<byte> span, int stride, int x, int y) {
             var offset = y * stride + x * 3;
-            var result = new Vector3(span[offset], span[offset + 1], span[offset + 2]);
+            var result = get_pixel(span, offset);
             return result;
         }
 
