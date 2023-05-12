@@ -3,20 +3,20 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Numerics;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Text;
 using Mediapipe.Net.Framework.Protobuf;
 using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
+#if OPENCV
+using OpenCvSharp;
+#endif
 
 namespace OpenSense.Components.PortableFACS {
-    public sealed class FaceImageAligner : 
-        IConsumer<(IReadOnlyList<NormalizedLandmarkList>, Shared<Image>)>, 
-        IProducer<IReadOnlyList<Shared<Image>>> 
-        {
+    public sealed class FaceImageAligner :
+        IConsumer<(IReadOnlyList<NormalizedLandmarkList>, Shared<Image>)>,
+        IProducer<IReadOnlyList<Shared<Image>>> {
 
         private const int AlignOutputSize = 256;
         private const int CropOutputSize = 224;
@@ -33,7 +33,7 @@ namespace OpenSense.Components.PortableFACS {
         /// This function replicates the logic in our team's python source code.
         /// </remarks>
         static FaceImageAligner() {
-            var mouthOuter = new [] {
+            var mouthOuter = new[] {
                 (61, 146), (146, 91), (91, 181), (181, 84), (84, 17),
                 (17, 314), (314, 405), (405, 321), (321, 375),
                 (375, 291), (61, 185), (185, 40), (40, 39), (39, 37),
@@ -45,19 +45,19 @@ namespace OpenSense.Components.PortableFACS {
                 (82, 13), (13, 312), (312, 311), (311, 310),
                 (310, 415), (415, 308),
             };
-            var leftEye = new [] { 
+            var leftEye = new[] {
                 (263, 249), (249, 390), (390, 373), (373, 374),
                 (374, 380), (380, 381), (381, 382), (382, 362),
                 (263, 466), (466, 388), (388, 387), (387, 386),
                 (386, 385), (385, 384), (384, 398), (398, 362),
             };
-            var rightEye = new [] {
+            var rightEye = new[] {
                 (33, 7), (7, 163), (163, 144), (144, 145),
                 (145, 153), (153, 154), (154, 155), (155, 133),
                 (33, 246), (246, 161), (161, 160), (160, 159),
                 (159, 158), (158, 157), (157, 173), (173, 133),
             };
-            static IEnumerable<int> process(IEnumerable<(int, int)> data) => 
+            static IEnumerable<int> process(IEnumerable<(int, int)> data) =>
                 data.SelectMany(t => new[] { t.Item1, t.Item2, }).Distinct();
 
             LeftEyeIndices = process(leftEye).ToArray();
@@ -137,7 +137,7 @@ namespace OpenSense.Components.PortableFACS {
             var y = temp9 * (-yScale, yScale);
             const float emScale = 0.1f;
             var c = eyeAvg + eyeToMouth * emScale;
-            var quad = new Quad (
+            var quad = new Quad(
                 c - x4 - y,
                 c - x4 + y,
                 c + x4 + y,
@@ -206,8 +206,8 @@ namespace OpenSense.Components.PortableFACS {
                     .Select(v => 1f - v);
                 var temp_float_h_w_01 = new TwoDims<float>(rows: h, columns: w);
                 np_maximum2D(
-                    cols: temp50.ToArray(), 
-                    rows: temp53.ToArray(), 
+                    cols: temp50.ToArray(),
+                    rows: temp53.ToArray(),
                     output: ref temp_float_h_w_01//mask
                 );
                 var blur = qSize * 0.02f;
@@ -219,9 +219,9 @@ namespace OpenSense.Components.PortableFACS {
                 var temp_float_3_h_w_02 = new TwoDims<Vector3>(rows: h, columns: w);
                 var temp_float_3_h_w_03 = new TwoDims<Vector3>(rows: h, columns: w);
                 gaussian_filter(
-                    img: ref temp_float_3_h_w_01, 
-                    sigmas: (blur, blur, 0), 
-                    interim: ref temp_float_3_h_w_02, 
+                    img: ref temp_float_3_h_w_01,
+                    sigmas: (blur, blur, 0),
+                    interim: ref temp_float_3_h_w_02,
                     output: ref temp_float_3_h_w_03//temp55
                 );
                 np_op_minus(
@@ -243,7 +243,7 @@ namespace OpenSense.Components.PortableFACS {
                 );
                 np_clip__(
                     value: ref temp_float_h_w_03,//temp58 -> temp59
-                    min: 0, 
+                    min: 0,
                     max: 1
                 );
                 np_op_mult__left(
@@ -262,7 +262,7 @@ namespace OpenSense.Components.PortableFACS {
                 );
                 np_clip__(
                     value: ref temp_float_h_w_01,//mask -> temp64
-                    min: 0, 
+                    min: 0,
                     max: 1
                 );
                 np_op_mult__left(
@@ -278,7 +278,7 @@ namespace OpenSense.Components.PortableFACS {
                 );
                 np_clip__(
                     value: ref temp_float_3_h_w_01,//temp67 -> temp68
-                    min: 0, 
+                    min: 0,
                     max: 255
                 );
                 np_uint8(
@@ -301,7 +301,12 @@ namespace OpenSense.Components.PortableFACS {
                 temp_float_3_h_w_01.Dispose();
                 temp_float_h_w_01.Dispose();
             }
-            const int transformSize = 4096;
+            const int transformSize = //was 4096, and it is too large
+#if OPENCV
+                outputSize * 1;
+#else
+                outputSize * 3;//If set to 2, mirrored edge will have visible artifact
+#endif
             var temp72 = (transformSize, transformSize);
             var temp73 = np_op_add(quad, 0.5f);
             PIL_transform_Qud_Bilinear_(ref temp_image_01, temp72, temp73);
@@ -601,11 +606,14 @@ namespace OpenSense.Components.PortableFACS {
                     result[k] = (channelValues[channelValues.Length / 2 - 1] + channelValues[channelValues.Length / 2]) / 2;
                 }
             }
-            return new (result[0], result[1], result[2]);
+            return new(result[0], result[1], result[2]);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void PIL_resize_(ref Shared<Image> img, (int, int) sizes) {
+            if (sizes == (img.Resource.Width, img.Resource.Height)) {
+                return;
+            }
             var temp = ImagePool.GetOrCreate(sizes.Item1, sizes.Item2, img.Resource.PixelFormat);
             img.Resource.Resize(temp.Resource, sizes.Item1, sizes.Item2, SamplingMode.Bicubic);
             img.Dispose();
@@ -630,6 +638,28 @@ namespace OpenSense.Components.PortableFACS {
         private static void PIL_transform_Qud_Bilinear_(ref Shared<Image> img, (int, int) outputSize, Quad quad) {
             Debug.Assert(outputSize.Item1 == outputSize.Item2);
             var (w, h) = outputSize;
+            var temp = ImagePool.GetOrCreate(w, h, img.Resource.PixelFormat);
+#if OPENCV
+            unsafe {
+                using var src = new Mat(img.Resource.Height, img.Resource.Width, MatType.CV_8UC3, img.Resource.ImageData, img.Resource.Stride);
+                using var dst = new Mat(h, w, MatType.CV_8UC3, temp.Resource.ImageData, temp.Resource.Stride);
+                static Point2f cvt(Float2 p) => new Point2f(p.I0, p.I1);
+                var srcQuad = new Point2f[] {
+                    cvt(quad.I0),
+                    cvt(quad.I1),
+                    cvt(quad.I2),
+                    cvt(quad.I3),
+                };
+                var dstQuad = new Point2f[] {
+                    new Point2f(0, 0),
+                    new Point2f(0, dst.Rows - 1),
+                    new Point2f(dst.Cols - 1, dst.Rows - 1),
+                    new Point2f(dst.Cols - 1, 0),
+                };
+                using var perspectiveMatrix = Cv2.GetPerspectiveTransform(srcQuad, dstQuad);
+                Cv2.WarpPerspective(src, dst, perspectiveMatrix, new Size(w, h), InterpolationFlags.Linear, BorderTypes.Reflect101);
+            }
+#else
             var (nw, sw, se, ne) = quad;
             var (x0, y0) = nw;
             var As = 1f / w;
@@ -644,8 +674,9 @@ namespace OpenSense.Components.PortableFACS {
                 (sw.I1 - y0) * At,
                 (se.I1 - sw.I1 - ne.I1 + y0) * As * At
             );
-            var temp = ImagePool.GetOrCreate(w, h, img.Resource.PixelFormat);
+            
             ImagingGenericTransform_quad_transform(temp.Resource, img.Resource, data);
+#endif
             img.Dispose();
             img = temp;
         }
@@ -707,7 +738,7 @@ namespace OpenSense.Components.PortableFACS {
             var height = img.Resource.Height + heightPadBefore + heightPadAfter;
             var temp = ImagePool.GetOrCreate(width, height, img.Resource.PixelFormat);
             temp.Resource.FillRectangle(new(0, 0, width, height), System.Drawing.Color.Black);
-            img.Resource.CopyTo(new (0, 0, img.Resource.Width, img.Resource.Height), temp.Resource, new (widthPadBefore, heightPadBefore));
+            img.Resource.CopyTo(new(0, 0, img.Resource.Width, img.Resource.Height), temp.Resource, new(widthPadBefore, heightPadBefore));
             img.Dispose();
             img = temp;
         }
@@ -1006,7 +1037,7 @@ namespace OpenSense.Components.PortableFACS {
             var result = total / (left.Width * left.Height * 3f);
             return result;
         }
-        #endregion
+#endregion
 
     }
 }
