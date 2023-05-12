@@ -100,6 +100,7 @@ namespace OpenSense.Components.PortableFACS {
         internal static (IEnumerable<Float2> LeftEyeLMs, IEnumerable<Float2> RightEyeLMs, IEnumerable<Float2> MouthOuterLMs) SplitLandmarks(IReadOnlyList<NormalizedLandmark> faceLandmarks, int width, int height) {
             IEnumerable<Float2> process(IReadOnlyList<int> indices) =>
                 indices
+                .Where(i => i < faceLandmarks.Count)
                 .Select(i => faceLandmarks[i])
                 .Select(lm => (Float2)lm)//Extract X and Y, not Z
                 .Select(lm => lm * (width, height))//Un-normalize
@@ -301,12 +302,7 @@ namespace OpenSense.Components.PortableFACS {
                 temp_float_3_h_w_01.Dispose();
                 temp_float_h_w_01.Dispose();
             }
-            const int transformSize = //was 4096, and it is too large
-#if OPENCV
-                outputSize * 1;
-#else
-                outputSize * 3;//If set to 2, mirrored edge will have visible artifact
-#endif
+            const int transformSize = outputSize;//was 4096, and it is too large
             var temp72 = (transformSize, transformSize);
             var temp73 = np_op_add(quad, 0.5f);
             PIL_transform_Qud_Bilinear_(ref temp_image_01, temp72, temp73);
@@ -712,7 +708,7 @@ namespace OpenSense.Components.PortableFACS {
             var strideOut = imgOut.Stride;
             var widthIn = imgIn.Width;
             var widthOut = imgOut.Width;
-            var heightIn = imgOut.Height;
+            var heightIn = imgIn.Height;
             var heightOut = imgOut.Height;
             const int fill = 1;
             const int x0 = 0;
@@ -772,7 +768,8 @@ namespace OpenSense.Components.PortableFACS {
                         for (var i = 0; i < img.Rows; i++) {
                             var sum = new Vector3();
                             for (var k = 0; k < weights.Length; k++) {
-                                var (ii, jj) = extension_mode_reflect(i - half + k, j, img.Rows, img.Columns);
+                                var ii = extension_mode_reflect(i - half + k, img.Rows);
+                                var jj = extension_mode_reflect(j, img.Columns);
                                 var val = img[ii, jj];
                                 var add = val * weights[k];
                                 sum += add;
@@ -786,7 +783,8 @@ namespace OpenSense.Components.PortableFACS {
                         for (var j = 0; j < img.Columns; j++) {
                             var sum = new Vector3();
                             for (var k = 0; k < weights.Length; k++) {
-                                var (ii, jj) = extension_mode_reflect(i, j - half + k, img.Rows, img.Columns);
+                                var ii = extension_mode_reflect(i, img.Rows);
+                                var jj = extension_mode_reflect(j - half + k, img.Columns);
                                 var val = img[ii, jj];
                                 var add = val * weights[k];
                                 sum += add;
@@ -815,41 +813,19 @@ namespace OpenSense.Components.PortableFACS {
             return phi_x;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static (float y, float x) extension_mode_reflect(float y, float x, int rows, int columns) {
-            if (y < 0) {
-                y = y <= -1 ? -y - 1 : 0;
-            }
+         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static int extension_mode_reflect(int x, int size) {
             if (x < 0) {
                 x = x <= -1 ? -x - 1 : 0;
             }
-            if (y >= rows) {
-                y = y >= rows ? (rows - 1) - (y - rows) : rows - 1;
+            if (x >= size) {
+                x = x >= size ? (size - 1) - (x - size) : size - 1;
             }
-            if (x >= columns) {
-                x = x >= columns ? (columns - 1) - (x - columns) : columns - 1;
-            }
-            return (y, x);
+            return x;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static (int y, int x) extension_mode_reflect(int y, int x, int rows, int columns) {
-            if (y < 0) {
-                y = y <= -1 ? -y - 1 : 0;
-            }
-            if (x < 0) {
-                x = x <= -1 ? -x - 1 : 0;
-            }
-            if (y >= rows) {
-                y = y >= rows ? (rows - 1) - (y - rows) : rows - 1;
-            }
-            if (x >= columns) {
-                x = x >= columns ? (columns - 1) - (x - columns) : columns - 1;
-            }
-            return (y, x);
-        }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static (float y, float x) extension_mode_mirror(float y, float x, int rows, int columns) {
             bool updated;
             do {
@@ -880,11 +856,15 @@ namespace OpenSense.Components.PortableFACS {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Vector3 bilinear_interpolation(ReadOnlySpan<byte> span, int stride, int width, int height, float y, float x) {
             /* mirror (not reflect) */
-            (y, x) = extension_mode_reflect(y, x, height, width);
             var x1 = (int)MathF.Floor(x);
             var x2 = (int)MathF.Ceiling(x);
             var y1 = (int)MathF.Floor(y);
             var y2 = (int)MathF.Ceiling(y);
+            x1 = extension_mode_reflect(x1, width);
+            x2 = extension_mode_reflect(x2, width);
+            y1 = extension_mode_reflect(y1, height);
+            y2 = extension_mode_reflect(y2, height);
+
             Vector3 result;
             /*
             var needX = x1 != x2;
