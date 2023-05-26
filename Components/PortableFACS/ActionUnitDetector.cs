@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Mediapipe.Net.Framework.Protobuf;
 using Microsoft.Psi;
@@ -29,7 +30,13 @@ namespace OpenSense.Components.PortableFACS {
             var convertedImage = _imageInConnector
                 .Convert(PixelFormat.RGB_24bpp, DeliveryPolicy.LatestMessage);
             var aligner = new FaceImageAligner(this);
-            _inConnector.Join(convertedImage)
+            _inConnector.Join(
+                    convertedImage,
+                    Reproducible.Exact<Shared<Image>>(),
+                    ValueTuple.Create,
+                    DeliveryPolicy.LatestMessage,
+                    DeliveryPolicy.LatestMessage
+                )//TODO: shared image pool grows too large when no face is detected! Fuse() does not help; swapping streams does not help.
                 .PipeTo(aligner, DeliveryPolicy.LatestMessage);
             aligner.PipeTo(_alignedImagesOutConnector, DeliveryPolicy.LatestMessage);
 
