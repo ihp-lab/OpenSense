@@ -15,6 +15,7 @@ namespace PortableFACS {
 
         internal FacsOutput(in NamedOnnxValue labels) {
             _dict = labels.AsEnumerable<float>()
+                .Select(l => MathF.Max(0, MathF.Min(5, l * 5f))) //Apply for ResNet18 model
                 .Select((l, i) => (Label: l, Idx: i))
                 .ToDictionary(t => Keys[t.Idx], t => t.Label);
             Debug.Assert(_dict.Count == Labels);
