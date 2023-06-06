@@ -75,7 +75,7 @@ namespace OpenSense.Pipeline {
                 return;
             }
 
-            Pipeline.Dispose();//psi pipeline will dispose any components
+            Pipeline.Dispose();//psi pipeline will dispose components
             foreach (var instObj in Instances.Select(i => i.Instance).OfType<IDisposable>()) {
                 //but some components will still not be disposed by pipeline dispose
                 try {

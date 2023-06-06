@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -8,9 +10,7 @@ using Microsoft.Psi;
 using Microsoft.Psi.Components;
 
 namespace OpenSense.Components.PortableFACS.Visualizer {
-    public sealed class ActionUnitVisualizer : IConsumerProducer<IReadOnlyDictionary<int, float>, string>, INotifyPropertyChanged {
-
-        private readonly StringBuilder _stringBuilder = new StringBuilder();
+    public sealed class ActionUnitVisualizer : IConsumer<IReadOnlyDictionary<int, float>>, INotifyPropertyChanged {
 
         #region Ports
         public Receiver<IReadOnlyDictionary<int, float>> In { get; }
@@ -18,12 +18,7 @@ namespace OpenSense.Components.PortableFACS.Visualizer {
         public Emitter<string> Out { get; }
         #endregion
 
-        private string text;
-
-        public string Text {
-            get => text;
-            set => SetProperty(ref text, value);
-        }
+        public ImmutableSortedDictionary<int, float> Last { get; private set; } = ImmutableSortedDictionary<int, float>.Empty;
 
         public ActionUnitVisualizer(Pipeline pipeline) {
             In = pipeline.CreateReceiver<IReadOnlyDictionary<int, float>>(this, Process, nameof(In));
@@ -31,19 +26,8 @@ namespace OpenSense.Components.PortableFACS.Visualizer {
         }
 
         private void Process(IReadOnlyDictionary<int, float> actionUnits, Envelope envelope) {
-            _stringBuilder.Clear();
-            foreach (var kv in actionUnits.OrderBy(p => p.Key)) {
-                var keyStr = kv.Key.ToString();
-                keyStr = keyStr.PadLeft(2, ' ');
-                var valueStr = kv.Value.ToString("F3");
-                valueStr = valueStr.PadLeft(7, ' ');
-                _stringBuilder.Append(keyStr);
-                _stringBuilder.Append(":\t");
-                _stringBuilder.Append(valueStr);
-                _stringBuilder.AppendLine();
-            }
-            Text = _stringBuilder.ToString();
-            Out.Post(Text, envelope.OriginatingTime);
+            Last = ImmutableSortedDictionary.CreateRange(actionUnits);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Last)));
         }
 
         #region INotifyPropertyChanged

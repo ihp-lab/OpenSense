@@ -5,13 +5,75 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:OpenSense.WPF.Components.PortableFACS"
+    DataContextChanged="UserControl_DataContextChanged"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
     <Grid>
-        <TextBlock
+        <Grid.RowDefinitions>
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Expander
             Grid.Row="0"
-            Grid.Column="1"
-            Text="{Binding Text}" />
+            Header="Settings"
+            d:IsExpanded="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition
+                        Width="auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition
+                        Height="auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0">
+                    Display range
+                </TextBlock>
+                <Grid
+                    Grid.Row="0"
+                    Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <RadioButton
+                        Grid.Column="0"
+                        HorizontalAlignment="Center"
+                        IsChecked="True"
+                        Tag="1"
+                        Checked="RadioButton_Checked">
+                        0 to 1
+                    </RadioButton>
+                    <RadioButton
+                        Grid.Column="1"
+                        HorizontalAlignment="Center"
+                        Tag="5"
+                        Checked="RadioButton_Checked">
+                        0 to 5
+                    </RadioButton>
+                </Grid>
+            </Grid>
+        </Expander>
+
+        <Grid
+            Grid.Row="1"
+            Name="GridMain">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="30" />
+                <ColumnDefinition />
+                <ColumnDefinition
+                    Width="60" />
+            </Grid.ColumnDefinitions>
+        </Grid>
     </Grid>
+
 </UserControl>
