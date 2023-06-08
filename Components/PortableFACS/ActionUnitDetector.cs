@@ -6,7 +6,7 @@ using Microsoft.Psi;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
 
-namespace OpenSense.Components.PortableFACS {
+namespace OpenSense.Components.LibreFace {
     public sealed class ActionUnitDetector : Subpipeline, IProducer<IReadOnlyList<IReadOnlyDictionary<int, float>>> {
 
         private readonly Connector<IReadOnlyList<NormalizedLandmarkList>> _inConnector;

@@ -2,8 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
-        <AssemblyName>OpenSense.Components.PortableFACS</AssemblyName>
-        <RootNamespace>OpenSense.Components.PortableFACS</RootNamespace>
+        <AssemblyName>OpenSense.Components.LibreFace</AssemblyName>
+        <RootNamespace>OpenSense.Components.LibreFace</RootNamespace>
         <LangVersion>11.0</LangVersion>
         <Nullable>enable</Nullable>
         <EmbedAllSources>true</EmbedAllSources>
@@ -34,7 +34,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\ComponentContract\ComponentContract.csproj" />
-        <ProjectReference Include="..\..\PortableFACS\PortableFACS.csproj" />
+        <ProjectReference Include="..\..\PortableFACS\LibreFace.csproj" />
     </ItemGroup>
 
 </Project>

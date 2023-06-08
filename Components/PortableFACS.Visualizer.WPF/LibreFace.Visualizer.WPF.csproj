@@ -5,8 +5,8 @@
         <UseWPF>true</UseWPF>
         <Platforms>x64</Platforms>
         <PlatformTarget>x64</PlatformTarget>
-        <AssemblyName>OpenSense.WPF.Components.PortableFACS</AssemblyName>
-        <RootNamespace>OpenSense.WPF.Components.PortableFACS</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Components.LibreFace</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.LibreFace</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
@@ -16,7 +16,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
-        <ProjectReference Include="..\PortableFACS\PortableFACS.csproj" />
+        <ProjectReference Include="..\PortableFACS\LibreFace.csproj" />
     </ItemGroup>
 
 </Project>

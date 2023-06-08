@@ -13,7 +13,7 @@ using Microsoft.Psi.Imaging;
 using OpenCvSharp;
 #endif
 
-namespace OpenSense.Components.PortableFACS {
+namespace OpenSense.Components.LibreFace {
     public sealed class FaceImageAligner :
         IConsumer<(IReadOnlyList<NormalizedLandmarkList>, Shared<Image>)>,
         IProducer<IReadOnlyList<Shared<Image>>> {

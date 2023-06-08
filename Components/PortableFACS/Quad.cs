@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OpenSense.Components.PortableFACS {
+namespace OpenSense.Components.LibreFace {
     internal record struct Quad(Float2 I0, Float2 I1, Float2 I2, Float2 I3) {
 
         public const int Count = 4;

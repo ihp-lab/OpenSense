@@ -2,7 +2,7 @@
 using Microsoft.Psi;
 using OpenSense.Components.Contract;
 
-namespace OpenSense.Components.PortableFACS.Visualizer {
+namespace OpenSense.Components.LibreFace.Visualizer {
     [Serializable]
     public class ActionUnitVisualizerConfiguration : ConventionalComponentConfiguration {
 

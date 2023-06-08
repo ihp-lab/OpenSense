@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Buffers;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 
-namespace OpenSense.Components.PortableFACS {
+namespace OpenSense.Components.LibreFace {
     internal struct TwoDims<T>: IDisposable
         where T: struct 
     {

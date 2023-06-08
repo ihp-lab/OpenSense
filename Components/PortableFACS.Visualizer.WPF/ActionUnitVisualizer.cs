@@ -9,7 +9,7 @@ using System.Text;
 using Microsoft.Psi;
 using Microsoft.Psi.Components;
 
-namespace OpenSense.Components.PortableFACS.Visualizer {
+namespace OpenSense.Components.LibreFace.Visualizer {
     public sealed class ActionUnitVisualizer : IConsumer<IReadOnlyDictionary<int, float>>, INotifyPropertyChanged {
 
         #region Ports

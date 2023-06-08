@@ -2,7 +2,7 @@
 using System.Composition;
 using OpenSense.Components.Contract;
 
-namespace OpenSense.Components.PortableFACS {
+namespace OpenSense.Components.LibreFace {
     [Export(typeof(IComponentMetadata))]
     public class ActionUnitDetectorMetadata : ConventionalComponentMetadata {
 

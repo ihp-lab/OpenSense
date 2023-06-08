@@ -4,9 +4,9 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using OpenSense.Components.PortableFACS.Visualizer;
+using OpenSense.Components.LibreFace.Visualizer;
 
-namespace OpenSense.WPF.Components.PortableFACS {
+namespace OpenSense.WPF.Components.LibreFace {
     public partial class ActionUnitVisualizerInstanceControl : UserControl {
 
         private static readonly TimeSpan TimeOut = TimeSpan.FromMilliseconds(100);

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Reflection;
 
-namespace PortableFACS {
+namespace LibreFace {
     public sealed class ModelContext : IDisposable {
 
         private const string InputName = "image";
@@ -10,8 +10,8 @@ namespace PortableFACS {
         private const string OutputName = "AUs";
 
         private readonly string ModelFilename = Path.Combine(
-            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), 
-            "PortableFACS.onnx"
+            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+            "LibreFace.onnx"
             );
 
         private readonly SessionOptions _options;

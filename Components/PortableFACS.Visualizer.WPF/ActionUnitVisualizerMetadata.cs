@@ -2,7 +2,7 @@
 using System.Composition;
 using OpenSense.Components.Contract;
 
-namespace OpenSense.Components.PortableFACS.Visualizer {
+namespace OpenSense.Components.LibreFace.Visualizer {
     [Export(typeof(IComponentMetadata))]
     public class ActionUnitVisualizerMetadata : ConventionalComponentMetadata {
 

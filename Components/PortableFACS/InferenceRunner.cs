@@ -4,9 +4,9 @@ using System.Diagnostics;
 using Microsoft.Psi;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
-using PortableFACS;
+using LibreFace;
 
-namespace OpenSense.Components.PortableFACS {
+namespace OpenSense.Components.LibreFace {
     internal sealed class InferenceRunner : IConsumerProducer<IReadOnlyList<Shared<Image>>, IReadOnlyList<IReadOnlyDictionary<int, float>>>, IDisposable {
 
         private readonly ModelContext _modelContext;

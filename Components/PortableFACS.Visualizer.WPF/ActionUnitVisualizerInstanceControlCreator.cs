@@ -1,8 +1,8 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Components.PortableFACS.Visualizer;
+using OpenSense.Components.LibreFace.Visualizer;
 using OpenSense.WPF.Components.Contract;
-using OpenSense.WPF.Components.PortableFACS;
+using OpenSense.WPF.Components.LibreFace;
 
 namespace OpenSense.WPF.Components.Builtin.Visualizer {
     [Export(typeof(IInstanceControlCreator))]

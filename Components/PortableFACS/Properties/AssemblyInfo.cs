@@ -1,3 +1,3 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("PortableFACS.Tests")]
+[assembly: InternalsVisibleTo("LibreFace.Tests")]

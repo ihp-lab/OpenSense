@@ -3,9 +3,9 @@ using System.Numerics;
 using System.Text.Json.Nodes;
 using Mediapipe.Net.Framework.Protobuf;
 using Microsoft.Psi.Imaging;
-using OpenSense.Components.PortableFACS;
+using OpenSense.Components.LibreFace;
 
-namespace PortableFACS.Tests {
+namespace LibreFace.Tests {
     public sealed class FaceImageAlignerTests : IDisposable {
 
         /* Inputs */

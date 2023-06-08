@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Psi;
 using OpenSense.Components.Contract;
 
-namespace OpenSense.Components.PortableFACS {
+namespace OpenSense.Components.LibreFace {
     [Serializable]
     public class ActionUnitDetectorConfiguration : ConventionalComponentConfiguration {
 

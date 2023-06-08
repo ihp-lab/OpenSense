@@ -2,7 +2,7 @@
 using System.Buffers;
 using System.Diagnostics;
 
-namespace PortableFACS {
+namespace LibreFace {
     public sealed class ImageInput : IDisposable {
 
         private const int ChannelSize = 3;

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Diagnostics;
 
-namespace PortableFACS {
+namespace LibreFace {
     public sealed record class FacsOutput : IReadOnlyDictionary<int, float> {
 
         private const int Labels = 12;

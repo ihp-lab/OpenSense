@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using Mediapipe.Net.Framework.Protobuf;
+﻿using Mediapipe.Net.Framework.Protobuf;
 
-namespace OpenSense.Components.PortableFACS {
+namespace OpenSense.Components.LibreFace {
     internal record struct Float2(float I0, float I1) {
 
         public static implicit operator Float2((float, float) p) => new Float2(p.Item1, p.Item2);
