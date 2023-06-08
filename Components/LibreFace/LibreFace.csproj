@@ -34,7 +34,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\ComponentContract\ComponentContract.csproj" />
-        <ProjectReference Include="..\..\PortableFACS\LibreFace.csproj" />
+        <ProjectReference Include="..\..\LibreFace\LibreFace.csproj" />
     </ItemGroup>
 
 </Project>

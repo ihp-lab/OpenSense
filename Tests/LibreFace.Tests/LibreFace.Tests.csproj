@@ -27,7 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Components\PortableFACS\LibreFace.csproj" />
+        <ProjectReference Include="..\..\Components\LibreFace\LibreFace.csproj" />
     </ItemGroup>
 
     <ItemGroup>
