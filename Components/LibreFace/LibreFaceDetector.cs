@@ -7,24 +7,24 @@ using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
 
 namespace OpenSense.Components.LibreFace {
-    public sealed class ActionUnitDetector : Subpipeline, IProducer<IReadOnlyList<IReadOnlyDictionary<int, float>>> {
+    public sealed class LibreFaceDetector : Subpipeline{
 
         private readonly Connector<IReadOnlyList<NormalizedLandmarkList>> _inConnector;
         private readonly Connector<Shared<Image>> _imageInConnector;
-        private readonly Connector<IReadOnlyList<IReadOnlyDictionary<int, float>>> _outConnector;
+        private readonly Connector<IReadOnlyList<IReadOnlyDictionary<string, float>>> _auOutConnector;
         private readonly Connector<IReadOnlyList<Shared<Image>>> _alignedImagesOutConnector;
 
         public Receiver<IReadOnlyList<NormalizedLandmarkList>> DataIn => _inConnector.In;
         public Receiver<Shared<Image>> ImageIn => _imageInConnector.In;
 
-        public Emitter<IReadOnlyList<IReadOnlyDictionary<int, float>>> Out => _outConnector.Out;
+        public Emitter<IReadOnlyList<IReadOnlyDictionary<string, float>>> ActionUnitOut => _auOutConnector.Out;
         public Emitter<IReadOnlyList<Shared<Image>>> AlignedImagesOut => _alignedImagesOutConnector.Out;
 
-        public ActionUnitDetector(Pipeline pipeline) : base(pipeline, nameof(ActionUnitDetector), DeliveryPolicy.LatestMessage) {
+        public LibreFaceDetector(Pipeline pipeline) : base(pipeline, nameof(LibreFaceDetector), DeliveryPolicy.LatestMessage) {
             _inConnector = CreateInputConnectorFrom<IReadOnlyList<NormalizedLandmarkList>>(pipeline, nameof(DataIn));
             _imageInConnector = CreateInputConnectorFrom<Shared<Image>>(pipeline, nameof(ImageIn));
 
-            _outConnector = CreateOutputConnectorTo<IReadOnlyList<IReadOnlyDictionary<int, float>>>(pipeline, nameof(Out));
+            _auOutConnector = CreateOutputConnectorTo<IReadOnlyList<IReadOnlyDictionary<string, float>>>(pipeline, nameof(ActionUnitOut));
             _alignedImagesOutConnector = CreateOutputConnectorTo<IReadOnlyList<Shared<Image>>>(pipeline, nameof(AlignedImagesOut));
 
             var convertedImage = _imageInConnector
@@ -40,9 +40,9 @@ namespace OpenSense.Components.LibreFace {
                 .PipeTo(aligner, DeliveryPolicy.LatestMessage);
             aligner.PipeTo(_alignedImagesOutConnector, DeliveryPolicy.LatestMessage);
 
-            var inferenceRunner = new InferenceRunner(this);
-            aligner.PipeTo(inferenceRunner, DeliveryPolicy.LatestMessage);
-            inferenceRunner.PipeTo(_outConnector, DeliveryPolicy.LatestMessage);
+            var auInferenceRunner = new ActionUnitInferenceRunner(this);
+            aligner.PipeTo(auInferenceRunner, DeliveryPolicy.LatestMessage);
+            auInferenceRunner.PipeTo(_auOutConnector, DeliveryPolicy.LatestMessage);
         }
     }
 }

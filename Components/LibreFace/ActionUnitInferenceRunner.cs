@@ -7,23 +7,23 @@ using Microsoft.Psi.Imaging;
 using LibreFace;
 
 namespace OpenSense.Components.LibreFace {
-    internal sealed class InferenceRunner : IConsumerProducer<IReadOnlyList<Shared<Image>>, IReadOnlyList<IReadOnlyDictionary<int, float>>>, IDisposable {
+    internal sealed class ActionUnitInferenceRunner : IConsumerProducer<IReadOnlyList<Shared<Image>>, IReadOnlyList<IReadOnlyDictionary<string, float>>>, IDisposable {
 
-        private readonly ModelContext _modelContext;
+        private readonly ActionUnitModelContext _modelContext;
 
         public Receiver<IReadOnlyList<Shared<Image>>> In { get; }
 
-        public Emitter<IReadOnlyList<IReadOnlyDictionary<int, float>>> Out { get; }
+        public Emitter<IReadOnlyList<IReadOnlyDictionary<string, float>>> Out { get; }
 
-        public InferenceRunner(Pipeline pipeline) {
+        public ActionUnitInferenceRunner(Pipeline pipeline) {
             In = pipeline.CreateReceiver<IReadOnlyList<Shared<Image>>>(this, Process, nameof(In));
-            Out = pipeline.CreateEmitter<IReadOnlyList<IReadOnlyDictionary<int, float>>>(this, nameof(Out));
-            _modelContext = new ModelContext();
+            Out = pipeline.CreateEmitter<IReadOnlyList<IReadOnlyDictionary<string, float>>>(this, nameof(Out));
+            _modelContext = new ActionUnitModelContext();
         }
 
         private void Process(IReadOnlyList<Shared<Image>> images, Envelope envelope) {
             if (disposed) {
-                throw new ObjectDisposedException(nameof(InferenceRunner));
+                throw new ObjectDisposedException(nameof(ActionUnitInferenceRunner));
             }
 
             var result = new List<FacsOutput>(images.Count);

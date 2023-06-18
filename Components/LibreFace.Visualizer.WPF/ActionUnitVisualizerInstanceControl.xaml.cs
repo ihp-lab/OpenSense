@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -67,7 +68,7 @@ namespace OpenSense.WPF.Components.LibreFace {
                         }
                     }
                     var idx = 0;
-                    foreach (var (id, val) in dict) {
+                    foreach (var (id, val) in dict.OrderBy(kv => kv.Key)) {//Order by keys
                         ((TextBlock)GridMain.Children[idx * 3]).Text = id.ToString();
                         ((ProgressBar)GridMain.Children[idx * 3 + 1]).Value = val;
                         ((TextBlock)GridMain.Children[idx * 3 + 2]).Text = val.ToString("F2");

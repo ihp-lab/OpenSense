@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Reflection;
 
 namespace LibreFace {
-    public sealed class ModelContext : IDisposable {
+    public sealed class ActionUnitModelContext : IDisposable {
 
         private const string InputName = "image";
 
@@ -11,14 +11,14 @@ namespace LibreFace {
 
         private readonly string ModelFilename = Path.Combine(
             Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-            "LibreFace.onnx"
+            "LibreFace_AU.onnx"
             );
 
         private readonly SessionOptions _options;
 
         private readonly InferenceSession _session;
 
-        public ModelContext() {
+        public ActionUnitModelContext() {
             Debug.Assert(File.Exists(ModelFilename));
 
             _options = new SessionOptions() { 
@@ -28,7 +28,7 @@ namespace LibreFace {
 
         public FacsOutput Run(ImageInput image) {
             if (disposed) {
-                throw new ObjectDisposedException(nameof(ModelContext));
+                throw new ObjectDisposedException(nameof(ActionUnitModelContext));
             }
             var inputs = new NamedOnnxValue[1];
             inputs[0] = NamedOnnxValue.CreateFromTensor(InputName, image.Tensor);

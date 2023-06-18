@@ -1,31 +1,26 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using Microsoft.Psi;
-using Microsoft.Psi.Components;
 
 namespace OpenSense.Components.LibreFace.Visualizer {
-    public sealed class ActionUnitVisualizer : IConsumer<IReadOnlyDictionary<int, float>>, INotifyPropertyChanged {
+    public sealed class ActionUnitVisualizer : IConsumer<IReadOnlyDictionary<string, float>>, INotifyPropertyChanged {
 
         #region Ports
-        public Receiver<IReadOnlyDictionary<int, float>> In { get; }
+        public Receiver<IReadOnlyDictionary<string, float>> In { get; }
 
         public Emitter<string> Out { get; }
         #endregion
 
-        public ImmutableSortedDictionary<int, float> Last { get; private set; } = ImmutableSortedDictionary<int, float>.Empty;
+        public ImmutableSortedDictionary<string, float> Last { get; private set; } = ImmutableSortedDictionary<string, float>.Empty;
 
         public ActionUnitVisualizer(Pipeline pipeline) {
-            In = pipeline.CreateReceiver<IReadOnlyDictionary<int, float>>(this, Process, nameof(In));
+            In = pipeline.CreateReceiver<IReadOnlyDictionary<string, float>>(this, Process, nameof(In));
             Out = pipeline.CreateEmitter<string>(this, nameof(Out));
         }
 
-        private void Process(IReadOnlyDictionary<int, float> actionUnits, Envelope envelope) {
+        private void Process(IReadOnlyDictionary<string, float> actionUnits, Envelope envelope) {
             Last = ImmutableSortedDictionary.CreateRange(actionUnits);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Last)));
         }
