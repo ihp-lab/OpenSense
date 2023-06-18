@@ -9,32 +9,32 @@ using System.Windows.Threading;
 using OpenSense.Components.LibreFace.Visualizer;
 
 namespace OpenSense.WPF.Components.LibreFace {
-    public partial class ActionUnitVisualizerInstanceControl : UserControl {
+    public partial class FacialExpressionVisualizerInstanceControl : UserControl {
+
+        private const int RangeTo = 1;
 
         private static readonly TimeSpan TimeOut = TimeSpan.FromMilliseconds(100);
 
-        private ActionUnitVisualizer Instance => DataContext as ActionUnitVisualizer;
+        private FacialExpressionVisualizer Instance => DataContext as FacialExpressionVisualizer;
 
-        private int rangeTo = 1;
-
-        public ActionUnitVisualizerInstanceControl() {
+        public FacialExpressionVisualizerInstanceControl() {
             InitializeComponent();
         }
 
         private void UserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) {
-            if (e.OldValue is ActionUnitVisualizer old) {
+            if (e.OldValue is FacialExpressionVisualizer old) {
                 old.PropertyChanged -= OnPropertyChanged;
             }
-            if (e.NewValue is ActionUnitVisualizer @new) {
+            if (e.NewValue is FacialExpressionVisualizer @new) {
                 @new.PropertyChanged += OnPropertyChanged;
             }
         }
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs args) {
-            if (args.PropertyName != nameof(ActionUnitVisualizer.Last)) {
+            if (args.PropertyName != nameof(FacialExpressionVisualizer.Last)) {
                 return;
             }
-            var dict = ((ActionUnitVisualizer)sender).Last;
+            var dict = ((FacialExpressionVisualizer)sender).Last;
             /* Timeout is required, otherwise when disposing pipeline, it will stuck. */
             try {
                 Dispatcher.Invoke(() => {
@@ -56,7 +56,7 @@ namespace OpenSense.WPF.Components.LibreFace {
                             pb.SetValue(Grid.ColumnProperty, 1);
                             pb.SetValue(Grid.RowProperty, rowIdx);
                             pb.Minimum = 0;
-                            pb.Maximum = rangeTo;
+                            pb.Maximum = RangeTo;
 
                             // see https://stackoverflow.com/questions/24288870/c-sharp-xaml-progressbar-set-gradient-filling-properly
                             var brush = new LinearGradientBrush();
@@ -80,26 +80,13 @@ namespace OpenSense.WPF.Components.LibreFace {
                     foreach (var (id, val) in dict.OrderBy(kv => kv.Key)) {//Order by keys
                         ((TextBlock)GridMain.Children[idx * 3]).Text = id.ToString();
                         var bar = (ProgressBar)GridMain.Children[idx * 3 + 1];
-                        bar.Value = rangeTo - val;
+                        bar.Value = RangeTo - val;
                         ((TextBlock)GridMain.Children[idx * 3 + 2]).Text = val.ToString("F2");
                         idx++;
                     }
                 }, DispatcherPriority.DataBind, CancellationToken.None, TimeOut);
             } catch (TimeoutException) {
                 ;//Nothing
-            }
-        }
-
-        private void RadioButton_Checked(object sender, RoutedEventArgs e) {
-            var tag = (string)((RadioButton)sender).Tag;
-            if (tag is null) {
-                return;
-            }
-            rangeTo = int.Parse(tag);
-            foreach (var child in GridMain.Children) {
-                if (child is ProgressBar bar) {
-                    bar.Maximum = rangeTo;
-                }
             }
         }
     }

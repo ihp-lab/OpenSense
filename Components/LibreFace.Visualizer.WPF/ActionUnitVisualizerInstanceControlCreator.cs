@@ -2,9 +2,8 @@
 using System.Windows;
 using OpenSense.Components.LibreFace.Visualizer;
 using OpenSense.WPF.Components.Contract;
-using OpenSense.WPF.Components.LibreFace;
 
-namespace OpenSense.WPF.Components.Builtin.Visualizer {
+namespace OpenSense.WPF.Components.LibreFace {
     [Export(typeof(IInstanceControlCreator))]
     public class ActionUnitVisualizerInstanceControlCreator : IInstanceControlCreator {
 

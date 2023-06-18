@@ -20,6 +20,8 @@ namespace OpenSense.Components.LibreFace {
                     return "[Required] Images. Same as those were sent to MediaPipe.";
                 case nameof(LibreFaceDetector.ActionUnitOut):
                     return "A list of Action Units of detected faces.";
+                case nameof(LibreFaceDetector.FacialExpressionOut):
+                    return "A list of facial expressions of detected faces.";
                 case nameof(LibreFaceDetector.AlignedImagesOut):
                     return "A list of aligned face images. For debug purpose.";
                 default:
