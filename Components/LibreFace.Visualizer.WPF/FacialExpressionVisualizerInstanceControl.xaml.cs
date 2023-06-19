@@ -61,6 +61,7 @@ namespace OpenSense.WPF.Components.LibreFace {
                             // see https://stackoverflow.com/questions/24288870/c-sharp-xaml-progressbar-set-gradient-filling-properly
                             var brush = new LinearGradientBrush();
                             brush.GradientStops.Add(new GradientStop { Color = Colors.Red, Offset = 0, });
+                            brush.GradientStops.Add(new GradientStop { Color = Colors.Orange, Offset = 0.5, });
                             brush.GradientStops.Add(new GradientStop { Color = Colors.LightGreen, Offset = 1, });
                             pb.Foreground = pb.Background;
                             pb.Background = brush;
@@ -77,7 +78,7 @@ namespace OpenSense.WPF.Components.LibreFace {
                         }
                     }
                     var idx = 0;
-                    foreach (var (id, val) in dict.OrderBy(kv => kv.Key)) {//Order by keys
+                    foreach (var (id, val) in dict) {
                         ((TextBlock)GridMain.Children[idx * 3]).Text = id.ToString();
                         var bar = (ProgressBar)GridMain.Children[idx * 3 + 1];
                         bar.Value = RangeTo - val;

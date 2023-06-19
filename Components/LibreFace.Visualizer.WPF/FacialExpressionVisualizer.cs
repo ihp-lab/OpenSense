@@ -13,15 +13,15 @@ namespace OpenSense.Components.LibreFace.Visualizer {
         public Emitter<string> Out { get; }
         #endregion
 
-        public ImmutableSortedDictionary<string, float> Last { get; private set; } = ImmutableSortedDictionary<string, float>.Empty;
+        public IReadOnlyDictionary<string, float> Last { get; private set; } = ImmutableSortedDictionary<string, float>.Empty;
 
         public FacialExpressionVisualizer(Pipeline pipeline) {
             In = pipeline.CreateReceiver<IReadOnlyDictionary<string, float>>(this, Process, nameof(In));
             Out = pipeline.CreateEmitter<string>(this, nameof(Out));
         }
 
-        private void Process(IReadOnlyDictionary<string, float> FacialExpressions, Envelope envelope) {
-            Last = ImmutableSortedDictionary.CreateRange(FacialExpressions);
+        private void Process(IReadOnlyDictionary<string, float> facialExpressions, Envelope envelope) {
+            Last = facialExpressions;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Last)));
         }
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.ML.OnnxRuntime;
 using System.Collections;
+using System.Collections.Immutable;
 using System.Diagnostics;
 
 namespace LibreFace {
@@ -8,8 +9,10 @@ namespace LibreFace {
         private const int Labels = 12;
 
         public static readonly string[] Keys = {
-            "AU01", "AU02", "AU04", "AU05", "AU06", "AU09", "AU12", "AU15", "AU17", "AU20", "AU25", "AU26",
+            "1", "2", "4", "5", "6", "9", "12", "15", "17", "20", "25", "26",
         };
+
+        private static readonly KeyComparer Comparer = new KeyComparer();
 
         private readonly IReadOnlyDictionary<string, float> _dict;
 
@@ -17,7 +20,7 @@ namespace LibreFace {
             _dict = labels.AsEnumerable<float>()
                 .Select(l => MathF.Max(0, MathF.Min(5, l * 5f))) //Apply for ResNet18 model
                 .Select((l, i) => (Label: l, Idx: i))
-                .ToDictionary(t => Keys[t.Idx], t => t.Label);
+                .ToImmutableSortedDictionary(t => Keys[t.Idx], t => t.Label, Comparer);
             Debug.Assert(_dict.Count == Labels);
         }
 
@@ -37,6 +40,17 @@ namespace LibreFace {
         public bool ContainsKey(string key) => _dict.ContainsKey(key);
 
         public bool TryGetValue(string key, out float value) => _dict.TryGetValue(key, out value);
+        #endregion
+
+        #region Comparer
+        private sealed class KeyComparer : IComparer<string> {
+            public int Compare(string x, string y) {
+                var i = Array.IndexOf(Keys, x);
+                var j = Array.IndexOf(Keys, y);
+                var result = i.CompareTo(j);
+                return result;
+            }
+        } 
         #endregion
     }
 }

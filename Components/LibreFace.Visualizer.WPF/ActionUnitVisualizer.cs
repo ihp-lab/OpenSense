@@ -13,7 +13,7 @@ namespace OpenSense.Components.LibreFace.Visualizer {
         public Emitter<string> Out { get; }
         #endregion
 
-        public ImmutableSortedDictionary<string, float> Last { get; private set; } = ImmutableSortedDictionary<string, float>.Empty;
+        public IReadOnlyDictionary<string, float> Last { get; private set; } = ImmutableSortedDictionary<string, float>.Empty;
 
         public ActionUnitVisualizer(Pipeline pipeline) {
             In = pipeline.CreateReceiver<IReadOnlyDictionary<string, float>>(this, Process, nameof(In));
@@ -21,7 +21,7 @@ namespace OpenSense.Components.LibreFace.Visualizer {
         }
 
         private void Process(IReadOnlyDictionary<string, float> actionUnits, Envelope envelope) {
-            Last = ImmutableSortedDictionary.CreateRange(actionUnits);
+            Last = actionUnits;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Last)));
         }
 
