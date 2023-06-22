@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net7.0-windows</TargetFramework>
+        <Platforms>x64</Platforms>
+        <PlatformTarget>x64</PlatformTarget>
+        <UseWPF>true</UseWPF>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="CommandLineParser" Version="2.9.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Components\LibreFace\LibreFace.csproj" />
+        <ProjectReference Include="..\..\Components\MediaPipe.NET\MediaPipe.NET.csproj" />
+        <ProjectReference Include="..\..\Components\OpenFace.Windows\OpenFace.Windows.csproj" />
+    </ItemGroup>
+
+</Project>

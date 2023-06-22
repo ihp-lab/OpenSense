@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net48</TargetFramework>
+        <!--Note: System.Windows.Point is referenced by OpenFaceInterop-->
+        <UseWPF>true</UseWPF>
+        <LangVersion>11</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="BenchmarkDotNet" Version="0.13.5" />
+        <PackageReference Include="Microsoft.Psi.Imaging" Version="0.18.72.1-beta" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Components\OpenFace.Common\OpenFace.Common.csproj" />
+        <ProjectReference Include="..\..\OpenFaceInterop\OpenFaceInterop.vcxproj" />
+    </ItemGroup>
+
+</Project>
