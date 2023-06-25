@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "LibreFace.Benchmarks2": {
+      "commandName": "Project",
+      "commandLineArgs": "-i 300 -r 0"
+    }
+  }
+}
