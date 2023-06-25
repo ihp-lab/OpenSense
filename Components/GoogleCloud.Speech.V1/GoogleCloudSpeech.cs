@@ -282,11 +282,11 @@ namespace OpenSense.Components.GoogleCloud.Speech.V1 {
         private IList<SpeechRecognitionAlternate> CombineAlternatives(IList<SpeechRecognitionAlternate> a, IList<SpeechRecognitionAlternate> b) {
             var altsWithConfidence = new List<SpeechRecognitionAlternate>();
             var altsWithoutConfidence = new List<SpeechRecognitionAlternate>();
-            Trace.Assert(a.Any());
-            Trace.Assert(b.Any());
+            Debug.Assert(a.Any());
+            Debug.Assert(b.Any());
             foreach (var left in a) {
                 foreach (var right in b) {
-                    Trace.Assert(!string.IsNullOrWhiteSpace(right.Text));
+                    Debug.Assert(!string.IsNullOrWhiteSpace(right.Text));
                     var altText = string.IsNullOrWhiteSpace(left.Text) ? right.Text.Trim() : (left.Text + PartialFinalResultDelimiter + right.Text.Trim());
                     var altConfidence = left.Confidence * right.Confidence;
                     var alt = new SpeechRecognitionAlternate(altText, altConfidence);
@@ -318,7 +318,7 @@ namespace OpenSense.Components.GoogleCloud.Speech.V1 {
                     return new SpeechRecognitionAlternate(text: group.Key, confidence: confidence);
                 })
                 .ToList();
-            Trace.Assert(result.Any());
+            Debug.Assert(result.Any());
             return result;
         }
     }
