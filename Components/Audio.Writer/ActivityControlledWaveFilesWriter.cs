@@ -7,7 +7,7 @@ namespace OpenSense.Components.Audio.Writer {
     /// <summary>
     /// This component will write multiple wave files when the activity indicator is on.
     /// </summary>
-    public class ActivityControlledWaveFilesWriter : IConsumer<(AudioBuffer, bool)>, IDisposable {
+    public sealed class ActivityControlledWaveFilesWriter : IConsumer<(AudioBuffer, bool)>, IDisposable {
 
         private readonly Func<Envelope, string> _filenameGenerator;
 
@@ -31,6 +31,9 @@ namespace OpenSense.Components.Audio.Writer {
         }
 
         private void Process((AudioBuffer, bool) data, Envelope envelope) {
+            if (disposed) {
+                throw new ObjectDisposedException(nameof(ActivityControlledWaveFilesWriter));
+            }
             var (frame, activity) = data;
             if (activity) {
                 if (writer == null) {
@@ -45,8 +48,18 @@ namespace OpenSense.Components.Audio.Writer {
             }
         }
 
+        #region IDisposable
+        private bool disposed;
+
         public void Dispose() {
+            if (disposed) {
+                return;
+            }
+
             DisposeWriter();
-        }
+
+            disposed = true;
+        } 
+        #endregion
     }
 }

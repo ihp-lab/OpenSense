@@ -14,7 +14,7 @@ namespace OpenSense.Components.Media.Writer {
     /// <summary>
     /// This component will write multiple mp4 files when the activity indicator is on.
     /// </summary>
-    public class ActivityControlledMpeg4FilesWriter : Subpipeline, IConsumer<(Shared<Image>, bool)>, INotifyPropertyChanged {
+    public sealed class ActivityControlledMpeg4FilesWriter : Subpipeline, IConsumer<(Shared<Image>, bool)>, INotifyPropertyChanged {
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -64,14 +64,6 @@ namespace OpenSense.Components.Media.Writer {
             pipeline.PipelineRun += (s, e) => OnPipelineRun();
         }
 
-        public override void Dispose() {
-            DisposeWriter();
-            if (pipelineEverStarted) {
-                MP4Writer.Shutdown();
-            }
-            base.Dispose();
-        }
-
         private void OnPipelineRun() {
             MP4Writer.Startup();
             pipelineEverStarted = true;
@@ -108,6 +100,9 @@ namespace OpenSense.Components.Media.Writer {
         }
 
         private void Process(((Shared<Image>, bool), AudioBuffer) data, Envelope envelope) {//in chronological order
+            if (disposed) {
+                throw new ObjectDisposedException(nameof(ActivityControlledMpeg4FilesWriter));
+            }
             var ((video, activity), audio) = data;
             if (video != null) {
                 if (activity) {// only when video is not null, activity has a valid value
@@ -139,5 +134,23 @@ namespace OpenSense.Components.Media.Writer {
             System.Runtime.InteropServices.Marshal.FreeHGlobal(waveFmtPtr);
             System.Runtime.InteropServices.Marshal.FreeHGlobal(audioData);
         }
+
+        #region IDisposable
+        private bool disposed;
+
+        public override void Dispose() {
+            if (disposed) {
+                return;
+            }
+
+            DisposeWriter();
+            if (pipelineEverStarted) {
+                MP4Writer.Shutdown();
+            }
+            base.Dispose();
+
+            disposed = true;
+        }
+        #endregion
     }
 }
