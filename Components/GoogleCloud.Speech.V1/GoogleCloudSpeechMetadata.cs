@@ -18,8 +18,8 @@ namespace OpenSense.Components.GoogleCloud.Speech.V1 {
                     return "[Required] Audio signal paired with voice activity detection result.";
                 case nameof(GoogleCloudSpeech.Out):
                     return "Speech recognition results.";
-                case nameof(GoogleCloudSpeech.Audio):
-                    return "The portion of input audio signal that was send to Google server.";
+                case nameof(GoogleCloudSpeech.AudioOut):
+                    return "For debugging, the portion of input audio signal that was send to Google server.";
                 default:
                     return null;
             }

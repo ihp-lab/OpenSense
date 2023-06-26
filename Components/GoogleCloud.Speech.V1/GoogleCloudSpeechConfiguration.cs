@@ -22,6 +22,20 @@ namespace OpenSense.Components.GoogleCloud.Speech.V1 {
             set => SetProperty(ref atMostOneFinalResultEachVadSession, value);
         }
 
+        private CredentialSource credentialSource = CredentialSource.Embedded;
+
+        public CredentialSource CredentialSource {
+            get => credentialSource;
+            set => SetProperty(ref credentialSource, value);
+        }
+
+        private string credentials = "Paste your google cloud crednetials JSON content here.";
+
+        public string Credentials {
+            get => credentials;
+            set => SetProperty(ref credentials, value);
+        }
+
         private string credentialsPath = "set_your_google_cloud_credentials.json";
 
         public string CredentialsPath {
@@ -62,14 +76,22 @@ namespace OpenSense.Components.GoogleCloud.Speech.V1 {
 
         public override IComponentMetadata GetMetadata() => new GoogleCloudSpeechMetadata();
 
-        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new GoogleCloudSpeech(pipeline, File.ReadAllText(CredentialsPath)) { 
-            Logger = (serviceProvider?.GetService(typeof(ILoggerFactory)) as ILoggerFactory)?.CreateLogger(Name),
-            Mute = Mute,
-            AtMostOneFinalResultEachVadSession = AtMostOneFinalResultEachVadSession,
-            LanguageCode = LanguageCode,
-            SeparateRecognitionPerChannel = SeparateRecognitionPerChannel,
-            PostInterimResults = PostInterimResults,
-            AddDurationToOutputTime = AddDurationToOutputTime,
-        };
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) {
+            var content = CredentialSource switch { 
+                CredentialSource.Embedded => Credentials,
+                CredentialSource.File => File.ReadAllText(CredentialsPath),
+                _ => throw new InvalidOperationException("Invalid Enum value."),
+            };
+            var result = new GoogleCloudSpeech(pipeline, content) {
+                Logger = (serviceProvider?.GetService(typeof(ILoggerFactory)) as ILoggerFactory)?.CreateLogger(Name),
+                Mute = Mute,
+                AtMostOneFinalResultEachVadSession = AtMostOneFinalResultEachVadSession,
+                LanguageCode = LanguageCode,
+                SeparateRecognitionPerChannel = SeparateRecognitionPerChannel,
+                PostInterimResults = PostInterimResults,
+                AddDurationToOutputTime = AddDurationToOutputTime,
+            };
+            return result;
+        }
     }
 }

@@ -39,7 +39,7 @@ namespace OpenSense.Components.GoogleCloud.Speech.V1 {
 
         public Emitter<IStreamingSpeechRecognitionResult> Out { get; private set; }
 
-        public Emitter<AudioBuffer> Audio { get; private set; }
+        public Emitter<AudioBuffer> AudioOut { get; private set; }
 
         private bool mute = false;
 
@@ -116,7 +116,7 @@ namespace OpenSense.Components.GoogleCloud.Speech.V1 {
             // psi pipeline
             In = pipeline.CreateAsyncReceiver<(AudioBuffer, bool)>(this, PorcessFramesAsync, nameof(In));
             Out = pipeline.CreateEmitter<IStreamingSpeechRecognitionResult>(this, nameof(Out));
-            Audio = pipeline.CreateEmitter<AudioBuffer>(this, nameof(Audio));
+            AudioOut = pipeline.CreateEmitter<AudioBuffer>(this, nameof(AudioOut));
 
             pipeline.PipelineRun += OnPipeRun;
             pipeline.PipelineCompleted += OnPipeCompleted;
@@ -167,6 +167,11 @@ namespace OpenSense.Components.GoogleCloud.Speech.V1 {
         private async Task CloseStreamAsync() {
             if (stream != null) {
                 try {
+                    /* TODO:
+                     * When Google is not reachable, ProcessResponsesAsync() will receive an exception with StatusCode == Unavailable after timeout.
+                     * However, when that happened, calling WriteCompleteAsync() here because of the next audio buffer will block the process for another timeout and get another exception.
+                     * How to reduce one timeout while throw an exception here? So that the pipeline can be terminated by unhandled exceptions.
+                     */
                     await stream.WriteCompleteAsync();
                 } catch (Exception ex) {
                     Logger?.LogError(ex, "An exception was thrown when trying to write complete to Google cloud speech stream. This exception will be ignored.");
@@ -206,7 +211,7 @@ namespace OpenSense.Components.GoogleCloud.Speech.V1 {
                 AudioContent = ByteString.CopyFrom(audio.Data, 0, audio.Data.Length),
             };
             await stream.WriteAsync(request);
-            Audio.Post(audio, envelope.OriginatingTime);
+            AudioOut.Post(audio, envelope.OriginatingTime);
         }
 
         private async Task ProcessResponsesAsync() {//Note: do not use ValueTask
