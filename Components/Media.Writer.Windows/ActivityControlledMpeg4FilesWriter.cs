@@ -49,13 +49,17 @@ namespace OpenSense.Components.Media.Writer {
             InConnector = CreateInputConnectorFrom<(Shared<Image>, bool)>(pipeline, nameof(In));
             AudioInConnector = CreateInputConnectorFrom<AudioBuffer>(pipeline, nameof(AudioIn));
 
-            var videoTime = InConnector.Select((_, e) => e.OriginatingTime);
-            var audioTime = AudioInConnector.Select((_, e) => e.OriginatingTime);
-            var time = videoTime.Zip(audioTime); Debug.Assert(configuration.ContainsAudio);//TODO: if no audio stream is connected, all video message will be buffered.
-            var j1 = time.Join(InConnector, Reproducible.ExactOrDefault<(Shared<Image>, bool)>());
-            var j2 = j1.Join(AudioInConnector, Reproducible.ExactOrDefault<AudioBuffer>());
-            var ordered = j2.Select(data => ((data.Item2, data.Item3), data.Item4));
-            ordered.Do(Process);
+            if (configuration.ContainsAudio) {
+                var videoTime = InConnector.Select((_, e) => e.OriginatingTime);
+                var audioTime = AudioInConnector.Select((_, e) => e.OriginatingTime);
+                var time = videoTime.Zip(audioTime);
+                var j1 = time.Join(InConnector, Reproducible.ExactOrDefault<(Shared<Image>, bool)>());
+                var j2 = j1.Join(AudioInConnector, Reproducible.ExactOrDefault<AudioBuffer>());
+                var ordered = j2.Select(data => ((data.Item2, data.Item3), data.Item4));
+                ordered.Do(Process);
+            } else {
+                InConnector.Select(i => (i, default(AudioBuffer))).Do(Process);
+            }
 
             pipeline.PipelineRun += (s, e) => OnPipelineRun();
         }
