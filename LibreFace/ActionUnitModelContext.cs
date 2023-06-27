@@ -21,8 +21,13 @@ namespace LibreFace {
         public ActionUnitModelContext() {
             Debug.Assert(File.Exists(ModelFilename));
 
-            _options = new SessionOptions() { 
+#if CUDA
+            _options = SessionOptions.MakeSessionOptionWithCudaProvider(deviceId: 0);
+#else
+            _options = new SessionOptions() {
             };
+#endif
+
             _session = new InferenceSession(ModelFilename, _options);
         }
 
