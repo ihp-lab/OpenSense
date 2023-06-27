@@ -18,9 +18,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="LibreFace*.onnx">
+		<None Update="LibreFace_AU.onnx">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+        <None Update="LibreFace_FE.onnx">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
 	</ItemGroup>
 
 </Project>
