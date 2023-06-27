@@ -2,7 +2,7 @@
   "profiles": {
     "LibreFace.Benchmarks2": {
       "commandName": "Project",
-      "commandLineArgs": "-i 300 -r 0"
+      "commandLineArgs": "-i 3000 -r 0 -w 3 -t 7"
     }
   }
 }
