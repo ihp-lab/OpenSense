@@ -78,7 +78,7 @@ namespace OpenSense.Components.MediaPipe.NET {
             getPortsCallback: GetComponentPorts
         );
 
-        public override object Instantiate(Pipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents, IServiceProvider serviceProvider) {
+        public override object Instantiate(Pipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents, IServiceProvider? serviceProvider) {
             var logger = serviceProvider.GetService(typeof(ILogger<SolutionWrapper>)) as ILogger<SolutionWrapper>;
             var result = new SolutionWrapper(pipeline, inputSidePackets, inputStreams, outputStreams, Graph, logger);
 
