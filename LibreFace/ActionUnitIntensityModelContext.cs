@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Reflection;
 
 namespace LibreFace {
-    public sealed class ActionUnitModelContext : IDisposable {
+    public sealed class ActionUnitIntensityModelContext : IDisposable {
 
         private const string InputName = "image";
 
@@ -11,14 +11,14 @@ namespace LibreFace {
 
         private readonly string ModelFilename = Path.Combine(
             Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-            "LibreFace_AU.onnx"
+            "LibreFace_AU_Intensity.onnx"
             );
 
         private readonly SessionOptions _options;
 
         private readonly InferenceSession _session;
 
-        public ActionUnitModelContext() {
+        public ActionUnitIntensityModelContext() {
             Debug.Assert(File.Exists(ModelFilename));
 
 #if CUDA
@@ -31,15 +31,15 @@ namespace LibreFace {
             _session = new InferenceSession(ModelFilename, _options);
         }
 
-        public FacsOutput Run(ImageInput image) {
+        public ActionUnitIntensityOutput Run(ImageInput image) {
             if (disposed) {
-                throw new ObjectDisposedException(nameof(ActionUnitModelContext));
+                throw new ObjectDisposedException(nameof(ActionUnitIntensityModelContext));
             }
             var inputs = new NamedOnnxValue[1];
             inputs[0] = NamedOnnxValue.CreateFromTensor(InputName, image.Tensor);
             using var outputs = _session.Run(inputs);
             var output = outputs.Single(o => o.Name == OutputName);
-            var result = new FacsOutput(output);
+            var result = new ActionUnitIntensityOutput(output);
             return result;
         }
 

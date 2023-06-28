@@ -26,9 +26,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="LibreFace_AU.onnx">
+		<None Update="LibreFace_AU_Intensity.onnx">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+        <None Update="LibreFace_AU_Presence.onnx">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
         <None Update="LibreFace_FE.onnx">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>

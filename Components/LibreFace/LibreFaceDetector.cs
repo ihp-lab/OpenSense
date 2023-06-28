@@ -11,14 +11,16 @@ namespace OpenSense.Components.LibreFace {
 
         private readonly Connector<IReadOnlyList<NormalizedLandmarkList>> _inConnector;
         private readonly Connector<Shared<Image>> _imageInConnector;
-        private readonly Connector<IReadOnlyList<IReadOnlyDictionary<string, float>>> _auOutConnector;
+        private readonly Connector<IReadOnlyList<IReadOnlyDictionary<string, float>>> _auIntensityOutConnector;
+        private readonly Connector<IReadOnlyList<IReadOnlyDictionary<string, bool>>> _auPresenceOutConnector;
         private readonly Connector<IReadOnlyList<IReadOnlyDictionary<string, float>>> _feOutConnector;
         private readonly Connector<IReadOnlyList<Shared<Image>>> _alignedImagesOutConnector;
 
         public Receiver<IReadOnlyList<NormalizedLandmarkList>> DataIn => _inConnector.In;
         public Receiver<Shared<Image>> ImageIn => _imageInConnector.In;
 
-        public Emitter<IReadOnlyList<IReadOnlyDictionary<string, float>>> ActionUnitOut => _auOutConnector.Out;
+        public Emitter<IReadOnlyList<IReadOnlyDictionary<string, float>>> ActionUnitIntensityOut => _auIntensityOutConnector.Out;
+        public Emitter<IReadOnlyList<IReadOnlyDictionary<string, bool>>> ActionUnitPresenceOut => _auPresenceOutConnector.Out;
         public Emitter<IReadOnlyList<IReadOnlyDictionary<string, float>>> FacialExpressionOut => _feOutConnector.Out;
         public Emitter<IReadOnlyList<Shared<Image>>> AlignedImagesOut => _alignedImagesOutConnector.Out;
 
@@ -26,7 +28,8 @@ namespace OpenSense.Components.LibreFace {
             _inConnector = CreateInputConnectorFrom<IReadOnlyList<NormalizedLandmarkList>>(pipeline, nameof(DataIn));
             _imageInConnector = CreateInputConnectorFrom<Shared<Image>>(pipeline, nameof(ImageIn));
 
-            _auOutConnector = CreateOutputConnectorTo<IReadOnlyList<IReadOnlyDictionary<string, float>>>(pipeline, nameof(ActionUnitOut));
+            _auIntensityOutConnector = CreateOutputConnectorTo<IReadOnlyList<IReadOnlyDictionary<string, float>>>(pipeline, nameof(ActionUnitIntensityOut));
+            _auPresenceOutConnector = CreateOutputConnectorTo<IReadOnlyList<IReadOnlyDictionary<string, bool>>>(pipeline, nameof(ActionUnitPresenceOut));
             _feOutConnector = CreateOutputConnectorTo<IReadOnlyList<IReadOnlyDictionary<string, float>>>(pipeline, nameof(FacialExpressionOut));
             _alignedImagesOutConnector = CreateOutputConnectorTo<IReadOnlyList<Shared<Image>>>(pipeline, nameof(AlignedImagesOut));
 
@@ -43,9 +46,13 @@ namespace OpenSense.Components.LibreFace {
                 .PipeTo(aligner, DeliveryPolicy.LatestMessage);
             aligner.PipeTo(_alignedImagesOutConnector, DeliveryPolicy.LatestMessage);
 
-            var auInferenceRunner = new ActionUnitInferenceRunner(this);
-            aligner.PipeTo(auInferenceRunner, DeliveryPolicy.LatestMessage);
-            auInferenceRunner.PipeTo(_auOutConnector, DeliveryPolicy.LatestMessage);
+            var auIntensitiyInferenceRunner = new ActionUnitIntensityInferenceRunner(this);
+            aligner.PipeTo(auIntensitiyInferenceRunner, DeliveryPolicy.LatestMessage);
+            auIntensitiyInferenceRunner.PipeTo(_auIntensityOutConnector, DeliveryPolicy.LatestMessage);
+
+            var auPresenceInferenceRunner = new ActionUnitPresenceInferenceRunner(this);
+            aligner.PipeTo(auPresenceInferenceRunner, DeliveryPolicy.LatestMessage);
+            auPresenceInferenceRunner.PipeTo(_auPresenceOutConnector, DeliveryPolicy.LatestMessage);
 
             var feInferenceRunner = new FacialExpressionInferenceRunner(this);
             aligner.PipeTo(feInferenceRunner, DeliveryPolicy.LatestMessage);

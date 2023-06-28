@@ -5,22 +5,19 @@ using System.Runtime.CompilerServices;
 using Microsoft.Psi;
 
 namespace OpenSense.Components.LibreFace.Visualizer {
-    public sealed class ActionUnitVisualizer : IConsumer<IReadOnlyDictionary<string, float>>, INotifyPropertyChanged {
+    public sealed class ActionUnitPresenceVisualizer : IConsumer<IReadOnlyDictionary<string, bool>>, INotifyPropertyChanged {
 
         #region Ports
-        public Receiver<IReadOnlyDictionary<string, float>> In { get; }
-
-        public Emitter<string> Out { get; }
+        public Receiver<IReadOnlyDictionary<string, bool>> In { get; }
         #endregion
 
-        public IReadOnlyDictionary<string, float> Last { get; private set; } = ImmutableSortedDictionary<string, float>.Empty;
+        public IReadOnlyDictionary<string, bool> Last { get; private set; } = ImmutableSortedDictionary<string, bool>.Empty;
 
-        public ActionUnitVisualizer(Pipeline pipeline) {
-            In = pipeline.CreateReceiver<IReadOnlyDictionary<string, float>>(this, Process, nameof(In));
-            Out = pipeline.CreateEmitter<string>(this, nameof(Out));
+        public ActionUnitPresenceVisualizer(Pipeline pipeline) {
+            In = pipeline.CreateReceiver<IReadOnlyDictionary<string, bool>>(this, Process, nameof(In));
         }
 
-        private void Process(IReadOnlyDictionary<string, float> actionUnits, Envelope envelope) {
+        private void Process(IReadOnlyDictionary<string, bool> actionUnits, Envelope envelope) {
             Last = actionUnits;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Last)));
         }

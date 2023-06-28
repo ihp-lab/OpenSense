@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 
 namespace LibreFace {
-    public sealed record class FacsOutput : IReadOnlyDictionary<string, float> {
+    public sealed record class ActionUnitIntensityOutput : IReadOnlyDictionary<string, float> {
 
         private const int Labels = 12;
 
@@ -16,7 +16,7 @@ namespace LibreFace {
 
         private readonly IReadOnlyDictionary<string, float> _dict;
 
-        internal FacsOutput(in NamedOnnxValue labels) {
+        internal ActionUnitIntensityOutput(in NamedOnnxValue labels) {
             _dict = labels.AsEnumerable<float>()
                 .Select(l => MathF.Max(0, MathF.Min(5, l * 5f))) //Apply for ResNet18 model
                 .Select((l, i) => (Label: l, Idx: i))

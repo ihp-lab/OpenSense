@@ -9,35 +9,36 @@ using System.Windows.Threading;
 using OpenSense.Components.LibreFace.Visualizer;
 
 namespace OpenSense.WPF.Components.LibreFace {
-    public partial class ActionUnitVisualizerInstanceControl : UserControl {
+    public partial class ActionUnitIntensityVisualizerInstanceControl : UserControl {
 
         private static readonly TimeSpan TimeOut = TimeSpan.FromMilliseconds(100);
 
-        private ActionUnitVisualizer Instance => DataContext as ActionUnitVisualizer;
+        private ActionUnitIntensityVisualizer Instance => DataContext as ActionUnitIntensityVisualizer;
 
         private int rangeTo = 1;
 
-        public ActionUnitVisualizerInstanceControl() {
+        public ActionUnitIntensityVisualizerInstanceControl() {
             InitializeComponent();
         }
 
         private void UserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) {
-            if (e.OldValue is ActionUnitVisualizer old) {
+            if (e.OldValue is ActionUnitIntensityVisualizer old) {
                 old.PropertyChanged -= OnPropertyChanged;
             }
-            if (e.NewValue is ActionUnitVisualizer @new) {
+            if (e.NewValue is ActionUnitIntensityVisualizer @new) {
                 @new.PropertyChanged += OnPropertyChanged;
             }
         }
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs args) {
-            if (args.PropertyName != nameof(ActionUnitVisualizer.Last)) {
+            if (args.PropertyName != nameof(ActionUnitIntensityVisualizer.Last)) {
                 return;
             }
-            var dict = ((ActionUnitVisualizer)sender).Last;
+            var dict = ((ActionUnitIntensityVisualizer)sender).Last;
             /* Timeout is required, otherwise when disposing pipeline, it will stuck. */
             try {
                 Dispatcher.Invoke(() => {
+                    var numCols = GridMain.ColumnDefinitions.Count;
                     while (dict.Count != GridMain.RowDefinitions.Count) {
                         if (dict.Count > GridMain.RowDefinitions.Count) {
                             var row = new RowDefinition() {
@@ -74,15 +75,15 @@ namespace OpenSense.WPF.Components.LibreFace {
                         }
                         if (dict.Count < GridMain.RowDefinitions.Count) {
                             GridMain.RowDefinitions.RemoveAt(GridMain.RowDefinitions.Count - 1);
-                            GridMain.Children.RemoveRange(GridMain.Children.Count - 3, 3);
+                            GridMain.Children.RemoveRange(GridMain.Children.Count - numCols, numCols);
                         }
                     }
                     var idx = 0;
                     foreach (var (id, val) in dict) {
-                        ((TextBlock)GridMain.Children[idx * 3]).Text = id.ToString();
-                        var bar = (ProgressBar)GridMain.Children[idx * 3 + 1];
+                        ((TextBlock)GridMain.Children[idx * numCols]).Text = id.ToString();
+                        var bar = (ProgressBar)GridMain.Children[idx * numCols + 1];
                         bar.Value = rangeTo - val;
-                        ((TextBlock)GridMain.Children[idx * 3 + 2]).Text = val.ToString("F2");
+                        ((TextBlock)GridMain.Children[idx * numCols + 2]).Text = val.ToString("F2");
                         idx++;
                     }
                 }, DispatcherPriority.DataBind, CancellationToken.None, TimeOut);

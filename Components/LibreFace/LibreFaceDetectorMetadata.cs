@@ -18,10 +18,12 @@ namespace OpenSense.Components.LibreFace {
                     return "[Required] Face landmark detection results from MediaPipe.";
                 case nameof(LibreFaceDetector.ImageIn):
                     return "[Required] Images. Same as those were sent to MediaPipe.";
-                case nameof(LibreFaceDetector.ActionUnitOut):
-                    return "A list of Action Units of detected faces.";
+                case nameof(LibreFaceDetector.ActionUnitIntensityOut):
+                    return "A list of Action Unit intensities of detected faces. Range 0 - 5.";
+                case nameof(LibreFaceDetector.ActionUnitPresenceOut):
+                    return "A list of Action Unit presences of detected faces. Range false or true.";
                 case nameof(LibreFaceDetector.FacialExpressionOut):
-                    return "A list of facial expressions of detected faces.";
+                    return "A list of facial expressions of detected faces. Range 0 - 1.";
                 case nameof(LibreFaceDetector.AlignedImagesOut):
                     return "A list of aligned face images. For debug purpose.";
                 default:
