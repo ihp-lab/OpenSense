@@ -17,11 +17,27 @@ namespace LibreFace {
         private readonly IReadOnlyDictionary<string, float> _dict;
 
         internal ExpressionOutput(in NamedOnnxValue labels) {
-            _dict = labels.AsEnumerable<float>()
-                //.Select(l => MathF.Max(0, MathF.Min(5, l * 5f))) //Apply for ResNet18 model
+            _dict = Softmax(labels.AsEnumerable<float>())
                 .Select((l, i) => (Label: l, Idx: i))
                 .ToImmutableSortedDictionary(t => Keys[t.Idx], t => t.Label, Comparer);
             Debug.Assert(_dict.Count == Labels);
+        }
+
+        private static float[] Softmax(IEnumerable<float> input) {
+            var output = input.ToArray();
+            var max = output.Max();
+            var len = output.Length;
+            var sum = 0f;
+            for (var i = 0; i < len; i++) {
+                output[i] = MathF.Exp(output[i] - max);
+                sum += output[i];
+            }
+
+            for (var i = 0; i < len; i++) {
+                output[i] /= sum;
+            }
+
+            return output;
         }
 
         #region IReadOnlyCollection
