@@ -3,7 +3,7 @@
 namespace LibreFace.Benchmarks2 {
     public sealed class Options {
 
-        [Option('d', "dir", Default = "C:\\D\\Projects\\Other\\LibreFace_TestData\\DISFA\\images\\SN001", HelpText = "A folder which contains unaligned test images.")]
+        [Option('d', "dir", Default = "C:\\D\\Projects\\Other\\LibreFace_TestData\\DISFA\\full_images\\SN001", HelpText = "A folder which contains unaligned test images.")]
         public string ImageDirectory { get; set; }
 
         [Option('i', "image", Default = int.MaxValue, HelpText = "Limit the number of images to use.")]
@@ -17,5 +17,8 @@ namespace LibreFace.Benchmarks2 {
 
         [Option('r', "thread", Default = 1, HelpText = "Microsoft \\psi thread count. 0 means no limit.")]
         public int ThreadCount { get; set; }
+
+        [Option('c', "counters", Default = false, HelpText = "Count outputs.")]
+        public bool CountOutputs { get; set; }
     }
 }
