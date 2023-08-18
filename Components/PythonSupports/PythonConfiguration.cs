@@ -92,7 +92,7 @@ namespace OpenSense.Components.PythonSupports {
             /** Connect
              */
             foreach (var inputConfig in Inputs) {
-                var inputMetadata = (PythonPortMetadata)this.FindPortMetadata(inputConfig.LocalPort);
+                var inputMetadata = (StaticPortMetadata)this.FindPortMetadata(inputConfig.LocalPort);
                 Debug.Assert(inputMetadata.Direction == PortDirection.Input);
                 dynamic consumer = result.Consumers[inputConfig.LocalPort.Identifier];
 
@@ -101,7 +101,7 @@ namespace OpenSense.Components.PythonSupports {
                 Debug.Assert(remoteOutputMetadata.Direction == PortDirection.Output);
                 var getProducerFunc = typeof(HelperExtensions)
                     .GetMethod(nameof(HelperExtensions.GetProducer))
-                    .MakeGenericMethod(inputMetadata.TransmissionDataType);
+                    .MakeGenericMethod(inputMetadata.DataType);
                 dynamic producer = getProducerFunc.Invoke(null, new object[] { remoteEnvironment, inputConfig.RemotePort });
 
                 Operators.PipeTo(producer, consumer, inputConfig.DeliveryPolicy);
@@ -122,9 +122,9 @@ namespace OpenSense.Components.PythonSupports {
 
         #region IComponentMetadata
 
-        private Lazy<IReadOnlyList<PythonPortMetadata>> componentPorts;
+        private Lazy<IReadOnlyList<StaticPortMetadata>> componentPorts;
 
-        private IReadOnlyList<PythonPortMetadata> ComponentPorts => componentPorts.Value;
+        private IReadOnlyList<StaticPortMetadata> ComponentPorts => componentPorts.Value;
 
         #endregion
 
@@ -134,7 +134,7 @@ namespace OpenSense.Components.PythonSupports {
                 return result;
             });
 
-            componentPorts = new Lazy<IReadOnlyList<PythonPortMetadata>>(() => {
+            componentPorts = new Lazy<IReadOnlyList<StaticPortMetadata>>(() => {
                 var result = GetComponentPorts(_engine, MetadataScope);
                 return result;
             });
@@ -163,13 +163,13 @@ namespace OpenSense.Components.PythonSupports {
             return result;
         }
 
-        private static IReadOnlyList<PythonPortMetadata> GetComponentPorts(ScriptEngine engine, ScriptScope metadataScope) {
-            var result = new List<PythonPortMetadata>();
+        private static IReadOnlyList<StaticPortMetadata> GetComponentPorts(ScriptEngine engine, ScriptScope metadataScope) {
+            var result = new List<StaticPortMetadata>();
 
             if (metadataScope.TryGetVariable("PORTS", out var portsRaw)) {
                 if (engine.Operations.TryConvertTo<PythonList>(portsRaw, out PythonList ports)) {
                     foreach (var portRaw in ports) {
-                        if (portRaw is PythonPortMetadata port) {
+                        if (portRaw is StaticPortMetadata port) {
                             result.Add(port);
                         }
                     }

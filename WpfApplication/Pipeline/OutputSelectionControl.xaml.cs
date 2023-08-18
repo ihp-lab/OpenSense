@@ -33,11 +33,11 @@ namespace OpenSense.WPF.Pipeline {
                         );
             var localOutputs = configuration.FindOutputPortDataTypes(configurations);
             var localInputs = configuration.FindInputPortDataTypes(configurations, inputMetadata);
-            var localDataType = configuration.FindInputPortDataType(inputMetadata, configurations);
+            var localDataType = new RuntimePortDataType(inputMetadata, configuration.FindInputPortDataType(inputMetadata, configurations));
             var result = selections.Where(sel => {
                 var remoteInputs = sel.Configuration.FindInputPortDataTypes(configurations);
                 var remoteOutputs = sel.Configuration.FindOutputPortDataTypes(configurations, sel.PortMetadata);
-                var remoteDataType = sel.PortMetadata.GetTransmissionDataType(localDataType, remoteInputs, remoteOutputs);//try connect
+                var remoteDataType = new RuntimePortDataType(sel.PortMetadata, sel.PortMetadata.GetTransmissionDataType(localDataType, remoteInputs, remoteOutputs));//try connect
                 return inputMetadata.CanConnectDataType(remoteDataType, localOutputs, localInputs);
             }).ToArray();
             return result;
