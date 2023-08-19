@@ -79,11 +79,11 @@ namespace OpenSense.Components.MediaPipe.NET {
         );
 
         public override object Instantiate(Pipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents, IServiceProvider? serviceProvider) {
-            var logger = serviceProvider.GetService(typeof(ILogger<SolutionWrapper>)) as ILogger<SolutionWrapper>;
+            var logger = serviceProvider?.GetService(typeof(ILogger<SolutionWrapper>)) as ILogger<SolutionWrapper>;
             var result = new SolutionWrapper(pipeline, inputSidePackets, inputStreams, outputStreams, Graph, logger);
 
             foreach (var inputConfig in Inputs) {
-                var inputMetadata = (PortMetadata)this.FindPortMetadata(inputConfig.LocalPort);
+                var inputMetadata = (StaticPortMetadata)this.FindPortMetadata(inputConfig.LocalPort);
 
                 Debug.Assert(inputMetadata.Direction == PortDirection.Input);
                 var key = (string)inputConfig.LocalPort.Identifier;
@@ -94,7 +94,7 @@ namespace OpenSense.Components.MediaPipe.NET {
                 Debug.Assert(remoteOutputMetadata.Direction == PortDirection.Output);
                 var getProducerFunc = typeof(HelperExtensions)
                     .GetMethod(nameof(HelperExtensions.GetProducer))!
-                    .MakeGenericMethod(inputMetadata.TransmissionDataType);
+                    .MakeGenericMethod(inputMetadata.DataType);
                 dynamic producer = getProducerFunc.Invoke(null, new object[] { remoteEnvironment, inputConfig.RemotePort })!;
 
                 Operators.PipeTo(producer, consumer, inputConfig.DeliveryPolicy);
@@ -107,12 +107,12 @@ namespace OpenSense.Components.MediaPipe.NET {
             var result = new List<IPortMetadata>();
             foreach (var input in InputStreams) {
                 var type = MediaPipeInteropHelpers.MapInputType(input.PacketType);
-                var port = new PortMetadata(input.Identifier, type, PortDirection.Input, "Input stream.");
+                var port = new StaticPortMetadata(input.Identifier, PortDirection.Input, PortAggregation.Object, type, "Input stream.");
                 result.Add(port);
             }
             foreach (var output in OutputStreams) {
                 var type = MediaPipeInteropHelpers.MapOutputType(output.PacketType);
-                var port = new PortMetadata(output.Identifier, type, PortDirection.Output, "Output stream.");
+                var port = new StaticPortMetadata(output.Identifier, PortDirection.Output, PortAggregation.Object, type, "Output stream.");
                 result.Add(port);
             }
             return result;

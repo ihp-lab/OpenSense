@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
 
 namespace OpenSense.Components.Contract {
@@ -14,13 +16,13 @@ namespace OpenSense.Components.Contract {
         /// <summary>
         /// Display description
         /// </summary>
-        string Description { get;}
+        string? Description { get;}
 
         PortDirection Direction { get; }
 
         PortAggregation Aggregation { get; }
 
-        bool CanConnectDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes);
+        bool CanConnectDataType(RuntimePortDataType? remoteEndPointDataType, IReadOnlyList<RuntimePortDataType> localOtherDirectionPortsDataTypes, IReadOnlyList<RuntimePortDataType> localSameDirectionPortsDataTypes);
 
         /// <summary>
         /// The data type that this dynamic port transmitts, inferenced by already exsited connections.
@@ -29,6 +31,6 @@ namespace OpenSense.Components.Contract {
         /// <param name="localOtherDirectionPortsDataTypes">element will be null if the data type of the sepcific port is not known</param>
         /// <param name="localSameDirectionPortsDataTypes">element will be null if the data type of the sepcific port is not known.</param>
         /// <returns>null if the port type can not be determined</returns>
-        Type GetTransmissionDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes);
+        Type? GetTransmissionDataType(RuntimePortDataType? remoteEndPointDataType, IReadOnlyList<RuntimePortDataType> localOtherDirectionPortsDataTypes, IReadOnlyList<RuntimePortDataType> localSameDirectionPortsDataTypes);
     }
 }
