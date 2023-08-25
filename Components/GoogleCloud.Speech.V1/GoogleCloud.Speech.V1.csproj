@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <!-- Note: We have multiple target frameworks, because the package Google.Cloud.Speech.V1's dependency. -->
+        <TargetFrameworks>netstandard2.1;net48</TargetFrameworks>
         <AssemblyName>OpenSense.Components.GoogleCloud.Speech.V1</AssemblyName>
         <RootNamespace>OpenSense.Components.GoogleCloud.Speech.V1</RootNamespace>
         <LangVersion>11.0</LangVersion>
