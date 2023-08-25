@@ -13,7 +13,7 @@ namespace OpenSense.WPF.Components.CollectionOperators {
                 return false;
             }
             var genericType = type.GetGenericTypeDefinition();
-            var result = genericType == typeof(ElementAt<>);
+            var result = genericType == typeof(ElementAt<,>);
             return result;
         }
 

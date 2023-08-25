@@ -1,10 +1,12 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
 
 namespace OpenSense.Components.Contract {
     public abstract class OperatorPortMetadata : IPortMetadata {
 
-        public OperatorPortMetadata(string name, PortDirection direction, string description = null) {
+        public OperatorPortMetadata(string name, PortDirection direction, string? description = null) {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Direction = direction;
             Description = description;
@@ -14,18 +16,18 @@ namespace OpenSense.Components.Contract {
 
         public string Name { get; }
 
-        public string Description { get; }
+        public string? Description { get; }
 
         public PortDirection Direction { get; }
 
         public PortAggregation Aggregation => PortAggregation.Object;
 
-        public virtual bool CanConnectDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes) {
+        public virtual bool CanConnectDataType(RuntimePortDataType? remoteEndPointDataType, IReadOnlyList<RuntimePortDataType> localOtherDirectionPortsDataTypes, IReadOnlyList<RuntimePortDataType> localSameDirectionPortsDataTypes) {
             switch (Direction) {
                 case PortDirection.Input:
                     return true;
                 case PortDirection.Output:
-                    if (remoteEndPointDataType is null) {
+                    if (remoteEndPointDataType?.Type is null) {
                         return false;
                     }
                     var selfDataType = GetTransmissionDataType(remoteEndPointDataType, localOtherDirectionPortsDataTypes, localSameDirectionPortsDataTypes);
@@ -34,14 +36,14 @@ namespace OpenSense.Components.Contract {
                          */
                         return false;
                     }
-                    var result = selfDataType.CanBeCastTo(remoteEndPointDataType);
+                    var result = selfDataType.CanBeCastTo(remoteEndPointDataType.Type);
                     return result;
                 default:
                     throw new InvalidOperationException();
             }
         }
 
-        public abstract Type GetTransmissionDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes);
+        public abstract Type? GetTransmissionDataType(RuntimePortDataType? remoteEndPointDataType, IReadOnlyList<RuntimePortDataType> localOtherDirectionPortsDataTypes, IReadOnlyList<RuntimePortDataType> localSameDirectionPortsDataTypes);
 
     }
 }

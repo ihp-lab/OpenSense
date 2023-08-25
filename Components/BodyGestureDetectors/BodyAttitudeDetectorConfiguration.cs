@@ -13,6 +13,16 @@ namespace OpenSense.Components.BodyGestureDetectors {
             set => SetProperty(ref bodyIndex, value);
         }
 
+
+        private ConfidenceLevel minimumConfidenceLevel = ConfidenceLevel.Medium;
+
+        public ConfidenceLevel MinimumConfidenceLevel {
+            get => minimumConfidenceLevel;
+            set => SetProperty(ref minimumConfidenceLevel, value);
+        }
+
+        /* Torso */
+
         private float yawOffset = 0;
 
         public float YawOffset {
@@ -34,12 +44,28 @@ namespace OpenSense.Components.BodyGestureDetectors {
             set => SetProperty(ref rollOffset, value);
         }
 
-        private ConfidenceLevel minimumConfidenceLevel = ConfidenceLevel.Medium;
+        /* Head */
+        private float headYawOffset = 0;
 
-        public ConfidenceLevel MinimumConfidenceLevel {
-            get => minimumConfidenceLevel;
-            set => SetProperty(ref minimumConfidenceLevel, value);
+        public float HeadYawOffset {
+            get => headYawOffset;
+            set => SetProperty(ref headYawOffset, value);
         }
+
+        private float headPitchOffset = 0;
+
+        public float HeadYPitchOffset {
+            get => headPitchOffset;
+            set => SetProperty(ref headPitchOffset, value);
+        }
+
+        private float headRollOffset = 0;
+
+        public float HeadRollOffset {
+            get => headRollOffset;
+            set => SetProperty(ref headRollOffset, value);
+        }
+
 
         public override IComponentMetadata GetMetadata() => new BodyAttitudeDetectorMetadata();
 

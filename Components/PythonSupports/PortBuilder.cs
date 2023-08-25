@@ -37,7 +37,7 @@ namespace OpenSense.Components.PythonSupports {
 
         #region Methods
         public IPortMetadata Build() {
-            var result = new PythonPortMetadata(Name, Direction, Type, Description);
+            var result = new StaticPortMetadata(Name, Direction, PortAggregation.Object, Type, Description);
             return result;
         }
 

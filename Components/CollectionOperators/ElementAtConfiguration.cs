@@ -4,7 +4,7 @@ using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.CollectionOperators {
     [Serializable]
-    public sealed class ElementAtConfiguration : ConventionalComponentConfiguration_OneParam {
+    public sealed class ElementAtConfiguration : CollectionOperatorConfiguration {
 
         private int index = 0;
 
@@ -15,7 +15,7 @@ namespace OpenSense.Components.CollectionOperators {
 
         public override IComponentMetadata GetMetadata() => new ElementAtMetadata();
 
-        protected override object Instantiate<T>(Pipeline pipeline, IServiceProvider serviceProvider) =>
-            new ElementAt<T>(pipeline) { Index = Index, };
+        protected override object Instantiate<TElem, TCollection>(Pipeline pipeline, IServiceProvider serviceProvider) =>
+            new ElementAt<TElem, TCollection>(pipeline) { Index = Index, };
     }
 }

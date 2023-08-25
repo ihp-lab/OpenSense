@@ -8,16 +8,16 @@ using Microsoft.Psi.Components;
 
 namespace OpenSense.Components.CollectionOperators {
 
-    public sealed class ElementAt<T> : IConsumerProducer<IEnumerable<T>, T>, INotifyPropertyChanged {
-
-        private static readonly IEqualityComparer<T> Comparer = EqualityComparer<T>.Default;
+    public sealed class ElementAt<TElem, TCollection>
+        : IConsumerProducer<TCollection, TElem>, INotifyPropertyChanged
+        where TCollection : IEnumerable<TElem> {
 
         #region Ports
-        public Receiver<IEnumerable<T>> In { get; }
-
         public Receiver<int> IndexIn { get; }
 
-        public Emitter<T> Out { get; }
+        public Receiver<TCollection> In { get; }
+
+        public Emitter<TElem> Out { get; }
         #endregion
 
         #region Settings
@@ -30,19 +30,25 @@ namespace OpenSense.Components.CollectionOperators {
         #endregion
 
         public ElementAt(Pipeline pipeline) {
-            In = pipeline.CreateReceiver<IEnumerable<T>>(this, Process, nameof(In));
             IndexIn = pipeline.CreateReceiver<int>(this, ProcessIndex, nameof(IndexIn));
-            Out = pipeline.CreateEmitter<T>(this, nameof(Out));
+            In = pipeline.CreateReceiver<TCollection>(this, Process, nameof(In));
+            Out = pipeline.CreateEmitter<TElem>(this, nameof(Out));
         }
 
         private void ProcessIndex(int index, Envelope envelope) {
             Index = index;
         }
 
-        private void Process(IEnumerable<T> values, Envelope envelope) {
+        private void Process(TCollection collection, Envelope envelope) {
             var index = Index;
-            switch (values) {
-                case IReadOnlyList<T> list:
+            switch (collection) {
+                case IReadOnlyList<TElem> readOnlyList:
+                    if (0 <= index && index < readOnlyList.Count) {
+                        var value = readOnlyList[index];
+                        Out.Post(value, envelope.OriginatingTime);
+                    }
+                    break;
+                case IList<TElem> list:
                     if (0 <= index && index < list.Count) {
                         var value = list[index];
                         Out.Post(value, envelope.OriginatingTime);
@@ -50,7 +56,7 @@ namespace OpenSense.Components.CollectionOperators {
                     break;
                 default:
                     try {
-                        var value = values.ElementAt(index);
+                        var value = collection.ElementAt(index);
                         Out.Post(value, envelope.OriginatingTime);//Note: ElementAtOrDefault() is not suitable here.
                     } catch (ArgumentOutOfRangeException) {
                         ;//Nothing

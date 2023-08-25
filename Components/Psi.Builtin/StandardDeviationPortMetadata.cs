@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -30,26 +32,29 @@ namespace OpenSense.Components.Psi {
         public StandardDeviationPortMetadata(string name, PortDirection direction, string description = "") : base(name, direction, description) {
         }
 
-        public override bool CanConnectDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes) {
+        public override bool CanConnectDataType(RuntimePortDataType? remoteEndPointDataType, IReadOnlyList<RuntimePortDataType> localOtherDirectionPortsDataTypes, IReadOnlyList<RuntimePortDataType> localSameDirectionPortsDataTypes) {
             switch (Direction) {
                 case PortDirection.Input:
+                    if (remoteEndPointDataType?.Type is null) {
+                        return false;
+                    }
                     Debug.Assert(ValidInputArrayTypes.Length > 0);
-                    var result = ValidInputArrayTypes.Contains(remoteEndPointDataType);
+                    var result = ValidInputArrayTypes.Contains(remoteEndPointDataType.Type);
                     return result;
                 default:
                     return base.CanConnectDataType(remoteEndPointDataType, localOtherDirectionPortsDataTypes, localSameDirectionPortsDataTypes);
             }
         }
 
-        public override Type GetTransmissionDataType(Type remoteEndPointDataType, IList<Type> localOtherDirectionPortsDataTypes, IList<Type> localSameDirectionPortsDataTypes) {
+        public override Type? GetTransmissionDataType(RuntimePortDataType? remoteEndPointDataType, IReadOnlyList<RuntimePortDataType> localOtherDirectionPortsDataTypes, IReadOnlyList<RuntimePortDataType> localSameDirectionPortsDataTypes) {
             switch (Direction) {
                 case PortDirection.Input:
-                    return remoteEndPointDataType;
+                    return remoteEndPointDataType?.Type;
                 case PortDirection.Output:
                     if (localOtherDirectionPortsDataTypes.Count != 1) {
                         return null;
                     }
-                    var inputType = localOtherDirectionPortsDataTypes.Single();
+                    var inputType = localOtherDirectionPortsDataTypes.Single().Type;
                     if (inputType is null) {
                         return null;
                     }

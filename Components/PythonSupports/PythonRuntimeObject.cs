@@ -29,7 +29,7 @@ namespace OpenSense.Components.PythonSupports {
             Pipeline pipeline, 
             ScriptEngine engine, 
             string code, 
-            IReadOnlyList<PythonPortMetadata> ports, 
+            IReadOnlyList<StaticPortMetadata> ports, 
             ILogger pythonLogger
             ) {
             _engine = engine;
@@ -50,7 +50,7 @@ namespace OpenSense.Components.PythonSupports {
                     case PortDirection.Output:
                         var createMethod = typeof(Pipeline)
                             .GetMethod(nameof(Pipeline.CreateEmitter))
-                            .MakeGenericMethod(portMetadata.TransmissionDataType);
+                            .MakeGenericMethod(portMetadata.DataType);
                         var emitter = createMethod.Invoke(pipeline, new object[] { 
                             this, 
                             portMetadata.Name,
@@ -85,7 +85,7 @@ namespace OpenSense.Components.PythonSupports {
                         break;
                     case PortDirection.Input:
                         var identifier = portMetadata.Identifier.ToString();
-                        var processingMethodType = typeof(Action<,>).MakeGenericType(portMetadata.TransmissionDataType, typeof(Envelope));
+                        var processingMethodType = typeof(Action<,>).MakeGenericType(portMetadata.DataType, typeof(Envelope));
                         if (!_scope.TryGetVariable(identifier, out var delegateRaw)) {
                             throw new InvalidOperationException($"Did not find a \"{identifier}\" function in runtime Python code.");
                         }
@@ -97,7 +97,7 @@ namespace OpenSense.Components.PythonSupports {
                             .GetMethods(BindingFlags.Instance | BindingFlags.Public)
                             .Where(m => m.Name == nameof(Pipeline.CreateReceiver))
                             .Single(m => m.GetParameters()[1].ParameterType.GetGenericTypeDefinition() == typeof(Action<,>))
-                            .MakeGenericMethod(portMetadata.TransmissionDataType);
+                            .MakeGenericMethod(portMetadata.DataType);
                         var receiver = createMethod.Invoke(pipeline, new object[] {
                             this,
                             @delegate,
