@@ -46,7 +46,7 @@ You may see security warnings like this.
 
 If a retarget dialog is shown, select `No Upgrade` for all.
 ![image](images/visual-studio-retarget-project.png)
-*We once upgraded them to VS 2019 Toolset, but found some native functions does not work.*
+*We once upgraded them to VS 2019 Toolset, but found some native functions did not work.*
 
 Select project `WpfApplication` and set it to be the startup project (by right click on it and click `Set as Startup Project`).
 
