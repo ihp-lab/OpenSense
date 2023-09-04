@@ -16,7 +16,7 @@ namespace OpenSense.Components.Psi {
                 case PortDirection.Input:
                     return remoteEndPointDataType?.Type;//If remoteEndPointDataType is null, then return null
                 case PortDirection.Output:
-                    if (localOtherDirectionPortsDataTypes.Count != 2 || localOtherDirectionPortsDataTypes.Contains(null)) {
+                    if (localOtherDirectionPortsDataTypes.Count != 2 || localOtherDirectionPortsDataTypes.Any(t => t.Type is null)) {
                         return null;
                     }
                     return typeof(ValueTuple<,>).MakeGenericType(localOtherDirectionPortsDataTypes.Select(t => t.Type).ToArray());
