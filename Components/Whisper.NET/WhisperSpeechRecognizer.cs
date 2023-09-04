@@ -128,8 +128,15 @@ namespace OpenSense.Components.Whisper.NET {
         public ILogger? Logger {
             get => logger;
             set => SetProperty(ref logger, value);
-        } 
+        }
         #endregion
+
+        private double progress = 0;
+
+        public double Progress {
+            get => progress;
+            private set => SetProperty(ref progress, value);
+        }
 
         #region Ports
         public Receiver<(AudioBuffer, bool)> In { get; }
@@ -203,6 +210,7 @@ namespace OpenSense.Components.Whisper.NET {
                 .FromPath(modelFilename)
                 .CreateBuilder()
                 .WithLanguage(code)
+                .WithProgressHandler(OnProgress)
                 .WithSegmentEventHandler(OnSegment)
                 .WithProbabilities()
                 .WithTokenTimestamps()
@@ -390,6 +398,10 @@ namespace OpenSense.Components.Whisper.NET {
 
         private void OnSegment(SegmentData segment) {
             _segments.Add(segment);
+        }
+
+        private void OnProgress(int progress) {
+            Progress = progress;//What is this? 100 times of 0.01sec units? https://github.com/ggerganov/whisper.cpp/blob/2f52783a080e8955e80e4324fed73e2f906bb80c/whisper.cpp#L4270C84-L4270C84
         }
 
         private static byte[] SegmentAudioBuffer(SegmentData segment, WaveFormat format, IReadOnlyList<Section> sections) {
