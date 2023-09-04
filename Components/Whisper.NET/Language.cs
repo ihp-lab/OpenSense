@@ -1,7 +1,6 @@
 ﻿namespace OpenSense.Components.Whisper.NET {
     public enum Language : byte {
         NotSet = 0,
-        Auto = 0,
         Afrikaans,
         Arabic, 
         Armenian, 

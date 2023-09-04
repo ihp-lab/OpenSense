@@ -504,7 +504,7 @@ namespace OpenSense.Components.Whisper.NET {
         };
 
         private static string GetLanguageCode(Language language) => language switch {//Generated, not tested
-            Language.Auto => "auto",
+            Language.NotSet => "auto",
             Language.Afrikaans => "af",
             Language.Arabic => "ar",
             Language.Armenian => "hy",
