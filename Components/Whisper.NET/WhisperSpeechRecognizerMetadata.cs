@@ -6,7 +6,7 @@ namespace OpenSense.Components.Whisper.NET {
     [Export(typeof(IComponentMetadata))]
     public sealed class WhisperSpeechRecognizerMetadata : ConventionalComponentMetadata {
 
-        public override string Description => "[Experimental] Local deploy of OpenAI Whisper Speech Recognizer. Please use 16kHz 16-bit PCM. Channels will be averaged. Model file will be downloaded if not found. There will be no alternative results.";
+        public override string Description => "[Experimental] Local deploy of OpenAI Whisper Speech Recognizer. Please use 16kHz 16-bit PCM. Channels will be averaged. Model file will be downloaded if not found. There will be no alternative results. This is a CPU version. To use CUDA please compile from source.";
 
         protected override Type ComponentType => typeof(WhisperSpeechRecognizer);
 

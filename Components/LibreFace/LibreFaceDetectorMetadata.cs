@@ -6,7 +6,7 @@ namespace OpenSense.Components.LibreFace {
     [Export(typeof(IComponentMetadata))]
     public class LibreFaceDetectorMetadata : ConventionalComponentMetadata {
 
-        public override string Description => "Detect Action Unit intensities and facial expressions. Requires MediaPipe face landmark detection results. The included AUs are 1, 2, 4, 5, 6, 9, 12, 15, 17, 20, 25, 26.";
+        public override string Description => "Detect Action Unit intensities and facial expressions. Requires MediaPipe face landmark detection results. The included AUs are 1, 2, 4, 5, 6, 9, 12, 15, 17, 20, 25, 26. This is a CPU version. To use CUDA please compile from source.";
 
         protected override Type ComponentType => typeof(LibreFaceDetector);
 
