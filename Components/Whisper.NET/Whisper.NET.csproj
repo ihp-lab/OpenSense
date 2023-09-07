@@ -9,8 +9,7 @@
         <Nullable>enable</Nullable>
 
         <!-- cuBLAS conditions-->
-        <!--Note: CUDA is required.-->
-        <!--TODO: cuBLAS not working, it says missing native library, but why? I have CUDA_PATH set.-->
+        <!--Note: CUDA is required, and needed to be added to PATH.-->
         <!--<DefineConstants>$(DefineConstants);CUBLAS</DefineConstants>-->
         <UseCUBLAS Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*CUBLAS(;.*)*$'))">true</UseCUBLAS>
     </PropertyGroup>

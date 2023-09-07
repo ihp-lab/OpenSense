@@ -44,6 +44,13 @@ namespace OpenSense.Components.Whisper.NET {
             set => SetProperty(ref downloadTimeoutInSeconds, value);
         }
 
+        private bool lazyInitialization = false;
+
+        public bool LazyInitialization {
+            get => lazyInitialization;
+            set => SetProperty(ref lazyInitialization, value);
+        }
+
         private Language language = Language.English;
 
         public Language Language {
@@ -109,6 +116,7 @@ namespace OpenSense.Components.Whisper.NET {
             QuantizationType = QuantizationType,
             ForceDownload = ForceDownload,
             DownloadTimeout = TimeSpan.FromSeconds(DownloadTimeoutInSeconds),
+            LazyInitialization = LazyInitialization,
             Language = Language,
             Prompt = Prompt,
             SegmentationRestriction = SegmentationRestriction,

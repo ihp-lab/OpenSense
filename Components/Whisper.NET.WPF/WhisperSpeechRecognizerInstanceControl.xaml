@@ -48,6 +48,8 @@
                         Height="auto" />
                     <RowDefinition
                         Height="auto" />
+                    <RowDefinition
+                        Height="auto" />
                 </Grid.RowDefinitions>
 
                 <Label
@@ -79,75 +81,85 @@
 
                 <Label
                     Grid.Row="3">
-                    Language
+                    Lazy Initialization
                 </Label>
-                <TextBlock
+                <CheckBox
                     Grid.Row="3"
                     Grid.Column="1"
-                    Text="{Binding Language}" />
+                    IsEnabled="False"
+                    IsChecked="{Binding LazyInitialization}" />
 
                 <Label
                     Grid.Row="4">
-                    Prompt
+                    Language
                 </Label>
                 <TextBlock
                     Grid.Row="4"
                     Grid.Column="1"
-                    Text="{Binding Prompt}" />
+                    Text="{Binding Language}" />
 
                 <Label
                     Grid.Row="5">
-                    Segmentation Restriction
+                    Prompt
                 </Label>
                 <TextBlock
                     Grid.Row="5"
                     Grid.Column="1"
-                    Text="{Binding SegmentationRestriction}" />
+                    Text="{Binding Prompt}" />
 
                 <Label
                     Grid.Row="6">
+                    Segmentation Restriction
+                </Label>
+                <TextBlock
+                    Grid.Row="6"
+                    Grid.Column="1"
+                    Text="{Binding SegmentationRestriction}" />
+
+                <Label
+                    Grid.Row="7">
                     Input Timestamp Mode
                 </Label>
                 <ComboBox
-                    Grid.Row="6"
+                    Grid.Row="7"
                     Grid.Column="1"
                     SelectedItem="{Binding InputTimestampMode}"
                     ItemsSource="{Binding Source={util:EnumBindingSource {x:Type component:TimestampMode}}, Mode=OneTime}" />
 
                 <Label
-                    Grid.Row="7">
+                    Grid.Row="8">
                     Output Timestamp Mode
                 </Label>
                 <ComboBox
-                    Grid.Row="7"
+                    Grid.Row="8"
                     Grid.Column="1"
                     SelectedItem="{Binding OutputTimestampMode}"
                     ItemsSource="{Binding Source={util:EnumBindingSource {x:Type component:TimestampMode}}, Mode=OneTime}" />
 
                 <Label
-                    Grid.Row="8">
+                    Grid.Row="9">
                     Output Partial Results (WARN: PERF)
                 </Label>
                 <CheckBox
-                    Grid.Row="8"
+                    Grid.Row="9"
                     Grid.Column="1"
                     IsChecked="{Binding OutputPartialResults}" />
 
                 <Label
-                    Grid.Row="9">
+                    Grid.Row="10">
                     Partial Eval Inverval (sec)
                 </Label>
                 <TextBox
-                    Grid.Row="9"
+                    Grid.Row="10"
                     Grid.Column="1"
                     Text="{Binding PartialEvalueationInvervalInSeconds}" />
 
                 <Label
-                    Grid.Row="10">
+                    Grid.Row="11">
                     Output Audio
                 </Label>
                 <CheckBox
-                    Grid.Row="10"
+                    Grid.Row="11"
                     Grid.Column="1"
                     IsChecked="{Binding OutputAudio}" />
             </Grid>
