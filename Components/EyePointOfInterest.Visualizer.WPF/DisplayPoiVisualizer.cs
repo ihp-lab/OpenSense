@@ -10,11 +10,11 @@ namespace OpenSense.Components.EyePointOfInterest.Visualizer {
         public Receiver<Vector2> In { get; private set; }
 
         public DisplayPoiVisualizer(Pipeline pipeline) {
-            In = pipeline.CreateReceiver<Vector2>(this, Porcess, nameof(In));
+            In = pipeline.CreateReceiver<Vector2>(this, Process, nameof(In));
             pipeline.PipelineCompleted += PipelineCompleted;
         }
 
-        private void Porcess(Vector2 displayCoordinate, Envelope envelope) {
+        private void Process(Vector2 displayCoordinate, Envelope envelope) {
             X = displayCoordinate.X;
             Y = displayCoordinate.Y;
         }

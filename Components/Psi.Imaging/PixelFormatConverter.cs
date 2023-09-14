@@ -26,11 +26,11 @@ namespace OpenSense.Components.Psi.Imaging {
         public Emitter<Shared<Image>> Out { get; private set; }
 
         public PixelFormatConverter(Pipeline pipeline) {
-            In = pipeline.CreateReceiver<Shared<Image>>(this, PorcessFrame, nameof(In));
+            In = pipeline.CreateReceiver<Shared<Image>>(this, ProcessFrame, nameof(In));
             Out = pipeline.CreateEmitter<Shared<Image>>(this, nameof(Out));
         }
 
-        private void PorcessFrame(Shared<Image> frame, Envelope envelope) {
+        private void ProcessFrame(Shared<Image> frame, Envelope envelope) {
             if (BypassIfPossible && frame.Resource.PixelFormat == TargetPixelFormat) {
                 Out.Post(frame, envelope.OriginatingTime);
                 return;

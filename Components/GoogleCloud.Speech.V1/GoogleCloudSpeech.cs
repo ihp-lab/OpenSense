@@ -16,7 +16,7 @@ using Microsoft.Psi.Speech;
 
 namespace OpenSense.Components.GoogleCloud.Speech.V1 {
 
-    public sealed class GoogleCloudSpeech : IConsumerProducer<(AudioBuffer, bool), IStreamingSpeechRecognitionResult> {
+    public sealed class GoogleCloudSpeech : IConsumerProducer<(AudioBuffer, bool), IStreamingSpeechRecognitionResult>, INotifyPropertyChanged {
 
         private static readonly IList<SpeechRecognitionAlternate> EmptyAlternatives = new List<SpeechRecognitionAlternate> {
            new SpeechRecognitionAlternate(text: "", confidence: 1.0),
@@ -114,7 +114,7 @@ namespace OpenSense.Components.GoogleCloud.Speech.V1 {
 
         public GoogleCloudSpeech(Pipeline pipeline, string jsonCredentials) {
             // psi pipeline
-            In = pipeline.CreateAsyncReceiver<(AudioBuffer, bool)>(this, PorcessFramesAsync, nameof(In));
+            In = pipeline.CreateAsyncReceiver<(AudioBuffer, bool)>(this, ProcessFramesAsync, nameof(In));
             Out = pipeline.CreateEmitter<IStreamingSpeechRecognitionResult>(this, nameof(Out));
             AudioOut = pipeline.CreateEmitter<AudioBuffer>(this, nameof(AudioOut));
 
@@ -191,7 +191,7 @@ namespace OpenSense.Components.GoogleCloud.Speech.V1 {
             client = null;
         }
 
-        private async Task PorcessFramesAsync((AudioBuffer, bool) frame, Envelope envelope) {
+        private async Task ProcessFramesAsync((AudioBuffer, bool) frame, Envelope envelope) {
             var (audio, active) = frame;
             if (Mute || !active) {
                 await CloseStreamAsync();

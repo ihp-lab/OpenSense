@@ -41,11 +41,11 @@ namespace OpenSense.Components.Psi.Imaging {
 
         public FlipImageOperator(Pipeline pipeline) {
             // psi pipeline
-            In = pipeline.CreateReceiver<Shared<Image>>(this, PorcessFrame, nameof(In));
+            In = pipeline.CreateReceiver<Shared<Image>>(this, Process, nameof(In));
             Out = pipeline.CreateEmitter<Shared<Image>>(this, nameof(Out));
         }
 
-        private void PorcessFrame(Shared<Image> frame, Envelope envelope) {
+        private void Process(Shared<Image> frame, Envelope envelope) {
             var flip = (Horizontal, Vertical);
             if (flip == (false, false)) {
                 Out.Post(frame, envelope.OriginatingTime);

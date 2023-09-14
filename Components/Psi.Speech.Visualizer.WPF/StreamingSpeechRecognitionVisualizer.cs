@@ -20,11 +20,11 @@ namespace OpenSense.Components.Psi.Speech.Visualizer {
         public Receiver<IStreamingSpeechRecognitionResult> In { get; private set; }
 
         public StreamingSpeechRecognitionVisualizer(Pipeline pipeline) {
-            In = pipeline.CreateReceiver<IStreamingSpeechRecognitionResult>(this, Porcess, nameof(In));
+            In = pipeline.CreateReceiver<IStreamingSpeechRecognitionResult>(this, Process, nameof(In));
             pipeline.PipelineCompleted += PipelineCompleted;
         }
 
-        private void Porcess(IStreamingSpeechRecognitionResult speech, Envelope envelope) {
+        private void Process(IStreamingSpeechRecognitionResult speech, Envelope envelope) {
             if (OnlyUpdateOnFinalResults && !speech.IsFinal) {
                 return;
             }

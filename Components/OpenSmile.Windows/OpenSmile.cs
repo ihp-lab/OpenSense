@@ -86,7 +86,7 @@ namespace OpenSense.Components.OpenSmile {
                 this.sourceName = sourceName;
             }
 
-            public void Porcess(AudioBuffer input, Envelope envelope) {
+            public void Process(AudioBuffer input, Envelope envelope) {
                 if (opensmile.Mute) {
                     return;
                 }
@@ -103,7 +103,7 @@ namespace OpenSense.Components.OpenSmile {
         }
 
         protected Action<AudioBuffer, Envelope> CreateReceiveCallBack(string sourceName) {
-            return new Closure(this, sourceName).Porcess;
+            return new Closure(this, sourceName).Process;
         }
 
         protected OpenSmileInterop.RawDataHandler CreateRawDataHandler(string sinkName) {

@@ -39,7 +39,7 @@ namespace OpenSense.Components.OpenPose {
 
         public OpenPose(Pipeline pipeline, AggregateStaticConfiguration configuration) {
             // psi pipeline
-            In = pipeline.CreateReceiver<Shared<Image>>(this, PorcessFrame, nameof(In));
+            In = pipeline.CreateReceiver<Shared<Image>>(this, ProcessFrame, nameof(In));
             Out = pipeline.CreateEmitter<Datum>(this, nameof(Out));
             //openpose configuration
             Session.StaticConfiguration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -73,7 +73,7 @@ namespace OpenSense.Components.OpenPose {
         }
 
         [HandleProcessCorruptedStateExceptions]
-        private void PorcessFrame(Shared<Image> frame, Envelope envelope) {
+        private void ProcessFrame(Shared<Image> frame, Envelope envelope) {
             if (Mute) {
                 return;
             }

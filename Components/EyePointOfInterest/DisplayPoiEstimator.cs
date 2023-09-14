@@ -37,11 +37,11 @@ namespace OpenSense.Components.EyePointOfInterest {
         }
 
         public DisplayPoiEstimator(Pipeline pipeline) {
-            In = pipeline.CreateReceiver<PoseAndEyeAndFace>(this, Porcess, nameof(In));
+            In = pipeline.CreateReceiver<PoseAndEyeAndFace>(this, Process, nameof(In));
             Out = pipeline.CreateEmitter<Vector2>(this, nameof(Out));
         }
 
-        private void Porcess(PoseAndEyeAndFace headPoseAndGaze, Envelope envelope) {
+        private void Process(PoseAndEyeAndFace headPoseAndGaze, Envelope envelope) {
             if (Mute) {
                 return;
             }
