@@ -15,11 +15,13 @@
             OpenSense component interfaces.
         </Description>
         <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <RepositoryUrl>https://github.com/ihp-lab/OpenSense.git</RepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>
         <None Include="$(SolutionDir)/LICENSE.txt" Pack="true" PackagePath=""/>
+        <None Include="$(SolutionDir)/README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
 
     <ItemGroup>
