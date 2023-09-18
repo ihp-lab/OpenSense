@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Composition;
 using Microsoft.Psi.Kinect;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Psi.Kinect {
     [Export(typeof(IComponentMetadata))]

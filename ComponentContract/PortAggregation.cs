@@ -1,4 +1,4 @@
-﻿namespace OpenSense.Components.Contract {
+﻿namespace OpenSense.Components {
     public enum PortAggregation {
         Unspecified = 0,
         Object = 1,

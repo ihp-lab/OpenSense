@@ -1,8 +1,7 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.WPF.Widget.Contract;
 
-namespace OpenSense.WPF.Widget.OpenSmileConfigurationConverter {
+namespace OpenSense.WPF.Widgets.OpenSmileConfigurationConverter {
     [Export(typeof(IWidgetMetadata))]
     public class WidgetMetadata : IWidgetMetadata {
         public string Name => "OpenSmile Configuration Converter";

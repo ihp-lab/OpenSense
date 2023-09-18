@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.Psi;
 using Microsoft.Psi.Remoting;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Psi {
     [Serializable]

@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.Psi.Media;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Psi.Media {
     [Serializable]

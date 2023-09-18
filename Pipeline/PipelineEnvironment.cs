@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using OpenSense.Components.Contract;
+using OpenSense.Components;
 using PsiPipeline = Microsoft.Psi.Pipeline;
 
 namespace OpenSense.Pipeline {

@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Builtin {
     public sealed class GenericComponentPortMetadata_OneParam : IPortMetadata {

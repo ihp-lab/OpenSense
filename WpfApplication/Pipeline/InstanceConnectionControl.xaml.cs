@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Psi;
-using OpenSense.Components.Contract;
+using OpenSense.Components;
 
 namespace OpenSense.WPF.Pipeline {
     public partial class InstanceConnectionControl : UserControl {

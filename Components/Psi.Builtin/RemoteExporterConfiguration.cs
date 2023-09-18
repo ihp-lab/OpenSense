@@ -2,7 +2,6 @@
 using Microsoft.Psi;
 using Microsoft.Psi.Data;
 using Microsoft.Psi.Remoting;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Psi {
     [Serializable]

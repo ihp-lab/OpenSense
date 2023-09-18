@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Psi;
 using Microsoft.Psi.Data.Json;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Psi.Data {
     [Serializable]

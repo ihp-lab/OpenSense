@@ -1,8 +1,7 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Components.Contract;
+using OpenSense.Components;
 using OpenSense.Components.OpenFace.Visualizer;
-using OpenSense.WPF.Components.Contract;
 
 namespace OpenSense.WPF.Components.OpenFace.Visualizer {
     [Export(typeof(IConfigurationControlCreator))]

@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net7.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <AssemblyName>OpenSense.WPF.Widget.Contract</AssemblyName>
-        <RootNamespace>OpenSense.WPF.Widget.Contract</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Widgets</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Widgets.Contracts</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

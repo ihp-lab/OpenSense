@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Psi;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Builtin {
     /// <remarks>

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Composition;
 using Microsoft.Psi.Audio;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Psi.Audio {
     [Export(typeof(IComponentMetadata))]

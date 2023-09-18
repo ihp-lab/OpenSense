@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:OpenSense.WPF.Components.MediaPipe.NET"
     xmlns:comp="clr-namespace:OpenSense.Components.MediaPipe.NET;assembly=OpenSense.Components.MediaPipe.NET"
-    xmlns:util="clr-namespace:OpenSense.WPF.Components.Utility;assembly=OpenSense.WPF.Components.Contract"
+    xmlns:util="clr-namespace:OpenSense.WPF.Components.Utilities;assembly=OpenSense.WPF.Components.Contracts"
     xmlns:packets="clr-namespace:Mediapipe.Net.Framework.Packets;assembly=Mediapipe.Net"
     mc:Ignorable="d"
     d:DesignHeight="450"

@@ -3,7 +3,6 @@ using System.Composition;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.Psi;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.CollectionOperators {
     [Export(typeof(IComponentMetadata))]

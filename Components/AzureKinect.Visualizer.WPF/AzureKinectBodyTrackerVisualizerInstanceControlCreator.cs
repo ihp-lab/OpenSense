@@ -1,7 +1,7 @@
 ﻿using System.Composition;
 using System.Windows;
 using OpenSense.Components.AzureKinect.Visualizer;
-using OpenSense.WPF.Components.Contract;
+using OpenSense.WPF.Components;
 
 namespace OpenSense.WPF.Components.AzureKinect.Visualizer {
     [Export(typeof(IInstanceControlCreator))]

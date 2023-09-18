@@ -1,4 +1,4 @@
-﻿namespace OpenSense.Widget.OpenSmileConfigurationConverter {
+﻿namespace OpenSense.Widgets.OpenSmileConfigurationConverter {
     internal static class Constants {
 
         public static readonly string NEW_LINE = "\n";//Environment.NewLine;

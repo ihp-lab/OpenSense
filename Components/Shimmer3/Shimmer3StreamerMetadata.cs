@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Composition;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Shimmer3 {
     [Export(typeof(IComponentMetadata))]

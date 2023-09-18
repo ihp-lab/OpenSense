@@ -10,7 +10,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.PythonSupports {
     [Serializable]

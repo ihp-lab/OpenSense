@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Psi;
 using Microsoft.Psi.Data;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Psi {
     [Serializable]

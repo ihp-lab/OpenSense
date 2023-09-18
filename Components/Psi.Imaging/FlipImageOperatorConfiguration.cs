@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.Psi;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Psi.Imaging {
     [Serializable]

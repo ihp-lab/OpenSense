@@ -1,7 +1,7 @@
 ﻿using System.Composition;
 using System.Windows;
 using OpenSense.Components.OpenSmile.Visualizer;
-using OpenSense.WPF.Components.Contract;
+using OpenSense.WPF.Components;
 
 namespace OpenSense.WPF.Components.OpenSmile.Visualizer {
     [Export(typeof(IInstanceControlCreator))]

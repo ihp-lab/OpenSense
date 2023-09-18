@@ -5,8 +5,8 @@ using System.Composition.Hosting;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
-using OpenSense.Components.Contract;
-using OpenSense.WPF.Components.Contract;
+using OpenSense.Components;
+using OpenSense.WPF.Components;
 
 namespace OpenSense.WPF.Pipeline {
     public class ConfigurationControlCreatorManager{

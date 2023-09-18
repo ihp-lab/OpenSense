@@ -5,7 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:OpenSense.WPF.Components.GoogleCloud.Speech.V1"
-    xmlns:util="clr-namespace:OpenSense.WPF.Components.Utility;assembly=OpenSense.WPF.Components.Contract"
+    xmlns:util="clr-namespace:OpenSense.WPF.Components.Utilities;assembly=OpenSense.WPF.Components.Contracts"
     xmlns:asr="clr-namespace:OpenSense.Components.GoogleCloud.Speech.V1;assembly=OpenSense.Components.GoogleCloud.Speech.V1"
     mc:Ignorable="d"
     d:DesignHeight="450"

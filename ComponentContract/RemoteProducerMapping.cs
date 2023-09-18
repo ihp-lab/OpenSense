@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OpenSense.Components.Contract {
+namespace OpenSense.Components {
     public sealed class RemoteProducerMapping {
 
         public InputConfiguration InputConfiguration { get; }

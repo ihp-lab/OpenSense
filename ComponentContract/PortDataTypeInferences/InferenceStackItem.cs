@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Diagnostics;
 
-namespace OpenSense.Components.Contract.PortDataTypeInferences {
+namespace OpenSense.Components.PortDataTypeInferences {
     internal sealed class InferenceStackItem {
 
         private readonly InferenceOperation _operation;

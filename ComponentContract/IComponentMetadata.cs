@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Psi;
 
-namespace OpenSense.Components.Contract {
+namespace OpenSense.Components {
     /// <summary>
     /// Metadata of a component.
     /// Contains information that not need to be serialized.

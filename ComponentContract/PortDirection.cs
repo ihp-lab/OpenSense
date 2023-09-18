@@ -1,4 +1,4 @@
-﻿namespace OpenSense.Components.Contract {
+﻿namespace OpenSense.Components {
     public enum PortDirection {
         Unspecified,
         Input,

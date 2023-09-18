@@ -1,7 +1,6 @@
-﻿using OpenSense.Components.Contract;
-using OpenSense.WPF.Components.Contract;
-using System.Composition;
+﻿using System.Composition;
 using System.Windows;
+using OpenSense.Components;
 
 namespace OpenSense.WPF.Components.MediaPipe.NET.Visualizer {
     [Export(typeof(IConfigurationControlCreator))]

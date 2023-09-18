@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.Psi;
-using OpenSense.Components.Contract;
+using OpenSense.Components;
 
 namespace OpenSense.WPF.Components.MediaPipe.NET.Visualizer {
     [Serializable]

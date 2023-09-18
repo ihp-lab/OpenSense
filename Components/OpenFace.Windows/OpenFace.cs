@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
 using OpenFaceInterop;
-using OpenSense.DataWriter.Contract;
+using OpenSense.DataWriter.Contracts;
 
 namespace OpenSense.Components.OpenFace {
     public sealed class OpenFace : IConsumer<Shared<Image>>, IProducer<PoseAndEyeAndFace>, INotifyPropertyChanged, IDisposable {

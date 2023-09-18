@@ -2,8 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <RootNamespace>OpenSense.Components.Contract</RootNamespace>
-        <AssemblyName>OpenSense.Components.Contract</AssemblyName>
+        <RootNamespace>OpenSense.Components</RootNamespace>
+        <AssemblyName>OpenSense.Components.Contracts</AssemblyName>
         <LangVersion>11.0</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>

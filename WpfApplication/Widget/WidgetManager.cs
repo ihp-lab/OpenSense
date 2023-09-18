@@ -4,9 +4,9 @@ using System.Composition;
 using System.Composition.Hosting;
 using System.IO;
 using System.Reflection;
-using OpenSense.WPF.Widget.Contract;
+using OpenSense.WPF.Widgets;
 
-namespace OpenSense.WPF.Widget {
+namespace OpenSense.WPF.Widgets {
     public class WidgetManager {
 
         [ImportMany]

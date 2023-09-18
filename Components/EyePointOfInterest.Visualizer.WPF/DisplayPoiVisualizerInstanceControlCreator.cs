@@ -1,7 +1,7 @@
 ﻿using System.Composition;
 using System.Windows;
 using OpenSense.Components.EyePointOfInterest.Visualizer;
-using OpenSense.WPF.Components.Contract;
+using OpenSense.WPF.Components;
 
 namespace OpenSense.WPF.Components.EyePointOfInterest.Visualizer {
     [Export(typeof(IInstanceControlCreator))]

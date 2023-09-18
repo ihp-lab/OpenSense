@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
-using OpenSense.Widget.OpenSmileConfigurationConverter;
+using OpenSense.Widgets.OpenSmileConfigurationConverter;
 
-namespace OpenSense.WPF.Widget.OpenSmileConfigurationConverter {
+namespace OpenSense.WPF.Widgets.OpenSmileConfigurationConverter {
     public partial class ConverterWindow : Window {
         public ConverterWindow() {
             InitializeComponent();

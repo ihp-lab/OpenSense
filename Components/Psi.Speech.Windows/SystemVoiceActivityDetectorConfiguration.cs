@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Psi;
 using Microsoft.Psi.Speech;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Psi.Speech {
     [Serializable]

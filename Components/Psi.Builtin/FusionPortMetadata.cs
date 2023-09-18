@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Psi {
     public sealed class FusionPortMetadata : OperatorPortMetadata {

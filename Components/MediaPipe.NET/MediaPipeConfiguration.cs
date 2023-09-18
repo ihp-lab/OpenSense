@@ -9,7 +9,6 @@ using Mediapipe.Net.Framework.Packets;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using Newtonsoft.Json;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.MediaPipe.NET {
     [Serializable]

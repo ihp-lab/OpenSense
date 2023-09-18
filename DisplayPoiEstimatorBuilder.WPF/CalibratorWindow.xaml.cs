@@ -9,7 +9,7 @@ using OpenSense.Components.EyePointOfInterest.Regression;
 using OpenSense.Components.EyePointOfInterest.SpatialTracking;
 using OpenSense.WPF.Components.EyePointOfInterest;
 
-namespace OpenSense.WPF.Widget.DisplayPoiEstimatorBuilder {
+namespace OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder {
     public partial class CalibratorWindow : Window {
         public CalibratorWindow() {
             InitializeComponent();

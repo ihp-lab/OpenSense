@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Psi;
 using Microsoft.Psi.Kinect;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Psi.Kinect {
     [Serializable]

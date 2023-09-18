@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace OpenSense.Components.Contract {
+namespace OpenSense.Components {
     public sealed class StaticPortMetadata : IPortMetadata {
 
         internal bool IsMadeFromPropertyInfo { get; }

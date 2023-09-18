@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using OpenSense.Components.Contract;
+using OpenSense.Components;
 
 namespace OpenSense.WPF.Pipeline {
     public partial class OutputSelectionControl : UserControl {

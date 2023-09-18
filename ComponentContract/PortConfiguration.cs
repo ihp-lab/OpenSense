@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace OpenSense.Components.Contract {
+namespace OpenSense.Components {
 
     [Serializable]
     public class PortConfiguration : INotifyPropertyChanged {

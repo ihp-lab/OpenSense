@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Composition;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.GoogleCloud.Speech.V1 {
     [Export(typeof(IComponentMetadata))]

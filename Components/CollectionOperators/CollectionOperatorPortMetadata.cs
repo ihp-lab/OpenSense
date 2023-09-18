@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using OpenSense.Components.Builtin;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.CollectionOperators {
     public sealed class CollectionOperatorPortMetadata : IPortMetadata {

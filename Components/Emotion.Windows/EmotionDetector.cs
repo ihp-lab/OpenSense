@@ -12,7 +12,7 @@ using Microsoft.Psi;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
 using OpenSense.Components.OpenFace;
-using OpenSense.DataWriter.Contract;
+using OpenSense.DataWriter.Contracts;
 using static Microsoft.ML.Transforms.Image.ImagePixelExtractingEstimator;
 
 namespace OpenSense.Components.Emotion {

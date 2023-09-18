@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace OpenSense.Widget.OpenSmileConfigurationConverter {
+namespace OpenSense.Widgets.OpenSmileConfigurationConverter {
     public static class Parser {
 
         public static void Parse(string filename, string saveDir) {

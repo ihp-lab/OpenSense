@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using OpenSense.Components.Contract;
+using OpenSense.Components;
 using OpenSense.Components.Psi;
 
 namespace OpenSense.WPF.Components.Psi {

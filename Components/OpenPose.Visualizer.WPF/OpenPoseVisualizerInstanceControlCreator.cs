@@ -1,7 +1,7 @@
 ﻿using System.Composition;
 using System.Windows;
 using OpenSense.Components.OpenPose.Visualizer;
-using OpenSense.WPF.Components.Contract;
+using OpenSense.WPF.Components;
 
 namespace OpenSense.WPF.Components.OpenPose.Visualizer {
     [Export(typeof(IInstanceControlCreator))]

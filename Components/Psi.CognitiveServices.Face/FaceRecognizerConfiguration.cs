@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Psi;
 using Microsoft.Psi.CognitiveServices.Face;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Psi.CognitiveServices.Face {
     [Serializable]

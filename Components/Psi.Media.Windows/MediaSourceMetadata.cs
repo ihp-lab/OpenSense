@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Composition;
 using Microsoft.Psi.Media;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Psi.Media {
     [Export(typeof(IComponentMetadata))]

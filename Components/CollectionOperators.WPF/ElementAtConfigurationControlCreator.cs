@@ -1,8 +1,7 @@
 ﻿using System.Composition;
 using System.Windows;
+using OpenSense.Components;
 using OpenSense.Components.CollectionOperators;
-using OpenSense.Components.Contract;
-using OpenSense.WPF.Components.Contract;
 
 namespace OpenSense.WPF.Components.CollectionOperators {
     [Export(typeof(IConfigurationControlCreator))]

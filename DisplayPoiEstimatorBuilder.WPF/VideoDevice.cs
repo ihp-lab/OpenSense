@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.Psi.Media_Interop;
 
-namespace OpenSense.WPF.Widget.DisplayPoiEstimatorBuilder {
+namespace OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder {
 
     internal class VideoDevice : INotifyPropertyChanged {
         #region INotifyPropertyChanged

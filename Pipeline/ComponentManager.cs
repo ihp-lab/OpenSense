@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Composition;
 using System.Composition.Hosting;
 using System.Reflection;
-using OpenSense.Components.Contract;
+using OpenSense.Components;
 
 namespace OpenSense.Pipeline {
     public class ComponentManager {

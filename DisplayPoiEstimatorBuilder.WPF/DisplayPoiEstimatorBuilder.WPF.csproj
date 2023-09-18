@@ -6,8 +6,8 @@
         <UseWPF>true</UseWPF>
         <Platforms>x64</Platforms>
         <PlatformTarget>x64</PlatformTarget>
-        <AssemblyName>OpenSense.WPF.Widget.DisplayPoiEstimatorBuilder</AssemblyName>
-        <RootNamespace>OpenSense.WPF.Widget.DisplayPoiEstimatorBuilder</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

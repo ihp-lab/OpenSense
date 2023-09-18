@@ -1,8 +1,8 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Components.Contract;
+using OpenSense.Components;
 using OpenSense.Components.PythonSupports;
-using OpenSense.WPF.Components.Contract;
+using OpenSense.WPF.Components;
 
 namespace OpenSense.WPF.Components.PythonSupports {
     [Export(typeof(IConfigurationControlCreator))]

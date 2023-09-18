@@ -87,7 +87,7 @@ namespace LibreFace.Benchmarks2 {
             Microsoft.Psi.Operators.PipeTo(producerConverted, detector.DataIn);
 
 #if DEBUG
-            detector.ActionUnitOut.Do(v => Console.WriteLine("LibreFace outptu +1"));
+            detector.ActionUnitIntensityOut.Do(v => Console.WriteLine("LibreFace outptu +1"));
 #endif
 
             return pipeline;

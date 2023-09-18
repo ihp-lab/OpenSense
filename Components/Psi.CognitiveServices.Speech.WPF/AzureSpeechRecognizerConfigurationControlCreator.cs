@@ -1,8 +1,7 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.Components.Contract;
+using OpenSense.Components;
 using OpenSense.Components.Psi.CognitiveServices.Speech;
-using OpenSense.WPF.Components.Contract;
 
 namespace OpenSense.WPF.Components.Psi.CognitiveServices.Speech {
     [Export(typeof(IConfigurationControlCreator))]

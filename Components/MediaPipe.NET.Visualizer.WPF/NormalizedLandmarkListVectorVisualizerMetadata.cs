@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Composition;
-using OpenSense.Components.Contract;
+using OpenSense.Components;
 
 namespace OpenSense.WPF.Components.MediaPipe.NET.Visualizer {
     [Export(typeof(IComponentMetadata))]

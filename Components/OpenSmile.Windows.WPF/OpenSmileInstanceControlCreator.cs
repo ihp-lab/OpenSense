@@ -1,6 +1,6 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.WPF.Components.Contract;
+using OpenSense.WPF.Components;
 
 namespace OpenSense.WPF.Components.OpenSmile {
     [Export(typeof(IInstanceControlCreator))]

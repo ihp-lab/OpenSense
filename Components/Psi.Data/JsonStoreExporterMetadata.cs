@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Composition;
 using Microsoft.Psi;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Psi.Data {
     [Export(typeof(IComponentMetadata))]

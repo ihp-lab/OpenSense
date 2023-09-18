@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Psi;
-using OpenSense.Components.Contract;
+using OpenSense.Components;
 using OpenSense.Pipeline;
 
 namespace OpenSense.WPF.Pipeline {

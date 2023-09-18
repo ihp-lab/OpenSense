@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
-using OpenSense.Components.Contract;
 
 
 namespace OpenSense.Components.OpenFace {

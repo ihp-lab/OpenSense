@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Composition;
 using Microsoft.Psi.Speech;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Psi.Speech {
     [Export(typeof(IComponentMetadata))]

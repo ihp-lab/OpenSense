@@ -1,8 +1,8 @@
 ﻿using System.Composition;
 using System.Windows;
-using OpenSense.WPF.Widget.Contract;
+using OpenSense.WPF.Widgets;
 
-namespace OpenSense.WPF.Widget.DisplayPoiEstimatorBuilder {
+namespace OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder {
     [Export(typeof(IWidgetMetadata))]
     public class WidgetMetadata : IWidgetMetadata {
         public string Name => "Display POI Estimator Builder";

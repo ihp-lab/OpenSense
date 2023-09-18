@@ -1,7 +1,7 @@
 ﻿using System.Composition;
 using System.Windows;
 using OpenSense.Components.Whisper.NET;
-using OpenSense.WPF.Components.Contract;
+using OpenSense.WPF.Components;
 namespace OpenSense.WPF.Components.Whisper.NET {
     [Export(typeof(IInstanceControlCreator))]
     public sealed class WhisperSpeechRecognizerInstanceControlCreator : IInstanceControlCreator {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Composition;
 using Microsoft.Psi.AzureKinect;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.Psi.AzureKinect {
     [Export(typeof(IComponentMetadata))]

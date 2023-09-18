@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.Psi;
 using OpenSense.Components.Builtin;
-using OpenSense.Components.Contract;
 
 namespace OpenSense.Components.CollectionOperators {
     [Export(typeof(IComponentMetadata))]

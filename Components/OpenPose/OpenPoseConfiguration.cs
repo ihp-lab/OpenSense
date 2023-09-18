@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
-using OpenSense.Components.Contract;
 using OpenSense.Components.OpenPose.PInvoke.Configuration;
 
 namespace OpenSense.Components.OpenPose {

@@ -6,8 +6,8 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using OpenSense.WPF.Pipeline;
-using OpenSense.WPF.Widget;
-using OpenSense.WPF.Widget.Contract;
+using OpenSense.WPF.Widgets;
+using OpenSense.WPF.Widgets;
 
 namespace OpenSense.WPF {
 
