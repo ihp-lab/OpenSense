@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <AssemblyName>OpenSense.WPF.Components.OpenCvSharp</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.OpenCvSharp</RootNamespace>
+        <EmbedAllSources>true</EmbedAllSources>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
+        <ProjectReference Include="..\OpenCvSharp\OpenCvSharp.csproj" />
+    </ItemGroup>
+
+</Project>

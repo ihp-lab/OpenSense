@@ -91,6 +91,8 @@
         <ProjectReference Include="..\Components\HeadGesture.Visualizer.WPF\HeadGesture.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\MediaPipe.Net.Visualizer.WPF\MediaPipe.NET.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\MediaPipe.NET.WPF\MediaPipe.NET.WPF.csproj" />
+        <ProjectReference Include="..\Components\OpenCvSharp.Windows\OpenCvSharp.Windows.csproj" />
+        <ProjectReference Include="..\Components\OpenCvSharp.WPF\OpenCvSharp.WPF.csproj" />
         <ProjectReference Include="..\Components\OpenFace.Visualizer.WPF\OpenFace.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\OpenFace.Windows.WPF\OpenFace.Windows.WPF.csproj" />
         <ProjectReference Include="..\Components\OpenPose.Visualizer.WPF\OpenPose.Visualizer.WPF.csproj" />
