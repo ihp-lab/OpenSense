@@ -4,9 +4,23 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <RootNamespace>OpenSense.Components</RootNamespace>
         <AssemblyName>OpenSense.Components.Contracts</AssemblyName>
+        <PackageId>OpenSense.Components.Contracts</PackageId>
         <LangVersion>11.0</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
+        <AssemblyVersion>4.0.0</AssemblyVersion>
+        <Version>4.0.0</Version>
+        <Authors>Intelligent Human Perception Lab</Authors>
+        <Product>OpenSense</Product>
+        <Description>
+            OpenSense component interfaces.
+        </Description>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+        <RepositoryUrl>https://github.com/ihp-lab/OpenSense.git</RepositoryUrl>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="$(SolutionDir)/LICENSE.txt" Pack="true" PackagePath=""/>
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
