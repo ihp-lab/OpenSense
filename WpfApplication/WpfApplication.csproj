@@ -76,6 +76,7 @@
         <!--Components-->
         <ProjectReference Include="..\Components\Audio.Visualizer.WPF\Audio.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\AzureKinect.Visualizer.WPF\AzureKinect.Visualizer.WPF.csproj" />
+        <ProjectReference Include="..\Components\BehaviorManagement.WPF\BehaviorManagement.WPF.csproj" />
         <ProjectReference Include="..\Components\Biopac.Visualizer.WPF\Biopac.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\BodyGestureDetectors.WPF\BodyGestureDetectors.WPF.csproj" />
         <ProjectReference Include="..\Components\Builtin\Builtin.csproj" />

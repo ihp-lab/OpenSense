@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <AssemblyName>OpenSense.WPF.Components.BehaviorManagement</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.BehaviorManagement</RootNamespace>
+        <EmbedAllSources>true</EmbedAllSources>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="System.Composition" Version="7.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\BehaviorManagement\BehaviorManagement.csproj" />
+        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
+    </ItemGroup>
+
+</Project>
