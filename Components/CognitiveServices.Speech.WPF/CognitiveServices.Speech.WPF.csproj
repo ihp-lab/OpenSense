@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <AssemblyName>OpenSense.WPF.Components.CognitiveServices.Speech</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.CognitiveServices.Speech</RootNamespace>
+        <EmbedAllSources>true</EmbedAllSources>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="System.Composition" Version="7.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\CognitiveServices.Speech\CognitiveServices.Speech.csproj" />
+        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
+    </ItemGroup>
+
+</Project>

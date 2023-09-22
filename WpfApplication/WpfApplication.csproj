@@ -80,6 +80,7 @@
         <ProjectReference Include="..\Components\BodyGestureDetectors.WPF\BodyGestureDetectors.WPF.csproj" />
         <ProjectReference Include="..\Components\Builtin\Builtin.csproj" />
         <ProjectReference Include="..\Components\Builtin.Visualizer.WPF\Builtin.Visualizer.WPF.csproj" />
+        <ProjectReference Include="..\Components\CognitiveServices.Speech.WPF\CognitiveServices.Speech.WPF.csproj" />
         <ProjectReference Include="..\Components\CollectionOperators.WPF\CollectionOperators.WPF.csproj" />
         <ProjectReference Include="..\Components\CsvExporter.WPF\CsvExporter.WPF.csproj" />
         <ProjectReference Include="..\Components\Emotion.Visualizer.WPF\Emotion.Visualizer.WPF.csproj" />
