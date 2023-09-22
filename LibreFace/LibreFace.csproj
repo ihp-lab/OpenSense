@@ -8,7 +8,16 @@
 		<RootNamespace>LibreFace</RootNamespace>
 		<AssemblyName>LibreFace</AssemblyName>
 		<EmbedAllSources>true</EmbedAllSources>
-		<Version>1.0.0</Version>
+        <AssemblyVersion>1.0.0</AssemblyVersion>
+        <Version>1.0.0</Version>
+        <Authors>Intelligent Human Perception Lab</Authors>
+        <Product>LibreFace</Product>
+        <Description>
+            LibreFace runtime and models. Input should be 224×224 RGB 24bpp image. This package uses the CPU runtime, if you want to use other runtimes, please compile from source.
+        </Description>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/ihp-lab/OpenSense.git</RepositoryUrl>
 
         <!-- CUDA conditions-->
         <!--Note: CUDA and cuDNN are required. Check version numbers at https://onnxruntime.ai/docs/tutorials/csharp/csharp-gpu.html-->
@@ -18,23 +27,40 @@
         <PlatformTarget Condition="'$(UseCUDA)' == 'true'">x64</PlatformTarget>
     </PropertyGroup>
 
+    <ItemGroup>
+        <None Include="$(SolutionDir)/LICENSE.txt" Pack="true" PackagePath="" />
+        <None Include="README.md" Pack="true" PackagePath="" />
+    </ItemGroup>
+
 	<ItemGroup>
-		<PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.15.1" Condition="'$(UseCUDA)' != 'true'"/>
+		<PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.15.1" Condition="'$(UseCUDA)' != 'true'" />
 		<PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.14.1" Condition="'$(UseCUDA)' == 'true'" />
 		<PackageReference Include="System.Collections.Immutable" Version="7.0.0" />
 		<PackageReference Include="System.Numerics.Tensors" Version="0.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="LibreFace_AU_Intensity.onnx">
+        <!--Note: 
+        PackagePath is added to prevent duplication in content and contentFiles.
+        ContentTargetFolders is default to content and contentFiles.
+        We are not setting ContentTargetFolders to contentFiles because files will be put into contentFiles/any/netstandard2.1, which is not what we want.
+        -->
+        
+		<Content Include="LibreFace_AU_Intensity.onnx">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-        <None Update="LibreFace_AU_Presence.onnx">
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <PackagePath>contentFiles/any/any</PackagePath>
+		</Content>
+        <Content Include="LibreFace_AU_Presence.onnx">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="LibreFace_FE.onnx">
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <PackagePath>contentFiles/any/any</PackagePath>
+        </Content>
+        <Content Include="LibreFace_FE.onnx">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <PackagePath>contentFiles/any/any</PackagePath>
+        </Content>
 	</ItemGroup>
 
 </Project>
