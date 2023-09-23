@@ -7,7 +7,7 @@ namespace OpenSense.Components.LibreFace {
 
         public override IComponentMetadata GetMetadata() => new LibreFaceDetectorMetadata();
 
-        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new LibreFaceDetector(pipeline) {
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new LibreFaceDetector(pipeline, DeliveryPolicy.LatestMessage) {
             
         };
     }

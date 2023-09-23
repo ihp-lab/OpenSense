@@ -24,7 +24,7 @@ namespace OpenSense.Components.LibreFace {
         public Emitter<IReadOnlyList<IReadOnlyDictionary<string, float>>> FacialExpressionOut => _feOutConnector.Out;
         public Emitter<IReadOnlyList<Shared<Image>>> AlignedImagesOut => _alignedImagesOutConnector.Out;
 
-        public LibreFaceDetector(Pipeline pipeline) : base(pipeline, nameof(LibreFaceDetector), DeliveryPolicy.LatestMessage) {
+        public LibreFaceDetector(Pipeline pipeline, DeliveryPolicy? deliveryPolicy = null) : base(pipeline, nameof(LibreFaceDetector), deliveryPolicy) {
             _inConnector = CreateInputConnectorFrom<IReadOnlyList<NormalizedLandmarkList>>(pipeline, nameof(DataIn));
             _imageInConnector = CreateInputConnectorFrom<Shared<Image>>(pipeline, nameof(ImageIn));
 
@@ -34,29 +34,29 @@ namespace OpenSense.Components.LibreFace {
             _alignedImagesOutConnector = CreateOutputConnectorTo<IReadOnlyList<Shared<Image>>>(pipeline, nameof(AlignedImagesOut));
 
             var convertedImage = _imageInConnector
-                .Convert(PixelFormat.RGB_24bpp, DeliveryPolicy.LatestMessage);
+                .Convert(PixelFormat.RGB_24bpp, deliveryPolicy);
             var aligner = new FaceImageAligner(this);
             _inConnector.Join(
                     convertedImage,
                     Reproducible.Exact<Shared<Image>>(),
                     ValueTuple.Create,
-                    DeliveryPolicy.LatestMessage,
-                    DeliveryPolicy.LatestMessage
+                    deliveryPolicy,
+                    deliveryPolicy
                 )//TODO: shared image pool grows too large when no face is detected! Fuse() does not help; swapping streams does not help.
-                .PipeTo(aligner, DeliveryPolicy.LatestMessage);
-            aligner.PipeTo(_alignedImagesOutConnector, DeliveryPolicy.LatestMessage);
+                .PipeTo(aligner, deliveryPolicy);
+            aligner.PipeTo(_alignedImagesOutConnector, deliveryPolicy);
 
             var auIntensitiyInferenceRunner = new ActionUnitIntensityInferenceRunner(this);
-            aligner.PipeTo(auIntensitiyInferenceRunner, DeliveryPolicy.LatestMessage);
-            auIntensitiyInferenceRunner.PipeTo(_auIntensityOutConnector, DeliveryPolicy.LatestMessage);
+            aligner.PipeTo(auIntensitiyInferenceRunner, deliveryPolicy);
+            auIntensitiyInferenceRunner.PipeTo(_auIntensityOutConnector, deliveryPolicy);
 
             var auPresenceInferenceRunner = new ActionUnitPresenceInferenceRunner(this);
-            aligner.PipeTo(auPresenceInferenceRunner, DeliveryPolicy.LatestMessage);
-            auPresenceInferenceRunner.PipeTo(_auPresenceOutConnector, DeliveryPolicy.LatestMessage);
+            aligner.PipeTo(auPresenceInferenceRunner, deliveryPolicy);
+            auPresenceInferenceRunner.PipeTo(_auPresenceOutConnector, deliveryPolicy);
 
             var feInferenceRunner = new FacialExpressionInferenceRunner(this);
-            aligner.PipeTo(feInferenceRunner, DeliveryPolicy.LatestMessage);
-            feInferenceRunner.PipeTo(_feOutConnector, DeliveryPolicy.LatestMessage);
+            aligner.PipeTo(feInferenceRunner, deliveryPolicy);
+            feInferenceRunner.PipeTo(_feOutConnector, deliveryPolicy);
         }
     }
 }
