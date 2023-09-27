@@ -20,7 +20,28 @@
             Grid.Row="0"
             Header="Settings"
             d:IsExpanded="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition
+                        Width="auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
 
+                <Grid.RowDefinitions>
+                    <RowDefinition
+                        Height="auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0">
+                    Show RAW values
+                </TextBlock>
+                <CheckBox
+                    Grid.Column="1"
+                    Checked="CheckBox_Checked"
+                    Unchecked="CheckBox_Checked" />
+            </Grid>
         </Expander>
 
         <Grid
@@ -30,7 +51,15 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
                     Width="20" />
-                <ColumnDefinition />
+                <ColumnDefinition
+                    Tag="0" 
+                    MaxWidth="0"/>
+                <ColumnDefinition
+                    Width="30"
+                    Tag="0" 
+                    MaxWidth="0"/>
+                <ColumnDefinition
+                    Width="20" />
             </Grid.ColumnDefinitions>
         </Grid>
     </Grid>
