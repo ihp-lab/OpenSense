@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "LibreFace.App.Consoles": {
+      "commandName": "Project",
+      "commandLineArgs": "-f \"C:\\D\\Projects\\Other\\LibreFace_TestData\\DISFA\\Videos_LeftCamera\\test_video_1.mp4\" \"C:\\D\\Projects\\Other\\LibreFace_TestData\\DISFA\\Videos_LeftCamera\\test_video_2.mp4\" -o \"C:\\Users\\kana\\Desktop\""
+    }
+  }
+}
