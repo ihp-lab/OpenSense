@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0-windows</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <Platforms>x64</Platforms>
+        <PlatformTarget>x64</PlatformTarget>
+        <RootNamespace>LibreFace.App.Consoles</RootNamespace>
+        <AssemblyName>LibreFace.App.Consoles</AssemblyName>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="CommandLineParser" Version="2.9.1" />
+        <PackageReference Include="Spectre.Console" Version="0.47.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\LibreFace.App.Core\LibreFace.App.Core.csproj" />
+    </ItemGroup>
+
+</Project>
