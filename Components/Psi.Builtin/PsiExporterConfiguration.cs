@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Psi;
 using Microsoft.Psi.Data;
 
 namespace OpenSense.Components.Psi {
     [Serializable]
     public abstract class PsiExporterConfiguration : ExporterConfiguration {
-
-        private Exporter exporter;
 
         private List<Guid> largeMessageInputs = new List<Guid>();
 
@@ -16,17 +15,18 @@ namespace OpenSense.Components.Psi {
             set => SetProperty(ref largeMessageInputs, value);
         }
 
-        protected abstract Exporter CreateExporter(Pipeline pipeline, out object instance);
+        protected abstract Exporter CreateExporter(Pipeline pipeline);
 
         protected override sealed object CreateInstance(Pipeline pipeline) {
-            exporter = CreateExporter(pipeline, out var instance);
-            return instance;
+            var exporter = CreateExporter(pipeline);
+            return exporter;
         }
 
         protected override sealed void ConnectInput<T>(object instance, InputConfiguration inputConfiguration, IProducer<T> remoteEndProducer) {
+            var exporter = (Exporter)instance;
             var streamName = (string)inputConfiguration.LocalPort.Index;
             var largeMessage = LargeMessageInputs.Contains(inputConfiguration.Id);
-            exporter.Write((dynamic)remoteEndProducer, streamName, largeMessage, inputConfiguration.DeliveryPolicy);
+            exporter.Write(remoteEndProducer, streamName, largeMessage, inputConfiguration.DeliveryPolicy);
         }
     }
 }
