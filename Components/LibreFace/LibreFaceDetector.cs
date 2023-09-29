@@ -24,7 +24,7 @@ namespace OpenSense.Components.LibreFace {
         public Emitter<IReadOnlyList<IReadOnlyDictionary<string, float>>> FacialExpressionOut => _feOutConnector.Out;
         public Emitter<IReadOnlyList<Shared<Image>>> AlignedImagesOut => _alignedImagesOutConnector.Out;
 
-        public LibreFaceDetector(Pipeline pipeline, DeliveryPolicy? deliveryPolicy = null) : base(pipeline, nameof(LibreFaceDetector), deliveryPolicy) {
+        public LibreFaceDetector(Pipeline pipeline, DeliveryPolicy deliveryPolicy) : base(pipeline, nameof(LibreFaceDetector), deliveryPolicy) {
             _inConnector = CreateInputConnectorFrom<IReadOnlyList<NormalizedLandmarkList>>(pipeline, nameof(DataIn));
             _imageInConnector = CreateInputConnectorFrom<Shared<Image>>(pipeline, nameof(ImageIn));
 

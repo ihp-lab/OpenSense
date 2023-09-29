@@ -8,8 +8,8 @@
 		<RootNamespace>LibreFace</RootNamespace>
 		<AssemblyName>LibreFace</AssemblyName>
 		<EmbedAllSources>true</EmbedAllSources>
-        <AssemblyVersion>1.0.0</AssemblyVersion>
-        <Version>1.0.0</Version>
+        <AssemblyVersion>1.1.0</AssemblyVersion>
+        <Version>1.1.0</Version>
         <Authors>Intelligent Human Perception Lab</Authors>
         <Product>LibreFace</Product>
         <Description>
@@ -17,6 +17,7 @@
         </Description>
         <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageReleaseNotes>RELEASE_NOTES.md</PackageReleaseNotes>
         <RepositoryUrl>https://github.com/ihp-lab/OpenSense.git</RepositoryUrl>
 
         <!-- CUDA conditions-->
@@ -30,6 +31,7 @@
     <ItemGroup>
         <None Include="$(SolutionDir)/LICENSE.txt" Pack="true" PackagePath="" />
         <None Include="README.md" Pack="true" PackagePath="" />
+        <None Include="RELEASE_NOTES.md" Pack="true" PackagePath="" />
     </ItemGroup>
 
 	<ItemGroup>
