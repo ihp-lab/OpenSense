@@ -7,16 +7,16 @@ namespace OpenSense.Components.BehaviorManagement {
 
         public IPortMetadata Port { get; }
 
-        public Type Type { get; }
+        public Type DataType { get; }
 
         public object? Data { get; }
 
         public Envelope Envelope { get; }
 
-        public BehaviorOutputData(IPortMetadata portMetadata, Type type, object? data, Envelope envelope) {
+        public BehaviorOutputData(IPortMetadata portMetadata, Type dataType, object? data, Envelope envelope) {
             Debug.Assert(envelope.OriginatingTime.Kind == DateTimeKind.Utc);
             Port = portMetadata;
-            Type = type;
+            DataType = dataType;
             Data = data;
             Envelope = envelope;
         }

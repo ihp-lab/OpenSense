@@ -3,14 +3,17 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
         <RootNamespace>OpenSense.Components.BehaviorManagement</RootNamespace>
-        <AssemblyName>OpenSense.Components.BehaviorManagement</AssemblyName>
+        <AssemblyName>OpenSense.Components.BehaviorManagement.Contracts</AssemblyName>
         <LangVersion>11</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
         <PackageReference Include="System.Composition" Version="7.0.0" />
+        <!--TODO: Solve recursive converter issue, Json.net's converter design is not suitable, so we are not using it.-->
+        <PackageReference Include="System.Text.Json" Version="7.0.3" />
     </ItemGroup>
 
     <ItemGroup>

@@ -11,27 +11,11 @@ namespace OpenSense.Components.BehaviorManagement {
 
         protected readonly IReadOnlyList<IBehaviorRule> _children;
 
-        protected readonly IPortMetadata[] _ports;
-
-        protected readonly TimeSpan _window;
-
         public CompositeRule(IReadOnlyList<IBehaviorRule> children) {
             _children = children;
-            _ports = children
-                .SelectMany(c => c.Ports)
-                .ToArray()
-                ;
-            _window = children
-                .Select(r => r.Window)
-                .Aggregate(TimeSpan.Zero, (a, v) => a > v ? a : v)
-                ;
         }
 
         #region IBehaviorRule
-        public TimeSpan Window => _window;
-
-        public IReadOnlyCollection<IPortMetadata> Ports => _ports;
-
         public abstract ValueTask<BehaviorRuleResponse> EvaluateAsync(BehaviorRequest request, CancellationToken cancellationToken = default);
         #endregion
 
