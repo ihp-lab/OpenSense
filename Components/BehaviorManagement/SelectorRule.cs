@@ -9,7 +9,7 @@ namespace OpenSense.Components.BehaviorManagement {
         }
 
         #region IBehaviorRule
-        public override async ValueTask<BehaviorRuleResponse> EvaluateAsync(BehaviorRequest request, CancellationToken cancellationToken = default) {
+        public override async ValueTask<BehaviorResponse> EvaluateAsync(BehaviorRequest request, CancellationToken cancellationToken = default) {
             if (_children.Count > 0) {
                 foreach (var child in _children) {
                     var response = await child.EvaluateAsync(request, cancellationToken);
@@ -18,7 +18,7 @@ namespace OpenSense.Components.BehaviorManagement {
                     }
                 } 
             }
-            return BehaviorRuleResponse.NotTriggered;
+            return BehaviorResponse.NotTriggered;
         }
         #endregion
     }

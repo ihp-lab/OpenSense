@@ -38,7 +38,8 @@ namespace OpenSense.Components.BehaviorManagement {
             }
             Debug.Assert(port.Direction == PortDirection.Output);
             var obj = (BehaviorTree)instance;
-            var result = obj.GetProducer<T>(port);
+            var connector = obj.GetConnectorInfo(port);
+            var result = (IProducer<T>)connector.Connector;
             return result;
         }
         #endregion

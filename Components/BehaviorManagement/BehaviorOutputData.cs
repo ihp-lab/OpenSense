@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using Microsoft.Psi;
 
 namespace OpenSense.Components.BehaviorManagement {
     public readonly struct BehaviorOutputData {
@@ -11,14 +10,14 @@ namespace OpenSense.Components.BehaviorManagement {
 
         public object? Data { get; }
 
-        public Envelope Envelope { get; }
+        public DateTime OriginatingTime { get; }
 
-        public BehaviorOutputData(IPortMetadata portMetadata, Type dataType, object? data, Envelope envelope) {
-            Debug.Assert(envelope.OriginatingTime.Kind == DateTimeKind.Utc);
+        public BehaviorOutputData(IPortMetadata portMetadata, Type dataType, object? data, DateTime originatingTime) {
+            Debug.Assert(originatingTime.Kind == DateTimeKind.Utc);
             Port = portMetadata;
             DataType = dataType;
             Data = data;
-            Envelope = envelope;
+            OriginatingTime = originatingTime;
         }
 
         #region Helpers

@@ -5,6 +5,6 @@ namespace OpenSense.Components.BehaviorManagement {
 
     public interface IBehaviorRule {
 
-        ValueTask<BehaviorRuleResponse> EvaluateAsync(BehaviorRequest request, CancellationToken cancellationToken = default);
+        ValueTask<BehaviorResponse> EvaluateAsync(BehaviorRequest request, CancellationToken cancellationToken = default);
     }
 }

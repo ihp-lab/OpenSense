@@ -16,7 +16,7 @@ namespace OpenSense.Components.BehaviorManagement {
         }
 
         #region IBehaviorRule
-        public abstract ValueTask<BehaviorRuleResponse> EvaluateAsync(BehaviorRequest request, CancellationToken cancellationToken = default);
+        public abstract ValueTask<BehaviorResponse> EvaluateAsync(BehaviorRequest request, CancellationToken cancellationToken = default);
         #endregion
 
         #region IDisposable

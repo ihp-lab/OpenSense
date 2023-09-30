@@ -1,33 +1,39 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace OpenSense.Components.BehaviorManagement {
 
-    public readonly struct BehaviorRequest {
+    public readonly struct BehaviorRequest : IReadOnlyDictionary<IPortMetadata, BehaviorInputData> {
 
-        public DateTime Time { get; }
+        private readonly IReadOnlyDictionary<IPortMetadata, BehaviorInputData> _inputs;
+
+        public DateTime OriginatingTime { get; }
 
         public TimeSpan Window { get; }
 
-        public IReadOnlyCollection<BehaviorInputData> Inputs { get; }
-
-        public BehaviorRequest(DateTime time, TimeSpan window, IReadOnlyCollection<BehaviorInputData> inputs) {
-            Time = time;
+        public BehaviorRequest(DateTime originatingTime, TimeSpan window, IReadOnlyDictionary<IPortMetadata, BehaviorInputData> inputs) {
+            _inputs = inputs;
+            OriginatingTime = originatingTime;
             Window = window;
-            Inputs = inputs;
+            Debug.Assert(_inputs.All(kv => ReferenceEquals(kv.Key, kv.Value.Port)));
         }
 
-        #region Helpers
-        private BehaviorInputData? GetData(IPortMetadata port) {
-            var result = Inputs
-                .Where(i => i.Port.Equals(port))
-                .Select(i => (BehaviorInputData?)i)
-                .SingleOrDefault();
-            return result;
-        }
+        #region IReadOnlyDictionary
+        public BehaviorInputData this[IPortMetadata key] => _inputs[key];
 
-        public BehaviorInputData? this[IPortMetadata port] => GetData(port);
+        public IEnumerable<IPortMetadata> Keys => _inputs.Keys;
+
+        public IEnumerable<BehaviorInputData> Values => _inputs.Values;
+
+        public int Count => _inputs.Count;
+
+        public bool ContainsKey(IPortMetadata key) => _inputs.ContainsKey(key);
+        public IEnumerator<KeyValuePair<IPortMetadata, BehaviorInputData>> GetEnumerator() => _inputs.GetEnumerator();
+        public bool TryGetValue(IPortMetadata key, out BehaviorInputData value) => _inputs.TryGetValue(key, out value);
+        IEnumerator IEnumerable.GetEnumerator() => _inputs.GetEnumerator();
         #endregion
     }
 }
