@@ -15,12 +15,48 @@ namespace OpenSense.Components.BehaviorManagement {
             set => SetProperty(ref root, value);
         }
 
+        private DeliveryPolicy deliveryPolicy = DeliveryPolicy.LatestMessage;
+
+        public DeliveryPolicy DeliveryPolicy {
+            get => deliveryPolicy;
+            set => SetProperty(ref deliveryPolicy, value);
+        }
+
         #region ComponentConfiguration
         public override IComponentMetadata GetMetadata() => 
             new BehaviorTreeMetadata(this);
 
         public override object Instantiate(Pipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents, IServiceProvider? serviceProvider) {
-            var result = new BehaviorTree(pipeline, Root, serviceProvider, DeliveryPolicy.Unlimited);
+            /* Instantiate rule */
+            var rule = Root.Instantiate(serviceProvider);
+
+            /* Inference port data types */
+            var metadata = GetMetadata();
+            var ports = new List<BehaviorTree.PortInfo>();
+            var configurations = instantiatedComponents.Select(e => e.Configuration).ToArray();
+            foreach (var port in metadata.Ports) {
+                Type? type;
+                DeliveryPolicy? deliveryPolicy;
+                switch (port.Direction) {
+                    case PortDirection.Input:
+                        type = this.FindInputPortDataType(port, configurations);
+                        var inputConfig = Inputs.SingleOrDefault(i => Equals(i.LocalPort.Identifier, port.Identifier));
+                        deliveryPolicy = inputConfig?.DeliveryPolicy;
+                        break;
+                    case PortDirection.Output:
+                        type = this.FindOutputPortDataType(port, configurations);
+                        deliveryPolicy = null;
+                        break;
+                    default:
+                        throw new InvalidOperationException();
+                }
+                ports.Add(new BehaviorTree.PortInfo(port, type, deliveryPolicy));
+            }
+
+            /* Instantiate subpipeline */
+            var result = new BehaviorTree(pipeline, rule, Root.Window, ports, DeliveryPolicy);
+
+            /* Connect inputs */
             foreach (var inputConfig in Inputs) {
                 var inputMetadata = this.FindPortMetadata(inputConfig.LocalPort);
                 var connectorInfo = result.GetConnectorInfo(inputMetadata);

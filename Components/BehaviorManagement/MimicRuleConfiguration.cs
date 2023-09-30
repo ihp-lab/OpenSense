@@ -7,11 +7,11 @@ namespace OpenSense.Components.BehaviorManagement {
     [Serializable]
     public sealed class MimicRuleConfiguration : BehaviorRuleConfiguration {
 
-        internal static readonly StaticPortMetadata InputPort = new StaticPortMetadata("In", PortDirection.Input, PortAggregation.Object, typeof(object), "The input to mimic.");
+        internal static readonly MirrorPortMetadata InputPort = new MirrorPortMetadata("In", PortDirection.Input, "The input to mimic.");
 
-        internal static readonly StaticPortMetadata OutputPort = new StaticPortMetadata("Out", PortDirection.Output, PortAggregation.Object, typeof(object), "The mimicked output.");
+        internal static readonly MirrorPortMetadata OutputPort = new MirrorPortMetadata("Out", PortDirection.Output, "The mimicked output.");
 
-        private static readonly StaticPortMetadata[] StaticPorts = new StaticPortMetadata[] { InputPort, OutputPort, };
+        private static readonly MirrorPortMetadata[] StaticPorts = new MirrorPortMetadata[] { InputPort, OutputPort, };
 
         #region BehaviorRuleConfiguration
         public override TimeSpan Window => 

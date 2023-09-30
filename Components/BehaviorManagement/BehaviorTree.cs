@@ -19,56 +19,44 @@ namespace OpenSense.Components.BehaviorManagement {
 
         private static readonly MethodInfo ConnectInputMethod = typeof(BehaviorTree).GetMethod(nameof(ConnectInput), Flags);
 
-        private readonly IBehaviorRule _root;
+        private readonly IBehaviorRule _rule;
+
+        private readonly TimeSpan _window;
 
         private readonly Dictionary<IPortMetadata, ConnectorInfo> _connectors = new Dictionary<IPortMetadata, ConnectorInfo>();
 
         private readonly Dictionary<IPortMetadata, BehaviorInputData> _inputCache = new Dictionary<IPortMetadata, BehaviorInputData>();
 
-        public BehaviorTree(Pipeline pipeline, BehaviorRuleConfiguration rootConfiguration, IServiceProvider? serviceProvider = null, DeliveryPolicy? defaultDeliveryPolicy = null): base(pipeline, nameof(BehaviorTree), defaultDeliveryPolicy) {
-            /* Create connectors */
-            foreach (var port in rootConfiguration.Ports) {
-                var dataType = port.GetTransmissionDataType(null, Array.Empty<RuntimePortDataType>(), Array.Empty<RuntimePortDataType>());
-                Debug.Assert(dataType is not null);
+        internal BehaviorTree(Pipeline pipeline, IBehaviorRule rule, TimeSpan window, IEnumerable<PortInfo> ports, DeliveryPolicy? defaultDeliveryPolicy = null): base(pipeline, nameof(BehaviorTree), defaultDeliveryPolicy) {
+            _rule = rule;
+            _window = window;
+            Debug.Assert(window >= TimeSpan.Zero);
+
+            foreach (var portInfo in ports) {
+                var dataType = portInfo.DataType;
                 if (dataType is null) {
-                    throw new Exception("Cannot decide data type.");
+                    continue;
                 }
+                var port = portInfo.Port;
                 switch (port.Direction) {
+                    case PortDirection.Input:
+                        var input = (IConnector)CreateInputConnectorFromMethod
+                            .MakeGenericMethod(dataType)
+                            .Invoke(this, new object[] { pipeline, port.Name, });
+                        _connectors.Add(port, new ConnectorInfo(input, dataType));
+
+                        ConnectInputMethod.MakeGenericMethod(dataType).Invoke(this, new object?[] { port, input, portInfo.DeliveryPolicy, });
+                        break;
                     case PortDirection.Output:
                         var output = (IConnector)CreateOutputConnectorToMethod
                             .MakeGenericMethod(dataType)
                             .Invoke(this, new object[] { pipeline, port.Name, } );
                         _connectors.Add(port, new ConnectorInfo(output, dataType));
                         break;
-                    case PortDirection.Input:
-                        var input = (IConnector)CreateInputConnectorFromMethod
-                            .MakeGenericMethod(dataType)
-                            .Invoke(this, new object[] { pipeline, port.Name, });
-                        _connectors.Add(port, new ConnectorInfo(input, dataType));
-                        break;
                     default:
                         throw new InvalidOperationException();
                 }
             }
-
-            /* Connect */
-            var window = rootConfiguration.Window;
-            foreach (var (port, connector) in _connectors) {
-                switch (port.Direction) {
-                    case PortDirection.Output:
-                        //Nothing
-                        break;
-                    case PortDirection.Input:
-                        ConnectInputMethod.MakeGenericMethod(connector.DataType).Invoke(this, new object[] { port, connector.Connector, window });
-                        break;
-                    default:
-                        throw new InvalidOperationException();
-                }
-            }
-
-
-            /* Instantiate */
-            _root = rootConfiguration.Instantiate(serviceProvider);
         }
 
         internal ConnectorInfo GetConnectorInfo(IPortMetadata port) {
@@ -76,7 +64,7 @@ namespace OpenSense.Components.BehaviorManagement {
             return result;
         }
 
-        private void ConnectInput<T>(IPortMetadata port, IConnector connector, TimeSpan window) {
+        private void ConnectInput<T>(IPortMetadata port, IConnector connector, DeliveryPolicy? deliveryPolicy) {
 
             static object? cast(T o) {
                 var result = (object?)o;
@@ -92,21 +80,23 @@ namespace OpenSense.Components.BehaviorManagement {
                 var copy = list.DeepClone();
                 var input = new BehaviorInputData(port, typeof(T), copy);
                 _inputCache[port] = input;//TODO: how to dispose?
-                var request = new BehaviorRequest(envelope.OriginatingTime, window, _inputCache);
-                var response = _root.EvaluateAsync(request, cancellationToken: default).GetAwaiter().GetResult();
+                var request = new BehaviorRequest(envelope.OriginatingTime, _window, _inputCache);
+                var response = _rule.EvaluateAsync(request, cancellationToken: default).GetAwaiter().GetResult();
                 foreach (var output in response.Values) {
                     var port = output.Port;
-                    dynamic connector = _connectors[port].Connector;//TODO: Convert to cached delegates so it is faster
-                    connector.Out.Post((dynamic?)output.Data, output.OriginatingTime);
+                    if (_connectors.TryGetValue(port, out var connectorInfo)) {
+                        dynamic connector = connectorInfo.Connector;//TODO: Convert to cached delegates so it is faster
+                        connector.Out.Post((dynamic?)output.Data, output.OriginatingTime);
+                    }
                 }
             }
 
-            var past = RelativeTimeInterval.Past(window, inclusive: true);
+            var past = RelativeTimeInterval.Past(_window, inclusive: true);
             var producer = (IProducer<T>)connector;
             producer
-                .Select(cast)
-                .Window(past, windowCast)
-                .Do(process);
+                .Select(cast, deliveryPolicy)
+                .Window(past, windowCast, deliveryPolicy)
+                .Do(process, deliveryPolicy);
         }
         
 
@@ -135,7 +125,7 @@ namespace OpenSense.Components.BehaviorManagement {
         #endregion
 
         #region Classes
-        public readonly struct ConnectorInfo {
+        internal readonly struct ConnectorInfo {
 
             public IConnector Connector { get; }
 
@@ -144,6 +134,22 @@ namespace OpenSense.Components.BehaviorManagement {
             public ConnectorInfo(IConnector connector, Type dataType) {
                 Connector = connector;
                 DataType = dataType;
+            }
+        }
+
+        internal readonly struct PortInfo {
+
+            public IPortMetadata Port { get; }
+
+            public Type? DataType { get; }
+
+            /// <remarks>For inputs only.</remarks>
+            public DeliveryPolicy? DeliveryPolicy { get; }
+
+            public PortInfo(IPortMetadata port, Type? dataType, DeliveryPolicy? deliveryPolicy) {
+                Port = port;
+                DataType = dataType;
+                DeliveryPolicy = deliveryPolicy;
             }
         }
         #endregion
