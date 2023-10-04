@@ -19,7 +19,7 @@ namespace OpenSense.WPF.Views.Runners {
 
         public void Setup(PipelineEnvironment environment) {
             RootLayoutPanel.Children.Clear();
-            var map = new Dictionary<Guid, LayoutAnchorablePane>(environment.Instances.Count);
+            var map = new Dictionary<Guid, LayoutDocumentPane>(environment.Instances.Count);
             var creators = new InstanceControlCreatorManager();
             foreach (var component in environment.Instances) {
                 var control = CreateControl(component, creators);
@@ -48,14 +48,14 @@ namespace OpenSense.WPF.Views.Runners {
         }
 
         #region Helpers
-        private static LayoutAnchorablePane CreateControl(ComponentEnvironment environment, InstanceControlCreatorManager creators) {
+        private static LayoutDocumentPane CreateControl(ComponentEnvironment environment, InstanceControlCreatorManager creators) {
             var control = creators.Create(environment.Instance);//DataContext should be set inside this method.
             control ??= new EmptyControl();
-            var anchorable = new LayoutAnchorable() {
+            var anchorable = new LayoutDocument() {
                 Content = control,
                 Title = environment.Configuration.Name,
             };
-            var result = new LayoutAnchorablePane(anchorable);
+            var result = new LayoutDocumentPane(anchorable);
             return result;
         }
 
@@ -64,7 +64,7 @@ namespace OpenSense.WPF.Views.Runners {
             return result;
         }
 
-        private int CountHeight(LayoutAnchorablePane control) {
+        private int CountHeight(LayoutDocumentPane control) {
             var result = 0;
             var current = (ILayoutElement)control;
             while (current.Parent != RootLayoutPanel) {
@@ -74,7 +74,7 @@ namespace OpenSense.WPF.Views.Runners {
             return result;
         }
 
-        private int CountWidth(LayoutAnchorablePane control) {
+        private int CountWidth(LayoutDocumentPane control) {
             var parentPanel = (LayoutPanel)control.Parent;
             if (parentPanel.Orientation == Orientation.Horizontal) {//No child
                 return 0;
@@ -84,7 +84,7 @@ namespace OpenSense.WPF.Views.Runners {
             return childrenPanel.Children.Count;
         }
 
-        private void AddToLayout(LayoutAnchorablePane control, LayoutAnchorablePane? parent) {
+        private void AddToLayout(LayoutDocumentPane control, LayoutDocumentPane? parent) {
             if (parent is null) {
                 Debug.Assert(RootLayoutPanel.Orientation == Orientation.Horizontal);
                 RootLayoutPanel.InsertChildAt(RootLayoutPanel.Children.Count, control);
