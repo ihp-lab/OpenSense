@@ -24,7 +24,7 @@ namespace OpenSense.Pipeline {
                     return false;
                 }
                 //check whether remote is instantiated
-                if (!instantiatedEnvs.Any(e => e.Configuration.Id == inputConfig.RemoteId)) {
+                if (!instantiatedConfigs.Any(c => c.Id == inputConfig.RemoteId)) {
                     return false;
                 }
             }
