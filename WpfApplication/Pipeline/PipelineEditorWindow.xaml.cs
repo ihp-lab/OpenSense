@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using Microsoft.Psi;
 using OpenSense.Components;
 using OpenSense.Pipeline;
+using OpenSense.WPF.Views.Runners;
 
 namespace OpenSense.WPF.Pipeline {
     public partial class PipelineEditorWindow : Window {
@@ -46,7 +47,7 @@ namespace OpenSense.WPF.Pipeline {
             if (Configuration is null) {
                 return;
             }
-            var win = new PipelineRunnerWindow(Configuration) { 
+            var win = new RunnerWindow(Configuration) { 
                 Owner = Owner,
                 WindowStartupLocation = WindowStartupLocation.Manual,
                 Left = Left,

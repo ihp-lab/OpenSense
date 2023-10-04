@@ -5,8 +5,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using OpenSense.Pipeline;
 using OpenSense.WPF.Pipeline;
-using OpenSense.WPF.Widgets;
+using OpenSense.WPF.Views.Runners;
 using OpenSense.WPF.Widgets;
 
 namespace OpenSense.WPF {
@@ -51,7 +52,7 @@ namespace OpenSense.WPF {
         }
 
         private void ButtonPipelineRunner_Click(object sender, RoutedEventArgs e) {
-            var executor = new PipelineRunnerWindow() { 
+            var executor = new RunnerWindow(new PipelineConfiguration()) { 
                 //Owner = this,
             };
             executor.Show();
