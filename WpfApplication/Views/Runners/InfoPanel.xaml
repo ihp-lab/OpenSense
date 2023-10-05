@@ -16,7 +16,7 @@
     <Expander
         Header="Pipeline Information"
         IsExpanded="True"
-        Margin="3"
+        Margin="5"
         BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
         <Grid
             Margin="5">

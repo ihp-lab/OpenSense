@@ -61,6 +61,16 @@
             </MenuItem>
         </Menu>
 
+        <ProgressBar
+            DockPanel.Dock="Top"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"
+            Visibility="Hidden"
+            d:Visibility="Visible"
+            Height="3"
+            IsIndeterminate="True" 
+            Name="ProgressBarAction"/>
+
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition
@@ -70,11 +80,13 @@
 
             <local:InfoPanel
                 Grid.Row="0"
-                x:Name="InfoPanelControl"/>
+                x:Name="InfoPanelControl" />
 
             <local:VisualizerContainer
-                Grid.Row="1" 
-                x:Name="VisualizerContainerControl"/>
+                Grid.Row="1"
+                x:Name="VisualizerContainerControl" />
         </Grid>
+
+        
     </DockPanel>
 </Window>

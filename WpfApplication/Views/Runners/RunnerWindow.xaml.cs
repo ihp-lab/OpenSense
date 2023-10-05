@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -33,14 +33,16 @@ namespace OpenSense.WPF.Views.Runners {
             Debug.Assert(states is not null);
             Debug.Assert(!states.IsStarted);
             states.IsStarted = true;
-            InfoPanelControl.TextBlockRunning.Text = "✓";
+            _ = Dispatcher.InvokeAsync(() => {
+                InfoPanelControl.TextBlockRunning.Text = "✓";
+            });
         }
 
         private void OnPipelineExceptionNotHandled(object? sender, PipelineExceptionNotHandledEventArgs e) {
             Debug.Assert(states?.IsRunning == true);
             states.IsStopped = true;
-            InfoPanelControl.TextBlockRunning.Text = "×";
-            Dispatcher.Invoke(() => {
+            _ = Dispatcher.InvokeAsync(() => {
+                InfoPanelControl.TextBlockRunning.Text = "×";
                 MessageBox.Show(e.Exception.ToString(), "Pipeline Runtime Exception", MessageBoxButton.OK, MessageBoxImage.Error);
             });
         }
@@ -51,8 +53,8 @@ namespace OpenSense.WPF.Views.Runners {
             }
             Debug.Assert(states?.IsRunning == true);
             states.IsStopped = true;
-            InfoPanelControl.TextBlockRunning.Text = "×";
-            Dispatcher.Invoke(() => {
+            _ = Dispatcher.InvokeAsync(() => {
+                InfoPanelControl.TextBlockRunning.Text = "×";
                 MessageBox.Show($"Pipeline Completed.", "Pipeline Completed", MessageBoxButton.OK, MessageBoxImage.Information);
                 //TODO: show details in PipelineCompletedEventArgs
             });
@@ -60,25 +62,29 @@ namespace OpenSense.WPF.Views.Runners {
         #endregion
 
         #region Control Event Handlers
-        private void ButtonNew_Click(object? sender, RoutedEventArgs e) {
+        private async void ButtonNew_Click(object? sender, RoutedEventArgs e) {
             if (states?.IsRunning == true) {
                 MessageBox.Show("Pipeline is running.", "Create New Pipeline", MessageBoxButton.OK, MessageBoxImage.Hand);
                 return;
             }
             VisualizerContainerControl.Clear();
-            states?.Environment.Dispose();
-            states = null;
-            configuration = new PipelineConfiguration();
+            await DoLongTimeOperationAsync(() => {
+                states?.Environment.Dispose();
+                states = null;
+                configuration = new PipelineConfiguration();
+            }, ui: false);
         }
 
-        private void ButtonLoad_Click(object? sender, RoutedEventArgs e) {
+        private async void ButtonLoad_Click(object? sender, RoutedEventArgs e) {
             if (states?.IsRunning == true) {
                 MessageBox.Show("Pipeline is running.", "Load Pipeline", MessageBoxButton.OK, MessageBoxImage.Hand);
                 return;
             }
             VisualizerContainerControl.Clear();
-            states?.Environment?.Dispose();
-            states = null;
+            await DoLongTimeOperationAsync(() => {
+                states?.Environment?.Dispose();
+                states = null;
+            }, ui: false);
             var openFileDialog = new Microsoft.Win32.OpenFileDialog {
                 CheckFileExists = true,
                 AddExtension = true,
@@ -86,8 +92,10 @@ namespace OpenSense.WPF.Views.Runners {
                 Filter = "OpenSense Pipeline | *.pipe.json",
             };
             if (openFileDialog.ShowDialog() == true) {
-                var json = File.ReadAllText(openFileDialog.FileName);
-                configuration = new PipelineConfiguration(json);
+                await DoLongTimeOperationAsync(() => {
+                    var json = File.ReadAllText(openFileDialog.FileName);
+                    configuration = new PipelineConfiguration(json);
+                });
             }
         }
 
@@ -109,38 +117,40 @@ namespace OpenSense.WPF.Views.Runners {
             Close();
         }
 
-        private void ButtonInstantiate_Click(object sender, RoutedEventArgs e) {
+        private async void ButtonInstantiate_Click(object sender, RoutedEventArgs e) {
             if (states is not null) {
                 if (states.IsStarted && !states.IsStopped) {
                     MessageBox.Show("Pipeline is running.", "Instantiate Pipeline", MessageBoxButton.OK, MessageBoxImage.Hand);
                     return;
                 }
             }
-            _ = ReinstantiateAndSetupControls();
+            _ = await DoLongTimeOperationAsync(ReinstantiateAndSetupControlsAsync);
         }
 
-        private void ButtonResetControls_Click(object sender, RoutedEventArgs e) {
+        private async void ButtonResetControls_Click(object sender, RoutedEventArgs e) {
             if (states is null) {
                 return;
             }
-            VisualizerContainerControl.Setup(states.Environment);
+            await DoLongTimeOperationAsync(() => {
+                VisualizerContainerControl.Setup(states.Environment);
+            });
         }
 
-        private void ButtonRemoveEmptyControls_Click(object sender, RoutedEventArgs e) {
+        private async void ButtonRemoveEmptyControls_Click(object sender, RoutedEventArgs e) {
             if (states is null) {
                 return;
             }
-            VisualizerContainerControl.RemoveEmptyControls();
+            await DoLongTimeOperationAsync(VisualizerContainerControl.RemoveEmptyControls);
         }
 
-        private void ButtonSimplifyLayouts_Click(object sender, RoutedEventArgs e) {
+        private async void ButtonSimplifyLayouts_Click(object sender, RoutedEventArgs e) {
             if (states is null) {
                 return;
             }
-            VisualizerContainerControl.SimplifyLayouts();
+            await DoLongTimeOperationAsync(VisualizerContainerControl.SimplifyLayouts);
         }
 
-        private void ButtonRun_Click(object? sender, RoutedEventArgs e) {
+        private async void ButtonRun_Click(object? sender, RoutedEventArgs e) {
             if (states is not null) {
                 if (states.IsStarted && !states.IsStopped) {
                     MessageBox.Show("Pipeline is running.", "Run Pipeline", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -151,19 +161,22 @@ namespace OpenSense.WPF.Views.Runners {
                     return;
                 }
             }
-            if (ReinstantiateAndSetupControls()) {
+            if (await ReinstantiateAndSetupControlsAsync()) {
+                Debug.Assert(states is not null);
                 _ = states.Environment.Pipeline.RunAsync();
             }
         }
 
-        private void ButtonStop_Click(object? sender, RoutedEventArgs e) {
+        private async void ButtonStop_Click(object? sender, RoutedEventArgs e) {
             if (states?.IsRunning != true) {
                 MessageBox.Show("Pipeline is not running.", "Stop Pipeline", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
             VisualizerContainerControl.Clear();
-            states?.Environment.Dispose();//Note: the Stop() method is not public, so we can only stop the pipeline by disposing it.
-            states = null;
+            await DoLongTimeOperationAsync(() => {
+                states?.Environment.Dispose();//Note: the Stop() method is not public, so we can only stop the pipeline by disposing it.
+                states = null;
+            }, ui: false);
         }
 
         private void Window_Unloaded(object? sender, RoutedEventArgs e) {
@@ -174,6 +187,33 @@ namespace OpenSense.WPF.Views.Runners {
         #endregion
 
         #region Helpers
+        private async Task<T> DoLongTimeOperationAsync<T>(Func<T> func, bool ui = true) {
+            IsEnabled = false;
+            ProgressBarAction.Visibility = Visibility.Visible;
+            try {
+                var result = ui ? 
+                    await Dispatcher.InvokeAsync(func) : await Task.Factory.StartNew(func);
+                return result;
+            } finally {
+                ProgressBarAction.Visibility = Visibility.Hidden;
+                IsEnabled = true;
+            }
+        }
+
+        private async Task DoLongTimeOperationAsync(Action action, bool ui = true) {
+            IsEnabled = false;
+            ProgressBarAction.Visibility = Visibility.Visible;
+            try {
+                if (ui) {
+                    await Dispatcher.InvokeAsync(action);
+                } else {
+                    await Task.Factory.StartNew(action);
+                }
+            } finally {
+                ProgressBarAction.Visibility = Visibility.Hidden;
+                IsEnabled = true;
+            }
+        }
 
         private static PipelineEnvironment CreateEnvironment(PipelineConfiguration configuration) {
             var services = new ServiceCollection();
@@ -192,22 +232,27 @@ namespace OpenSense.WPF.Views.Runners {
             environment.Pipeline.PipelineCompleted += OnPipelineCompleted;
         }
 
-        [MemberNotNullWhen(true, nameof(states))]
-        private bool ReinstantiateAndSetupControls() {
+        private async Task<bool> ReinstantiateAndSetupControlsAsync() {
             VisualizerContainerControl.Clear();
-            states?.Environment.Dispose();
-            states = null;
 
-            PipelineEnvironment env;
             try {
-                env = CreateEnvironment(configuration);
+                await DoLongTimeOperationAsync(() => { 
+                    states?.Environment.Dispose();
+                    states = null;
+
+                    var env = CreateEnvironment(configuration);
+                    ConfigureEnvironment(env);
+                    states = new States(env);
+                }, ui: false);
             } catch (Exception ex) {
                 MessageBox.Show(ex.ToString(), "Pipeline Instantiation Exception", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
-            ConfigureEnvironment(env);
-            VisualizerContainerControl.Setup(env);
-            states = new States(env);
+
+            await DoLongTimeOperationAsync(() => {
+                VisualizerContainerControl.Setup(states!.Environment);
+            });
+
             return true;
         }
         #endregion
@@ -215,7 +260,7 @@ namespace OpenSense.WPF.Views.Runners {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        private void SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null) {
+        private void SetProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null) {
             if (!EqualityComparer<T>.Default.Equals(field, value)) {
                 field = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -238,11 +283,6 @@ namespace OpenSense.WPF.Views.Runners {
                 Environment = environment;
             }
         }
-
-
-
         #endregion
-
-        
     }
 }
