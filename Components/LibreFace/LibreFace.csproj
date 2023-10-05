@@ -52,7 +52,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\ComponentContract\ComponentContract.csproj" />
-        <ProjectReference Include="..\..\LibreFace\LibreFace.csproj" />
+        <ProjectReference Include="..\..\Utilities\LibreFace\LibreFace.csproj" />
     </ItemGroup>
 
 </Project>
