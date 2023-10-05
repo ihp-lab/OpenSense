@@ -26,6 +26,7 @@ namespace OpenSense.WPF.Views.Runners {
             InitializeComponent();
 
             configuration = pipelineConfiguration;
+            DataContext = configuration;
         }
 
         #region Pipeline Event Handlers
@@ -73,6 +74,7 @@ namespace OpenSense.WPF.Views.Runners {
                 states = null;
                 configuration = new PipelineConfiguration();
             }, ui: false);
+            DataContext = configuration;
         }
 
         private async void ButtonLoad_Click(object? sender, RoutedEventArgs e) {
@@ -95,7 +97,8 @@ namespace OpenSense.WPF.Views.Runners {
                 await DoLongTimeOperationAsync(() => {
                     var json = File.ReadAllText(openFileDialog.FileName);
                     configuration = new PipelineConfiguration(json);
-                });
+                }, ui: false);
+                DataContext = configuration;
             }
         }
 
@@ -136,18 +139,18 @@ namespace OpenSense.WPF.Views.Runners {
             });
         }
 
-        private async void ButtonRemoveEmptyControls_Click(object sender, RoutedEventArgs e) {
+        private void ButtonRemoveEmptyControls_Click(object sender, RoutedEventArgs e) {
             if (states is null) {
                 return;
             }
-            await DoLongTimeOperationAsync(VisualizerContainerControl.RemoveEmptyControls);
+            VisualizerContainerControl.RemoveEmptyControls();
         }
 
-        private async void ButtonSimplifyLayouts_Click(object sender, RoutedEventArgs e) {
+        private void ButtonSimplifyLayouts_Click(object sender, RoutedEventArgs e) {
             if (states is null) {
                 return;
             }
-            await DoLongTimeOperationAsync(VisualizerContainerControl.SimplifyLayouts);
+            VisualizerContainerControl.SimplifyLayouts();
         }
 
         private async void ButtonRun_Click(object? sender, RoutedEventArgs e) {
