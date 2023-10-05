@@ -224,10 +224,13 @@ namespace OpenSense.WPF.Views.Runners {
 
         private static PipelineEnvironment CreateEnvironment(PipelineConfiguration configuration) {
             var services = new ServiceCollection();
-            var providers = new ILoggerProvider[] {
-                new SerilogLoggerProvider(),
-            };
-            services.AddSingleton<ILoggerFactory, LoggerFactory>(sp => new LoggerFactory(providers));
+            services.AddSingleton<ILoggerFactory, LoggerFactory>(sp => {
+                var providers = new ILoggerProvider[] {
+                    new SerilogLoggerProvider(),
+                };
+                var result = new LoggerFactory(providers);
+                return result;
+            });
             var serviceProvider = services.BuildServiceProvider();
             var result = new PipelineEnvironment(configuration, serviceProvider);
             return result;
