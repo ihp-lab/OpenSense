@@ -1,0 +1,5 @@
+# Git LFS
+OpenPoseLib/models/** filter=lfs diff=lfs merge=lfs -text
+OpenPoseLib/bin/x64/Common/** filter=lfs diff=lfs merge=lfs -text
+OpenPoseLib/bin/x64_CUDA/Common/** filter=lfs diff=lfs merge=lfs -text
+OpenPoseLib/bin/x64_CPU/Common/** filter=lfs diff=lfs merge=lfs -text

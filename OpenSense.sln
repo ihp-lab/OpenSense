@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenFaceInterop", "OpenFaceInterop\OpenFaceInterop.vcxproj", "{78196985-EE54-411F-822B-5A23EDF80642}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenFaceInterop", "Interoperations\OpenFaceInterop\OpenFaceInterop.vcxproj", "{78196985-EE54-411F-822B-5A23EDF80642}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BiopacInterop", "BiopacInterop\BiopacInterop.vcxproj", "{FC200E98-DC12-4276-A7CD-588CD9E638A7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BiopacInterop", "Interoperations\BiopacInterop\BiopacInterop.vcxproj", "{FC200E98-DC12-4276-A7CD-588CD9E638A7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenSmileInterop", "OpenSmileInterop\openSmileInterop.vcxproj", "{F7324168-9704-4996-BF61-546590F86614}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenSmileInterop", "Interoperations\OpenSmileInterop\openSmileInterop.vcxproj", "{F7324168-9704-4996-BF61-546590F86614}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{59B873D6-5EB5-47B2-8242-C427367C736D}"
 	ProjectSection(SolutionItems) = preProject
@@ -106,7 +106,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emotion.Visualizer.WPF", "C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPose.Common", "Components\OpenPose.Common\OpenPose.Common.csproj", "{8B66EDFB-7480-4898-9702-2A6011E7E437}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPose.PInvoke", "OpenPose.PInvoke\OpenPose.PInvoke.csproj", "{5F08DC91-55C6-4A0C-85F3-D2C8D0B1C87E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPose.PInvoke", "Interoperations\OpenPose.PInvoke\OpenPose.PInvoke.csproj", "{5F08DC91-55C6-4A0C-85F3-D2C8D0B1C87E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPose", "Components\OpenPose\OpenPose.csproj", "{43E3CBB1-31F9-461D-BED0-02986AF5AA4C}"
 EndProject

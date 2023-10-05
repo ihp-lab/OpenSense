@@ -15,7 +15,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\Components\OpenFace.Common\OpenFace.Common.csproj" />
-        <ProjectReference Include="..\..\OpenFaceInterop\OpenFaceInterop.vcxproj" />
+        <ProjectReference Include="..\..\Interoperations\OpenFaceInterop\OpenFaceInterop.vcxproj" />
     </ItemGroup>
 
 </Project>
