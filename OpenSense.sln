@@ -142,13 +142,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest.Visualiz
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Widgets", "Widgets", "{76A71A78-644E-4B19-B47A-6BF48E5CCCF4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisplayPoiEstimatorBuilder.WPF", "DisplayPoiEstimatorBuilder.WPF\DisplayPoiEstimatorBuilder.WPF.csproj", "{5BA42999-6FEA-4399-B87F-17C94A718F51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisplayPoiEstimatorBuilder.WPF", "Widgets\DisplayPoiEstimatorBuilder.WPF\DisplayPoiEstimatorBuilder.WPF.csproj", "{5BA42999-6FEA-4399-B87F-17C94A718F51}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest.SpatialTracking", "Components\EyePointOfInterest.SpatialTracking\EyePointOfInterest.SpatialTracking.csproj", "{23A771BB-0B15-4695-974F-C1EE1EA5462A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfWidgetContract", "WpfWidgetContract\WpfWidgetContract.csproj", "{FC5D9B98-38E7-4057-A8FE-9EFBC3F0A09F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenSmileConfigurationConverter.WPF", "OpenSmileConfigurationConverter.WPF\OpenSmileConfigurationConverter.WPF.csproj", "{8B517B74-3FA7-4B8B-A967-7F8BFA1AB142}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenSmileConfigurationConverter.WPF", "Widgets\OpenSmileConfigurationConverter.WPF\OpenSmileConfigurationConverter.WPF.csproj", "{8B517B74-3FA7-4B8B-A967-7F8BFA1AB142}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest.WPF.Common", "Components\EyePointOfInterest.WPF.Common\EyePointOfInterest.WPF.Common.csproj", "{C0E4BA17-E2EA-48EB-8639-D15FC0B02FF2}"
 EndProject

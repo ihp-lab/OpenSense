@@ -121,8 +121,8 @@
         <ProjectReference Include="..\Components\Statistics.WPF\Statistics.WPF.csproj" />
         <ProjectReference Include="..\Components\Whisper.NET.WPF\Whisper.NET.WPF.csproj" />
         <!--Widgets-->
-        <ProjectReference Include="..\DisplayPoiEstimatorBuilder.WPF\DisplayPoiEstimatorBuilder.WPF.csproj" />
-        <ProjectReference Include="..\OpenSmileConfigurationConverter.WPF\OpenSmileConfigurationConverter.WPF.csproj" />
+        <ProjectReference Include="..\Widgets\DisplayPoiEstimatorBuilder.WPF\DisplayPoiEstimatorBuilder.WPF.csproj" />
+        <ProjectReference Include="..\Widgets\OpenSmileConfigurationConverter.WPF\OpenSmileConfigurationConverter.WPF.csproj" />
     </ItemGroup>
 
     <ItemGroup>
