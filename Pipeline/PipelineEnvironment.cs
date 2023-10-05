@@ -45,7 +45,7 @@ namespace OpenSense.Pipeline {
             if (configuration is null) {
                 throw new ArgumentNullException(nameof(configuration));
             }
-            Debug.WriteLineIf(serviceProvider is null, "no IServiceProvider is provided to the pipeline environment");
+            Debug.WriteLineIf(serviceProvider is null, "No IServiceProvider is provided to the pipeline environment.");
             ServiceProvider = serviceProvider;
             Pipeline = PsiPipeline.Create(configuration.Name, configuration.DeliveryPolicy);
             var instEnvs = new List<ComponentEnvironment>();
@@ -75,11 +75,11 @@ namespace OpenSense.Pipeline {
                 return;
             }
 
-            Pipeline.Dispose();//psi pipeline will dispose components
+            Pipeline.Dispose();//\psi pipeline will dispose components
             foreach (var instObj in Instances.Select(i => i.Instance).OfType<IDisposable>()) {
-                //but some components will still not be disposed by pipeline dispose
+                //But some components that was created in a different way will still not be disposed by pipeline dispose, so we dispose them again to make sure.
                 try {
-                    instObj.Dispose();
+                    instObj.Dispose();//Some \psi components do not follow the dispose pattern and can only be disposed once, that is why we catch exceptions here.
                 } catch (NullReferenceException) {
                 } catch (ObjectDisposedException) {
                 }
