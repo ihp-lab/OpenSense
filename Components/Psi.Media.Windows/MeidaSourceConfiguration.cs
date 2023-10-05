@@ -5,7 +5,7 @@ namespace OpenSense.Components.Psi.Media {
     [Serializable]
     public class MediaSourceConfiguration : ConventionalComponentConfiguration {
 
-        private string filename;
+        private string filename = "video.mp4";
 
         public string Filename {
             get => filename;

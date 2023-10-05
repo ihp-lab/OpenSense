@@ -1,8 +1,9 @@
-﻿using System.Windows.Controls;
+﻿using System.IO;
+using System.Windows.Controls;
 using OpenSense.Components.MediaPipe.NET;
 
 namespace OpenSense.WPF.Components.MediaPipe.NET {
-    public partial class MediaPipeConfigurationControl : UserControl {
+    public sealed partial class MediaPipeConfigurationControl : UserControl {
 
         private MediaPipeConfiguration Configuration => (MediaPipeConfiguration)DataContext;
 
@@ -50,6 +51,19 @@ namespace OpenSense.WPF.Components.MediaPipe.NET {
                 return;
             }
             Configuration.OutputStreams.Remove(stream);
+        }
+
+        private void buttonOpenGraph_Click(object sender, System.Windows.RoutedEventArgs e) {
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog {
+                CheckFileExists = true,
+                AddExtension = true,
+                DefaultExt = "*.pbtxt",
+                Filter = "MediaPipe Graph (*.pbtxt) | *.pbtxt",
+                InitialDirectory = string.IsNullOrEmpty(Configuration.Graph) ? "" : Path.GetDirectoryName(Path.GetFullPath(Configuration.Graph)),
+            };
+            if (openFileDialog.ShowDialog() == true) {
+                Configuration.Graph = openFileDialog.FileName;
+            }
         }
     }
 }

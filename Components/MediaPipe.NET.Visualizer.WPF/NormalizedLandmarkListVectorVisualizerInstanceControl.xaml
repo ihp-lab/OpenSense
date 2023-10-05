@@ -20,7 +20,8 @@
         <Expander
             Grid.Row="0"
             Header="Settings"
-            IsExpanded="False">
+            IsExpanded="False"
+            d:IsExpanded="True">
             <Grid
                 Grid.IsSharedSizeScope="True">
 
@@ -73,7 +74,7 @@
                 <Label
                     Grid.Row="1"
                     Grid.Column="0">
-                    Circle radius
+                    Circle Radius
                 </Label>
                 <TextBox
                     Grid.Row="1"
@@ -83,7 +84,7 @@
                 <Label
                     Grid.Row="2"
                     Grid.Column="0">
-                    Line thickness
+                    Line Thickness
                 </Label>
                 <TextBox
                     Grid.Row="2"

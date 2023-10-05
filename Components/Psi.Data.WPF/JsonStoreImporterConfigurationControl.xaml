@@ -39,7 +39,12 @@
 
             <TextBox
                 Text="{Binding RootPath}" />
-            <!--<Button Grid.Column="1">Open</Button>-->
+            <Button
+                Grid.Column="1"
+                Name="ButtonOpen"
+                Click="ButtonOpen_Click">
+                Open
+            </Button>
         </Grid>
     </Grid>
 </UserControl>

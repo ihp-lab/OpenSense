@@ -10,11 +10,11 @@
     d:DesignWidth="800"
     DataContextChanged="UserControl_DataContextChanged"
     Unloaded="UserControl_Unloaded">
-
     <StackPanel>
         <Expander
             Header="Settings"
-            IsExpanded="False">
+            IsExpanded="False"
+            d:IsExpanded="True">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition
@@ -29,7 +29,9 @@
 
                 <Label
                     Grid.Row="0"
-                    Grid.Column="0">Duration</Label>
+                    Grid.Column="0">
+                    Duration
+                </Label>
                 <TextBox
                     Grid.Row="0"
                     Grid.Column="1"

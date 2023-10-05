@@ -18,23 +18,13 @@ using Image = Microsoft.Psi.Imaging.Image;
 namespace OpenSense.Components.AzureKinect.Visualizer {
     public class AzureKinectBodyTrackerVisualizer : Subpipeline, IProducer<Shared<Image>>, INotifyPropertyChanged {
 
-        #region INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null) {
-            if (!EqualityComparer<T>.Default.Equals(field, value)) {
-                field = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-        #endregion
-
         private Connector<List<AzureKinectBody>> BodiesInConnector;
 
         private Connector<IDepthDeviceCalibrationInfo> CalibrationInConnector;
 
         private Connector<Shared<Image>> ColorImageInConnector;
 
+        #region Ports
         public Receiver<List<AzureKinectBody>> BodiesIn => BodiesInConnector.In;
 
         public Receiver<IDepthDeviceCalibrationInfo> CalibrationIn => CalibrationInConnector.In;
@@ -42,17 +32,9 @@ namespace OpenSense.Components.AzureKinect.Visualizer {
         public Receiver<Shared<Image>> ColorImageIn => ColorImageInConnector.In;
 
         public Emitter<Shared<Image>> Out { get; private set; }
+        #endregion
 
-        private ImageDisplay display = new ImageDisplay();
-
-        public WriteableBitmap Image {
-            get => display.VideoImage;
-        }
-
-        public int FrameRate {
-            get => display.ReceivedFrames.Rate;
-        }
-
+        #region Settings
         private bool mute = false;
 
         public bool Mute {
@@ -72,7 +54,16 @@ namespace OpenSense.Components.AzureKinect.Visualizer {
         public int LineThickness {
             get => lineThickness;
             set => SetProperty(ref lineThickness, value);
-        }
+        } 
+        #endregion
+
+        #region Binding Properties
+        public WriteableBitmap Image => imageVisualizer.Image;
+
+        public double? FrameRate => imageVisualizer.FrameRate;
+        #endregion
+
+        private ImageHolder imageVisualizer = new ImageHolder();
 
         public AzureKinectBodyTrackerVisualizer(Pipeline pipeline) : base(pipeline) {
             BodiesInConnector = CreateInputConnectorFrom<List<AzureKinectBody>>(pipeline, nameof(BodiesIn));
@@ -84,19 +75,12 @@ namespace OpenSense.Components.AzureKinect.Visualizer {
             var joined2 = joined1.Join(ColorImageInConnector.Out, Reproducible.Nearest<Shared<Image>>());
             joined2.Do(Process);
 
-            pipeline.PipelineCompleted += OnPipelineCompleted;
-
-            display.PropertyChanged += (sender, e) => {
-                if (e.PropertyName == nameof(display.VideoImage)) {
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Image)));
-                }
-            };
-            display.ReceivedFrames.PropertyChanged += (sender, e) => {
-                if (e.PropertyName == nameof(display.RenderedFrames.Rate)) {
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FrameRate)));
-                }
+            imageVisualizer.PropertyChanged += (sender, e) => {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(e.PropertyName));
             };
         }
+
+        public void RenderingCallback(object sender, EventArgs args) => imageVisualizer.RenderingCallback(sender, args);
 
         private void Process(ValueTuple<List<AzureKinectBody>, IDepthDeviceCalibrationInfo, Shared<Image>> data, Envelope envelope) {
             if (Mute) {
@@ -130,26 +114,35 @@ namespace OpenSense.Components.AzureKinect.Visualizer {
                     }
                     using var img = ImagePool.GetOrCreate(frame.Resource.Width, frame.Resource.Height, frame.Resource.PixelFormat);
                     img.Resource.CopyFrom(bitmap);
+                    imageVisualizer.UpdateImage(img, envelope.OriginatingTime);
                     Out.Post(img, envelope.OriginatingTime);
-                    display.Update(img);
                 }
             }
         }
 
-        private void OnPipelineCompleted(object sender, PipelineCompletedEventArgs e) {
-            display.Clear();
-        }
-
+        #region Helpers
         private static bool IsValidDouble(double val) {
-            if (Double.IsNaN(val)) {
+            if (double.IsNaN(val)) {
                 return false;
             }
-            if (Double.IsInfinity(val)) {
+            if (double.IsInfinity(val)) {
                 return false;
             }
             return true;
         }
 
-        private static bool IsValidPoint2D(MathNet.Spatial.Euclidean.Point2D point) => IsValidDouble(point.X) && IsValidDouble(point.Y);
+        private static bool IsValidPoint2D(Point2D point) => IsValidDouble(point.X) && IsValidDouble(point.Y);
+        #endregion
+
+        #region INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null) {
+            if (!EqualityComparer<T>.Default.Equals(field, value)) {
+                field = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        #endregion
     }
 }

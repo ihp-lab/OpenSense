@@ -20,10 +20,10 @@
         <Label Grid.Row="0" Grid.Column="0">Mute</Label>
         <CheckBox Grid.Row="0" Grid.Column="1" IsChecked="{Binding Mute}"/>
 
-        <Label Grid.Row="1" Grid.Column="0">Circle radius</Label>
+        <Label Grid.Row="1" Grid.Column="0">Circle Radius</Label>
         <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CircleRadius}"/>
 
-        <Label Grid.Row="2" Grid.Column="0">Line thickness</Label>
+        <Label Grid.Row="2" Grid.Column="0">Line Thickness</Label>
         <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding LineThickness}"/>
     </Grid>
 </UserControl>
