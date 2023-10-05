@@ -46,11 +46,15 @@ namespace OpenSense.WPF.Views.Runners {
                 InfoPanelControl.TextBlockRunning.Text = "×";
                 MessageBox.Show(e.Exception.ToString(), "Pipeline Runtime Exception", MessageBoxButton.OK, MessageBoxImage.Error);
             });
+            //OnPipelineCompleted will be called after this event handler.
         }
 
         private void OnPipelineCompleted(object? sender, PipelineCompletedEventArgs e) {
             if (states?.IsStarted == false) {
-                return;//Pipeline is not run, but is disposed.
+                return;//Pipeline was not run, but is being disposed.
+            }
+            if (states?.IsStopped == true) {
+                return;//There was an exception, we do not show message boxes again.;
             }
             Debug.Assert(states?.IsRunning == true);
             states.IsStopped = true;
