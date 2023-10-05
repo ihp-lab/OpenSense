@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -32,22 +33,25 @@ namespace OpenSense.WPF.Views.Runners {
             Debug.Assert(states is not null);
             Debug.Assert(!states.IsStarted);
             states.IsStarted = true;
-            InfoPanelControl.TextBlockRunning.Text = "True";
+            InfoPanelControl.TextBlockRunning.Text = "✓";
         }
 
         private void OnPipelineExceptionNotHandled(object? sender, PipelineExceptionNotHandledEventArgs e) {
             Debug.Assert(states?.IsRunning == true);
             states.IsStopped = true;
-            InfoPanelControl.TextBlockRunning.Text = "False";
+            InfoPanelControl.TextBlockRunning.Text = "×";
             Dispatcher.Invoke(() => {
                 MessageBox.Show(e.Exception.ToString(), "Pipeline Runtime Exception", MessageBoxButton.OK, MessageBoxImage.Error);
             });
         }
 
         private void OnPipelineCompleted(object? sender, PipelineCompletedEventArgs e) {
+            if (states?.IsStarted == false) {
+                return;//Pipeline is not run, but is disposed.
+            }
             Debug.Assert(states?.IsRunning == true);
             states.IsStopped = true;
-            InfoPanelControl.TextBlockRunning.Text = "False";
+            InfoPanelControl.TextBlockRunning.Text = "×";
             Dispatcher.Invoke(() => {
                 MessageBox.Show($"Pipeline Completed.", "Pipeline Completed", MessageBoxButton.OK, MessageBoxImage.Information);
                 //TODO: show details in PipelineCompletedEventArgs
@@ -58,9 +62,10 @@ namespace OpenSense.WPF.Views.Runners {
         #region Control Event Handlers
         private void ButtonNew_Click(object? sender, RoutedEventArgs e) {
             if (states?.IsRunning == true) {
-                MessageBox.Show("Pipeline is running.");
+                MessageBox.Show("Pipeline is running.", "Create New Pipeline", MessageBoxButton.OK, MessageBoxImage.Hand);
                 return;
             }
+            VisualizerContainerControl.Clear();
             states?.Environment.Dispose();
             states = null;
             configuration = new PipelineConfiguration();
@@ -68,9 +73,10 @@ namespace OpenSense.WPF.Views.Runners {
 
         private void ButtonLoad_Click(object? sender, RoutedEventArgs e) {
             if (states?.IsRunning == true) {
-                MessageBox.Show("Pipeline is running.");
+                MessageBox.Show("Pipeline is running.", "Load Pipeline", MessageBoxButton.OK, MessageBoxImage.Hand);
                 return;
             }
+            VisualizerContainerControl.Clear();
             states?.Environment?.Dispose();
             states = null;
             var openFileDialog = new Microsoft.Win32.OpenFileDialog {
@@ -87,7 +93,7 @@ namespace OpenSense.WPF.Views.Runners {
 
         private void ButtonEdit_Click(object? sender, RoutedEventArgs e) {
             if (states?.IsRunning == true) {
-                MessageBox.Show("Pipeline is running.");
+                MessageBox.Show("Pipeline is running.", "Edit Pipeline", MessageBoxButton.OK, MessageBoxImage.Hand);
                 return;
             }
             var win = new PipelineEditorWindow(configuration) {
@@ -103,42 +109,65 @@ namespace OpenSense.WPF.Views.Runners {
             Close();
         }
 
+        private void ButtonInstantiate_Click(object sender, RoutedEventArgs e) {
+            if (states is not null) {
+                if (states.IsStarted && !states.IsStopped) {
+                    MessageBox.Show("Pipeline is running.", "Instantiate Pipeline", MessageBoxButton.OK, MessageBoxImage.Hand);
+                    return;
+                }
+            }
+            _ = ReinstantiateAndSetupControls();
+        }
+
+        private void ButtonResetControls_Click(object sender, RoutedEventArgs e) {
+            if (states is null) {
+                return;
+            }
+            VisualizerContainerControl.Setup(states.Environment);
+        }
+
+        private void ButtonRemoveEmptyControls_Click(object sender, RoutedEventArgs e) {
+            if (states is null) {
+                return;
+            }
+            VisualizerContainerControl.RemoveEmptyControls();
+        }
+
+        private void ButtonSimplifyLayouts_Click(object sender, RoutedEventArgs e) {
+            if (states is null) {
+                return;
+            }
+            VisualizerContainerControl.SimplifyLayouts();
+        }
+
         private void ButtonRun_Click(object? sender, RoutedEventArgs e) {
             if (states is not null) {
                 if (states.IsStarted && !states.IsStopped) {
-                    MessageBox.Show("Pipeline is running.");
+                    MessageBox.Show("Pipeline is running.", "Run Pipeline", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
-                states.Environment.Dispose();
-                states = null;
+                if (!states.IsStarted) {
+                    _ = states.Environment.Pipeline.RunAsync();
+                    return;
+                }
             }
-            PipelineEnvironment env;
-            try {
-                env = CreateEnvironment(configuration);
-            } catch (Exception ex) {
-                MessageBox.Show(ex.ToString(), "Failed to instantiate the pipeline.");
-                return;
+            if (ReinstantiateAndSetupControls()) {
+                _ = states.Environment.Pipeline.RunAsync();
             }
-            ConfigureEnvironment(env);
-            states = new States(env);
-            VisualizerContainerControl.Setup(env);
-            _ = env.Pipeline.RunAsync();
         }
 
         private void ButtonStop_Click(object? sender, RoutedEventArgs e) {
             if (states?.IsRunning != true) {
-                MessageBox.Show("Pipeline is not running.");
+                MessageBox.Show("Pipeline is not running.", "Stop Pipeline", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
+            VisualizerContainerControl.Clear();
             states?.Environment.Dispose();//Note: the Stop() method is not public, so we can only stop the pipeline by disposing it.
             states = null;
         }
 
-        private void ButtonDumpLayout_Click(object sender, RoutedEventArgs e) {
-            VisualizerContainerControl.ConsoleDump();
-        }
-
         private void Window_Unloaded(object? sender, RoutedEventArgs e) {
+            VisualizerContainerControl.Clear();
             states?.Environment.Dispose();
             states = null;
         }
@@ -161,6 +190,25 @@ namespace OpenSense.WPF.Views.Runners {
             environment.Pipeline.PipelineRun += OnPipelineRun;
             environment.Pipeline.PipelineExceptionNotHandled += OnPipelineExceptionNotHandled;
             environment.Pipeline.PipelineCompleted += OnPipelineCompleted;
+        }
+
+        [MemberNotNullWhen(true, nameof(states))]
+        private bool ReinstantiateAndSetupControls() {
+            VisualizerContainerControl.Clear();
+            states?.Environment.Dispose();
+            states = null;
+
+            PipelineEnvironment env;
+            try {
+                env = CreateEnvironment(configuration);
+            } catch (Exception ex) {
+                MessageBox.Show(ex.ToString(), "Pipeline Instantiation Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+            ConfigureEnvironment(env);
+            VisualizerContainerControl.Setup(env);
+            states = new States(env);
+            return true;
         }
         #endregion
 
@@ -190,6 +238,11 @@ namespace OpenSense.WPF.Views.Runners {
                 Environment = environment;
             }
         }
+
+
+
         #endregion
+
+        
     }
 }

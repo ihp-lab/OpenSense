@@ -15,11 +15,15 @@
     </d:UserControl.DataContext>
     <Expander
         Header="Pipeline Information"
-        IsExpanded="True">
-        <Grid>
+        IsExpanded="True"
+        Margin="3"
+        BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
+        <Grid
+            Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
-                    Width="auto" />
+                    Width="auto" 
+                    MinWidth="50"/>
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
@@ -51,7 +55,7 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 Name="TextBlockRunning">
-                False
+                ×
             </TextBlock>
 
         </Grid>

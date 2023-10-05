@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:OpenSense.WPF.Views.Runners"
     mc:Ignorable="d"
-    Title="Pipeline Runner"
+    Title="OpenSense - Pipeline Runner"
     WindowStartupLocation="CenterScreen"
     Height="450"
     Width="800"
@@ -30,6 +30,25 @@
                 Name="ButtonEdit"
                 Click="ButtonEdit_Click" />
             <MenuItem
+                Header="PreSteps">
+                <MenuItem
+                    Header="(Re-)Instantiate"
+                    Name="ButtonInstantiate"
+                    Click="ButtonInstantiate_Click" />
+                <MenuItem
+                    Header="Recreate Controls"
+                    Name="ButtonResetControls"
+                    Click="ButtonResetControls_Click" />
+                <MenuItem
+                    Header="Remove Empty Controls"
+                    Name="ButtonRemoveEmptyControls"
+                    Click="ButtonRemoveEmptyControls_Click" />
+                <MenuItem
+                    Header="Simplify/Merge Layouts"
+                    Name="ButtonSimplifyLayouts"
+                    Click="ButtonSimplifyLayouts_Click" />
+            </MenuItem>
+            <MenuItem
                 Header="_Run/Stop">
                 <MenuItem
                     Header="_Run"
@@ -39,11 +58,6 @@
                     Header="_Stop"
                     Name="ButtonStop"
                     Click="ButtonStop_Click" />
-            </MenuItem>
-            <MenuItem
-                Header="DumpLayout"
-                Name="ButtonDumpLayout"
-                Click="ButtonDumpLayout_Click">
             </MenuItem>
         </Menu>
 
