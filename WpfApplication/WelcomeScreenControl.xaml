@@ -106,6 +106,8 @@
 
         <TextBlock
             Style="{StaticResource StyleSectionBreaker}" />
+        <TextBlock
+            Style="{StaticResource StyleSectionBreaker}" />
 
         <TextBlock
             Style="{StaticResource StyleSubTitle}">
@@ -114,26 +116,6 @@
         <TextBlock
             Style="{StaticResource StyleContent}">
             Mohammad Soleymani
-        </TextBlock>
-
-        <TextBlock
-            Style="{StaticResource StyleSectionBreaker}" />
-
-        <TextBlock
-            Style="{StaticResource StyleSubTitle}">
-            Development Team
-        </TextBlock>
-        <TextBlock
-            Style="{StaticResource StyleContent}">
-            Kalin Stefanov
-        </TextBlock>
-        <TextBlock
-            Style="{StaticResource StyleContent}">
-            Baiyu Huang
-        </TextBlock>
-        <TextBlock
-            Style="{StaticResource StyleContent}">
-            Zongjian Li
         </TextBlock>
 
         <TextBlock
