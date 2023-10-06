@@ -44,7 +44,7 @@ namespace OpenSense.WPF.Views.Runners {
             states.IsStopped = true;
             _ = Dispatcher.InvokeAsync(() => {
                 InfoPanelControl.TextBlockRunning.Text = "×";
-                MessageBox.Show(e.Exception.ToString(), "Pipeline Runtime Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+                ExceptionMessageWindow.Show(this, e.Exception, "Pipeline Runtime Exception", "There is an exception while running the pipeline.");
             });
             //OnPipelineCompleted will be called after this event handler.
         }
@@ -255,7 +255,7 @@ namespace OpenSense.WPF.Views.Runners {
                     states = new States(env);
                 }, ui: false);
             } catch (Exception ex) {
-                MessageBox.Show(ex.ToString(), "Pipeline Instantiation Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+                ExceptionMessageWindow.Show(this, ex, "Pipeline Instantiation Exception", "There is an exception while instantiating the pipeline.");
                 return false;
             }
 
