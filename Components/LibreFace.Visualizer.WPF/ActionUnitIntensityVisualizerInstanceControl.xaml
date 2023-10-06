@@ -17,6 +17,7 @@
         </Grid.RowDefinitions>
 
         <Expander
+            Visibility="Collapsed"
             Grid.Row="0"
             Header="Settings"
             d:IsExpanded="True">
@@ -31,35 +32,6 @@
                     <RowDefinition
                         Height="auto" />
                 </Grid.RowDefinitions>
-
-                <TextBlock
-                    Grid.Row="0"
-                    Grid.Column="0">
-                    Display range
-                </TextBlock>
-                <Grid
-                    Grid.Row="0"
-                    Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <RadioButton
-                        Grid.Column="0"
-                        HorizontalAlignment="Center"
-                        IsChecked="True"
-                        Tag="1"
-                        Checked="RadioButton_Checked">
-                        0 to 1
-                    </RadioButton>
-                    <RadioButton
-                        Grid.Column="1"
-                        HorizontalAlignment="Center"
-                        Tag="5"
-                        Checked="RadioButton_Checked">
-                        0 to 5
-                    </RadioButton>
-                </Grid>
             </Grid>
         </Expander>
 
