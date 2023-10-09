@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using Microsoft.Psi;
 using OpenSense.Components;
 using OpenSense.Pipeline;
+using OpenSense.WPF.Views.Editors;
 using OpenSense.WPF.Views.Runners;
 
 namespace OpenSense.WPF.Pipeline {
@@ -91,14 +92,16 @@ namespace OpenSense.WPF.Pipeline {
             var configuration = (ComponentConfiguration)ListBoxInstances.SelectedItem;
             var configurations = ListBoxInstances.ItemsSource.Cast<ComponentConfiguration>().ToArray();
             ContentControlComponentBasics.Content = null;
-            ContentControlConnection.Children.Clear();
+            ContentControlConnection.Content = null;
             ContentControlConnection.DataContext = configuration;
+            OutputPortInspector.Content = null;
+            OutputPortInspector.DataContext = configuration;
             ContentControlSettings.Children.Clear();
             ContentControlSettings.DataContext = ListBoxInstances.SelectedItem;
             if (configuration != null) {
                 ContentControlComponentBasics.Content = new InstanceBasicInformationControl(configuration);
-                var connection = new InstanceConnectionControl(configuration, configurations);
-                ContentControlConnection.Children.Add(connection);
+                ContentControlConnection.Content = new InstanceConnectionControl(configuration, configurations);
+                OutputPortInspector.Content = new OutputPortsInspector(configuration, configurations);
                 try {
                     var manager = new ConfigurationControlCreatorManager();//throws ReflectionTypeLoadException
                     var control = manager.Create(configuration);
