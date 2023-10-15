@@ -52,7 +52,7 @@
             Text="{Binding FocalLengthY}" />
 
         <Label
-            Grid.Row="3">Calibration Cy</Label>
+            Grid.Row="3">Calibration Cx</Label>
         <TextBox
             Grid.Row="3"
             Grid.Column="1"

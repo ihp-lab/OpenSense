@@ -19,7 +19,7 @@ namespace OpenSense.Components.Psi.Media {
                 case nameof(MediaCapture.Video):
                     return "Captured images. Same as the Out port.";
                 case nameof(MediaCapture.Audio):
-                    return "Captured audio signal.";
+                    return "Captured audio signal. This output will be \"null\" if \"Capture Audio\" is not selected.";
                 default:
                     return null;
             }

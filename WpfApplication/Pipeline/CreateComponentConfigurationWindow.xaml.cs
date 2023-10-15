@@ -56,6 +56,9 @@ namespace OpenSense.WPF.Pipeline {
             }
             DataGridComponents.ItemsSource = data;
             DataGridComponents.SelectedIndex = 0;
+            if (DataGridComponents.SelectedItem is not null) {
+                DataGridComponents.ScrollIntoView(DataGridComponents.SelectedItem);
+            }
         }
 
         #region Helpers
