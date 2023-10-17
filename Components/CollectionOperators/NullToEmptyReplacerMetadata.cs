@@ -11,7 +11,7 @@ namespace OpenSense.Components.CollectionOperators {
 
         public string Name => "Null to Empty Replacer";
 
-        public string Description => "Inputs are collections, and if a input is null, then replace it with an empty collection.";
+        public string Description => "Inputs are collections, and if an input is null, then replace it with an empty collection.";
 
         public IReadOnlyList<IPortMetadata> Ports { get; } = new GenericComponentPortMetadata_OneParam[] {
             new (typeof(NullToEmptyReplacer<,>).GetProperty(nameof(NullToEmptyReplacer<short, IEnumerable<short>>.In)), true, "[Required] The collection."),

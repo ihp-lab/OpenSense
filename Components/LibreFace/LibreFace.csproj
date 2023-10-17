@@ -8,6 +8,18 @@
         <Nullable>enable</Nullable>
         <EmbedAllSources>true</EmbedAllSources>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <AssemblyVersion>1.1.0</AssemblyVersion>
+        <Version>1.1.0</Version>
+        <Authors>Intelligent Human Perception Lab</Authors>
+        <Product>OpenSense</Product>
+        <Description>
+            LibreFace component of OpenSense.
+            This package uses a pure .NET alignment implementation, another implementation is available if you build from source.
+        </Description>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageReleaseNotes>RELEASE_NOTES.md</PackageReleaseNotes>
+        <RepositoryUrl>https://github.com/ihp-lab/OpenSense.git</RepositoryUrl>
 
         <!-- OpenCV conditions -->
         <!--<DefineConstants>$(DefineConstants);OPENCV</DefineConstants>-->
@@ -23,6 +35,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <None Include="$(SolutionDir)/LICENSE.txt" Pack="true" PackagePath=""/>
+        <None Include="$(SolutionDir)/README.md" Pack="true" PackagePath=""/>
+        <None Include="RELEASE_NOTES.md" Pack="true" PackagePath="" />
+    </ItemGroup>
+
+    <ItemGroup>
         <!--Note:
         Follow the version of Mediapipe.Net component.
         -->
@@ -34,7 +52,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\ComponentContract\ComponentContract.csproj" />
-        <ProjectReference Include="..\..\LibreFace\LibreFace.csproj" />
+        <ProjectReference Include="..\..\Utilities\LibreFace\LibreFace.csproj" />
     </ItemGroup>
 
 </Project>

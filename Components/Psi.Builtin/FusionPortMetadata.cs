@@ -7,7 +7,10 @@ using System.Linq;
 namespace OpenSense.Components.Psi {
     public sealed class FusionPortMetadata : OperatorPortMetadata {
 
-        public FusionPortMetadata(string name, PortDirection direction, string? description) : base(name, direction, description) {
+        internal int Order { get; }
+
+        public FusionPortMetadata(string name, PortDirection direction, int order, string description) : base(name, direction, description) {
+            Order = order;
         }
 
         public override Type? GetTransmissionDataType(RuntimePortDataType? remoteEndPointDataType, IReadOnlyList<RuntimePortDataType> localOtherDirectionPortsDataTypes, IReadOnlyList<RuntimePortDataType> localSameDirectionPortsDataTypes) {
@@ -18,7 +21,11 @@ namespace OpenSense.Components.Psi {
                     if (localOtherDirectionPortsDataTypes.Count != 2 || localOtherDirectionPortsDataTypes.Any(t => t.Type is null)) {
                         return null;
                     }
-                    return typeof(ValueTuple<,>).MakeGenericType(localOtherDirectionPortsDataTypes.Select(t => t.Type).ToArray());
+                    var types = localOtherDirectionPortsDataTypes
+                        .OrderBy(t => ((FusionPortMetadata)t.Metadata).Order)
+                        .Select(t => t.Type)
+                        .ToArray();
+                    return typeof(ValueTuple<,>).MakeGenericType(types);
                 default:
                     throw new InvalidOperationException();
             }

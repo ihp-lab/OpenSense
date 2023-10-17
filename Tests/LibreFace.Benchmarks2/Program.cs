@@ -80,7 +80,7 @@ namespace LibreFace.Benchmarks2 {
             dynamic consumer = wrapper.Inputs["image"];
             Microsoft.Psi.Operators.PipeTo(generator, consumer);
 
-            var detector = new LibreFaceDetector(pipeline);
+            var detector = new LibreFaceDetector(pipeline, DeliveryPolicy.Unlimited);
             generator.PipeTo(detector.ImageIn);
             var producer = (Emitter<List<NormalizedLandmarkList>>)wrapper.Outputs["multi_face_landmarks"];
             var producerConverted = producer.Select(l => (IReadOnlyList<NormalizedLandmarkList>)l);

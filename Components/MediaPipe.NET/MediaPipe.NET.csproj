@@ -10,11 +10,28 @@
         /psi Image does not support Span<T>, so we need to use pointers.
         -->
         <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+        <AssemblyVersion>1.0.0</AssemblyVersion>
+        <Version>1.0.0</Version>
+        <Authors>Intelligent Human Perception Lab</Authors>
+        <Product>OpenSense</Product>
+        <Description>
+            Mediapipe.NET component of OpenSense.
+            This package uses the CPU runtime, if you want to use other runtimes, please compile from source.
+            The face_detection and face_landmark models are included for convenience.
+        </Description>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/ihp-lab/OpenSense.git</RepositoryUrl>
 
         <!-- GPU conditions--><!--TODO: not working as expected.-->
         <!--<DefineConstants>$(DefineConstants);GPU</DefineConstants>-->
         <UseGPU Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*GPU(;.*)*$'))">true</UseGPU>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="$(SolutionDir)/LICENSE.txt" Pack="true" PackagePath=""/>
+        <None Include="$(SolutionDir)/README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Mediapipe.Net" Version="1.0.0-alpha2" />
@@ -38,10 +55,23 @@
     </ItemGroup>
 
     <ItemGroup>
+        <!--Note: 
+        PackagePath is added to prevent duplication in content and contentFiles.
+        ContentTargetFolders is default to content and contentFiles.
+        We are not setting ContentTargetFolders to contentFiles because files will be put into contentFiles/any/netstandard2.1, which is not what we want.
+        -->
+
         <!--Samples-->
-        <None Update="mediapipe/**/*">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
+        <Content Include="mediapipe/**/*.pbtxt" >
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <PackagePath>contentFiles/any/any</PackagePath>
+        </Content>
+        <Content Include="mediapipe/**/*.tflite" >
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <PackagePath>contentFiles/any/any</PackagePath>
+        </Content>
     </ItemGroup>
 
 </Project>

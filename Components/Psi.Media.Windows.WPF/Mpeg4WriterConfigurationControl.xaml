@@ -1,120 +1,187 @@
-﻿<UserControl x:Class="OpenSense.WPF.Components.Psi.Media.Mpeg4WriterConfigurationControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:OpenSense.WPF.Components.Psi.Media"
-             xmlns:util="clr-namespace:OpenSense.WPF.Components.Utilities;assembly=OpenSense.WPF.Components.Contracts"
-             xmlns:imaging="clr-namespace:Microsoft.Psi.Imaging;assembly=Microsoft.Psi.Imaging"
-             mc:Ignorable="d"
-             d:DesignHeight="450"
-             d:DesignWidth="800"
-             >
+﻿<UserControl
+    x:Class="OpenSense.WPF.Components.Psi.Media.Mpeg4WriterConfigurationControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:OpenSense.WPF.Components.Psi.Media"
+    xmlns:util="clr-namespace:OpenSense.WPF.Components.Utilities;assembly=OpenSense.WPF.Components.Contracts"
+    xmlns:imaging="clr-namespace:Microsoft.Psi.Imaging;assembly=Microsoft.Psi.Imaging"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
 
-    <Grid Grid.IsSharedSizeScope="True">
+    <Grid
+        Grid.IsSharedSizeScope="True">
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.IsSharedSizeScope="True">
+        <Grid
+            Grid.IsSharedSizeScope="True">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"
-                                  SharedSizeGroup="Label" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition
+                    Width="auto"
+                    SharedSizeGroup="Label" />
+                <ColumnDefinition
+                    Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
+                <RowDefinition
+                    Height="auto" />
             </Grid.RowDefinitions>
 
-            <Label Grid.Row="0">Filename</Label>
-            <Grid Grid.Row="0"
-                  Grid.Column="1">
+            <Label
+                Grid.Row="0">
+                Filename
+            </Label>
+            <Grid
+                Grid.Row="0"
+                Grid.Column="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition
+                        Width="*" />
+                    <ColumnDefinition
+                        Width="auto" />
                 </Grid.ColumnDefinitions>
-                <TextBox Name="TextBoxFilename"
-                         Text="{Binding Filename}" />
-                <Button Grid.Column="1"
-                        Name="ButtonOpenFile"
-                        Click="ButtonOpenFile_Click">Open</Button>
+                <TextBox
+                    Name="TextBoxFilename"
+                    Text="{Binding Filename}" />
+                <Button
+                    Grid.Column="1"
+                    Name="ButtonOpenFile"
+                    Click="ButtonOpenFile_Click">Open</Button>
             </Grid>
 
         </Grid>
 
-        <Grid Grid.Row="1"
-              Grid.IsSharedSizeScope="True"
-              DataContext="{Binding Raw}">
+        <Grid
+            Grid.Row="1"
+            Grid.IsSharedSizeScope="True"
+            DataContext="{Binding Raw}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"
-                                  SharedSizeGroup="Label" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition
+                    Width="auto"
+                    SharedSizeGroup="Label" />
+                <ColumnDefinition
+                    Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
+                <RowDefinition
+                    Height="auto" />
+                <RowDefinition
+                    Height="auto" />
+                <RowDefinition
+                    Height="auto" />
+                <RowDefinition
+                    Height="auto" />
+                <RowDefinition
+                    Height="auto" />
+                <RowDefinition
+                    Height="auto" />
+                <RowDefinition
+                    Height="auto" />
+                <RowDefinition
+                    Height="auto" />
+                <RowDefinition
+                    Height="auto" />
+                <RowDefinition
+                    Height="auto" />
             </Grid.RowDefinitions>
 
-            <Label Grid.Row="0">Image width</Label>
-            <TextBox Grid.Row="0"
-                     Grid.Column="1"
-                     Text="{Binding ImageWidth}" />
+            <Label
+                Grid.Row="0">
+                Image Width
+            </Label>
+            <TextBox
+                Grid.Row="0"
+                Grid.Column="1"
+                Text="{Binding ImageWidth}" />
 
-            <Label Grid.Row="1">Image height</Label>
-            <TextBox Grid.Row="1"
-                     Grid.Column="1"
-                     Text="{Binding ImageHeight}" />
+            <Label
+                Grid.Row="1">
+                Image Height
+            </Label>
+            <TextBox
+                Grid.Row="1"
+                Grid.Column="1"
+                Text="{Binding ImageHeight}" />
 
-            <Label Grid.Row="2">Pixel format</Label>
-            <ComboBox Grid.Row="2"
-                      Grid.Column="1"
-                      ItemsSource="{Binding Source={util:EnumBindingSource {x:Type imaging:PixelFormat }}, Mode=OneTime}"
-                      SelectedItem="{Binding PixelFormat  }" />
+            <Label
+                Grid.Row="2">
+                Pixel Format
+            </Label>
+            <ComboBox
+                Grid.Row="2"
+                Grid.Column="1"
+                ItemsSource="{Binding Source={util:EnumBindingSource {x:Type imaging:PixelFormat }}, Mode=OneTime}"
+                SelectedItem="{Binding PixelFormat  }" />
 
-            <Label Grid.Row="3">Frame rate numerator</Label>
-            <TextBox Grid.Row="3"
-                     Grid.Column="1"
-                     Text="{Binding FrameRateNumerator}" />
+            <Label
+                Grid.Row="3">
+                Frame Rate Numerator
+            </Label>
+            <TextBox
+                Grid.Row="3"
+                Grid.Column="1"
+                Text="{Binding FrameRateNumerator}" />
 
-            <Label Grid.Row="4">Frame rate denominator</Label>
-            <TextBox Grid.Row="4"
-                     Grid.Column="1"
-                     Text="{Binding FrameRateDenominator}" />
+            <Label
+                Grid.Row="4">
+                Frame Rate Denominator
+            </Label>
+            <TextBox
+                Grid.Row="4"
+                Grid.Column="1"
+                Text="{Binding FrameRateDenominator}" />
 
-            <Label Grid.Row="5">Target bit rate</Label>
-            <TextBox Grid.Row="5"
-                     Grid.Column="1"
-                     Text="{Binding TargetBitrate}" />
+            <Label
+                Grid.Row="5">
+                Target Bit-Rate
+            </Label>
+            <TextBox
+                Grid.Row="5"
+                Grid.Column="1"
+                Text="{Binding TargetBitrate}" />
 
-            <Label Grid.Row="6">Contains audio</Label>
-            <CheckBox Grid.Row="6"
-                      Grid.Column="1"
-                      IsChecked="{Binding ContainsAudio}" />
+            <Label
+                Grid.Row="6">
+                Contains Audio
+            </Label>
+            <CheckBox
+                Grid.Row="6"
+                Grid.Column="1"
+                IsChecked="{Binding ContainsAudio}" />
 
-            <Label Grid.Row="7">Audio bits per sample</Label>
-            <TextBox Grid.Row="7"
-                     Grid.Column="1"
-                     Text="{Binding AudioBitsPerSample}" />
+            <Label
+                Grid.Row="7">
+                Audio Bits per Sample
+            </Label>
+            <TextBox
+                Grid.Row="7"
+                Grid.Column="1"
+                Text="{Binding AudioBitsPerSample}" />
 
-            <Label Grid.Row="8">Audio samples per second</Label>
-            <TextBox Grid.Row="8"
-                     Grid.Column="1"
-                     Text="{Binding AudioSamplesPerSecond}" />
+            <Label
+                Grid.Row="8">
+                Audio Samples per Second
+            </Label>
+            <TextBox
+                Grid.Row="8"
+                Grid.Column="1"
+                Text="{Binding AudioSamplesPerSecond}" />
 
-            <Label Grid.Row="9">Audio channels</Label>
-            <TextBox Grid.Row="9"
-                     Grid.Column="1"
-                     Text="{Binding AudioChannels}" />
-
+            <Label
+                Grid.Row="9">
+                Audio Channels
+            </Label>
+            <TextBox
+                Grid.Row="9"
+                Grid.Column="1"
+                Text="{Binding AudioChannels}" />
         </Grid>
     </Grid>
 </UserControl>

@@ -32,7 +32,7 @@
                     Binding="{Binding Description}"
                     Width="*" />
                 <DataGridTextColumn
-                    Header="Type"
+                    Header="Kind"
                     Binding="{Binding Aggregation, Mode=OneWay}" />
             </DataGrid.Columns>
         </DataGrid>

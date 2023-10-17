@@ -9,7 +9,7 @@ using Microsoft.Psi;
 using Microsoft.Psi.Audio;
 
 namespace OpenSense.Components.Audio.Visualizer {
-    public class AudioVisualizer : Subpipeline, IConsumer<AudioBuffer>, INotifyPropertyChanged {
+    public class AudioVisualizer : IConsumer<AudioBuffer>, INotifyPropertyChanged {
 
         #region Settings
         private int imageWidth = 1280;
@@ -75,7 +75,7 @@ namespace OpenSense.Components.Audio.Visualizer {
         }
         #endregion
 
-        public AudioVisualizer(Pipeline pipeline) : base(pipeline) {
+        public AudioVisualizer(Pipeline pipeline) {
             In = pipeline.CreateReceiver<AudioBuffer>(pipeline, Process, nameof(In));
         }
 

@@ -1,9 +1,0 @@
-# Git LFS
-Shared/lib/boost/** filter=lfs diff=lfs merge=lfs -text
-Shared/lib/dlib/** filter=lfs diff=lfs merge=lfs -text
-Shared/lib/openface/** filter=lfs diff=lfs merge=lfs -text
-
-OpenPose.PInvoke/OpenPoseLib/models/** filter=lfs diff=lfs merge=lfs -text
-OpenPose.PInvoke/OpenPoseLib/bin/x64/Common/** filter=lfs diff=lfs merge=lfs -text
-OpenPose.PInvoke/OpenPoseLib/bin/x64_CUDA/Common/** filter=lfs diff=lfs merge=lfs -text
-OpenPose.PInvoke/OpenPoseLib/bin/x64_CPU/Common/** filter=lfs diff=lfs merge=lfs -text

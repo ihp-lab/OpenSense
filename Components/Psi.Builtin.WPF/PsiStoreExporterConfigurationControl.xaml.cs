@@ -7,13 +7,12 @@ using OpenSense.Components;
 using OpenSense.Components.Psi;
 
 namespace OpenSense.WPF.Components.Psi {
-    public partial class PsiStoreExporterConfigurationControl : UserControl {
-        private PsiStoreExporterConfiguration Configuration;
+    public sealed partial class PsiStoreExporterConfigurationControl : UserControl {
 
-        public PsiStoreExporterConfigurationControl(PsiStoreExporterConfiguration configuration) {
+        private PsiStoreExporterConfiguration Configuration => (PsiStoreExporterConfiguration)DataContext;
+
+        public PsiStoreExporterConfigurationControl() {
             InitializeComponent();
-            Configuration = configuration;
-            DataContext = Configuration;
         }
 
         private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e) {
@@ -54,6 +53,14 @@ namespace OpenSense.WPF.Components.Psi {
             Configuration.LargeMessageInputs.Remove(config.Id);
         }
 
-
+        private void ButtonOpen_Click(object sender, RoutedEventArgs e) {
+            var dialog = new System.Windows.Forms.FolderBrowserDialog() {
+                ShowNewFolderButton = true,
+                Description = "Select a Folder",
+            };
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
+                Configuration.RootPath = dialog.SelectedPath;
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -10,33 +11,15 @@ using Microsoft.Psi.Imaging;
 using OpenSense.WPF.Components.Psi.Imaging.Visualizer;
 
 namespace OpenSense.Components.Psi.Imaging.Visualizer {
-    public class DepthImageVisualizer : IConsumerProducer<Shared<DepthImage>, Shared<Image>>, INotifyPropertyChanged {
+    public sealed class DepthImageVisualizer : IConsumerProducer<Shared<DepthImage>, Shared<Image>>, INotifyPropertyChanged {
 
-        #region INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null) {
-            if (!EqualityComparer<T>.Default.Equals(field, value)) {
-                field = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-        #endregion
-
-        private ImageDisplay display = new ImageDisplay();
-
+        #region Ports
         public Receiver<Shared<DepthImage>> In { get; private set; }
 
-        public Emitter<Shared<Image>> Out { get; private set; }
+        public Emitter<Shared<Image>> Out { get; private set; } 
+        #endregion
 
-        public WriteableBitmap Image {
-            get => display.VideoImage;
-        }
-
-        public int FrameRate {
-            get => display.ReceivedFrames.Rate;
-        }
-
+        #region Settings
         private bool autoExpandRange = true;
 
         public bool AutoExpandRange {
@@ -57,23 +40,26 @@ namespace OpenSense.Components.Psi.Imaging.Visualizer {
             get => maxValue;
             set => SetProperty(ref maxValue, value);
         }
+        #endregion
+
+        #region Binding Properties
+        public WriteableBitmap Image => imageVisualizer.Image;
+
+        public double? FrameRate => imageVisualizer.FrameRate;
+        #endregion
+
+        private ImageHolder imageVisualizer = new ImageHolder();
 
         public DepthImageVisualizer(Pipeline pipeline) {
             In = pipeline.CreateReceiver<Shared<DepthImage>>(this, Process, nameof(In));
             Out = pipeline.CreateEmitter<Shared<Image>>(this, nameof(Out));
-            pipeline.PipelineCompleted += PipelineCompleted;
 
-            display.PropertyChanged += (sender, e) => {
-                if (e.PropertyName == nameof(display.VideoImage)) {
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Image)));
-                }
-            };
-            display.ReceivedFrames.PropertyChanged += (sender, e) => {
-                if (e.PropertyName == nameof(display.RenderedFrames.Rate)) {
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FrameRate)));
-                }
+            imageVisualizer.PropertyChanged += (sender, e) => {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(e.PropertyName));
             };
         }
+
+        public void RenderingCallback(object sender, EventArgs args) => imageVisualizer.RenderingCallback(sender, args);
 
         private void Process(Shared<DepthImage> frame, Envelope envelope) {
             if (AutoExpandRange) {
@@ -95,15 +81,21 @@ namespace OpenSense.Components.Psi.Imaging.Visualizer {
                     }
                 }
             }
-            using (var color = ImagePool.GetOrCreate(frame.Resource.Width, frame.Resource.Height, PixelFormat.BGR_24bpp)) {
-                frame.Resource.PseudoColorize(color.Resource, (MinValue, MaxValue));
-                Out.Post(color, envelope.OriginatingTime);
-                display.Update(color);
-            }
+            using var img = ImagePool.GetOrCreate(frame.Resource.Width, frame.Resource.Height, PixelFormat.BGRA_32bpp);
+            frame.Resource.PseudoColorize(img.Resource, (MinValue, MaxValue));
+            imageVisualizer.UpdateImage(img, envelope.OriginatingTime);
+            Out.Post(img, envelope.OriginatingTime);
         }
 
-        private void PipelineCompleted(object sender, PipelineCompletedEventArgs e) {
-            display.Clear();
+        #region INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null) {
+            if (!EqualityComparer<T>.Default.Equals(field, value)) {
+                field = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
+        #endregion
     }
 }

@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenFaceInterop", "OpenFaceInterop\OpenFaceInterop.vcxproj", "{78196985-EE54-411F-822B-5A23EDF80642}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenFaceInterop", "Interoperations\OpenFaceInterop\OpenFaceInterop.vcxproj", "{78196985-EE54-411F-822B-5A23EDF80642}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BiopacInterop", "BiopacInterop\BiopacInterop.vcxproj", "{FC200E98-DC12-4276-A7CD-588CD9E638A7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BiopacInterop", "Interoperations\BiopacInterop\BiopacInterop.vcxproj", "{FC200E98-DC12-4276-A7CD-588CD9E638A7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenSmileInterop", "OpenSmileInterop\openSmileInterop.vcxproj", "{F7324168-9704-4996-BF61-546590F86614}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenSmileInterop", "Interoperations\OpenSmileInterop\openSmileInterop.vcxproj", "{F7324168-9704-4996-BF61-546590F86614}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{59B873D6-5EB5-47B2-8242-C427367C736D}"
 	ProjectSection(SolutionItems) = preProject
@@ -106,7 +106,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emotion.Visualizer.WPF", "C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPose.Common", "Components\OpenPose.Common\OpenPose.Common.csproj", "{8B66EDFB-7480-4898-9702-2A6011E7E437}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPose.PInvoke", "OpenPose.PInvoke\OpenPose.PInvoke.csproj", "{5F08DC91-55C6-4A0C-85F3-D2C8D0B1C87E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPose.PInvoke", "Interoperations\OpenPose.PInvoke\OpenPose.PInvoke.csproj", "{5F08DC91-55C6-4A0C-85F3-D2C8D0B1C87E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenPose", "Components\OpenPose\OpenPose.csproj", "{43E3CBB1-31F9-461D-BED0-02986AF5AA4C}"
 EndProject
@@ -142,13 +142,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest.Visualiz
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Widgets", "Widgets", "{76A71A78-644E-4B19-B47A-6BF48E5CCCF4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisplayPoiEstimatorBuilder.WPF", "DisplayPoiEstimatorBuilder.WPF\DisplayPoiEstimatorBuilder.WPF.csproj", "{5BA42999-6FEA-4399-B87F-17C94A718F51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisplayPoiEstimatorBuilder.WPF", "Widgets\DisplayPoiEstimatorBuilder.WPF\DisplayPoiEstimatorBuilder.WPF.csproj", "{5BA42999-6FEA-4399-B87F-17C94A718F51}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest.SpatialTracking", "Components\EyePointOfInterest.SpatialTracking\EyePointOfInterest.SpatialTracking.csproj", "{23A771BB-0B15-4695-974F-C1EE1EA5462A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfWidgetContract", "WpfWidgetContract\WpfWidgetContract.csproj", "{FC5D9B98-38E7-4057-A8FE-9EFBC3F0A09F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenSmileConfigurationConverter.WPF", "OpenSmileConfigurationConverter.WPF\OpenSmileConfigurationConverter.WPF.csproj", "{8B517B74-3FA7-4B8B-A967-7F8BFA1AB142}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenSmileConfigurationConverter.WPF", "Widgets\OpenSmileConfigurationConverter.WPF\OpenSmileConfigurationConverter.WPF.csproj", "{8B517B74-3FA7-4B8B-A967-7F8BFA1AB142}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EyePointOfInterest.WPF.Common", "Components\EyePointOfInterest.WPF.Common\EyePointOfInterest.WPF.Common.csproj", "{C0E4BA17-E2EA-48EB-8639-D15FC0B02FF2}"
 EndProject
@@ -156,7 +156,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biopac.Visualizer.WPF", "Co
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{492B19A2-749B-464D-8043-1B90CAFDE132}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NMS.ActiveMQ", "NMS.ActiveMQ\NMS.ActiveMQ.csproj", "{654414EF-357E-4EAA-91DC-E1D913460053}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NMS.ActiveMQ", "Utilities\NMS.ActiveMQ\NMS.ActiveMQ.csproj", "{654414EF-357E-4EAA-91DC-E1D913460053}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoogleCloud.Speech.V1", "Components\GoogleCloud.Speech.V1\GoogleCloud.Speech.V1.csproj", "{22EECD22-3262-4758-80E1-D1194A4A1F15}"
 EndProject
@@ -204,11 +204,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CollectionOperators.WPF", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Builtin", "Components\Builtin\Builtin.csproj", "{06243CA1-D756-4A6A-AB8A-F95695264100}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibreFace", "LibreFace\LibreFace.csproj", "{6840EB07-93A0-4B8D-A717-57571AB38A28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibreFace", "Utilities\LibreFace\LibreFace.csproj", "{6840EB07-93A0-4B8D-A717-57571AB38A28}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibreFace", "Components\LibreFace\LibreFace.csproj", "{6B875517-14E0-4F29-9A5D-7D961B02FB09}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NumPy", "NumPy\NumPy.csproj", "{39597031-2FF4-4041-8A14-CEAD469F0D76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NumPy", "Utilities\NumPy\NumPy.csproj", "{39597031-2FF4-4041-8A14-CEAD469F0D76}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{27E2B2F6-BF7E-42CE-890C-9358E8B1ACA5}"
 EndProject
@@ -234,7 +234,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BehaviorManagement", "Compo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BehaviorManagement.WPF", "Components\BehaviorManagement.WPF\BehaviorManagement.WPF.csproj", "{B18D13C5-14EB-4F54-8890-A6B6440393F2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualHumanMessageClient", "VirtualHumanMessageClient\VirtualHumanMessageClient.csproj", "{0AF8D899-2ACB-41FD-807E-BD2F3B87A9D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualHumanMessageClient", "Utilities\VirtualHumanMessageClient\VirtualHumanMessageClient.csproj", "{0AF8D899-2ACB-41FD-807E-BD2F3B87A9D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

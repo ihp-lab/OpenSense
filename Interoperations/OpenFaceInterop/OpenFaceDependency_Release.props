@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalDependencies>libboost_filesystem-vc141-mt-x64-1_68.lib;opencv_calib3d342.lib;opencv_core342.lib;opencv_dnn342.lib;opencv_features2d342.lib;opencv_flann342.lib;opencv_highgui342.lib;opencv_imgcodecs342.lib;opencv_imgproc342.lib;opencv_ml342.lib;opencv_objdetect342.lib;opencv_photo342.lib;opencv_shape342.lib;opencv_stitching342.lib;opencv_superres342.lib;opencv_ts342.lib;opencv_video342.lib;opencv_videoio342.lib;opencv_videostab342.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent />
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>

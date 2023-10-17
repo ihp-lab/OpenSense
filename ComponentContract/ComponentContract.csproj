@@ -7,8 +7,8 @@
         <PackageId>OpenSense.Components.Contracts</PackageId>
         <LangVersion>11.0</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
-        <AssemblyVersion>4.0.0</AssemblyVersion>
-        <Version>4.0.0</Version>
+        <AssemblyVersion>4.0.1</AssemblyVersion>
+        <Version>4.0.1</Version>
         <Authors>Intelligent Human Perception Lab</Authors>
         <Product>OpenSense</Product>
         <Description>

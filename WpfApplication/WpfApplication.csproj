@@ -10,8 +10,8 @@
         <AssemblyName>OpenSense.WPF</AssemblyName>
         <EmbedAllSources>true</EmbedAllSources>
         <ApplicationIcon>Resource\Icon\usc.ico</ApplicationIcon>
-        <AssemblyVersion>3.1.0</AssemblyVersion>
-        <Version>3.1.0</Version>
+        <AssemblyVersion>3.2.0</AssemblyVersion>
+        <Version>3.2.0</Version>
         <AssemblyName>OpenSense.WPF</AssemblyName>
         <!--Note:
         The Azure Kinect package of /psi contains onnxruntime DLLs while not referencing it as a dependency. 
@@ -44,6 +44,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Dirkster.AvalonDock" Version="4.72.1" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
         <PackageReference Include="Serilog" Version="2.12.0" />
@@ -121,8 +122,8 @@
         <ProjectReference Include="..\Components\Statistics.WPF\Statistics.WPF.csproj" />
         <ProjectReference Include="..\Components\Whisper.NET.WPF\Whisper.NET.WPF.csproj" />
         <!--Widgets-->
-        <ProjectReference Include="..\DisplayPoiEstimatorBuilder.WPF\DisplayPoiEstimatorBuilder.WPF.csproj" />
-        <ProjectReference Include="..\OpenSmileConfigurationConverter.WPF\OpenSmileConfigurationConverter.WPF.csproj" />
+        <ProjectReference Include="..\Widgets\DisplayPoiEstimatorBuilder.WPF\DisplayPoiEstimatorBuilder.WPF.csproj" />
+        <ProjectReference Include="..\Widgets\OpenSmileConfigurationConverter.WPF\OpenSmileConfigurationConverter.WPF.csproj" />
     </ItemGroup>
 
     <ItemGroup>

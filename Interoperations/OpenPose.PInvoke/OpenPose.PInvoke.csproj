@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <!--Because PInvoke project and this project are not directly linked, so this project can be set to target to .net standard-->
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <AssemblyName>OpenSense.Components.OpenPose.PInvoke</AssemblyName>
+        <RootNamespace>OpenSense.Components.OpenPose.PInvoke</RootNamespace>
+        <LangVersion>10.0</LangVersion>
+        <EmbedAllSources>true</EmbedAllSources>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Components\OpenPose.Common\OpenPose.Common.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="$(ProjectDir)\OpenPoseLib\models\**\*">
+            <Link>models\%(RecursiveDir)%(Filename)%(Extension)</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="$(ProjectDir)\OpenPoseLib\bin\x64\Common\*.dll">
+            <Link>%(Filename)%(Extension)</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="$(ProjectDir)\OpenPoseLib\bin\x64\$(ConfigurationName)\*.dll">
+            <Link>%(Filename)%(Extension)</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="$(ProjectDir)\OpenPoseLib\bin\x64\$(ConfigurationName)\*.pdb">
+            <Link>%(Filename)%(Extension)</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+</Project>

@@ -123,9 +123,24 @@
             Header="Graph"
             IsExpanded="True">
             <Grid>
+                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition
+                        Width="auto" />
+                </Grid.ColumnDefinitions>
+                
                 <TextBox
+                    Grid.Column="0"
                     Name="textBoxGraph"
                     Text="{Binding Graph}" />
+
+                <Button
+                    Grid.Column="1"
+                    Name="buttonOpenGraph"
+                    Click="buttonOpenGraph_Click">
+                    Open
+                </Button>
             </Grid>
         </Expander>
 

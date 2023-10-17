@@ -9,6 +9,8 @@ namespace OpenSense.WPF.Components.GoogleCloud.Speech.V1 {
 
         public bool CanCreate(ComponentConfiguration configuration) => configuration is GoogleCloudSpeechConfiguration;
 
-        public UIElement Create(ComponentConfiguration configuration) => new GoogleCloudSpeechConfigurationControl() { DataContext = configuration };
+        public UIElement Create(ComponentConfiguration configuration) => new GoogleCloudSpeechConfigurationControl() { 
+            DataContext = configuration 
+        };
     }
 }
