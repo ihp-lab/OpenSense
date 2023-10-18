@@ -10,7 +10,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NMS.ActiveMQ\NMS.ActiveMQ.csproj" />
+        <ProjectReference Include="..\NMS.ActiveMQ\NMS.ActiveMQ.csproj" />
     </ItemGroup>
 
 </Project>
