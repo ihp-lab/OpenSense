@@ -81,8 +81,9 @@ namespace OpenSense.Components {
         /// <param name="instance"></param>
         /// <param name="instantiatedComponents"></param>
         public static void ConnectAllStaticInputs(this ComponentConfiguration componentConfiguration, object instance, IReadOnlyList<ComponentEnvironment> instantiatedComponents) {
+            var metadata = componentConfiguration.GetMetadata();
             foreach (var inputConfig in componentConfiguration.Inputs) {
-                var inputMetadata = componentConfiguration.FindPortMetadata(inputConfig.LocalPort);
+                var inputMetadata = metadata.FindPortMetadata(inputConfig.LocalPort);
                 Debug.Assert(inputMetadata.Direction == PortDirection.Input);
                 var inputStaticMetadata = inputMetadata as StaticPortMetadata;
                 if (inputStaticMetadata is null) {
