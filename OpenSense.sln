@@ -238,7 +238,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualHumanMessageClient",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualHumanMessage", "Components\VirtualHumanMessage\VirtualHumanMessage.csproj", "{03F5312E-AD73-4E94-B788-6E7A13129BAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualHumanMessage.WPF", "Components\VirtualHumanMessage.WPF\VirtualHumanMessage.WPF.csproj", "{F1B13942-9036-425C-AA37-BE95EC445216}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualHumanMessage.WPF", "Components\VirtualHumanMessage.WPF\VirtualHumanMessage.WPF.csproj", "{F1B13942-9036-425C-AA37-BE95EC445216}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
