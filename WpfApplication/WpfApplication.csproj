@@ -119,6 +119,7 @@
         <ProjectReference Include="..\Components\PythonSupports.WPF\PythonSupports.WPF.csproj" />
         <ProjectReference Include="..\Components\Shimmer3.WPF\Shimmer3.WPF.csproj" />
         <ProjectReference Include="..\Components\Statistics.WPF\Statistics.WPF.csproj" />
+        <ProjectReference Include="..\Components\VirtualHumanMessage.WPF\VirtualHumanMessage.WPF.csproj" />
         <ProjectReference Include="..\Components\Whisper.NET.WPF\Whisper.NET.WPF.csproj" />
         <!--Widgets-->
         <ProjectReference Include="..\Widgets\DisplayPoiEstimatorBuilder.WPF\DisplayPoiEstimatorBuilder.WPF.csproj" />

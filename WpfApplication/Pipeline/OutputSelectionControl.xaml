@@ -5,6 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:OpenSense.WPF.Pipeline"
+    xmlns:comp="clr-namespace:OpenSense.Components;assembly=OpenSense.Components.Contracts"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
@@ -75,8 +76,8 @@
                                         TargetType="TextBox">
                                         <Style.Triggers>
                                             <DataTrigger
-                                                Binding="{Binding Index}"
-                                                Value="{x:Null}">
+                                                Binding="{Binding PortMetadata.Aggregation}"
+                                                Value="{x:Static comp:PortAggregation.Object}">
                                                 <Setter
                                                     Property="Visibility"
                                                     Value="Collapsed" />
