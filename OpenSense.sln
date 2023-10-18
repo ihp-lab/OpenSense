@@ -226,7 +226,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Whisper.NET.WPF", "Componen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenCvSharp", "Components\OpenCvSharp\OpenCvSharp.csproj", "{7BA9AB84-1E0C-4CE6-81ED-C3FEABC9C25A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenCvSharp.Windows", "Components\OpenCvSharp.Windows\OpenCvSharp.Windows.csproj", "{95B697A2-ACD7-4E54-BDDD-AA01F02381A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenCvSharp.Windows", "Components\OpenCvSharp.Windows\OpenCvSharp.Windows.csproj", "{95B697A2-ACD7-4E54-BDDD-AA01F02381A6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenCvSharp.WPF", "Components\OpenCvSharp.WPF\OpenCvSharp.WPF.csproj", "{9B5A6E57-3EDD-47FF-8BED-D873E733804D}"
 EndProject
@@ -235,6 +235,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BehaviorManagement.WPF", "Components\BehaviorManagement.WPF\BehaviorManagement.WPF.csproj", "{B18D13C5-14EB-4F54-8890-A6B6440393F2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualHumanMessageClient", "Utilities\VirtualHumanMessageClient\VirtualHumanMessageClient.csproj", "{0AF8D899-2ACB-41FD-807E-BD2F3B87A9D7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualHumanMessage", "Components\VirtualHumanMessage\VirtualHumanMessage.csproj", "{03F5312E-AD73-4E94-B788-6E7A13129BAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualHumanMessage.WPF", "Components\VirtualHumanMessage.WPF\VirtualHumanMessage.WPF.csproj", "{F1B13942-9036-425C-AA37-BE95EC445216}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -670,6 +674,14 @@ Global
 		{0AF8D899-2ACB-41FD-807E-BD2F3B87A9D7}.Debug|x64.Build.0 = Debug|Any CPU
 		{0AF8D899-2ACB-41FD-807E-BD2F3B87A9D7}.Release|x64.ActiveCfg = Release|Any CPU
 		{0AF8D899-2ACB-41FD-807E-BD2F3B87A9D7}.Release|x64.Build.0 = Release|Any CPU
+		{03F5312E-AD73-4E94-B788-6E7A13129BAF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{03F5312E-AD73-4E94-B788-6E7A13129BAF}.Debug|x64.Build.0 = Debug|Any CPU
+		{03F5312E-AD73-4E94-B788-6E7A13129BAF}.Release|x64.ActiveCfg = Release|Any CPU
+		{03F5312E-AD73-4E94-B788-6E7A13129BAF}.Release|x64.Build.0 = Release|Any CPU
+		{F1B13942-9036-425C-AA37-BE95EC445216}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F1B13942-9036-425C-AA37-BE95EC445216}.Debug|x64.Build.0 = Debug|Any CPU
+		{F1B13942-9036-425C-AA37-BE95EC445216}.Release|x64.ActiveCfg = Release|Any CPU
+		{F1B13942-9036-425C-AA37-BE95EC445216}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -776,6 +788,8 @@ Global
 		{B034031B-33B6-40CD-B6E1-AE91C2723D42} = {5C411F31-BF09-4976-95CD-8748327C8478}
 		{B18D13C5-14EB-4F54-8890-A6B6440393F2} = {5C411F31-BF09-4976-95CD-8748327C8478}
 		{0AF8D899-2ACB-41FD-807E-BD2F3B87A9D7} = {492B19A2-749B-464D-8043-1B90CAFDE132}
+		{03F5312E-AD73-4E94-B788-6E7A13129BAF} = {5C411F31-BF09-4976-95CD-8748327C8478}
+		{F1B13942-9036-425C-AA37-BE95EC445216} = {5C411F31-BF09-4976-95CD-8748327C8478}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4CB31E6C-64DF-499B-B990-0C72B1A2AF47}
