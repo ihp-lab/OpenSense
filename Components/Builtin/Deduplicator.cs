@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -14,6 +15,20 @@ namespace OpenSense.Components.Builtin {
             get => comparer;
             set => SetProperty(ref comparer, value);
         }
+
+        private TimeSpan dullness = TimeSpan.Zero;
+
+        public TimeSpan Dullness {
+            get => dullness;
+            set => SetProperty(ref dullness, value);
+        }
+
+        private TimeSpan expiration = TimeSpan.MaxValue;
+
+        public TimeSpan Expiration {
+            get => expiration;
+            set => SetProperty(ref expiration, value);
+        }
         #endregion
 
         #region Ports
@@ -26,6 +41,8 @@ namespace OpenSense.Components.Builtin {
 
         private T lastValue = default!;
 
+        private DateTime lastTime;
+
         public Deduplicator(Pipeline pipeline) {
             In = pipeline.CreateReceiver<T>(this, Process, nameof(In));
             Out = pipeline.CreateEmitter<T>(this, nameof(Out));
@@ -36,14 +53,24 @@ namespace OpenSense.Components.Builtin {
                 hasFirstValue = true;
                 Out.Post(value, envelope.OriginatingTime);
                 lastValue = value.DeepClone();
+                lastTime = envelope.OriginatingTime;
                 return;
             }
 
-            if (Comparer.Equals(value, lastValue)) {
-                return;
+            if (envelope.OriginatingTime - lastTime > Dullness) {
+                if (!Comparer.Equals(value, lastValue)) {
+                    Out.Post(value, envelope.OriginatingTime);
+                    lastValue = value.DeepClone();
+                    lastTime = envelope.OriginatingTime;
+                    return;
+                }
+
+                if (envelope.OriginatingTime - lastTime > Expiration) {
+                    Out.Post(value, envelope.OriginatingTime);
+                    lastTime = envelope.OriginatingTime;
+                    return;
+                }
             }
-            Out.Post(value, envelope.OriginatingTime);
-            lastValue = value.DeepClone();
         }
 
         #region INotifyPropertyChanged
