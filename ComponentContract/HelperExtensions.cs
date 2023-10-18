@@ -605,6 +605,11 @@ jump:;
                 throw new Exception("Missing dependent DLLs", ex);
             }
 
+            /* Remove Subpipeline Diagnostics */
+            if (typeof(Subpipeline).IsAssignableFrom(componentType)) {
+                result.RemoveAll(i => i.DeclaringType == typeof(Pipeline) && i.Name == nameof(Subpipeline.Diagnostics));//Diagnostics of Subpipelines are not usable
+            }
+
             return result;
         }
 
