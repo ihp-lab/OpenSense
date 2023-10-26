@@ -3,10 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net7.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <Platforms>x64</Platforms>
-        <PlatformTarget>x64</PlatformTarget>
-        <AssemblyName>OpenSense.WPF.Components.LibreFace.Visualizer</AssemblyName>
-        <RootNamespace>OpenSense.WPF.Components.LibreFace.Visualizer</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Components.LibreFace</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.LibreFace</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
@@ -15,8 +13,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\ComponentContract\ComponentContract.csproj" />
         <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
         <ProjectReference Include="..\LibreFace\LibreFace.csproj" />
+        <ProjectReference Include="..\Psi.WPF.Common\Psi.WPF.Common.csproj" />
     </ItemGroup>
 
 </Project>

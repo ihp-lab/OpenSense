@@ -3,7 +3,7 @@ using Microsoft.Psi;
 
 namespace OpenSense.Components.LibreFace.Visualizer {
     [Serializable]
-    public class ActionUnitPresenceVisualizerConfiguration : ConventionalComponentConfiguration {
+    public sealed class ActionUnitPresenceVisualizerConfiguration : ConventionalComponentConfiguration {
 
         public override IComponentMetadata GetMetadata() => new ActionUnitPresenceVisualizerMetadata();
 

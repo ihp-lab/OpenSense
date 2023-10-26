@@ -8,7 +8,7 @@ namespace OpenSense.WPF.Components.Psi {
             Items.Add(new ComboBoxItem() { 
                 Content = "Pipeline Default",
                 Tag = null,
-                ToolTip = "If set for Pipeline, this is equivalent to Unlimited; if set for connections, this is equivalent to the delivery policy of Pipeline.",
+                ToolTip = "If set for a Pipeline or a Subpipeline, this is equivalent to Unlimited; if set for a connection, this is equivalent to the delivery policy of the Pipeline.",
             });
             Items.Add(new ComboBoxItem() {
                 Content = "Unlimited",

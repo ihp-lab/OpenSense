@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Mediapipe.Net.Framework.Protobuf;
+using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
 
 namespace OpenSense.Components.LibreFace {
-    public sealed class LibreFaceDetector : Subpipeline{
+    public sealed class LibreFaceDetector : Subpipeline, INotifyPropertyChanged {
 
         private readonly Connector<IReadOnlyList<NormalizedLandmarkList>> _inConnector;
         private readonly Connector<Shared<Image>> _imageInConnector;
@@ -15,6 +18,16 @@ namespace OpenSense.Components.LibreFace {
         private readonly Connector<IReadOnlyList<IReadOnlyDictionary<string, bool>>> _auPresenceOutConnector;
         private readonly Connector<IReadOnlyList<IReadOnlyDictionary<string, float>>> _feOutConnector;
         private readonly Connector<IReadOnlyList<Shared<Image>>> _alignedImagesOutConnector;
+
+        #region Settings
+
+        private ILogger? logger;
+
+        public ILogger? Logger {
+            get => logger;
+            set => SetProperty(ref logger, value);
+        }
+        #endregion
 
         public Receiver<IReadOnlyList<NormalizedLandmarkList>> DataIn => _inConnector.In;
         public Receiver<Shared<Image>> ImageIn => _imageInConnector.In;
@@ -24,7 +37,13 @@ namespace OpenSense.Components.LibreFace {
         public Emitter<IReadOnlyList<IReadOnlyDictionary<string, float>>> FacialExpressionOut => _feOutConnector.Out;
         public Emitter<IReadOnlyList<Shared<Image>>> AlignedImagesOut => _alignedImagesOutConnector.Out;
 
-        public LibreFaceDetector(Pipeline pipeline, DeliveryPolicy deliveryPolicy) : base(pipeline, nameof(LibreFaceDetector), deliveryPolicy) {
+        public LibreFaceDetector(
+            Pipeline pipeline, 
+            DeliveryPolicy deliveryPolicy, 
+            bool auIntensity = true, 
+            bool auPresence = true, 
+            bool facialExpression = true
+            ) : base(pipeline, nameof(LibreFaceDetector), deliveryPolicy) {
             _inConnector = CreateInputConnectorFrom<IReadOnlyList<NormalizedLandmarkList>>(pipeline, nameof(DataIn));
             _imageInConnector = CreateInputConnectorFrom<Shared<Image>>(pipeline, nameof(ImageIn));
 
@@ -46,17 +65,34 @@ namespace OpenSense.Components.LibreFace {
                 .PipeTo(aligner, deliveryPolicy);
             aligner.PipeTo(_alignedImagesOutConnector, deliveryPolicy);
 
-            var auIntensitiyInferenceRunner = new ActionUnitIntensityInferenceRunner(this);
-            aligner.PipeTo(auIntensitiyInferenceRunner, deliveryPolicy);
-            auIntensitiyInferenceRunner.PipeTo(_auIntensityOutConnector, deliveryPolicy);
+            if (auIntensity) {
+                var auIntensitiyInferenceRunner = new ActionUnitIntensityInferenceRunner(this);
+                aligner.PipeTo(auIntensitiyInferenceRunner, deliveryPolicy);
+                auIntensitiyInferenceRunner.PipeTo(_auIntensityOutConnector, deliveryPolicy);
+            }
 
-            var auPresenceInferenceRunner = new ActionUnitPresenceInferenceRunner(this);
-            aligner.PipeTo(auPresenceInferenceRunner, deliveryPolicy);
-            auPresenceInferenceRunner.PipeTo(_auPresenceOutConnector, deliveryPolicy);
+            if (auPresence) {
+                var auPresenceInferenceRunner = new ActionUnitPresenceInferenceRunner(this);
+                aligner.PipeTo(auPresenceInferenceRunner, deliveryPolicy);
+                auPresenceInferenceRunner.PipeTo(_auPresenceOutConnector, deliveryPolicy); 
+            }
 
-            var feInferenceRunner = new FacialExpressionInferenceRunner(this);
-            aligner.PipeTo(feInferenceRunner, deliveryPolicy);
-            feInferenceRunner.PipeTo(_feOutConnector, deliveryPolicy);
+            if (facialExpression) {
+                var feInferenceRunner = new FacialExpressionInferenceRunner(this);
+                aligner.PipeTo(feInferenceRunner, deliveryPolicy);
+                feInferenceRunner.PipeTo(_feOutConnector, deliveryPolicy); 
+            }
         }
+
+        #region INotifyPropertyChanged
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void SetProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null) {
+            if (!EqualityComparer<T>.Default.Equals(field, value)) {
+                field = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        #endregion
     }
 }

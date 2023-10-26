@@ -238,6 +238,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualHumanMessage.WPF", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Builtin.WPF", "Components\Builtin.WPF\Builtin.WPF.csproj", "{9B469FF7-BDAA-4FDE-A91D-71999B0ECF3A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibreFace.WPF", "Components\LibreFace.WPF\LibreFace.WPF.csproj", "{499405D0-6A7F-4F97-9228-4D6C009E7655}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -676,6 +678,10 @@ Global
 		{9B469FF7-BDAA-4FDE-A91D-71999B0ECF3A}.Debug|x64.Build.0 = Debug|Any CPU
 		{9B469FF7-BDAA-4FDE-A91D-71999B0ECF3A}.Release|x64.ActiveCfg = Release|Any CPU
 		{9B469FF7-BDAA-4FDE-A91D-71999B0ECF3A}.Release|x64.Build.0 = Release|Any CPU
+		{499405D0-6A7F-4F97-9228-4D6C009E7655}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{499405D0-6A7F-4F97-9228-4D6C009E7655}.Debug|x64.Build.0 = Debug|Any CPU
+		{499405D0-6A7F-4F97-9228-4D6C009E7655}.Release|x64.ActiveCfg = Release|Any CPU
+		{499405D0-6A7F-4F97-9228-4D6C009E7655}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -783,6 +789,7 @@ Global
 		{03F5312E-AD73-4E94-B788-6E7A13129BAF} = {5C411F31-BF09-4976-95CD-8748327C8478}
 		{F1B13942-9036-425C-AA37-BE95EC445216} = {5C411F31-BF09-4976-95CD-8748327C8478}
 		{9B469FF7-BDAA-4FDE-A91D-71999B0ECF3A} = {5C411F31-BF09-4976-95CD-8748327C8478}
+		{499405D0-6A7F-4F97-9228-4D6C009E7655} = {5C411F31-BF09-4976-95CD-8748327C8478}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4CB31E6C-64DF-499B-B990-0C72B1A2AF47}

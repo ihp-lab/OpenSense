@@ -8,8 +8,8 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using OpenSense.Components.LibreFace.Visualizer;
 
-namespace OpenSense.WPF.Components.LibreFace {
-    public partial class FacialExpressionVisualizerInstanceControl : UserControl {
+namespace OpenSense.WPF.Components.LibreFace.Visualizer {
+    public sealed partial class FacialExpressionVisualizerInstanceControl : UserControl {
 
         private static readonly TimeSpan TimeOut = TimeSpan.FromMilliseconds(100);
 

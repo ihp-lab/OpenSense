@@ -3,7 +3,7 @@ using Microsoft.Psi;
 
 namespace OpenSense.Components.LibreFace.Visualizer {
     [Serializable]
-    public class FacialExpressionVisualizerConfiguration : ConventionalComponentConfiguration {
+    public sealed class FacialExpressionVisualizerConfiguration : ConventionalComponentConfiguration {
 
         public override IComponentMetadata GetMetadata() => new FacialExpressionVisualizerMetadata();
 

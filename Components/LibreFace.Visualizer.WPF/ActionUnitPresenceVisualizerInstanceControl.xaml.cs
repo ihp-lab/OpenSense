@@ -8,8 +8,8 @@ using System.Windows.Threading;
 using LibreFace;
 using OpenSense.Components.LibreFace.Visualizer;
 
-namespace OpenSense.WPF.Components.LibreFace {
-    public partial class ActionUnitPresenceVisualizerInstanceControl : UserControl {
+namespace OpenSense.WPF.Components.LibreFace.Visualizer {
+    public sealed partial class ActionUnitPresenceVisualizerInstanceControl : UserControl {
 
         private const float RangeTo = 1;
 
