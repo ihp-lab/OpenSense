@@ -12,3 +12,4 @@ opencv|3.4.2
 openface|2.0.4
 tbb|18.5.0
 xmlrpc-c|1.54.1
+ffmpeg|6.0
