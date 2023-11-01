@@ -24,6 +24,7 @@ namespace FFMpegInterop {
         double timeBase;
         int prevWidth = -1;
         int prevHeight = -1;
+        AVPixelFormat prevFormat = AVPixelFormat::AV_PIX_FMT_NONE;
 
     public:
         FileReader(String^ filename);

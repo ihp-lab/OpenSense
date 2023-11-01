@@ -121,9 +121,10 @@ namespace FFMpegInterop {
                 srcData = static_cast<byte*>(_unmanaged->rawFrame->data[0]);
                 srcLength = ComputeBufferSize(*_unmanaged->rawFrame);
             } else {
-                if (width != prevWidth || height != prevHeight) {
+                if (width != prevWidth || height != prevHeight || targetFormat != prevFormat) {
                     prevWidth = width;
                     prevHeight = height;
+                    prevFormat = targetFormat;
 
                     if (_unmanaged->swsCtx) {
                         sws_freeContext(_unmanaged->swsCtx);
