@@ -192,6 +192,11 @@ namespace FFMpegInterop {
             bufferSize += frame.linesize[2] * frame.height; // V plane
             break;
         case AV_PIX_FMT_BGR24:
+        case AV_PIX_FMT_RGB24:
+        case AV_PIX_FMT_BGRA:
+        case AV_PIX_FMT_GRAY8:
+        case AV_PIX_FMT_GRAY16LE:
+        case AV_PIX_FMT_RGBA64LE:
             bufferSize = frame.linesize[0] * frame.height; // BGR plane
             break;
         default:
