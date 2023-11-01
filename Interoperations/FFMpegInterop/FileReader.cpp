@@ -117,14 +117,15 @@ namespace FFMpegInterop {
 
             byte* srcData = nullptr;
             int srcLength = 0;
-            if (targetFormat == static_cast<AVPixelFormat>(_unmanaged->rawFrame->format)) {
+            AVPixelFormat format = targetFormat;//snapshot
+            if (format == static_cast<AVPixelFormat>(_unmanaged->rawFrame->format)) {
                 srcData = static_cast<byte*>(_unmanaged->rawFrame->data[0]);
                 srcLength = ComputeBufferSize(*_unmanaged->rawFrame);
             } else {
-                if (width != prevWidth || height != prevHeight || targetFormat != prevFormat) {
+                if (width != prevWidth || height != prevHeight || format != prevFormat) {
                     prevWidth = width;
                     prevHeight = height;
-                    prevFormat = targetFormat;
+                    prevFormat = format;
 
                     if (_unmanaged->swsCtx) {
                         sws_freeContext(_unmanaged->swsCtx);
@@ -138,7 +139,7 @@ namespace FFMpegInterop {
                     _unmanaged->swsCtx = sws_getContext(
                         width, height, static_cast<AVPixelFormat>(_unmanaged->rawFrame->format),
                         width, height,
-                        targetFormat,
+                        format,
                         SWS_BILINEAR,
                         nullptr, nullptr, nullptr
                     );
@@ -148,7 +149,7 @@ namespace FFMpegInterop {
                     }
 
                     _unmanaged->convertedFrame = av_frame_alloc();
-                    _unmanaged->convertedFrame->format = targetFormat;
+                    _unmanaged->convertedFrame->format = format;
                     _unmanaged->convertedFrame->width = width;
                     _unmanaged->convertedFrame->height = height;
                     av_frame_get_buffer(_unmanaged->convertedFrame, 0);
