@@ -11,6 +11,7 @@ extern "C" {
 #include "FrameInfo.h"
 
 using namespace System;
+using namespace System::Runtime::InteropServices;
 
 namespace FFMpegInterop {
     struct FileReaderUnmanaged;
@@ -18,13 +19,19 @@ namespace FFMpegInterop {
     public ref class FileReader sealed {
     private:
         FileReaderUnmanaged* const _unmanaged;
-        Func<FrameInfo, ValueTuple<IntPtr, int, Action^>>^ const _callback;
+        AVPixelFormat targetFormat = AVPixelFormat::AV_PIX_FMT_RGB24;
         int videoStreamIndex = -1;
-        AVPixelFormat const _targetPixelFormat = AVPixelFormat::AV_PIX_FMT_BGR24;
+        double timeBase;
+        int prevWidth = -1;
+        int prevHeight = -1;
 
     public:
-        FileReader(String^ filename, Func<FrameInfo, ValueTuple<IntPtr, int, Action^>>^ callback);
-        void Run();
+        FileReader(String^ filename);
+        property int TargetFormat {
+            int get() { return targetFormat; }
+            void set(int value) { targetFormat = static_cast<AVPixelFormat>(value); }
+        }
+        void ReadOneFrame(Func<FrameInfo, ValueTuple<IntPtr, int>>^ allocator, [Out] bool% success, [Out] bool% eof);
 
     private:
         static int ComputeBufferSize(const AVFrame& frame);
@@ -44,6 +51,10 @@ namespace FFMpegInterop {
     struct FileReaderUnmanaged {
         AVFormatContext* formatContext = nullptr;
         AVCodecContext* codecContext = nullptr;
+        AVPacket* packet = nullptr;
+        SwsContext* swsCtx = nullptr;
+        AVFrame* rawFrame = nullptr;
+        AVFrame* convertedFrame = nullptr;
     };
 #pragma endregion
 

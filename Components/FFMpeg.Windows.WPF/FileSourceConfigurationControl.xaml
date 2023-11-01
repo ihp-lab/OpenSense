@@ -5,6 +5,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:OpenSense.WPF.Components.FFMpeg"
+    xmlns:util="clr-namespace:OpenSense.WPF.Components.Utilities;assembly=OpenSense.WPF.Components.Contracts"
+    xmlns:img="clr-namespace:Microsoft.Psi.Imaging;assembly=Microsoft.Psi.Imaging"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
@@ -16,6 +18,10 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
             <RowDefinition
                 Height="auto" />
         </Grid.RowDefinitions>
@@ -46,5 +52,26 @@
                 Open
             </Button>
         </Grid>
+
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0">
+            Format
+        </TextBlock>
+        <ComboBox
+            Grid.Row="1"
+            Grid.Column="1"
+            SelectedItem="{Binding PixelFormat}"
+            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type img:PixelFormat}}, Mode=OneTime}" />
+
+        <TextBlock
+            Grid.Row="2"
+            Grid.Column="0">
+            Only Key Frames
+        </TextBlock>
+        <CheckBox
+            Grid.Row="2"
+            Grid.Column="1"
+            IsChecked="{Binding OnlyKeyFrames}" />
     </Grid>
 </UserControl>

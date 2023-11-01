@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using FFMpegInterop;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
@@ -12,17 +12,35 @@ using Microsoft.Psi.Imaging;
 
 namespace OpenSense.Components.FFMpeg {
     public sealed class FileSource
-        : ISourceComponent, IProducer<Shared<Image>>, IDisposable {
+        : Generator, IProducer<Shared<Image>>, IDisposable {
 
         private readonly FileReader _reader;
 
         #region Ports
         public Emitter<Shared<Image>> Out { get; }
-
-        public Emitter<int> CountOut { get; }
         #endregion
 
         #region Settings
+        public PixelFormat PixelFormat {
+            get => ToPsiPixelFormat(_reader.TargetFormat);
+            set {
+                var old = _reader.TargetFormat;
+                var @new = ToFFMpegPixelFormat(value);
+                if (old == @new) {
+                    return;
+                }
+                _reader.TargetFormat = @new;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PixelFormat)));
+            }
+        }
+
+        private bool onlyKeyFrames;
+
+        public bool OnlyKeyFrames {
+            get => onlyKeyFrames;
+            set => SetProperty(ref onlyKeyFrames, value);
+        }
+
         private ILogger? logger;
 
         public ILogger? Logger {
@@ -31,33 +49,22 @@ namespace OpenSense.Components.FFMpeg {
         }
         #endregion
 
-        private Task? task;
-
         private DateTime startTime;
 
-        private int count;
+        private Shared<Image>? image;
 
-        public FileSource(Pipeline pipeline, string filename) {
-            _reader = new FileReader(filename, OnFrame);
+        private DateTime? time;
+
+        public FileSource(Pipeline pipeline, string filename) : base(pipeline) {
+            if (!File.Exists(filename)) {
+                throw new FileNotFoundException($"File {filename} does not exist.");
+            }
+            _reader = new FileReader(filename);
 
             Out = pipeline.CreateEmitter<Shared<Image>>(this, nameof(Out));
-            CountOut = pipeline.CreateEmitter<int>(this, nameof(CountOut));
 
             pipeline.PipelineRun += OnPipelineRun;
         }
-
-        #region ISourceComponent
-        public void Start(Action<DateTime> notifyCompletionTime) {
-            var t = Task.Run(_reader.Run);
-            task = t.ContinueWith(t => {
-                notifyCompletionTime(Out.LastEnvelope.OriginatingTime);
-            });
-        }
-        public void Stop(DateTime finalOriginatingTime, Action notifyCompleted) {
-            task?.Wait();
-            notifyCompleted();
-        }
-        #endregion
 
         #region Pipeline Event Handlers
         private void OnPipelineRun(object? sender, PipelineRunEventArgs args) {
@@ -66,23 +73,98 @@ namespace OpenSense.Components.FFMpeg {
         }
         #endregion
 
-        private (IntPtr, int, Action) OnFrame(FrameInfo info) {
-            var time = startTime + info.Timestamp;
-            var image = ImagePool.GetOrCreate(info.Width, info.Height, PixelFormat.BGR_24bpp);
-            var ptr = image.Resource.UnmanagedBuffer.Data;
-            var length = image.Resource.UnmanagedBuffer.Size;
-            var action = () => {
-                Out.Post(image, time);
-                image.Dispose();
-                count++;
-                CountOut.Post(count, time);
-            };
-            return (ptr, length, action);
+        #region Generator
+        protected override DateTime GenerateNext(DateTime previous) {
+            bool valid;
+            bool eof;
+            do {
+                _reader.ReadOneFrame(OnAllocate, out valid, out eof);
+            } while (!valid && !eof);
+            if (eof) {
+                return DateTime.MaxValue;//no more data
+            }
+            Debug.Assert(valid);
+            Debug.Assert(image is not null);
+            Debug.Assert(time is not null);
+            var originatingTime = (DateTime)time;
+            Out.Post(image, originatingTime);
+            return originatingTime;
         }
 
-        private void SafePost(Shared<Image> image, DateTime timestamp) {
-            
+        #endregion
+
+        private (IntPtr, int) OnAllocate(FrameInfo info) {
+            if (image is not null) {
+                image.Dispose();
+                image = null;
+            }
+
+            if (OnlyKeyFrames && !info.KeyFrame) {
+                return (IntPtr.Zero, 0);
+            }
+
+            time = startTime + info.Timestamp;
+            image = ImagePool.GetOrCreate(info.Width, info.Height, PixelFormat);
+            var ptr = image.Resource.UnmanagedBuffer.Data;
+            var length = image.Resource.UnmanagedBuffer.Size;
+            return (ptr, length);
         }
+
+        #region Helpers
+        /// <summary>
+        /// Convert to AVPixelFormat enum.
+        /// </summary>
+        private static int ToFFMpegPixelFormat(PixelFormat psiFormat) {
+            switch(psiFormat) {
+                case PixelFormat.Undefined:
+                    return -1;//AV_PIX_FMT_NONE
+                case PixelFormat.RGB_24bpp:
+                    return 2;//AV_PIX_FMT_RGB24
+                case PixelFormat.BGR_24bpp:
+                    return 3;//AV_PIX_FMT_BGR24
+                case PixelFormat.Gray_8bpp:
+                    return 8;//AV_PIX_FMT_GRAY8
+                case PixelFormat.BGRA_32bpp:
+                    return 28;//AV_PIX_FMT_BGRA
+                case PixelFormat.Gray_16bpp:
+                    if (!BitConverter.IsLittleEndian) {
+                        throw new InvalidOperationException("Big endian is not supported.");
+                    }
+                    return 30;//AV_PIX_FMT_GRAY16LE
+                case PixelFormat.RGBA_64bpp:
+                    if (!BitConverter.IsLittleEndian) {
+                        throw new InvalidOperationException("Big endian is not supported.");
+                    }
+                    return 105;//AV_PIX_FMT_RGBA64LE
+                default:
+                    throw new InvalidOperationException($"Unsupported \\psi pixel format {psiFormat}.");
+            }
+        }
+
+        /// <summary>
+        /// Convert from AVPixelFormat enum.
+        /// </summary>
+        private static PixelFormat ToPsiPixelFormat(int ffmpegFormat) {
+            switch (ffmpegFormat) {
+                case -1://AV_PIX_FMT_NONE
+                    return PixelFormat.Undefined;
+                case 2://AV_PIX_FMT_RGB24
+                    return PixelFormat.RGB_24bpp;
+                case 3://AV_PIX_FMT_BGR24
+                    return PixelFormat.BGR_24bpp;
+                case 8://AV_PIX_FMT_GRAY8
+                    return PixelFormat.Gray_8bpp;
+                case 28://AV_PIX_FMT_BGRA
+                    return PixelFormat.BGRA_32bpp;
+                case 30://AV_PIX_FMT_GRAY16LE
+                    return PixelFormat.Gray_16bpp;
+                case 105://AV_PIX_FMT_RGBA64LE
+                    return PixelFormat.RGBA_64bpp;
+                default:
+                    throw new InvalidOperationException($"Unsupported native pixel format {ffmpegFormat}.");
+            }
+        }
+        #endregion
 
         #region IDisposable
         private bool disposed;
@@ -93,6 +175,7 @@ namespace OpenSense.Components.FFMpeg {
             }
             disposed = true;
 
+            image?.Dispose();
             _reader.Dispose();
         }
         #endregion
