@@ -197,7 +197,7 @@ namespace FFMpegInterop {
         case AV_PIX_FMT_GRAY8:
         case AV_PIX_FMT_GRAY16LE:
         case AV_PIX_FMT_RGBA64LE:
-            bufferSize = frame.linesize[0] * frame.height; // BGR plane
+            bufferSize = frame.linesize[0] * frame.height; // RGBA plane
             break;
         default:
             throw gcnew System::Exception("Unsupported pixel format.");
