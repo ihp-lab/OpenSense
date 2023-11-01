@@ -86,6 +86,7 @@
         <ProjectReference Include="..\Components\Emotion.Visualizer.WPF\Emotion.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\EyePointOfInterest.Visualizer.WPF\EyePointOfInterest.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\EyePointOfInterest.WPF\EyePointOfInterest.WPF.csproj" />
+        <ProjectReference Include="..\Components\FFMpeg.Windows.WPF\FFMpeg.Windows.WPF.csproj" />
         <ProjectReference Include="..\Components\GoogleCloud.Speech.V1.WPF\GoogleCloud.Speech.V1.WPF.csproj" />
         <ProjectReference Include="..\Components\HeadGesture\HeadGesture.csproj" />
         <!--No settings available, thus no related WPF project here-->

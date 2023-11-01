@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <Platforms>x64</Platforms>
+        <PlatformTarget>x64</PlatformTarget>
+        <AssemblyName>OpenSense.WPF.Components.FFMpeg.Windows</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.FFMpeg</RootNamespace>
+        <EmbedAllSources>true</EmbedAllSources>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\FFMpeg.Windows\FFMpeg.Windows.csproj" />
+        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
+    </ItemGroup>
+
+
+</Project>
