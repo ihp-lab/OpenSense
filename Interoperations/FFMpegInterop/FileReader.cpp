@@ -56,16 +56,14 @@ namespace FFMpegInterop {
         if (avcodec_open2(_unmanaged->codecContext, codec, nullptr) < 0) {
             throw gcnew System::Exception("Could not open codec.");
         }
-
-
     }
 
     void FileReader::Run() {
         AVPacket packet;
         auto counter = 0;
         while (av_read_frame(_unmanaged->formatContext, &packet) >= 0) {
-            // If it's the video stream and a key frame
             if (packet.stream_index == videoStreamIndex && (packet.flags & AV_PKT_FLAG_KEY)) {
+                //TODO: Decode the packet
                 counter++;
                 _callback(counter);
             }
@@ -76,11 +74,11 @@ namespace FFMpegInterop {
 
 #pragma region IDisposable
     FileReader::~FileReader() {
-        /* if (disposed) {
+         if (disposed) {
              return;
          }
          disposed = true;
-         this->!FileReader();*/
+         this->!FileReader();
     }
 
     FileReader::!FileReader() {
@@ -92,8 +90,6 @@ namespace FFMpegInterop {
         if (_unmanaged->formatContext) {
             avformat_close_input(&_unmanaged->formatContext);
         }
-
-        avformat_network_deinit();
 
         delete _unmanaged;
     }
