@@ -1,6 +1,7 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Psi;
@@ -12,11 +13,14 @@ namespace OpenSense.Components.Builtin {
     [Serializable]
     public abstract class GenericComponentConfiguration_OneParam : ComponentConfiguration {
 
-        private static readonly MethodInfo InstantiateMethod =
-            typeof(DefaultValueInjectorConfiguration)
-            .GetMethod(nameof(Instantiate), BindingFlags.Instance | BindingFlags.NonPublic);
+        private readonly MethodInfo _instantiateMethod;
 
-        public override object Instantiate(Pipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents, IServiceProvider serviceProvider) {
+        public GenericComponentConfiguration_OneParam() {
+            var method = GetType().GetMethod(nameof(Instantiate), BindingFlags.Instance | BindingFlags.NonPublic);
+            _instantiateMethod = method;
+        }
+
+        public override sealed object Instantiate(Pipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents, IServiceProvider? serviceProvider) {
             /* Create instance */
             var genericInputPortMetadata = GetMetadata().Ports.OfType<GenericComponentPortMetadata_OneParam>().Single(m => m.IsGenericInput);
             var producerMappings = this.GetRemoteProducerMappings(instantiatedComponents);
@@ -27,9 +31,8 @@ namespace OpenSense.Components.Builtin {
                 throw new MissingRequiredInputConnectionException(Name, genericInputPortMetadata.Name);
             }
             var paramType = targetMappings.Single().RemoteDataType;
-            Debug.Assert(InstantiateMethod is not null);
-            var method = InstantiateMethod.MakeGenericMethod(new[] { paramType });
-            var instance = method.Invoke(this, new object[] { pipeline, serviceProvider, });
+            var method = _instantiateMethod.MakeGenericMethod(new[] { paramType });
+            var instance = method.Invoke(this, new object?[] { pipeline, serviceProvider, });
 
             /* Connect the ports */
             foreach (var producerMapping in producerMappings) {

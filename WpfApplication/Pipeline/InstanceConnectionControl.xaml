@@ -85,6 +85,7 @@
                                         <Style
                                             TargetType="TextBox">
                                             <Style.Triggers>
+                                                <!--TODO: Use PortMetadata.Aggregation == {x:Static comp:PortAggregation.Object} to set textbox visibility.-->
                                                 <DataTrigger
                                                     Binding="{Binding LocalPort.Index}"
                                                     Value="{x:Null}">

@@ -5,8 +5,8 @@
         <UseWPF>true</UseWPF>
         <Platforms>x64</Platforms>
         <PlatformTarget>x64</PlatformTarget>
-        <AssemblyName>OpenSense.WPF.Components.LibreFace</AssemblyName>
-        <RootNamespace>OpenSense.WPF.Components.LibreFace</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Components.LibreFace.Visualizer</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.LibreFace.Visualizer</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

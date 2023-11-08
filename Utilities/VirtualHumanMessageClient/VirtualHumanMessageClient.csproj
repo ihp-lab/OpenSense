@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <RootNamespace>OpenSense.VHMessage</RootNamespace>
+        <AssemblyName>OpenSense.VHMessage</AssemblyName>
+        <LangVersion>11.0</LangVersion>
+        <EmbedAllSources>true</EmbedAllSources>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\NMS.ActiveMQ\NMS.ActiveMQ.csproj" />
+    </ItemGroup>
+
+</Project>

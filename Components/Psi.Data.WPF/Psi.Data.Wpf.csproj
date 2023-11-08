@@ -3,6 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net7.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
+        <!--Note: For folder dialog-->
+        <UseWindowsForms>true</UseWindowsForms>
         <RootNamespace>OpenSense.WPF.Components.Psi.Data</RootNamespace>
         <AssemblyName>OpenSense.WPF.Components.Psi.Data</AssemblyName>
         <EmbedAllSources>true</EmbedAllSources>

@@ -16,7 +16,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\ComponentContract\ComponentContract.csproj" />
-        <ProjectReference Include="..\..\OpenPose.PInvoke\OpenPose.PInvoke.csproj" />
+        <ProjectReference Include="..\..\Interoperations\OpenPose.PInvoke\OpenPose.PInvoke.csproj" />
     </ItemGroup>
 
 </Project>

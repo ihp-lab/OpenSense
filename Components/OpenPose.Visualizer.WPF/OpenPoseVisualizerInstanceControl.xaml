@@ -6,8 +6,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:OpenSense.WPF.Components.OpenPose.Visualizer"
     mc:Ignorable="d"
-    d:DesignHeight="200"
-    d:DesignWidth="200"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
     DataContextChanged="UserControl_DataContextChanged"
     Unloaded="UserControl_Unloaded">
     <Grid
@@ -21,7 +21,8 @@
         <Expander
             Grid.Row="0"
             Header="Settings"
-            IsExpanded="False">
+            IsExpanded="False"
+            d:IsExpanded="True">
             <Grid
                 Grid.IsSharedSizeScope="True">
 
@@ -57,7 +58,7 @@
 
                 <Label
                     Grid.Row="1"
-                    Grid.Column="0">Draw pose</Label>
+                    Grid.Column="0">Draw Pose</Label>
                 <CheckBox
                     Grid.Row="1"
                     Grid.Column="1"
@@ -65,7 +66,7 @@
 
                 <Label
                     Grid.Row="2"
-                    Grid.Column="0">Draw face</Label>
+                    Grid.Column="0">Draw Face</Label>
                 <CheckBox
                     Grid.Row="2"
                     Grid.Column="1"
@@ -73,7 +74,7 @@
 
                 <Label
                     Grid.Row="3"
-                    Grid.Column="0">Draw hand</Label>
+                    Grid.Column="0">Draw Hand</Label>
                 <CheckBox
                     Grid.Row="3"
                     Grid.Column="1"
@@ -81,7 +82,7 @@
 
                 <Label
                     Grid.Row="4"
-                    Grid.Column="0">Circle radius</Label>
+                    Grid.Column="0">Circle Radius</Label>
                 <TextBox
                     Grid.Row="4"
                     Grid.Column="1"
@@ -89,7 +90,7 @@
 
                 <Label
                     Grid.Row="5"
-                    Grid.Column="0">Line thickness</Label>
+                    Grid.Column="0">Line Thickness</Label>
                 <TextBox
                     Grid.Row="5"
                     Grid.Column="1"

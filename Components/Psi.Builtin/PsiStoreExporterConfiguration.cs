@@ -29,9 +29,8 @@ namespace OpenSense.Components.Psi {
 
         public override IComponentMetadata GetMetadata() => new PsiStoreExporterMetadata();
 
-        protected override Exporter CreateExporter(Pipeline pipeline, out object instance) {
+        protected override Exporter CreateExporter(Pipeline pipeline) {
             var exporter = PsiStore.Create(pipeline, StoreName, RootPath, CreateSubdirectory);
-            instance = exporter;
             return exporter;
         }
     }

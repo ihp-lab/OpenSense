@@ -5,7 +5,12 @@ namespace OpenSense.Components.LibreFace {
     [Export(typeof(IComponentMetadata))]
     public class LibreFaceDetectorMetadata : ConventionalComponentMetadata {
 
-        public override string Description => "Detect Action Unit intensities and facial expressions. Requires MediaPipe face landmark detection results. The included AUs are 1, 2, 4, 5, 6, 9, 12, 15, 17, 20, 25, 26. This is a CPU version. To use CUDA please compile from source.";
+        public override string Description => 
+            "Detect Action Unit intensities, precenses and facial expressions. Requires MediaPipe face landmark detection results."
+            + " The included AUs are 1, 2, 4, 5(I), 6, 7(P), 9(I), 10(P), 12, 14(P), 15, 17, 20(I), 23(P), 24(P), 25(I), 26(I). Where \"(I)\" denotes intensity-only; \"(P)\" denotes persence-only."
+            + " Expressions are Neutral, Happiness, Sadness, Surprise, Fear, Disgust, Anger, Contempt."
+            + " This is a CPU version by default unless you are using a special release where the CUDA flag is enabled."
+            ;
 
         protected override Type ComponentType => typeof(LibreFaceDetector);
 

@@ -7,14 +7,14 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using OpenSense.Components.LibreFace.Visualizer;
 
-namespace OpenSense.WPF.Components.LibreFace {
-    public partial class ActionUnitIntensityVisualizerInstanceControl : UserControl {
+namespace OpenSense.WPF.Components.LibreFace.Visualizer {
+    public sealed partial class ActionUnitIntensityVisualizerInstanceControl : UserControl {
 
         private static readonly TimeSpan TimeOut = TimeSpan.FromMilliseconds(100);
 
         private ActionUnitIntensityVisualizer Instance => DataContext as ActionUnitIntensityVisualizer;
 
-        private int rangeTo = 1;
+        private int rangeTo = 5;
 
         public ActionUnitIntensityVisualizerInstanceControl() {
             InitializeComponent();
@@ -88,19 +88,6 @@ namespace OpenSense.WPF.Components.LibreFace {
                 }, DispatcherPriority.DataBind, CancellationToken.None, TimeOut);
             } catch (TimeoutException) {
                 ;//Nothing
-            }
-        }
-
-        private void RadioButton_Checked(object sender, RoutedEventArgs e) {
-            var tag = (string)((RadioButton)sender).Tag;
-            if (tag is null) {
-                return;
-            }
-            rangeTo = int.Parse(tag);
-            foreach (var child in GridMain.Children) {
-                if (child is ProgressBar bar) {
-                    bar.Maximum = rangeTo;
-                }
             }
         }
     }

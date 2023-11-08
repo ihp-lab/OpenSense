@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using OpenSense.Components;
@@ -71,19 +69,7 @@ jump:
             Configurations = configurations;
 
             var inputMetadata = configuration.FindPortMetadata(inputConfiguration.LocalPort);
-            var localOutputs = configuration.FindOutputPortDataTypes(configurations);
-            var localInputs = configuration.FindInputPortDataTypes(configurations, inputMetadata);
-            string inputDataTypeName;
-            if (inputMetadata.CanConnectDataType(null, localOutputs, localInputs)) {
-                inputDataTypeName = "Any";
-            } else {
-                var inputPortDataType = inputMetadata.GetTransmissionDataType(null, localOutputs, localInputs);
-                if (inputPortDataType is null) {
-                    inputDataTypeName = "Unknown";
-                } else {
-                    inputDataTypeName = GetCSharpStyleTypeName(inputPortDataType);
-                }
-            }
+            var inputDataTypeName = TypeDisplayHelpers.FindInputDataTypeName(configuration, inputMetadata, configurations);
             TextBlockPortDataType.Text = inputDataTypeName;
 
             var selections = LegalOutputSelections(configuration, inputConfiguration, configurations);
@@ -103,48 +89,6 @@ jump:
                 Index = selection.Index,
             };
             RemoveIllegalInputs(Configurations);
-        }
-
-        private static readonly Dictionary<Type, string> TypeMappings = new Dictionary<Type, string>() {
-            { typeof(object), "object" },
-            { typeof(string), "string" },
-            { typeof(bool), "bool" },
-            { typeof(float), "float" },
-            { typeof(double), "double" },
-            { typeof(int), "int" },
-            { typeof(uint), "uint" },
-            { typeof(long), "long" },
-            { typeof(ulong), "ulong" },
-            { typeof(short), "short" },
-            { typeof(ushort), "ushort" },
-
-        };
-
-        private static string GetCSharpStyleTypeName(Type type) {
-            if (TypeMappings.TryGetValue(type, out var name)) {
-                return name;
-            }
-            if (type.IsArray) {
-                return $"{GetCSharpStyleTypeName(type.GetElementType())}[]";
-            }
-            name = $"{type.Namespace}.{type.Name}";
-            if (!type.IsGenericType) {
-                return name;
-            }
-            var sb = new StringBuilder();
-            var innerText = string.Join(", ", type.GetGenericArguments().Select(GetCSharpStyleTypeName));
-            if (name.StartsWith("System.ValueTuple`")) {
-                sb.Append('(');
-                sb.Append(innerText);
-                sb.Append(')');
-            } else {
-                sb.Append(name.Substring(0, name.IndexOf('`')));
-                sb.Append('<');
-                sb.Append(innerText);
-                sb.Append('>');
-            }
-            var result = sb.ToString();
-            return result;
         }
     }
 }

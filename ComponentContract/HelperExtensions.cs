@@ -20,7 +20,7 @@ namespace OpenSense.Components {
         }
 
         public static IPortMetadata FindPortMetadata(this IComponentMetadata componentMetadata, PortConfiguration port) {
-            return componentMetadata.Ports.Single(p => Equals(p.Identifier, port.Identifier));
+            return componentMetadata.Ports.SingleOrDefault(p => Equals(p.Identifier, port.Identifier));
         }
 
         public static IPortMetadata FindPortMetadata(this ComponentConfiguration componentConfiguration, PortConfiguration port) {
@@ -81,8 +81,9 @@ namespace OpenSense.Components {
         /// <param name="instance"></param>
         /// <param name="instantiatedComponents"></param>
         public static void ConnectAllStaticInputs(this ComponentConfiguration componentConfiguration, object instance, IReadOnlyList<ComponentEnvironment> instantiatedComponents) {
+            var metadata = componentConfiguration.GetMetadata();
             foreach (var inputConfig in componentConfiguration.Inputs) {
-                var inputMetadata = componentConfiguration.FindPortMetadata(inputConfig.LocalPort);
+                var inputMetadata = metadata.FindPortMetadata(inputConfig.LocalPort);
                 Debug.Assert(inputMetadata.Direction == PortDirection.Input);
                 var inputStaticMetadata = inputMetadata as StaticPortMetadata;
                 if (inputStaticMetadata is null) {
@@ -415,6 +416,9 @@ namespace OpenSense.Components {
                 if (i is null) {
                     return null;
                 }
+                if (i.RemotePort is null) {//TODO: why this can be null in UI operations?
+                    return null;//Invalid argument
+                }
                 foreach (var other in configs) {
                     if (other.Id == config.Id) {//same config
                         continue;
@@ -422,9 +426,12 @@ namespace OpenSense.Components {
                     if (!Equals(i.RemoteId, other.Id)) {
                         continue;
                     }
+                    var oMetadata = other.FindPortMetadata(i.RemotePort);
+                    if (oMetadata is null) {//TODO: why this can be values from other configurations in UI operations?
+                        return null;//Invalid argument
+                    }
                     var newExclude = new Tuple<ComponentConfiguration, IPortMetadata>[exclude.Length + 1];
                     Array.Copy(exclude, newExclude, exclude.Length);
-                    var oMetadata = other.FindPortMetadata(i.RemotePort);
                     newExclude[exclude.Length] = new Tuple<ComponentConfiguration, IPortMetadata>(other, oMetadata);
                     var otherInput = FindInputPortDataTypes(other, configs, newExclude);
                     var otherOutput = FindOutputPortDataTypes(other, configs, newExclude);
@@ -596,6 +603,11 @@ jump:;
                 result.AddRange(dict);
             } catch (FileNotFoundException ex) {// missing dependent dll
                 throw new Exception("Missing dependent DLLs", ex);
+            }
+
+            /* Remove Subpipeline Diagnostics */
+            if (typeof(Subpipeline).IsAssignableFrom(componentType)) {
+                result.RemoveAll(i => i.DeclaringType == typeof(Pipeline) && i.Name == nameof(Subpipeline.Diagnostics));//Diagnostics of Subpipelines are not usable
             }
 
             return result;

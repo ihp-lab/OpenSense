@@ -5,6 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:OpenSense.WPF.Pipeline"
+    xmlns:comp="clr-namespace:OpenSense.Components;assembly=OpenSense.Components.Contracts"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
@@ -26,28 +27,33 @@
             <TextBlock
                 Grid.Column="1"
                 Name="TextBlockPortDataType"
-                TextWrapping="Wrap"/>
+                TextWrapping="Wrap" />
 
         </Grid>
 
         <ListBox
             Grid.Row="1"
             Name="ListBoxOutputs"
-            HorizontalContentAlignment="Stretch"
+            HorizontalContentAlignment="Left"
             SelectionChanged="ListBoxOutputs_SelectionChanged">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid
-                        ToolTip="{Binding PortMetadata.Description}">
+                        Margin="1">
+
                         <Grid.RowDefinitions>
                             <RowDefinition
                                 Height="auto" />
                             <RowDefinition
                                 Height="auto" />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
+                        
                         <TextBlock
+                            Grid.Row="0"
                             FontWeight="Bold"
                             Text="{Binding Configuration.Name}" />
+                        
                         <Grid
                             Grid.Row="1">
                             <Grid.ColumnDefinitions>
@@ -55,8 +61,11 @@
                                     Width="auto" />
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
+                            
                             <TextBlock
+                                Grid.Column="0"
                                 Text="{Binding PortMetadata.Name}" />
+                            
                             <TextBox
                                 Grid.Column="1"
                                 Name="TextBoxIndexer"
@@ -67,17 +76,44 @@
                                         TargetType="TextBox">
                                         <Style.Triggers>
                                             <DataTrigger
-                                                Binding="{Binding Index}"
-                                                Value="{x:Null}">
+                                                Binding="{Binding PortMetadata.Aggregation}"
+                                                Value="{x:Static comp:PortAggregation.Object}">
                                                 <Setter
                                                     Property="Visibility"
-                                                    Value="Hidden" />
+                                                    Value="Collapsed" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </TextBox.Style>
                             </TextBox>
                         </Grid>
+
+                        <TextBlock
+                            Grid.Row="2"
+                            Foreground="SlateGray"
+                            Text="{Binding PortMetadata.Description}">
+                            <TextBlock.Style>
+                                <Style
+                                    TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding PortMetadata.Description}"
+                                            Value="{x:Null}">
+                                            <Setter
+                                                Property="Visibility"
+                                                Value="Collapsed" />
+                                        </DataTrigger>
+                                        <DataTrigger
+                                            Binding="{Binding PortMetadata.Description}"
+                                            Value="">
+                                            <Setter
+                                                Property="Visibility"
+                                                Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>

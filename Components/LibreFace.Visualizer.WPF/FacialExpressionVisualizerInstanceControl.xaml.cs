@@ -8,14 +8,12 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using OpenSense.Components.LibreFace.Visualizer;
 
-namespace OpenSense.WPF.Components.LibreFace {
-    public partial class FacialExpressionVisualizerInstanceControl : UserControl {
+namespace OpenSense.WPF.Components.LibreFace.Visualizer {
+    public sealed partial class FacialExpressionVisualizerInstanceControl : UserControl {
 
         private static readonly TimeSpan TimeOut = TimeSpan.FromMilliseconds(100);
 
         private FacialExpressionVisualizer Instance => DataContext as FacialExpressionVisualizer;
-
-        private string rangeMode = "1";
 
         private float rangeTo = 1;
 
@@ -79,11 +77,6 @@ namespace OpenSense.WPF.Components.LibreFace {
                             GridMain.Children.RemoveRange(GridMain.Children.Count - 3, 3);
                         }
                     }
-                    rangeTo = rangeMode switch {
-                        "1" => 1,
-                        "max" => dict.Values.Append(0).Max(),
-                        _ => throw new InvalidOperationException(),
-                    };
                     var emotionId = dict.MaxBy(kv => kv.Value).Key;
                     var idx = 0;
                     foreach (var (id, val) in dict) {
@@ -104,39 +97,6 @@ namespace OpenSense.WPF.Components.LibreFace {
             } catch (TimeoutException) {
                 ;//Nothing
             }
-        }
-
-        private void RadioButton_Checked(object sender, RoutedEventArgs e) {
-            var tag = (string)((RadioButton)sender).Tag;
-            if (tag is null) {
-                return;
-            }
-            rangeMode = tag;
-            switch (tag) {
-                case "1":
-                    rangeTo = 1;
-                    break;
-                case "max":
-                    rangeTo = GridMain
-                        .Children
-                        .OfType<ProgressBar>()
-                        .Select(b => (float)b.Value)
-                        .Append(0)
-                        .Max()
-                        ;
-                    break;
-                default:
-                    throw new InvalidOperationException();
-            }
-            foreach (var child in GridMain.Children) {
-                if (child is ProgressBar bar) {
-                    bar.Maximum = rangeTo;
-                }
-            }
-        }
-
-        private void UpdateUpperRange() {
-
         }
     }
 }

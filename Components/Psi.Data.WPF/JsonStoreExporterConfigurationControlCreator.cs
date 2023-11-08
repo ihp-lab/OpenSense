@@ -9,6 +9,8 @@ namespace OpenSense.WPF.Components.Psi {
     public class JsonStoreExporterConfigurationControlCreator : IConfigurationControlCreator {
         public bool CanCreate(ComponentConfiguration configuration) => configuration is JsonStoreExporterConfiguration;
 
-        public UIElement Create(ComponentConfiguration configuration) => new JsonStoreExporterConfigurationControl() { DataContext = configuration };
+        public UIElement Create(ComponentConfiguration configuration) => new JsonStoreExporterConfigurationControl() { 
+            DataContext = configuration 
+        };
     }
 }

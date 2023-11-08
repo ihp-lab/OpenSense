@@ -152,7 +152,7 @@
                 <TextBox
                     Grid.Row="10"
                     Grid.Column="1"
-                    Text="{Binding PartialEvalueationInvervalInSeconds}" />
+                    Text="{Binding PartialEvalueationInverval}" />
 
                 <Label
                     Grid.Row="11">

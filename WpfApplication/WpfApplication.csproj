@@ -10,8 +10,8 @@
         <AssemblyName>OpenSense.WPF</AssemblyName>
         <EmbedAllSources>true</EmbedAllSources>
         <ApplicationIcon>Resource\Icon\usc.ico</ApplicationIcon>
-        <AssemblyVersion>3.1.0</AssemblyVersion>
-        <Version>3.1.0</Version>
+        <AssemblyVersion>3.2.0</AssemblyVersion>
+        <Version>3.2.0</Version>
         <AssemblyName>OpenSense.WPF</AssemblyName>
         <!--Note:
         The Azure Kinect package of /psi contains onnxruntime DLLs while not referencing it as a dependency. 
@@ -44,6 +44,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Dirkster.AvalonDock" Version="4.72.1" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
         <PackageReference Include="Serilog" Version="2.12.0" />
@@ -78,13 +79,14 @@
         <ProjectReference Include="..\Components\AzureKinect.Visualizer.WPF\AzureKinect.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\Biopac.Visualizer.WPF\Biopac.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\BodyGestureDetectors.WPF\BodyGestureDetectors.WPF.csproj" />
-        <ProjectReference Include="..\Components\Builtin\Builtin.csproj" />
+        <ProjectReference Include="..\Components\Builtin.WPF\Builtin.WPF.csproj" />
         <ProjectReference Include="..\Components\Builtin.Visualizer.WPF\Builtin.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\CollectionOperators.WPF\CollectionOperators.WPF.csproj" />
         <ProjectReference Include="..\Components\CsvExporter.WPF\CsvExporter.WPF.csproj" />
         <ProjectReference Include="..\Components\Emotion.Visualizer.WPF\Emotion.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\EyePointOfInterest.Visualizer.WPF\EyePointOfInterest.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\EyePointOfInterest.WPF\EyePointOfInterest.WPF.csproj" />
+        <ProjectReference Include="..\Components\FFMpeg.Windows.WPF\FFMpeg.Windows.WPF.csproj" />
         <ProjectReference Include="..\Components\GoogleCloud.Speech.V1.WPF\GoogleCloud.Speech.V1.WPF.csproj" />
         <ProjectReference Include="..\Components\HeadGesture\HeadGesture.csproj" />
         <!--No settings available, thus no related WPF project here-->
@@ -100,6 +102,7 @@
         <ProjectReference Include="..\Components\OpenSmile.Visualizer.WPF\OpenSmile.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\OpenSmile.Windows.WPF\OpenSmile.Windows.WPF.csproj" />
         <ProjectReference Include="..\Components\LibreFace.Visualizer.WPF\LibreFace.Visualizer.WPF.csproj" />
+        <ProjectReference Include="..\Components\LibreFace.WPF\LibreFace.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Audio.Windows.WPF\Psi.Audio.Windows.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Audio.WPF\Psi.Audio.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.AzureKinect.WPF\Psi.AzureKinect.WPF.csproj" />
@@ -118,10 +121,11 @@
         <ProjectReference Include="..\Components\PythonSupports.WPF\PythonSupports.WPF.csproj" />
         <ProjectReference Include="..\Components\Shimmer3.WPF\Shimmer3.WPF.csproj" />
         <ProjectReference Include="..\Components\Statistics.WPF\Statistics.WPF.csproj" />
+        <ProjectReference Include="..\Components\VirtualHumanMessage.WPF\VirtualHumanMessage.WPF.csproj" />
         <ProjectReference Include="..\Components\Whisper.NET.WPF\Whisper.NET.WPF.csproj" />
         <!--Widgets-->
-        <ProjectReference Include="..\DisplayPoiEstimatorBuilder.WPF\DisplayPoiEstimatorBuilder.WPF.csproj" />
-        <ProjectReference Include="..\OpenSmileConfigurationConverter.WPF\OpenSmileConfigurationConverter.WPF.csproj" />
+        <ProjectReference Include="..\Widgets\DisplayPoiEstimatorBuilder.WPF\DisplayPoiEstimatorBuilder.WPF.csproj" />
+        <ProjectReference Include="..\Widgets\OpenSmileConfigurationConverter.WPF\OpenSmileConfigurationConverter.WPF.csproj" />
     </ItemGroup>
 
     <ItemGroup>

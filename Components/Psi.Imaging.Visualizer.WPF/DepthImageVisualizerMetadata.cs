@@ -16,7 +16,7 @@ namespace OpenSense.Components.Psi.Imaging.Visualizer {
                 case nameof(DepthImageVisualizer.In):
                     return "[Required] Depth images to be visualized.";
                 case nameof(DepthImageVisualizer.Out):
-                    return "Rendered color images.";
+                    return "Rendered color images. BGRA 32bpp.";
                 default:
                     return null;
             }

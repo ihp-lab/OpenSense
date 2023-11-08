@@ -1,9 +1,14 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using Microsoft.Psi;
 
 namespace OpenSense.Components.Builtin {
     [Serializable]
     public sealed class DefaultValueInjectorConfiguration : GenericComponentConfiguration_OneParam {
+
+        private static readonly DefaultValueInjectorMetadata Metadata = new DefaultValueInjectorMetadata();
+
 
         /*
         private T? defaultValue = default;
@@ -28,9 +33,9 @@ namespace OpenSense.Components.Builtin {
             set => SetProperty(ref referenceAbsenceTolerance, value);
         }
 
-        public override IComponentMetadata GetMetadata() => new DefaultValueInjectorMetadata();
+        public override IComponentMetadata GetMetadata() => Metadata;
 
-        protected override object Instantiate<T>(Pipeline pipeline, IServiceProvider serviceProvider) {
+        protected override object Instantiate<T>(Pipeline pipeline, IServiceProvider? serviceProvider) {
             var result = new DefaultValueInjector<T>(pipeline) { 
                 DefaultValue = default,
                 InputAbsenceTolerance = InputAbsenceTolerance,

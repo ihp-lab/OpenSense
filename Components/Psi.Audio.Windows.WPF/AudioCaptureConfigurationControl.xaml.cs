@@ -6,35 +6,35 @@ using OpenSense.Components.Psi.Audio;
 namespace OpenSense.WPF.Components.Psi.Audio {
     public partial class AudioCaptureConfigurationControl : UserControl {
 
-        private AudioCaptureConfiguration Config => DataContext as AudioCaptureConfiguration;
+        private AudioCaptureConfiguration Configuration => (AudioCaptureConfiguration)DataContext;
 
         public AudioCaptureConfigurationControl() {
             InitializeComponent();
         }
 
         private void ComboBoxMicrophone_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) {
-            if (Config != null) {
+            if (Configuration != null) {
                 var devs = AudioDevice.Devices().ToList();
                 ComboBoxMicrophone.ItemsSource = devs;
                 ComboBoxMicrophone.DisplayMemberPath = nameof(AudioDevice.Name);
-                var index = devs.FindIndex(dev => dev.Name == Config.Raw.DeviceName);
+                var index = devs.FindIndex(dev => dev.Name == Configuration.Raw.DeviceName);
                 ComboBoxMicrophone.SelectedIndex = index >= 0 ? index : 0;
             }
         }
 
         private void ComboBoxMicrophone_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (ComboBoxMicrophone.SelectedItem is AudioDevice dev) {
-                Config.Raw.DeviceName = dev.Name;
+                Configuration.Raw.DeviceName = dev.Name;
             }
         }
 
         private void ContentControlWaveFormat_Loaded(object sender, RoutedEventArgs e) {
             ContentControlWaveFormat.Children.Clear();
-            if (Config != null) {
-                if (Config.Raw.Format is null) {
-                    Config.Raw.Format = Microsoft.Psi.Audio.WaveFormat.Create16kHz1Channel16BitPcm();
+            if (Configuration != null) {
+                if (Configuration.Raw.Format is null) {
+                    Configuration.Raw.Format = Microsoft.Psi.Audio.WaveFormat.Create16kHz1Channel16BitPcm();
                 }
-                var control = new WaveFormatControl(Config.Raw.Format);
+                var control = new WaveFormatControl(Configuration.Raw.Format);
                 ContentControlWaveFormat.Children.Add(control);
             }
         }

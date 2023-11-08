@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Psi;
 using OpenSense.Components;
+using OpenSense.WPF.Views;
 
 namespace OpenSense.WPF.Pipeline {
     public partial class InstanceConnectionControl : UserControl {
@@ -28,7 +29,7 @@ namespace OpenSense.WPF.Pipeline {
                 .Where(p => p.Aggregation != PortAggregation.Object || Configuration.Inputs.All(c => !Equals(c.LocalPort.Identifier, p.Identifier)))
                 .ToList();
             } catch (Exception ex) {
-                MessageBox.Show(ex.ToString(), "Port Evaluation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                ExceptionMessageWindow.Show(this, ex, "Port Evaluation Error", "An error occurred while evaluating port definitions.");
                 return;
             }
             if (filteredInputs.Count == 0) {
@@ -64,7 +65,7 @@ namespace OpenSense.WPF.Pipeline {
                     ContentControlConnection.Children.Add(control);
                 } catch (Exception ex) {
                     ContentControlConnection.Children.Add(new ErrorOccurredOutputSelectionControl());
-                    MessageBox.Show(ex.ToString(), "Port Evaluation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    ExceptionMessageWindow.Show(this, ex, "Port Evaluation Error", "An error occurred while evaluating port definitions.");
                 }
             }
             ComboBoxDeliveryPolicy.SelectedItem = ComboBoxDeliveryPolicy.Items.Cast<ComboBoxItem>().Single(i => i.Tag as DeliveryPolicy == config?.DeliveryPolicy);

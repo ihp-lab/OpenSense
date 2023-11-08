@@ -3,9 +3,9 @@ using System.Windows.Controls;
 using OpenSense.Components.Psi.Audio;
 
 namespace OpenSense.WPF.Components.Psi.Audio {
-    public partial class AudioResamplerConfigurationControl : UserControl {
+    public sealed partial class AudioResamplerConfigurationControl : UserControl {
 
-        private AudioResamplerConfiguration Config => DataContext as AudioResamplerConfiguration;
+        private AudioResamplerConfiguration Configuration => (AudioResamplerConfiguration)DataContext;
 
         public AudioResamplerConfigurationControl() {
             InitializeComponent();
@@ -21,8 +21,8 @@ namespace OpenSense.WPF.Components.Psi.Audio {
         */
         private void ContentControlOutputFormat_Loaded(object sender, RoutedEventArgs e) {
             ContentControlOutputFormat.Children.Clear();
-            if (Config != null) {
-                var control = new WaveFormatControl(Config.Raw.OutputFormat);
+            if (Configuration != null) {
+                var control = new WaveFormatControl(Configuration.Raw.OutputFormat);
                 ContentControlOutputFormat.Children.Add(control);
             }
         }

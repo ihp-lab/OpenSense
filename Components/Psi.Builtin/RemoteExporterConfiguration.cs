@@ -37,9 +37,8 @@ namespace OpenSense.Components.Psi {
 
         public override IComponentMetadata GetMetadata() => new RemoteExporterMetadata();
 
-        protected override Exporter CreateExporter(Pipeline pipeline, out object instance) {
+        protected override Exporter CreateExporter(Pipeline pipeline) {
             var remoteExporter = new RemoteExporter(pipeline, Port, Transport, MaxBytesPerSecond, BytesPerSecondSmoothingWindowSeconds);
-            instance = remoteExporter;
             return remoteExporter.Exporter;
         }
             

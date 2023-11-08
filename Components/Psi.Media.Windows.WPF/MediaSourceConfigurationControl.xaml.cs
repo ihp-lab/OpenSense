@@ -1,9 +1,13 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using OpenSense.Components.Psi.Media;
 
 namespace OpenSense.WPF.Components.Psi.Media {
-    public partial class MediaSourceConfigurationControl : UserControl {
+    public sealed partial class MediaSourceConfigurationControl : UserControl {
+
+        private MediaSourceConfiguration Configuration => (MediaSourceConfiguration)DataContext;
+
         public MediaSourceConfigurationControl() {
             InitializeComponent();
         }
@@ -12,12 +16,12 @@ namespace OpenSense.WPF.Components.Psi.Media {
             var openFileDialog = new Microsoft.Win32.OpenFileDialog {
                 CheckFileExists = true,
                 AddExtension = true,
-                DefaultExt = string.Empty,
-                Filter = string.Empty,
+                DefaultExt = "*.json",
+                Filter = "MPEG4 (*.mp4) | *.mp4",
+                InitialDirectory = string.IsNullOrEmpty(Configuration.Filename) ? "" : Path.GetDirectoryName(Path.GetFullPath(Configuration.Filename)),
             };
             if (openFileDialog.ShowDialog() == true) {
-                var config = (MediaSourceConfiguration)DataContext;
-                config.Filename = openFileDialog.FileName;
+                Configuration.Filename = openFileDialog.FileName;
             }
         }
     }
