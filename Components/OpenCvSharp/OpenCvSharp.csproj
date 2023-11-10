@@ -5,6 +5,7 @@
         <RootNamespace>OpenSense.Components.OpenCvSharp</RootNamespace>
         <AssemblyName>OpenSense.Components.OpenCvSharp</AssemblyName>
         <LangVersion>11.0</LangVersion>
+        <Nullable>enable</Nullable>
         <EmbedAllSources>true</EmbedAllSources>
         <AssemblyVersion>1.0.0</AssemblyVersion>
         <Version>1.0.0</Version>
