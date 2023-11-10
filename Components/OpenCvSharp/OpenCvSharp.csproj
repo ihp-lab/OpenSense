@@ -7,8 +7,8 @@
         <LangVersion>11.0</LangVersion>
         <Nullable>enable</Nullable>
         <EmbedAllSources>true</EmbedAllSources>
-        <AssemblyVersion>1.0.0</AssemblyVersion>
-        <Version>1.0.0</Version>
+        <AssemblyVersion>1.0.1</AssemblyVersion>
+        <Version>1.0.1</Version>
         <Authors>Intelligent Human Perception Lab</Authors>
         <Product>OpenSense</Product>
         <Description>
@@ -16,12 +16,14 @@
         </Description>
         <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageReleaseNotes>RELEASE_NOTES.md</PackageReleaseNotes>
         <RepositoryUrl>https://github.com/ihp-lab/OpenSense.git</RepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="$(SolutionDir)/LICENSE.txt" Pack="true" PackagePath=""/>
-        <None Include="$(SolutionDir)/README.md" Pack="true" PackagePath="\"/>
+        <None Include="$(SolutionDir)/LICENSE.txt" Pack="true" PackagePath="" />
+        <None Include="README.md" Pack="true"  PackagePath=""  />
+        <None Include="RELEASE_NOTES.md" Pack="true" PackagePath="" />
     </ItemGroup>
 
     <ItemGroup>
