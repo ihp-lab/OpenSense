@@ -8,13 +8,13 @@
         <Nullable>enable</Nullable>
         <EmbedAllSources>true</EmbedAllSources>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <AssemblyVersion>1.1.0</AssemblyVersion>
-        <Version>1.1.0</Version>
+        <AssemblyVersion>1.2.0</AssemblyVersion>
+        <Version>1.2.0</Version>
         <Authors>Intelligent Human Perception Lab</Authors>
         <Product>OpenSense</Product>
         <Description>
             LibreFace component of OpenSense.
-            This package uses a pure .NET alignment implementation, another implementation is available if you build from source.
+            This package uses CUDA, build options are available if you build from source.
         </Description>
         <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -38,7 +38,7 @@
         <PlatformTarget Condition="'$(UseOpenCV)' == 'true'">x64</PlatformTarget>
 
         <!-- Profiler conditions -->
-        <!--To disable profiler, uncomment the following property.-->
+        <!--To disable profiler, comment the following property.-->
         <!--<DefineConstants>$(DefineConstants);PROFILER</DefineConstants>-->
         <UseProfiler Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*PROFILER(;.*)*$'))">true</UseProfiler>
         <DebugType Condition="'$(UseProfiler)' == 'true'">full</DebugType>
