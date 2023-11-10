@@ -21,14 +21,24 @@
         <PackageReleaseNotes>RELEASE_NOTES.md</PackageReleaseNotes>
         <RepositoryUrl>https://github.com/ihp-lab/OpenSense.git</RepositoryUrl>
 
+        <!-- CUDA conditions-->
+        <!--Note: CUDA and cuDNN are required. Check version numbers at https://onnxruntime.ai/docs/tutorials/csharp/csharp-gpu.html-->
+        <!--To disable CUDA ONNX runtime, comment the following property.-->
+        <DefineConstants>$(DefineConstants);CUDA</DefineConstants>
+        <UseCUDA Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*CUDA(;.*)*$'))">true</UseCUDA>
+        <Platforms Condition="'$(UseCUDA)' == 'true'">x64</Platforms>
+        <PlatformTarget Condition="'$(UseCUDA)' == 'true'">x64</PlatformTarget>
+
         <!-- OpenCV conditions -->
-        <!--<DefineConstants>$(DefineConstants);OPENCV</DefineConstants>-->
+        <!--To disable OpenCVSharp4, comment the following property.-->
+        <DefineConstants>$(DefineConstants);OPENCV</DefineConstants>
         <UseOpenCV Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*OPENCV(;.*)*$'))">true</UseOpenCV>
         <TargetFramework Condition="'$(UseOpenCV)' == 'true'">net7.0-windows</TargetFramework>
         <Platforms Condition="'$(UseOpenCV)' == 'true'">x64</Platforms>
         <PlatformTarget Condition="'$(UseOpenCV)' == 'true'">x64</PlatformTarget>
 
         <!-- Profiler conditions -->
+        <!--To disable profiler, uncomment the following property.-->
         <!--<DefineConstants>$(DefineConstants);PROFILER</DefineConstants>-->
         <UseProfiler Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*PROFILER(;.*)*$'))">true</UseProfiler>
         <DebugType Condition="'$(UseProfiler)' == 'true'">full</DebugType>
@@ -46,6 +56,8 @@
         -->
         <PackageReference Include="Mediapipe.Net" Version="1.0.0-alpha2" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+        <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.15.1" Condition="'$(UseCUDA)' != 'true'" />
+        <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.14.1" Condition="'$(UseCUDA)' == 'true'" />
         <PackageReference Include="Microsoft.Psi.Imaging" Version="0.18.72.1-beta" />
         <PackageReference Include="OpenCvSharp4.Windows" Version="4.7.0.20230115" Condition="'$(UseOpenCV)' == 'true'" />
         <PackageReference Include="System.Composition" Version="7.0.0" />
