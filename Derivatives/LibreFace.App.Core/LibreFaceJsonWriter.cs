@@ -80,6 +80,8 @@ namespace LibreFace.App {
             writer.WriteEndArray();
 
             writer.WriteEndObject();
+
+            writer.Flush();
         }
 
         #region Pipeline Event Handlers

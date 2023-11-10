@@ -1,14 +1,18 @@
-﻿using Microsoft.Psi;
-using Microsoft.Psi.Media;
+﻿using Mediapipe.Net.Framework.Protobuf;
+using Microsoft.Psi;
+using Microsoft.Psi.Imaging;
 using OpenSense.Components;
+using OpenSense.Components.Builtin;
+using OpenSense.Components.CollectionOperators;
+using OpenSense.Components.FFMpeg;
 using OpenSense.Components.LibreFace;
 using OpenSense.Components.MediaPipe.NET;
-using OpenSense.Components.Psi.Data;
-using OpenSense.Components.Psi.Media;
 using OpenSense.Pipeline;
 
 namespace LibreFace.App {
     public sealed class Processor : IDisposable {
+
+        private static readonly DeliveryPolicy DeliveryPolicy = DeliveryPolicy.SynchronousOrThrottle;
 
         private readonly PipelineEnvironment _env;
 
@@ -19,10 +23,44 @@ namespace LibreFace.App {
         public Processor(string filename, string outDir, IProgress<double> progress) {
             var config = CreatePipelineConfiguration(filename, outDir);
             _env = new PipelineEnvironment(config, serviceProvider: null);
-            _env.Pipeline.ProgressReportInterval = TimeSpan.FromSeconds(0.5);
-            _env.Pipeline.PipelineCompleted += OnPipelineCompleted;
-            _env.Pipeline.PipelineExceptionNotHandled += OnPipelineExceptionNotHandled;
-            _ = _env.Pipeline.RunAsync(ReplayDescriptor.ReplayAll, progress);
+
+            var pipe = _env.Pipeline;
+            var reader = (FileSource)_env.Instances.Single(i => i.Configuration.GetType() == typeof(FileSourceConfiguration)).Instance;
+            var mediapipeEnv = _env.Instances.Single(i => i.Configuration.GetType() == typeof(MediaPipeConfiguration));
+
+            var injector = new DefaultValueInjector<IReadOnlyList<NormalizedLandmarkList>>(pipe) { 
+            };
+            var mediapipeOutputPort = new PortConfiguration() { 
+                Identifier = "multi_face_landmarks",
+            };
+            var mediapipeOutput = mediapipeEnv
+                .Configuration
+                .GetMetadata()
+                .GetProducer<IReadOnlyList<NormalizedLandmarkList>>(mediapipeEnv.Instance, mediapipeOutputPort)
+                ;
+            mediapipeOutput.PipeTo(injector);
+            var replacer = new NullToEmptyReplacer<NormalizedLandmarkList, IReadOnlyList<NormalizedLandmarkList>>(pipe) { 
+            };
+            injector.PipeTo(replacer);
+            var libreface = new LibreFaceDetector(pipe, DeliveryPolicy) { 
+            };
+            reader.PipeTo(libreface.ImageIn);
+            replacer.PipeTo(libreface.DataIn);
+            var combined = libreface
+                .ActionUnitPresenceOut
+                .Join(libreface.ActionUnitIntensityOut)
+                .Join(libreface.FacialExpressionOut);
+            var stem = Path.GetFileNameWithoutExtension(filename);
+            var outFilename = Path.Combine(outDir, stem + ".json");
+            var writer = new LibreFaceJsonWriter(pipe, outFilename) { 
+            };
+            combined.PipeTo(writer);
+
+            pipe.ProgressReportInterval = TimeSpan.FromSeconds(0.5);
+            pipe.PipelineCompleted += OnPipelineCompleted;
+            pipe.PipelineExceptionNotHandled += OnPipelineExceptionNotHandled;
+
+            _ = pipe.RunAsync(ReplayDescriptor.ReplayAll, progress);
         }
 
         private void OnPipelineCompleted(object? sender, PipelineCompletedEventArgs args) {
@@ -34,13 +72,12 @@ namespace LibreFace.App {
         }
 
         private static PipelineConfiguration CreatePipelineConfiguration(string filename, string outDir) {
-            var stem = Path.GetFileNameWithoutExtension(filename);
-
             var config = new PipelineConfiguration() { 
-                DeliveryPolicy = DeliveryPolicy.SynchronousOrThrottle,
+                DeliveryPolicy = DeliveryPolicy,
             };
-            var reader = new MediaSourceConfiguration() {
+            var reader = new FileSourceConfiguration() {
                 Filename = filename,
+                PixelFormat = PixelFormat.RGB_24bpp,
             };
             config.Instances.Add(reader);
             var mediapipe = new MediaPipeConfiguration() {
@@ -51,74 +88,12 @@ namespace LibreFace.App {
                         },
                         RemoteId = reader.Id,
                         RemotePort = new PortConfiguration() {
-                            Identifier = nameof(MediaSource.Image),
+                            Identifier = nameof(FileSource.Out),
                         },
                     },
                 },
             };
             config.Instances.Add(mediapipe);
-            var libreface = new LibreFaceDetectorConfiguration() {
-                DeliveryPolicy = DeliveryPolicy.Unlimited,
-                Inputs = { 
-                    new InputConfiguration() {
-                        LocalPort = new PortConfiguration() {
-                            Identifier = nameof(LibreFaceDetector.ImageIn),
-                        },
-                        RemoteId = reader.Id,
-                        RemotePort = new PortConfiguration() {
-                            Identifier = nameof(MediaSource.Image),
-                        },
-                    },
-                    new InputConfiguration() {
-                        LocalPort = new PortConfiguration() {
-                            Identifier = nameof(LibreFaceDetector.DataIn),
-                        },
-                        RemoteId = mediapipe.Id,
-                        RemotePort = new PortConfiguration() {
-                            Identifier = "multi_face_landmarks",
-                        },
-                    },
-                },
-            };
-            config.Instances.Add(libreface);
-            var exporter = new JsonStoreExporterConfiguration() {
-                StoreName = stem,
-                RootPath = outDir,
-                CreateSubdirectory = false,
-                Inputs = {
-                    new InputConfiguration() {
-                        LocalPort = new PortConfiguration() {
-                            Identifier = nameof(IConsumer<object>.In),
-                            Index = nameof(LibreFaceDetector.ActionUnitPresenceOut),
-                        },
-                        RemoteId = libreface.Id,
-                        RemotePort = new PortConfiguration() {
-                            Identifier = nameof(LibreFaceDetector.ActionUnitPresenceOut),
-                        },
-                    },
-                    new InputConfiguration() {
-                        LocalPort = new PortConfiguration() {
-                            Identifier = nameof(IConsumer<object>.In),
-                            Index = nameof(LibreFaceDetector.ActionUnitIntensityOut),
-                        },
-                        RemoteId = libreface.Id,
-                        RemotePort = new PortConfiguration() {
-                            Identifier = nameof(LibreFaceDetector.ActionUnitIntensityOut),
-                        },
-                    },
-                    new InputConfiguration() {
-                        LocalPort = new PortConfiguration() {
-                            Identifier = nameof(IConsumer<object>.In),
-                            Index = nameof(LibreFaceDetector.FacialExpressionOut),
-                        },
-                        RemoteId = libreface.Id,
-                        RemotePort = new PortConfiguration() {
-                            Identifier = nameof(LibreFaceDetector.FacialExpressionOut),
-                        },
-                    },
-                },
-            };
-            config.Instances.Add(exporter);
             return config;
         }
 

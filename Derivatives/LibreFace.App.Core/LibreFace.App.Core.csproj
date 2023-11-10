@@ -16,10 +16,11 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\Components\Builtin\Builtin.csproj" />
+        <ProjectReference Include="..\..\Components\CollectionOperators\CollectionOperators.csproj" />
+        <ProjectReference Include="..\..\Components\FFMpeg.Windows\FFMpeg.Windows.csproj" />
         <ProjectReference Include="..\..\Components\LibreFace\LibreFace.csproj" />
         <ProjectReference Include="..\..\Components\MediaPipe.NET\MediaPipe.NET.csproj" />
-        <ProjectReference Include="..\..\Components\Psi.Data\Psi.Data.csproj" />
-        <ProjectReference Include="..\..\Components\Psi.Media.Windows\Psi.Media.Windows.csproj" />
         <ProjectReference Include="..\..\Pipeline\Pipeline.csproj" />
     </ItemGroup>
 
