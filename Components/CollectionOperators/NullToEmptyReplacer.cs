@@ -8,7 +8,7 @@ using Microsoft.Psi.Components;
 
 namespace OpenSense.Components.CollectionOperators {
     public sealed class NullToEmptyReplacer<TElem, TCollection>
-        : IConsumerProducer<TCollection, TCollection>
+        : IConsumerProducer<TCollection?, TCollection>
         where TCollection : IEnumerable<TElem>{
 
         private static readonly TCollection? EmptyCollection;
@@ -19,7 +19,7 @@ namespace OpenSense.Components.CollectionOperators {
 
         private Lazy<TCollection?>? cachedEmptyCollection;
 
-        public Receiver<TCollection> In { get; }
+        public Receiver<TCollection?> In { get; }
 
         public Emitter<TCollection> Out { get; }
 
@@ -29,11 +29,11 @@ namespace OpenSense.Components.CollectionOperators {
         }
 
         public NullToEmptyReplacer(Pipeline pipeline) {
-            In = pipeline.CreateReceiver<TCollection>(this, Process, nameof(In));
+            In = pipeline.CreateReceiver<TCollection?>(this, Process, nameof(In));
             Out = pipeline.CreateEmitter<TCollection>(this, nameof(Out));
         }
 
-        private void Process(TCollection collection, Envelope envelope) {
+        private void Process(TCollection? collection, Envelope envelope) {
             if (collection is not null) {
                 UpdateCachedType(collection.GetType());
                 Out.Post(collection, envelope.OriginatingTime);
