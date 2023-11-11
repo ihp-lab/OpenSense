@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System;
+using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 
 namespace OpenSense.Components.Builtin {
@@ -33,13 +34,22 @@ namespace OpenSense.Components.Builtin {
             set => SetProperty(ref referenceAbsenceTolerance, value);
         }
 
+        private TimeSpan stoppingTimeout = TimeSpan.FromSeconds(1);
+
+        public TimeSpan StoppingTimeout {
+            get => stoppingTimeout;
+            set => SetProperty(ref stoppingTimeout, value);
+        }
+
         public override IComponentMetadata GetMetadata() => Metadata;
 
         protected override object Instantiate<T>(Pipeline pipeline, IServiceProvider? serviceProvider) {
-            var result = new DefaultValueInjector<T>(pipeline) { 
+            var result = new DefaultValueInjector<T>(pipeline) {
+                Logger = (serviceProvider?.GetService(typeof(ILoggerFactory)) as ILoggerFactory)?.CreateLogger(Name),
                 DefaultValue = default,
                 InputAbsenceTolerance = InputAbsenceTolerance,
                 ReferenceAbsenceTolerance = ReferenceAbsenceTolerance,
+                StoppingTimeout = StoppingTimeout,
             };
             return result;
         }
