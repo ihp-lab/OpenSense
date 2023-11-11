@@ -30,7 +30,7 @@ namespace OpenSense.Components.LibreFace {
         public Emitter<IReadOnlyList<Shared<Image>>> Out { get; }
 
         /// <remarks>
-        /// This function replicates the logic in our team's python source code.
+        /// This function replicates the logic in LibreFace's python source code.
         /// </remarks>
         static FaceImageAligner() {
             var mouthOuter = new[] {
@@ -109,7 +109,7 @@ namespace OpenSense.Components.LibreFace {
         }
 
         /// <summary>
-        /// This function replicates the logic in our team's python source code.
+        /// This function replicates the logic in LibreFace's python source code.
         /// </summary>
         internal static Shared<Image> Align(in Image image, IEnumerable<Float2> leftEyeLMs, IEnumerable<Float2> rightEyeLMs, IEnumerable<Float2> mouthOuterLMs) {
             (leftEyeLMs, rightEyeLMs) = (rightEyeLMs, leftEyeLMs);//Note: The python code's naming is wrong, here we follow the wrong naming.

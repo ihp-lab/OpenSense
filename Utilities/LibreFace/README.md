@@ -1,6 +1,19 @@
 # Introduction
 
-This is the official .NET implementation of our WACV 2024 Application Track paper: LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis.
+Official .NET implementation of our WACV 2024 Application Track paper: LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis.
+
+# Input Format
+
+RGB 24bpp 224×224 image. BGR image will produce incorrect result.
+
+# Face Alignment
+
+A sample facial image alignment C# code can be found at [here](https://github.com/ihp-lab/OpenSense/blob/master/Components/LibreFace/FaceImageAligner.cs).
+
+# Additional Dependencies
+
+A specific ONNX runtime is not included as a dependency of this package.
+Please use one of the ONNX runtime packages listed in [this page](https://onnxruntime.ai/docs/get-started/with-csharp.html#builds).
 
 # License
 

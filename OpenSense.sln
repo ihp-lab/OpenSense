@@ -248,7 +248,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FFMpegInterop", "Interopera
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FFMpeg.Windows", "Components\FFMpeg.Windows\FFMpeg.Windows.csproj", "{9A5795B5-1F84-4C76-81C6-F7ACE267D4C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FFMpeg.Windows.WPF", "Components\FFMpeg.Windows.WPF\FFMpeg.Windows.WPF.csproj", "{600FC6F0-CB37-441F-A121-5FB905985C9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FFMpeg.Windows.WPF", "Components\FFMpeg.Windows.WPF\FFMpeg.Windows.WPF.csproj", "{600FC6F0-CB37-441F-A121-5FB905985C9E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -628,10 +628,10 @@ Global
 		{6840EB07-93A0-4B8D-A717-57571AB38A28}.Debug|x64.Build.0 = Debug|Any CPU
 		{6840EB07-93A0-4B8D-A717-57571AB38A28}.Release|x64.ActiveCfg = Release|Any CPU
 		{6840EB07-93A0-4B8D-A717-57571AB38A28}.Release|x64.Build.0 = Release|Any CPU
-		{6B875517-14E0-4F29-9A5D-7D961B02FB09}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{6B875517-14E0-4F29-9A5D-7D961B02FB09}.Debug|x64.Build.0 = Debug|Any CPU
-		{6B875517-14E0-4F29-9A5D-7D961B02FB09}.Release|x64.ActiveCfg = Release|Any CPU
-		{6B875517-14E0-4F29-9A5D-7D961B02FB09}.Release|x64.Build.0 = Release|Any CPU
+		{6B875517-14E0-4F29-9A5D-7D961B02FB09}.Debug|x64.ActiveCfg = Debug|x64
+		{6B875517-14E0-4F29-9A5D-7D961B02FB09}.Debug|x64.Build.0 = Debug|x64
+		{6B875517-14E0-4F29-9A5D-7D961B02FB09}.Release|x64.ActiveCfg = Release|x64
+		{6B875517-14E0-4F29-9A5D-7D961B02FB09}.Release|x64.Build.0 = Release|x64
 		{39597031-2FF4-4041-8A14-CEAD469F0D76}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{39597031-2FF4-4041-8A14-CEAD469F0D76}.Debug|x64.Build.0 = Debug|Any CPU
 		{39597031-2FF4-4041-8A14-CEAD469F0D76}.Release|x64.ActiveCfg = Release|Any CPU

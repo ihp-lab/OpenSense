@@ -77,7 +77,7 @@ namespace LibreFace {
                 _values = values;
             }
 
-            #region MyRegion
+            #region IReadOnlyDictionary
             public float this[string key] => _values[key];
 
             public IEnumerable<string> Keys => _values.Keys;

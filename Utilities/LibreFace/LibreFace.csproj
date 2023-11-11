@@ -8,24 +8,17 @@
 		<RootNamespace>LibreFace</RootNamespace>
 		<AssemblyName>LibreFace</AssemblyName>
 		<EmbedAllSources>true</EmbedAllSources>
-        <AssemblyVersion>1.1.0</AssemblyVersion>
-        <Version>1.1.0</Version>
+        <AssemblyVersion>1.1.1</AssemblyVersion>
+        <Version>1.1.1</Version>
         <Authors>Intelligent Human Perception Lab</Authors>
         <Product>LibreFace</Product>
         <Description>
-            LibreFace runtime and models. Input should be 224×224 RGB 24bpp image. This package uses the CPU runtime, if you want to use other runtimes, please compile from source.
+            Official .NET implementation of our WACV 2024 Application Track paper: LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis.
         </Description>
         <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageReleaseNotes>RELEASE_NOTES.md</PackageReleaseNotes>
         <RepositoryUrl>https://github.com/ihp-lab/OpenSense.git</RepositoryUrl>
-
-        <!-- CUDA conditions-->
-        <!--Note: CUDA and cuDNN are required. Check version numbers at https://onnxruntime.ai/docs/tutorials/csharp/csharp-gpu.html-->
-        <!--<DefineConstants>$(DefineConstants);CUDA</DefineConstants>-->
-        <UseCUDA Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*CUDA(;.*)*$'))">true</UseCUDA>
-        <Platforms Condition="'$(UseCUDA)' == 'true'">x64</Platforms>
-        <PlatformTarget Condition="'$(UseCUDA)' == 'true'">x64</PlatformTarget>
     </PropertyGroup>
 
     <ItemGroup>
@@ -35,8 +28,7 @@
     </ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.15.1" Condition="'$(UseCUDA)' != 'true'" />
-		<PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.14.1" Condition="'$(UseCUDA)' == 'true'" />
+		<PackageReference Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.15.1"/>
 		<PackageReference Include="System.Collections.Immutable" Version="7.0.0" />
 		<PackageReference Include="System.Numerics.Tensors" Version="0.1.0" />
 	</ItemGroup>
