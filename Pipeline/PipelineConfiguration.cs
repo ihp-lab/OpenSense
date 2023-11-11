@@ -61,6 +61,13 @@ namespace OpenSense.Pipeline {
             set => SetProperty(ref description, value);
         }
 
+        private bool enableDiagnostics;
+
+        public bool EnableDiagnostics {
+            get => enableDiagnostics;
+            set => SetProperty(ref enableDiagnostics, value);
+        }
+
         private DeliveryPolicy deliveryPolicy = DeliveryPolicy.LatestMessage; // to prevent memory overflow
 
         /// <summary>
