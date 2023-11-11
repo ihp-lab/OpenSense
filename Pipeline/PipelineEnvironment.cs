@@ -47,7 +47,7 @@ namespace OpenSense.Pipeline {
             }
             Debug.WriteLineIf(serviceProvider is null, "No IServiceProvider is provided to the pipeline environment.");
             ServiceProvider = serviceProvider;
-            Pipeline = PsiPipeline.Create(configuration.Name, configuration.DeliveryPolicy);
+            Pipeline = PsiPipeline.Create(configuration.Name, configuration.DeliveryPolicy, enableDiagnostics: configuration.EnableDiagnostics);
             var instEnvs = new List<ComponentEnvironment>();
             Instances = instEnvs;
             var pending = new List<ComponentConfiguration>(configuration.Instances);
