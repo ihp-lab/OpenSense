@@ -12,7 +12,7 @@ using OpenSense.Pipeline;
 namespace LibreFace.App {
     public sealed class Processor : IDisposable {
 
-        private static readonly DeliveryPolicy DeliveryPolicy = DeliveryPolicy.SynchronousOrThrottle;
+        private static readonly DeliveryPolicy DeliveryPolicy = DeliveryPolicy.Unlimited;
 
         private readonly PipelineEnvironment _env;
 
@@ -29,6 +29,9 @@ namespace LibreFace.App {
             var mediapipeEnv = _env.Instances.Single(i => i.Configuration.GetType() == typeof(MediaPipeConfiguration));
 
             var injector = new DefaultValueInjector<IReadOnlyList<NormalizedLandmarkList>>(pipe) { 
+                InputAbsenceTolerance = TimeSpan.MaxValue,
+                ReferenceAbsenceTolerance = TimeSpan.MaxValue,
+                StoppingTimeout = TimeSpan.FromMilliseconds(1),
             };
             var mediapipeOutputPort = new PortConfiguration() { 
                 Identifier = "multi_face_landmarks",
@@ -39,10 +42,11 @@ namespace LibreFace.App {
                 .GetProducer<IReadOnlyList<NormalizedLandmarkList>>(mediapipeEnv.Instance, mediapipeOutputPort)
                 ;
             mediapipeOutput.PipeTo(injector);
-            var replacer = new NullToEmptyReplacer<NormalizedLandmarkList, IReadOnlyList<NormalizedLandmarkList>>(pipe) { 
+            reader.Select(i => (object?)i).PipeTo(injector.ReferenceIn);
+            var replacer = new NullToEmptyReplacer<NormalizedLandmarkList, IReadOnlyList<NormalizedLandmarkList>>(pipe) {
             };
             injector.PipeTo(replacer);
-            var libreface = new LibreFaceDetector(pipe, DeliveryPolicy) { 
+            var libreface = new LibreFaceDetector(pipe, DeliveryPolicy) {
             };
             reader.PipeTo(libreface.ImageIn);
             replacer.PipeTo(libreface.DataIn);
@@ -52,7 +56,7 @@ namespace LibreFace.App {
                 .Join(libreface.FacialExpressionOut);
             var stem = Path.GetFileNameWithoutExtension(filename);
             var outFilename = Path.Combine(outDir, stem + ".json");
-            var writer = new LibreFaceJsonWriter(pipe, outFilename) { 
+            var writer = new LibreFaceJsonWriter(pipe, outFilename) {
             };
             combined.PipeTo(writer);
 

@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.ComponentModel;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using Microsoft.Psi;
 using Combind = (
@@ -8,7 +10,7 @@ using Combind = (
 );
 
 namespace LibreFace.App {
-    internal sealed class LibreFaceJsonWriter : IConsumer<Combind> {
+    internal sealed class LibreFaceJsonWriter : IConsumer<Combind>, INotifyPropertyChanged {
 
         private static readonly JsonWriterOptions Options = new JsonWriterOptions() {
             Indented = false,
@@ -25,6 +27,13 @@ namespace LibreFace.App {
         #region Ports
         public Receiver<Combind> In { get; }
         #endregion
+
+        private long counter;
+
+        public long Counter {
+            get => counter;
+            private set => SetProperty(ref counter, value);
+        }
 
         public LibreFaceJsonWriter(Pipeline pipeline, string filename) {
             _filename = filename;
@@ -45,10 +54,11 @@ namespace LibreFace.App {
             }
             var count = presences.Count;
             writer!.WriteStartObject();
+            writer.WriteNumber("Index", Counter);
+            Counter++;
             var diff = envelope.OriginatingTime - (DateTimeOffset)startTime!;
             var timestamp = diff.TotalMilliseconds;
             writer.WriteNumber("Timestamp", timestamp);
-
             writer.WriteStartArray("Faces");
             for (var i = 0; i < count; i++) {
                 writer.WriteStartObject();
@@ -63,7 +73,7 @@ namespace LibreFace.App {
 
                 var intensity = intensities[i];
                 writer.WriteStartObject("Intensity");
-                foreach(var au in ActionUnitIntensityOutput.Keys) {
+                foreach (var au in ActionUnitIntensityOutput.Keys) {
                     writer.WriteNumber(au, intensity[au]);
                 }
                 writer.WriteEndObject();
@@ -103,6 +113,17 @@ namespace LibreFace.App {
             writer.WriteEndObject();
             writer.Dispose();
             stream!.Dispose();
+        }
+        #endregion
+
+        #region INotifyPropertyChanged
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void SetProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null) {
+            if (!EqualityComparer<T>.Default.Equals(field, value)) {
+                field = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
         #endregion
     }

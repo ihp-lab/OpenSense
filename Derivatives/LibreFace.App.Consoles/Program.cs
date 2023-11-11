@@ -1,4 +1,6 @@
-﻿using CommandLine;
+﻿using System.Diagnostics;
+using CommandLine;
+using Spectre.Console;
 
 namespace LibreFace.App.Consoles {
     internal static class Program {
@@ -10,12 +12,14 @@ namespace LibreFace.App.Consoles {
         private static void Run(Options options) {
             var files = options.File.ToArray();
             foreach (var filename in files) {
+                var stopwatch = Stopwatch.StartNew();
                 var dir = options.Output ?? Path.GetDirectoryName(filename) ?? throw new ArgumentNullException();
                 using var progress = new Progress(filename);
                 using var processor = new Processor(filename, dir, progress);
                 processor.WaitTask.Wait();
+                stopwatch.Stop();
+                AnsiConsole.WriteLine($"Processed {filename} in {stopwatch.Elapsed}.");
             }
-            
         }
     }
 }
