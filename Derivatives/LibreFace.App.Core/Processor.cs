@@ -7,6 +7,7 @@ using OpenSense.Components.CollectionOperators;
 using OpenSense.Components.FFMpeg;
 using OpenSense.Components.LibreFace;
 using OpenSense.Components.MediaPipe.NET;
+using OpenSense.Components.Psi.Imaging;
 using OpenSense.Pipeline;
 
 namespace LibreFace.App {
@@ -84,15 +85,31 @@ namespace LibreFace.App {
                 PixelFormat = PixelFormat.RGB_24bpp,
             };
             config.Instances.Add(reader);
+            var converter = new PixelFormatConverterConfiguration() {
+                TargetPixelFormat = PixelFormat.RGB_24bpp,//MediaPipe and LibreFace expects RGB, convert once at here to save future conversions.
+                BypassIfPossible = true,
+                Inputs = {
+                    new InputConfiguration() {
+                        LocalPort = new PortConfiguration() {
+                            Identifier = nameof(PixelFormatConverter.In),
+                        },
+                        RemoteId = reader.Id,
+                        RemotePort = new PortConfiguration() {
+                            Identifier = nameof(FileSource.Out),
+                        },
+                    },
+                },
+            };
+            config.Instances.Add(converter);
             var mediapipe = new MediaPipeConfiguration() {
                 Inputs = { 
                     new InputConfiguration() {
                         LocalPort = new PortConfiguration() {
                             Identifier = "image",
                         },
-                        RemoteId = reader.Id,
+                        RemoteId = converter.Id,
                         RemotePort = new PortConfiguration() {
-                            Identifier = nameof(FileSource.Out),
+                            Identifier = nameof(PixelFormatConverter.Out),
                         },
                     },
                 },

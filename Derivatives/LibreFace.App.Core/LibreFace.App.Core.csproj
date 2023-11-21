@@ -21,6 +21,7 @@
         <ProjectReference Include="..\..\Components\FFMpeg.Windows\FFMpeg.Windows.csproj" />
         <ProjectReference Include="..\..\Components\LibreFace\LibreFace.csproj" />
         <ProjectReference Include="..\..\Components\MediaPipe.NET\MediaPipe.NET.csproj" />
+        <ProjectReference Include="..\..\Components\Psi.Imaging\Psi.Imaging.csproj" />
         <ProjectReference Include="..\..\Pipeline\Pipeline.csproj" />
     </ItemGroup>
 
