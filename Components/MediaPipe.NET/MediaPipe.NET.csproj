@@ -23,7 +23,7 @@
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <RepositoryUrl>https://github.com/ihp-lab/OpenSense.git</RepositoryUrl>
 
-        <!-- GPU conditions--><!--TODO: not working as expected.-->
+        <!-- GPU conditions--><!--Note: The GPU runtime is Linux only.-->
         <!--<DefineConstants>$(DefineConstants);GPU</DefineConstants>-->
         <UseGPU Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*GPU(;.*)*$'))">true</UseGPU>
     </PropertyGroup>
