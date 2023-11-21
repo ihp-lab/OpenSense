@@ -3,7 +3,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Mediapipe.Net.Framework.Packets;
 using Newtonsoft.Json.Linq;
 
 namespace OpenSense.Components.MediaPipe.NET {

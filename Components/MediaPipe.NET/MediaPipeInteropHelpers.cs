@@ -43,19 +43,19 @@ namespace OpenSense.Components.MediaPipe.NET {
             var img = image.PixelFormat == PixelFormat.RGB_24bpp ? 
                 image : image.Convert(PixelFormat.RGB_24bpp);//The default image format from Media Capturer is BGR_24bpp.
             var span = new ReadOnlySpan<byte>(img.UnmanagedBuffer.Data.ToPointer(), img.UnmanagedBuffer.Size);//Unsafe
-            var result = new ImageFrame(Mediapipe.Net.Framework.Format.ImageFormat.Srgb, img.Width, img.Height, img.Stride, span);
+            var result = new ImageFrame(ImageFormat.Types.Format.Srgb, img.Width, img.Height, img.Stride, span);
             if (!ReferenceEquals(img, image)) {
                 img.Dispose();
             }
             return result;
         }
 
-        internal static Packet ConvertImage(Shared<Image> data, Envelope envelope) {
+        internal static ImageFramePacket ConvertImage(Shared<Image> data, Envelope envelope) {
             var frame = CreateImageFrame(data.Resource);//Disposed by PacketFactory.ImageFramePacket
             Debug.Assert(envelope.OriginatingTime.Kind == DateTimeKind.Utc);
             var ticks = envelope.OriginatingTime.Ticks;
             var timestamp = new Timestamp(ticks);
-            var result = PacketFactory.ImageFramePacket(frame, timestamp);
+            var result = new ImageFramePacket(frame, timestamp);
             return result;
         }
     }

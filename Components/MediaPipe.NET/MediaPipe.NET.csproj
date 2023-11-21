@@ -29,12 +29,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="$(SolutionDir)/LICENSE.txt" Pack="true" PackagePath=""/>
-        <None Include="$(SolutionDir)/README.md" Pack="true" PackagePath="\"/>
+        <None Include="$(SolutionDir)/LICENSE.txt" Pack="true" PackagePath="" />
+        <None Include="$(SolutionDir)/README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Mediapipe.Net" Version="1.0.0-alpha2" />
+        <PackageReference Include="Mediapipe.Net" Version="0.9.1" />
         <!--Note:
         The latest Mediapipe.Net.Runtime.CPU version is 1.0.0-alpha2.
         Exported symbols in native DLL is incompatible with Mediapipe.Net version 1.0.0-alpha2.
@@ -42,8 +42,8 @@
         Mediapipe.Net contains many useful .NET types.
         So, we are using an older version of Mediapipe.Net.Runtime.CPU.
         -->
-        <PackageReference Include="Mediapipe.Net.Runtime.CPU" Version="0.8.9.1" Condition="'$(UseGPU)' != 'true'" />
-        <PackageReference Include="Mediapipe.Net.Runtime.GPU" Version="0.8.9.1" Condition="'$(UseGPU)' == 'true'" />
+        <PackageReference Include="Mediapipe.Net.Runtime.CPU" Version="0.9.1" Condition="'$(UseGPU)' != 'true'" />
+        <PackageReference Include="Mediapipe.Net.Runtime.GPU" Version="0.9.1" Condition="'$(UseGPU)' == 'true'" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
         <PackageReference Include="Microsoft.Psi.Imaging" Version="0.18.72.1-beta" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -62,12 +62,12 @@
         -->
 
         <!--Samples-->
-        <Content Include="mediapipe/**/*.pbtxt" >
+        <Content Include="mediapipe/**/*.pbtxt">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <PackagePath>contentFiles/any/any</PackagePath>
         </Content>
-        <Content Include="mediapipe/**/*.tflite" >
+        <Content Include="mediapipe/**/*.tflite">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <PackagePath>contentFiles/any/any</PackagePath>

@@ -7,17 +7,16 @@
     xmlns:local="clr-namespace:OpenSense.WPF.Components.MediaPipe.NET"
     xmlns:comp="clr-namespace:OpenSense.Components.MediaPipe.NET;assembly=OpenSense.Components.MediaPipe.NET"
     xmlns:util="clr-namespace:OpenSense.WPF.Components.Utilities;assembly=OpenSense.WPF.Components.Contracts"
-    xmlns:packets="clr-namespace:Mediapipe.Net.Framework.Packets;assembly=Mediapipe.Net"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
     <UserControl.Resources>
         <x:Array
             x:Key="arrayPacketTypes"
-            Type="{x:Type packets:PacketType}">
+            Type="{x:Type comp:PacketType}">
             <!--Note: Only supported types are added here.-->
-            <packets:PacketType>Bool</packets:PacketType>
-            <packets:PacketType>Int</packets:PacketType>
+            <comp:PacketType>Bool</comp:PacketType>
+            <comp:PacketType>Int</comp:PacketType>
         </x:Array>
     </UserControl.Resources>
 

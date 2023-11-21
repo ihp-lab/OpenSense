@@ -6,19 +6,21 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using Mediapipe.Net.Framework;
+using Mediapipe.Net.Framework.Format;
 using Mediapipe.Net.Framework.Packets;
 using Mediapipe.Net.Framework.Protobuf;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
 using Newtonsoft.Json.Linq;
+using OpenSense.Components.MediaPipe.NET.Packets;
 
 namespace OpenSense.Components.MediaPipe.NET {
     internal sealed class SolutionWrapper : IDisposable {
 
         private readonly ILogger<SolutionWrapper>? _logger;
         private readonly CalculatorGraph _graph;
-        private readonly SidePackets _sidePackets;
+        private readonly SidePacket _sidePackets;
         private readonly Dictionary<string, GCHandle> _observeStreamHandles = new Dictionary<string, GCHandle>();
 
         private readonly Dictionary<string, IReceiver> _inputs = new Dictionary<string, IReceiver>();
@@ -52,8 +54,9 @@ namespace OpenSense.Components.MediaPipe.NET {
                     case PacketType.NormalizedLandmarkListVector:
                         var e = pipeline.CreateEmitter<List<NormalizedLandmarkList>?>(this, output.Identifier);
                         emitter = e;
-                        var proc = new OutputProcessor<List<NormalizedLandmarkList>>(output.PacketType, e);
-                        _graph.ObserveOutputStream(output.Identifier, proc.Process, out handle).AssertOk();
+                        var proc = new OutputProcessor<List<NormalizedLandmarkList>>(e);
+                        handle = GCHandle.Alloc(proc, GCHandleType.Normal);//Prevent this object from being collected by GC. Pinning is not necessary, because .NET will manage moved object addresses.
+                        _graph.ObserveOutputStream(output.Identifier, 0, proc.NativePacketCallback<NormalizedLandmarkListVectorPacket>, observeTimestampBounds: false).AssertOk();//TODO: what is observeTimestampBounds?
                         break;
                     //TODO: Add more
                     default:
@@ -65,9 +68,8 @@ namespace OpenSense.Components.MediaPipe.NET {
             #endregion
 
             #region Prepare Graph Input Side Packets
-            _sidePackets = new SidePackets();
+            _sidePackets = new SidePacket();
             foreach (var inputSidePacket in inputSidePackets) {
-                Packet packet;
                 var jValue = inputSidePacket.Value as JValue;
                 switch (inputSidePacket.PacketType) {
                     case PacketType.Bool:
@@ -75,20 +77,21 @@ namespace OpenSense.Components.MediaPipe.NET {
                             throw new FormatException($"Invalid Side Packet \"{inputSidePacket.Identifier}\" JSON value.");
                         }
                         var b = (bool)jValue;
-                        packet = PacketFactory.BoolPacket(b);
+                        var boolPacket = new BoolPacket(b);
+                        _sidePackets.Emplace(inputSidePacket.Identifier, boolPacket);
                         break;
                     case PacketType.Int:
                         if (jValue is null || jValue.Type != JTokenType.Integer) {
                             throw new FormatException($"Invalid Side Packet \"{inputSidePacket.Identifier}\" JSON value.");
                         }
                         var i = (int)jValue;
-                        packet = PacketFactory.IntPacket(i);
+                        var intPacket = new IntPacket(i);
+                        _sidePackets.Emplace(inputSidePacket.Identifier, intPacket);
                         break;
                     //TODO: Add more
                     default:
                         throw new NotImplementedException();
                 }
-                _sidePackets.Emplace(inputSidePacket.Identifier, packet);
             }
             #endregion
 
@@ -101,7 +104,7 @@ namespace OpenSense.Components.MediaPipe.NET {
                 IReceiver receiver;
                 switch (input.PacketType) {
                     case PacketType.ImageFrame:
-                        var imageProc = new InputProcessor<Shared<Image>>(input.Identifier, MediaPipeInteropHelpers.ConvertImage, _graph);
+                        var imageProc = new InputProcessor<Shared<Image>, ImageFrame>(input.Identifier, MediaPipeInteropHelpers.ConvertImage, _graph);
                         receiver = pipeline.CreateReceiver<Shared<Image>>(this, imageProc.Process, input.Identifier);
                         break;
                     //TODO: Add more

@@ -3,9 +3,9 @@
 using System;
 using System.Globalization;
 using System.Windows.Controls;
-using Mediapipe.Net.Framework.Packets;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using OpenSense.Components.MediaPipe.NET;
 
 namespace OpenSense.WPF.Components.MediaPipe.NET {
     internal sealed class JTokenRule : ValidationRule {
@@ -23,12 +23,12 @@ namespace OpenSense.WPF.Components.MediaPipe.NET {
             if (PacketType is not null) {
                 var jValue = token as JValue;
                 switch (PacketType) {
-                    case Mediapipe.Net.Framework.Packets.PacketType.Bool:
+                    case OpenSense.Components.MediaPipe.NET.PacketType.Bool:
                         if (jValue is null || jValue.Type != JTokenType.Boolean) {
                             return new ValidationResult(isValid: false, "JSON value is not a Boolean.");
                         }
                         break;
-                    case Mediapipe.Net.Framework.Packets.PacketType.Int:
+                    case OpenSense.Components.MediaPipe.NET.PacketType.Int:
                         if (jValue is null || jValue.Type != JTokenType.Integer) {
                             return new ValidationResult(isValid: false, "JSON value is not a Integer.");
                         }

@@ -1,7 +1,7 @@
 ﻿#nullable enable
 
 using System;
-using System.Reflection;
+using System.Diagnostics;
 using Mediapipe.Net.Framework.Packets;
 using Mediapipe.Net.Framework.Port;
 using Microsoft.Psi;
@@ -9,33 +9,24 @@ using Microsoft.Psi;
 namespace OpenSense.Components.MediaPipe.NET {
     internal sealed class OutputProcessor<T> where T : notnull {
 
-        private delegate void TypeSetterMethod(Packet obj, PacketType value);
-
-        private readonly PacketType _desiredType;
         private readonly Emitter<T?> _emitter;
-        private readonly TypeSetterMethod _setTypeMethod;
 
-        public OutputProcessor(PacketType desiredType, Emitter<T?> emitter) {
-            _desiredType = desiredType;
+        public OutputProcessor(Emitter<T?> emitter) {
             _emitter = emitter;
-            var method = typeof(Packet).GetProperty(nameof(Packet.PacketType), BindingFlags.Instance | BindingFlags.Public)
-                ?.GetSetMethod(nonPublic: true)
-                ?? throw new InvalidOperationException($"Cound not find the setter method of {nameof(Packet)}.{nameof(Packet.PacketType)} property.");
-            _setTypeMethod = (TypeSetterMethod)Delegate.CreateDelegate(typeof(TypeSetterMethod), method);
         }
 
-        public Status Process(Packet packet) {
-            /**Note:
-             * Packet.Get() relies on packet type property.
-             * However, its setter is not public, and its value is not correct when returned from Graph.
-             * We have to modify it.
-             */
-            _setTypeMethod(packet, _desiredType);
-            var data = (T?)packet.Get();
+        internal void Process(Packet<T> packet) {//From MediaPipe.NET 0.9.1, This method cannot be used with ObserveOutputStream(). "System.argumentexception: Object contains references. (parameter 'value')" will be thrown by the method when trying to pin the callback. That method might have a bug. The callback is not need to be pinned, so we provide our low-level callback "NativePacketCallback" and use another overload.
+            var data = packet.Get();
             var timestamp = packet.Timestamp();
             var dateTime = new DateTime(timestamp.Value, DateTimeKind.Utc);
             _emitter.Post(data, dateTime);
-            return Status.Ok();
+        }
+        
+        internal Status.StatusArgs NativePacketCallback<TPacket>(IntPtr graphPtr, int streamId, IntPtr packetPtr) where TPacket : Packet<T>, new() {
+            var packet = Packet<T>.Create<TPacket>(packetPtr, isOwner: false);
+            Debug.Assert(packet is not null);
+            Process(packet);
+            return Status.StatusArgs.Ok();
         }
     }
 }

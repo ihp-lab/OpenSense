@@ -3,7 +3,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Mediapipe.Net.Framework.Packets;
 
 namespace OpenSense.Components.MediaPipe.NET {
     public sealed class OutputStreamConfiguration : INotifyPropertyChanged {

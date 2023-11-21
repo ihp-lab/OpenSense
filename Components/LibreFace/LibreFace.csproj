@@ -54,7 +54,7 @@
         <!--Note:
         Follow the version of Mediapipe.Net component.
         -->
-        <PackageReference Include="Mediapipe.Net" Version="1.0.0-alpha2" />
+        <PackageReference Include="Mediapipe.Net" Version="0.9.1" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
         <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.15.1" Condition="'$(UseCUDA)' != 'true'" />
         <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.14.1" Condition="'$(UseCUDA)' == 'true'" />
