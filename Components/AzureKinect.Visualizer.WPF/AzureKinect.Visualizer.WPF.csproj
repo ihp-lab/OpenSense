@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0-windows</TargetFramework>
+        <TargetFramework>net8.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
         <Platforms>x64</Platforms>
         <PlatformTarget>x64</PlatformTarget>
+        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
         <AssemblyName>OpenSense.WPF.Components.AzureKinect.Visualizer</AssemblyName>
         <RootNamespace>OpenSense.WPF.Components.AzureKinect.Visualizer</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
@@ -12,7 +13,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Psi.AzureKinect.x64" Version="0.18.72.1-beta" /><!--Although this package does not use the device, classes from this package are used as payloads-->
-        <PackageReference Include="System.Composition" Version="7.0.0" />
+        <PackageReference Include="System.Composition" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>

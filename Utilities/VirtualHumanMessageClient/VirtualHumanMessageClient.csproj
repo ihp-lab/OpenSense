@@ -5,7 +5,7 @@
         <Nullable>enable</Nullable>
         <RootNamespace>OpenSense.VHMessage</RootNamespace>
         <AssemblyName>OpenSense.VHMessage</AssemblyName>
-        <LangVersion>11.0</LangVersion>
+        <LangVersion>latest</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

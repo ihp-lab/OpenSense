@@ -4,13 +4,13 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <RootNamespace>OpenSense.Pipeline</RootNamespace>
         <AssemblyName>OpenSense.Pipeline</AssemblyName>
-        <LangVersion>11.0</LangVersion>
+        <LangVersion>latest</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-        <PackageReference Include="System.Composition" Version="7.0.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="System.Composition" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>

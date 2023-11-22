@@ -4,12 +4,12 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <AssemblyName>OpenSense.Components.EyePointOfInterest</AssemblyName>
         <RootNamespace>OpenSense.Components.EyePointOfInterest</RootNamespace>
-        <LangVersion>11.0</LangVersion>
+        <LangVersion>latest</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Composition" Version="7.0.0" />
+        <PackageReference Include="System.Composition" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>

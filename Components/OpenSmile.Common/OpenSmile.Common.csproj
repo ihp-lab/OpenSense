@@ -4,7 +4,7 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <AssemblyName>OpenSense.Components.OpenSmile.Common</AssemblyName>
         <RootNamespace>OpenSense.Components.OpenSmile</RootNamespace>
-        <LangVersion>11.0</LangVersion>
+        <LangVersion>latest</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

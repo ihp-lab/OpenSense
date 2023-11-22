@@ -5,7 +5,7 @@
         <RootNamespace>OpenSense.Components</RootNamespace>
         <AssemblyName>OpenSense.Components.Contracts</AssemblyName>
         <PackageId>OpenSense.Components.Contracts</PackageId>
-        <LangVersion>11.0</LangVersion>
+        <LangVersion>latest</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
         <AssemblyVersion>4.0.1</AssemblyVersion>
         <Version>4.0.1</Version>
@@ -20,15 +20,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="$(SolutionDir)/LICENSE.txt" Pack="true" PackagePath=""/>
-        <None Include="$(SolutionDir)/README.md" Pack="true" PackagePath="\"/>
+        <None Include="$(SolutionDir)/LICENSE.txt" Pack="true" PackagePath="" />
+        <None Include="$(SolutionDir)/README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
         <PackageReference Include="Microsoft.Psi.Runtime" Version="0.18.72.1-beta" />
         <!--For PE inspections. Only .Net Standard and .Net Framework need this package.-->
-        <PackageReference Include="System.Reflection.Metadata" Version="7.0.0" />
+        <PackageReference Include="System.Reflection.Metadata" Version="8.0.0" />
     </ItemGroup>
 
 </Project>

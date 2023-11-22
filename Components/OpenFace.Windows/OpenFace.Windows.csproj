@@ -2,20 +2,21 @@
 
     <PropertyGroup>
         <!--OpenFaceInterop project uses some classes from System.Windows namespace in its interfaces, so this project needs references to those types-->
-        <TargetFrameworks>net7.0-windows;net48</TargetFrameworks>
+        <TargetFrameworks>net8.0-windows;net48</TargetFrameworks>
         <UseWPF>true</UseWPF>
         <Platforms>x64</Platforms>
         <PlatformTarget>x64</PlatformTarget>
+        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
         <AssemblyName>OpenSense.Components.OpenFace.Windows</AssemblyName>
         <RootNamespace>OpenSense.Components.OpenFace</RootNamespace>
-        <LangVersion>11.0</LangVersion>
+        <LangVersion>latest</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
         <PackageReference Include="Microsoft.Psi.Imaging" Version="0.18.72.1-beta" />
-        <PackageReference Include="System.Composition" Version="7.0.0" />
+        <PackageReference Include="System.Composition" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>

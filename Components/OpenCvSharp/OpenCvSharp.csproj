@@ -4,7 +4,7 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <RootNamespace>OpenSense.Components.OpenCvSharp</RootNamespace>
         <AssemblyName>OpenSense.Components.OpenCvSharp</AssemblyName>
-        <LangVersion>11.0</LangVersion>
+        <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
         <EmbedAllSources>true</EmbedAllSources>
         <AssemblyVersion>1.0.1</AssemblyVersion>
@@ -27,10 +27,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
         <PackageReference Include="Microsoft.Psi.Imaging" Version="0.18.72.1-beta" />
         <PackageReference Include="OpenCvSharp4" Version="4.8.0.20230708" />
-        <PackageReference Include="System.Composition" Version="7.0.0" />
+        <PackageReference Include="System.Composition" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>
