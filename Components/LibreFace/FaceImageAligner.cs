@@ -80,21 +80,25 @@ namespace OpenSense.Components.LibreFace {
                 return;
             }
             Debug.Assert(image is not null);
-            var width = image.Resource.Width;
-            var height = image.Resource.Height;
 
-            var result = new List<Shared<Image>>();
-            foreach (var face in faces.Select(l => l.Landmark)) {
-                var (leftEye, rightEye, mouthOuter) = SplitLandmarks(face, width, height);
-                using var aligned = Align(image.Resource, leftEye, rightEye, mouthOuter);
-                var img = CenterCrop(aligned.Resource, CropOutputSize);
-                result.Add(img);
-            }
+            var result = Run(image.Resource, faces);
 
             Out.Post(result, envelope.OriginatingTime);
             foreach (var img in result) {
                 img.Dispose();
             }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static IReadOnlyList<Shared<Image>> Run(Image image, IReadOnlyList<NormalizedLandmarkList> faces) {
+            var result = new List<Shared<Image>>();
+            foreach (var face in faces.Select(l => l.Landmark)) {
+                var (leftEye, rightEye, mouthOuter) = SplitLandmarks(face, image.Width, image.Height);
+                using var aligned = Align(image, leftEye, rightEye, mouthOuter);
+                var img = CenterCrop(aligned.Resource, CropOutputSize);
+                result.Add(img);
+            }
+            return result;
         }
 
         internal static (IEnumerable<Float2> LeftEyeLMs, IEnumerable<Float2> RightEyeLMs, IEnumerable<Float2> MouthOuterLMs) SplitLandmarks(IReadOnlyList<NormalizedLandmark> faceLandmarks, int width, int height) {
