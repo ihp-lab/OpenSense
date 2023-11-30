@@ -5,6 +5,7 @@ using Microsoft.Psi;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
 using LibreFace;
+using Microsoft.ML.OnnxRuntime;
 
 namespace OpenSense.Components.LibreFace {
     internal sealed class ActionUnitPresenceInferenceRunner : IConsumerProducer<IReadOnlyList<Shared<Image>>, IReadOnlyList<IReadOnlyDictionary<string, bool>>>, IDisposable {
@@ -18,7 +19,14 @@ namespace OpenSense.Components.LibreFace {
         public ActionUnitPresenceInferenceRunner(Pipeline pipeline) {
             In = pipeline.CreateReceiver<IReadOnlyList<Shared<Image>>>(this, Process, nameof(In));
             Out = pipeline.CreateEmitter<IReadOnlyList<IReadOnlyDictionary<string, bool>>>(this, nameof(Out));
-            _modelContext = new ActionUnitPresenceModelContext();
+            var options =
+#if CUDA
+                SessionOptions.MakeSessionOptionWithCudaProvider(deviceId: 0);
+#else
+                new SessionOptions() {
+                };
+#endif
+            _modelContext = new ActionUnitPresenceModelContext(options, isOwner: true);
         }
 
         private void Process(IReadOnlyList<Shared<Image>> images, Envelope envelope) {

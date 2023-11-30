@@ -14,21 +14,19 @@ namespace LibreFace {
             "LibreFace_FE.onnx"
             );
 
-        private readonly SessionOptions _options;
+        private readonly SessionOptions? _options;
 
         private readonly InferenceSession _session;
 
-        public FacialExpressionModelContext() {
+        public FacialExpressionModelContext() : this(new SessionOptions(), true) {
+        }
+
+        public FacialExpressionModelContext(SessionOptions options, bool isOwner) {
             Debug.Assert(File.Exists(ModelFilename));
-
-#if CUDA
-            _options = SessionOptions.MakeSessionOptionWithCudaProvider(deviceId: 0);
-#else
-            _options = new SessionOptions() {
-            };
-#endif
-
-            _session = new InferenceSession(ModelFilename, _options);
+            _session = new InferenceSession(ModelFilename, options);
+            if (isOwner) {
+                _options = options;
+            }
         }
 
         public ExpressionOutput Run(ImageInput image) {
@@ -52,7 +50,7 @@ namespace LibreFace {
             }
 
             _session.Dispose();
-            _options.Dispose();
+            _options?.Dispose();
 
             disposed = true;
         }

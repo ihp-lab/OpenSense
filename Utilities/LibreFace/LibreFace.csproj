@@ -8,8 +8,8 @@
 		<RootNamespace>LibreFace</RootNamespace>
 		<AssemblyName>LibreFace</AssemblyName>
 		<EmbedAllSources>true</EmbedAllSources>
-        <AssemblyVersion>1.1.1</AssemblyVersion>
-        <Version>1.1.1</Version>
+        <AssemblyVersion>1.1.2</AssemblyVersion>
+        <Version>1.1.2</Version>
         <Authors>Intelligent Human Perception Lab</Authors>
         <Product>LibreFace</Product>
         <Description>
