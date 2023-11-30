@@ -2,10 +2,11 @@
 
     <PropertyGroup>
         <!--TODO: not tested after ported from .net framework to .net 6-->
-        <TargetFramework>net7.0-windows</TargetFramework>
+        <TargetFramework>net8.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
         <Platforms>x64</Platforms>
         <PlatformTarget>x64</PlatformTarget>
+        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
         <AssemblyName>OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder</AssemblyName>
         <RootNamespace>OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
@@ -15,7 +16,7 @@
         <PackageReference Include="Microsoft.Psi.Media.Windows.x64" Version="0.18.72.1-beta">
             <NoWarn>NU1701</NoWarn><!--Only a .net framework package is available-->
         </PackageReference>
-        <PackageReference Include="System.Composition" Version="7.0.0" />
+        <PackageReference Include="System.Composition" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>

@@ -8,14 +8,14 @@
   </PropertyGroup>
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
   <PropertyGroup>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>OpenSense.WPF.Components.Biopac.Visualizer</AssemblyName>
     <RootNamespace>OpenSense.WPF.Components.Biopac.Visualizer</RootNamespace>
     <EmbedAllSources>true</EmbedAllSources>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="System.Composition" Version="7.0.0" />
+    <PackageReference Include="System.Composition" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />

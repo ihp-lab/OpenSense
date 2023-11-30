@@ -8,7 +8,7 @@
   </PropertyGroup>
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
   <PropertyGroup>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>OpenSense.WPF.Components.OpenPose</AssemblyName>
     <RootNamespace>OpenSense.WPF.Components.OpenPose</RootNamespace>

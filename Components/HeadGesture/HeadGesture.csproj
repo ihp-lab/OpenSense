@@ -4,14 +4,14 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <AssemblyName>OpenSense.Components.HeadGesture</AssemblyName>
         <RootNamespace>OpenSense.Components.HeadGesture</RootNamespace>
-        <LangVersion>11.0</LangVersion>
+        <LangVersion>latest</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.10.0" />
         <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="1.7.0" />
-        <PackageReference Include="System.Composition" Version="7.0.0" />
+        <PackageReference Include="System.Composition" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>

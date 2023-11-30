@@ -4,7 +4,7 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <AssemblyName>OpenSense.DataWriter.Contracts</AssemblyName>
         <RootNamespace>OpenSense.DataWriter.Contracts</RootNamespace>
-        <LangVersion>11.0</LangVersion>
+        <LangVersion>latest</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

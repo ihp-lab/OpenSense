@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <RootNamespace>OpenSense.Components.MediaPipe.NET</RootNamespace>
         <AssemblyName>OpenSense.Components.MediaPipe.NET</AssemblyName>
-        <LangVersion>11.0</LangVersion>
+        <LangVersion>latest</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
         <!--Note:
         /psi Image does not support Span<T>, so we need to use pointers.
@@ -23,7 +23,7 @@
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <RepositoryUrl>https://github.com/ihp-lab/OpenSense.git</RepositoryUrl>
 
-        <!-- GPU conditions--><!--TODO: not working as expected.-->
+        <!-- GPU conditions--><!--Note: The GPU runtime is Linux only.-->
         <!--<DefineConstants>$(DefineConstants);GPU</DefineConstants>-->
         <UseGPU Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*GPU(;.*)*$'))">true</UseGPU>
     </PropertyGroup>
@@ -44,10 +44,10 @@
         -->
         <PackageReference Include="Mediapipe.Net.Runtime.CPU" Version="0.8.9.1" Condition="'$(UseGPU)' != 'true'" />
         <PackageReference Include="Mediapipe.Net.Runtime.GPU" Version="0.8.9.1" Condition="'$(UseGPU)' == 'true'" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
         <PackageReference Include="Microsoft.Psi.Imaging" Version="0.18.72.1-beta" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-        <PackageReference Include="System.Composition" Version="7.0.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="System.Composition" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>

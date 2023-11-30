@@ -2,12 +2,13 @@
 
     <PropertyGroup>
         <!--TODO: not tested after ported from .net framework to .net 6-->
-        <TargetFrameworks>net7.0-windows;net48</TargetFrameworks>
+        <TargetFrameworks>net8.0-windows;net48</TargetFrameworks>
         <Platforms>x64</Platforms>
         <PlatformTarget>x64</PlatformTarget>
+        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
         <AssemblyName>OpenSense.Components.Media.Writer.Windows</AssemblyName>
         <RootNamespace>OpenSense.Components.Media.Writer</RootNamespace>
-        <LangVersion>11.0</LangVersion>
+        <LangVersion>latest</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
@@ -17,7 +18,7 @@
         <PackageReference Include="Microsoft.Psi.Media.Windows.x64" Version="0.18.72.1-beta">
             <NoWarn>NU1701</NoWarn><!--Only a .net framework package is available-->
         </PackageReference>
-        <PackageReference Include="System.Composition" Version="7.0.0" />
+        <PackageReference Include="System.Composition" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>

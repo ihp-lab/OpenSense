@@ -4,13 +4,13 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <AssemblyName>OpenSense.Components.Psi.CognitiveServices.Face</AssemblyName>
         <RootNamespace>OpenSense.Components.Psi.CognitiveServices.Face</RootNamespace>
-        <LangVersion>11.0</LangVersion>
+        <LangVersion>latest</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Psi.CognitiveServices.Face" Version="0.18.72.1-beta" />
-        <PackageReference Include="System.Composition" Version="7.0.0" />
+        <PackageReference Include="System.Composition" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>

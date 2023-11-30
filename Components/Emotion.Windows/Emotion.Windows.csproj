@@ -2,11 +2,11 @@
 
     <PropertyGroup>
         <!--TODO: not tested after ported from .net framework to .net 6-->
-        <TargetFrameworks>net7.0-windows;net48</TargetFrameworks>
+        <TargetFrameworks>net8.0-windows;net48</TargetFrameworks>
         <UseWPF>true</UseWPF><!--Windows Drawing facilities-->
         <AssemblyName>OpenSense.Components.Emotion</AssemblyName>
         <RootNamespace>OpenSense.Components.Emotion</RootNamespace>
-        <LangVersion>11.0</LangVersion>
+        <LangVersion>latest</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
@@ -15,7 +15,7 @@
         <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="1.5.2" />
         <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="1.5.2" />
         <PackageReference Include="Microsoft.Psi.Imaging" Version="0.18.72.1-beta" />
-        <PackageReference Include="System.Composition" Version="7.0.0" />
+        <PackageReference Include="System.Composition" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>
