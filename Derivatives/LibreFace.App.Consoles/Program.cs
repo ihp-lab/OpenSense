@@ -17,15 +17,44 @@ namespace LibreFace.App.Consoles {
 
         private static void Run(Options options) {
             var files = options.File.ToArray();
-            foreach (var filename in files) {
+            if (files.Length == 0) {
+                return;
+            }
+            var source = new TaskCompletionSource();
+            var table = new Table()
+                .AddColumn("File")
+                .AddColumn("Spent")
+                .AddColumn("Processed")
+                ;
+            LiveDisplayContext? context = null;
+            AnsiConsole.Live(table).StartAsync(ctx => {
+                context = ctx;
+                return source.Task;
+            });
+            for (var i = 0; i < files.Length; i++) {
+                var filename = files[i];
+                table.AddRow(filename, FormatTime(TimeSpan.Zero), FormatTime(TimeSpan.Zero));
                 var stopwatch = Stopwatch.StartNew();
                 var dir = options.Output ?? Path.GetDirectoryName(filename) ?? throw new ArgumentNullException();
-                using var progress = new Progress(filename);
-                using var processor = new Processor(filename, dir, progress);
-                processor.WaitTask.Wait();
+                var last = 0L;
+                var progress = new Progress(v => {
+                    if (stopwatch.ElapsedMilliseconds - last < 100) {
+                        return;
+                    }
+                    table.UpdateCell(i, 1, FormatTime(stopwatch.Elapsed));
+                    table.UpdateCell(i, 2, FormatTime(v));
+                    context?.Refresh();
+                    last = stopwatch.ElapsedMilliseconds;
+                });
+                using var processor = new Processor(filename, dir, options.NumFaces, progress);
+                processor.Run();
                 stopwatch.Stop();
-                AnsiConsole.WriteLine($"Processed {filename} in {stopwatch.Elapsed}.");
             }
+            source.SetResult();
+        }
+
+        private static string FormatTime(TimeSpan time) {
+            return $"{time:d\\.hh\\:mm\\:ss\\.f}";
         }
 
         private static void DisplayHelp<T>(ParserResult<T> result, IEnumerable<Error> errs) {
@@ -51,11 +80,7 @@ The processing pipeline is as follows:
 5 - Write the results to the output file.
 
 Please install CUDA before using, as LibreFace utilizes CUDA for acceleration.
-All other steps are computed using the CPU, so the running time mainly depends on CPU performance.
-
-This program is based on the Microsoft Platform for Situated Intelligence (\psi) and OpenSense.
-Due to limitations of \psi, the buffer size cannot be accurately controlled,
-which may result in high memory usage during runtime."
+All other steps are computed using the CPU, so the running time mainly depends on CPU performance."
                     );
                     return HelpText.DefaultParsingErrorsHandler(result, h);
                 }, e => e);

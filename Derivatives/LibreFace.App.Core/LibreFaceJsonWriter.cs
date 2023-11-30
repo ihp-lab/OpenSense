@@ -12,7 +12,7 @@ using Combind = (
 namespace LibreFace.App {
     internal sealed class LibreFaceJsonWriter : IConsumer<Combind>, INotifyPropertyChanged {
 
-        private static readonly JsonWriterOptions Options = new JsonWriterOptions() {
+        internal static readonly JsonWriterOptions Options = new JsonWriterOptions() {
             Indented = false,
         };
 
@@ -49,20 +49,49 @@ namespace LibreFace.App {
             var presences = (List<ActionUnitPresenceOutput>)iP;
             var intensities = (List<ActionUnitIntensityOutput>)iI;
             var expressions = (List<ExpressionOutput>)iE;
+            var diff = envelope.OriginatingTime - (DateTimeOffset)startTime!;
+            WriteFrame(writer!, Counter, presences, intensities, expressions, diff);
+            Counter++;
+        }
+
+        #region Pipeline Event Handlers
+        private void OnPipelineRun(object? sender, PipelineRunEventArgs args) {
+            startTime = args.StartOriginatingTime;
+            stream = File.OpenWrite(_filename);
+            writer = new Utf8JsonWriter(stream, Options);
+            WriteStart(writer);
+        }
+
+        private void OnPipelineCompleted(object? sender, PipelineCompletedEventArgs args) {
+            WriteEnd(writer!);
+            writer!.Dispose();
+            stream!.Dispose();
+        }
+        #endregion
+
+        #region Static Methods
+        internal static void WriteStart(Utf8JsonWriter writer) {
+            writer.WriteStartObject();
+            var asm = Assembly.GetAssembly(typeof(LibreFaceJsonWriter));
+            var asmName = asm!.GetName();
+            var ver = asmName.Version;
+            writer.WritePropertyName("Version");
+            JsonSerializer.Serialize(writer, ver);
+            writer.WriteStartArray("Frames");
+        }
+
+        internal static void WriteFrame(Utf8JsonWriter writer, long index, IReadOnlyList<ActionUnitPresenceOutput> presences, IReadOnlyList<ActionUnitIntensityOutput> intensities, IReadOnlyList<ExpressionOutput> expressions, TimeSpan time) {
             if (presences.Count != intensities.Count || intensities.Count != expressions.Count) {
                 throw new InvalidOperationException("Data length mismatch.");
             }
             var count = presences.Count;
             writer!.WriteStartObject();
-            writer.WriteNumber("Index", Counter);
-            Counter++;
-            var diff = envelope.OriginatingTime - (DateTimeOffset)startTime!;
-            var timestamp = diff.TotalMilliseconds;
+            writer.WriteNumber("Index", index);
+            var timestamp = time.TotalMilliseconds;
             writer.WriteNumber("Timestamp", timestamp);
             writer.WriteStartArray("Faces");
             for (var i = 0; i < count; i++) {
                 writer.WriteStartObject();
-
 
                 var presense = presences[i];
                 writer.WriteStartObject("Presence");
@@ -94,25 +123,9 @@ namespace LibreFace.App {
             writer.Flush();
         }
 
-        #region Pipeline Event Handlers
-        private void OnPipelineRun(object? sender, PipelineRunEventArgs args) {
-            startTime = args.StartOriginatingTime;
-            stream = File.OpenWrite(_filename);
-            writer = new Utf8JsonWriter(stream, Options);
-            writer.WriteStartObject();
-            var asm = Assembly.GetAssembly(typeof(Processor));
-            var asmName = asm!.GetName();
-            var ver = asmName.Version;
-            writer.WritePropertyName("Version");
-            JsonSerializer.Serialize(writer, ver);
-            writer.WriteStartArray("Frames");
-        }
-
-        private void OnPipelineCompleted(object? sender, PipelineCompletedEventArgs args) {
-            writer!.WriteEndArray();
+        internal static void WriteEnd(Utf8JsonWriter writer) {
+            writer.WriteEndArray();
             writer.WriteEndObject();
-            writer.Dispose();
-            stream!.Dispose();
         }
         #endregion
 

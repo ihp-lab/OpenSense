@@ -2,7 +2,7 @@
   "profiles": {
     "LibreFace.App.Consoles": {
       "commandName": "Project",
-      "commandLineArgs": "-f \"D:\\Project\\ProjectExternalData\\LibreFace_TestData\\DISFA\\Videos_LeftCamera\\test_video_1.mp4\" \"D:\\Project\\ProjectExternalData\\LibreFace_TestData\\DISFA\\Videos_LeftCamera\\test_video_2.mp4\" -o \"C:\\Users\\kana\\Desktop\""
+      "commandLineArgs": "-o \"C:\\Users\\kana\\Desktop\" \"D:\\Project\\ProjectExternalData\\LibreFace_TestData\\DISFA\\Videos_LeftCamera\\test_video_1.mp4\" \"D:\\Project\\ProjectExternalData\\LibreFace_TestData\\DISFA\\Videos_LeftCamera\\test_video_2.mp4\""
     }
   }
 }
