@@ -1,3 +1,7 @@
+# 1.1.2
+
+Fixed a bug that prevented the use of other providers.
+
 # 1.1.1
 
 Decouple ONNX runtime.

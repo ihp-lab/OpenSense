@@ -1,3 +1,7 @@
+# 1.2.1
+
+Update LibreFace.
+
 # 1.2.0
 
 Opt in to OpenCVSharp and CUDA by default, as enabling them is the common case and provides higher performance.
