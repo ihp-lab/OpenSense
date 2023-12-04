@@ -511,7 +511,8 @@ namespace OpenSense.Components.Whisper.NET {
             GgmlType.Medium => "medium__v1",
             GgmlType.MediumEn => "medium_en__v1",
             GgmlType.LargeV1 => "large__v1",
-            GgmlType.Large => "large__v2",
+            GgmlType.LargeV2 => "large__v2",
+            GgmlType.LargeV3 => "large__v3",
             _ => throw new InvalidOperationException(),
         };
 
@@ -519,7 +520,6 @@ namespace OpenSense.Components.Whisper.NET {
             QuantizationType.NoQuantization => "classic",
             QuantizationType.Q4_0 => "q4_0",
             QuantizationType.Q4_1 => "q4_1",
-            QuantizationType.Q4_2 => "q4_2",
             QuantizationType.Q5_0 => "q5_0",
             QuantizationType.Q5_1 => "q5_1",
             QuantizationType.Q8_0 => "q8_0",
