@@ -40,11 +40,16 @@
         We are not setting ContentTargetFolders to contentFiles because files will be put into contentFiles/any/netstandard2.1, which is not what we want.
         -->
         
-		<Content Include="LibreFace_AU_Intensity.onnx">
+		<Content Include="LibreFace_AU_Encoder.onnx">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <PackagePath>contentFiles/any/any</PackagePath>
 		</Content>
+        <Content Include="LibreFace_AU_Intensity.onnx">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <PackagePath>contentFiles/any/any</PackagePath>
+        </Content>
         <Content Include="LibreFace_AU_Presence.onnx">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
