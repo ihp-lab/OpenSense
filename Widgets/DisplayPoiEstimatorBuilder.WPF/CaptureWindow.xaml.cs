@@ -1,34 +1,25 @@
-﻿// <copyright file="Calibration.xaml.cs" company="USC">
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Microsoft.Psi;
 using Microsoft.Psi.Media;
 using OpenSense.Components.EyePointOfInterest;
-using OpenSense.Components.Psi.Imaging;
 using OpenSense.Components.OpenFace;
+using OpenSense.Components.Psi.Imaging;
 
 namespace OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder {
 
-    /// <summary>
-    /// CalibrationWindow class.
-    /// </summary>
-    public partial class CaptureWindow : Window {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CaptureWindow"/> class.
-        /// </summary>
+    public sealed partial class CaptureWindow : Window {
+
         public CaptureWindow() {
             InitializeComponent();
 
@@ -49,6 +40,10 @@ namespace OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder {
         public int WebcamWidth { get; set; } = 1920;
 
         public int WebcamHeight { get; set; } = 1080;
+
+        public int WebcamFrameRateNumerator { get; set; } = 30;
+
+        public int WebcamFrameRateDenominator { get; set; } = 1;
 
         public float WebcamFx { get; set; } = 500;
 
@@ -183,23 +178,21 @@ namespace OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder {
             pathAnimationStoryboard.AutoReverse = true;
             pathAnimationStoryboard.RepeatBehavior = RepeatBehavior.Forever;
             pathAnimationStoryboard.Begin(this);
-            CompositionTarget.Rendering += CaptureCalibrationCircleCoordinate;
         }
 
-        private bool windowClosed = false;
+        //private bool windowClosed = false;
 
-        private void CalibrationCompleted(object sender, EventArgs e) {
-            if (windowClosed) {
-                return;
-            }
-            DialogResult = true;
-            Close();
-        }
+        //private void CalibrationCompleted(object sender, EventArgs e) {
+        //    if (windowClosed) {
+        //        return;
+        //    }
+        //    DialogResult = true;
+        //    Close();
+        //}
 
         private void CalibrationWindow_Key(object sender, EventArgs e) {
-            void close() {
-                DialogResult = true;
-                Close();
+            if (DialogResult is not null) {
+                return;
             }
             switch (e) {
                 case KeyEventArgs keyEvent:
@@ -207,13 +200,13 @@ namespace OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder {
                         switch (keyEvent.Key) {
                             case Key.Escape:
                             case Key.Enter:
-                                close();
+                                StopAndClose();
                                 break;
                         }
                     } else {
                         switch (keyEvent.Key) {
                             case Key.Escape:
-                                close();
+                                StopAndClose();
                                 break;
                             case Key.Enter:
                                 StartCalibration(sender, e);
@@ -223,14 +216,24 @@ namespace OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder {
                     break;
                 case MouseButtonEventArgs mouseEvent:
                     if (CalibrationStarted) {
-                        close();
+                        StopAndClose();
                     } else {
                         StartCalibration(sender, e);
                     }
                     break;
             }
+        }
 
+        private async void StopAndClose() {
+            DialogResult = true;
+            
+            if (pipeline is not null) {
+                pathAnimationStoryboard.Stop(this);
+                Cursor = Cursors.Wait;
+                await Task.Factory.StartNew(pipeline.Dispose);
+            }
 
+            Close();
         }
 
         #region pipeline
@@ -240,84 +243,31 @@ namespace OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder {
         private DisplayCoordianteGenerator generator;
 
         private void InitializePipeline() {
-            pipeline = Pipeline.Create();
+            pipeline = Pipeline.Create(deliveryPolicy: DeliveryPolicy.LatestMessage);
+            var frameRate = WebcamFrameRateNumerator / WebcamFrameRateDenominator;
             var webcamConfig = MediaCaptureConfiguration.Default;
             webcamConfig.DeviceId = WebcamSymbolicLink;
             webcamConfig.Width = WebcamWidth;
             webcamConfig.Height = WebcamHeight;
-            webcamConfig.Framerate = 30;
+            webcamConfig.Framerate = frameRate;
             webcamConfig.UseInSharedMode = true;
             var source = new MediaCapture(pipeline, webcamConfig);
             var flip = new FlipImageOperator(pipeline) { Horizontal = FlipX, Vertical = FlipY };
-            source.PipeTo(flip.In, DeliveryPolicy.SynchronousOrThrottle);
+            source.PipeTo(flip.In);
             var openface = new OpenFace(pipeline) { FocalLengthX = WebcamFx, FocalLengthY = WebcamFy, CenterX = WebcamCx, CenterY = WebcamCy };
-            flip.PipeTo(openface.In, DeliveryPolicy.SynchronousOrThrottle);
-            generator = new DisplayCoordianteGenerator(pipeline);
-            var record = openface.Out.Join(generator.Out, Reproducible.Nearest<Vector2>(), (gp, display) => new GazeToDisplayCoordinateMappingRecord(gp, display), DeliveryPolicy.SynchronousOrThrottle, DeliveryPolicy.SynchronousOrThrottle);
-            record.Do((d, e) => {
-                AddRecord(d, e);
-            }, DeliveryPolicy.SynchronousOrThrottle);
+            flip.PipeTo(openface.In);
+            generator = new DisplayCoordianteGenerator(pipeline, EllipseGeometryCalibrationCircle, CalibrationCanvas, Dispatcher, frameRate);
+            var record = openface.Out.Join(generator.Out, Reproducible.Nearest<Vector2>(), (gp, display) => new GazeToDisplayCoordinateMappingRecord(gp, display));
+            record.Do(AddRecord);
         }
 
-        private class DisplayCoordianteGenerator : IProducer<Vector2> {
-
-            public Emitter<Vector2> Out { get; private set; }
-
-            private DateTime lastTime;
-
-            public DisplayCoordianteGenerator(Pipeline pipeline) {
-                Out = pipeline.CreateEmitter<Vector2>(this, nameof(Out));
-            }
-
-            public void Post(EllipseGeometry ellipse, FrameworkElement frameworkElement) {
-                var now = DateTime.UtcNow;
-                if (now - lastTime <= TimeSpan.Zero) {
-                    return;
-                }
-                lastTime = now;
-                var raw = ellipse.Center;
-                var relativeX = (float)(raw.X / frameworkElement.ActualWidth);
-                var relativeY = (float)(raw.Y / frameworkElement.ActualHeight);
-                var relative = new Vector2(relativeX, relativeY);
-                Out.Post(relative, now);
-            }
-        }
-
-        private void CaptureCalibrationCircleCoordinate(object sender, EventArgs e) {
-            generator.Post(EllipseGeometryCalibrationCircle, CalibrationCanvas);
-        }
         private void AddRecord(GazeToDisplayCoordinateMappingRecord record, Envelope envelope) {
             record = record.DeepClone();
             DataPoints.Add(record);
             Dispatcher.InvokeAsync(() => EllipseGeometryRecordCircle.Center = new Point(record.Display.X * CalibrationCanvas.ActualWidth, record.Display.Y * CalibrationCanvas.ActualHeight));//Do not do it in synchronize fasion, may dead lock with Window_Closing
         }
 
-        private void UpdateDisplay(Shared<Microsoft.Psi.Imaging.Image> image, Envelope e) {
-            image = image.DeepClone();
-            try {
-                Dispatcher.Invoke(() => {
-                    var bitmap = image.Resource.ToBitmap();
-                    using (var memory = new MemoryStream()) {
-                        bitmap.Save(memory, ImageFormat.Png);
-                        memory.Position = 0;
-                        var bitmapImage = new BitmapImage();
-                        bitmapImage.BeginInit();
-                        bitmapImage.StreamSource = memory;
-                        bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                        bitmapImage.EndInit();
-                        ImageBrushVideoFrame.ImageSource = bitmapImage;
-                    }
-                }, DispatcherPriority.Normal, CancellationToken.None, TimeSpan.FromMilliseconds(100));
-            } catch (TimeoutException) {
-            }
-        }
-
         #endregion
-
-        private void CalibrationWindow_Closing(object sender, EventArgs e) {
-            CompositionTarget.Rendering -= CaptureCalibrationCircleCoordinate;
-            pipeline?.Dispose();
-        }
 
         private void CalibrationWindow_Loaded(object sender, RoutedEventArgs e) {
             InitializeCanvas();

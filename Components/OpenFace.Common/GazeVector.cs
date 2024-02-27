@@ -4,13 +4,11 @@ using System.Text.Json.Serialization;
 
 namespace OpenSense.Components.OpenFace {
     [Serializable]
-    public class GazeVector : IEquatable<GazeVector> {
+    public sealed class GazeVector : IEquatable<GazeVector> {
 
-        [JsonInclude]
-        public readonly Vector3 Left;
+        public Vector3 Left { get; }
 
-        [JsonInclude]
-        public readonly Vector3 Right;
+        public Vector3 Right { get; }
 
         [JsonConstructor]
         public GazeVector(Vector3 left, Vector3 right) {

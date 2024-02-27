@@ -7,7 +7,7 @@ using Microsoft.Psi.Media_Interop;
 
 namespace OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder {
 
-    internal class VideoDevice : INotifyPropertyChanged {
+    internal sealed class VideoDevice : INotifyPropertyChanged {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -58,7 +58,12 @@ namespace OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder {
             var id = 0;
             foreach (var device in MediaCaptureDevice.AllDevices) {
                 device.Attach(false);
-                var resolutions = device.Formats.Select(f => new Resolution(f.nWidth, f.nHeight)).Distinct().ToList();
+                var resolutions = device.Formats
+                    .Select(f => new Resolution(f.nWidth, f.nHeight, f.nFrameRateNumerator, f.nFrameRateDenominator))
+                    .Distinct()
+                    .OrderByDescending(r => (long)r.Width * r.Height)
+                    .ThenByDescending(r => r.FrameRateNumerator / r.FrameRateDenominator)
+                    .ToList();
                 if (resolutions.Count > 0) {
                     yield return new VideoDevice(id, device.FriendlyName, device.SymbolicLink, resolutions);
                 }

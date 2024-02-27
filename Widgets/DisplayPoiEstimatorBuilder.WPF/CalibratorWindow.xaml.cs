@@ -2,15 +2,25 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Windows;
-using Newtonsoft.Json;
 using OpenSense.Components.EyePointOfInterest;
 using OpenSense.Components.EyePointOfInterest.Regression;
 using OpenSense.Components.EyePointOfInterest.SpatialTracking;
 using OpenSense.WPF.Components.EyePointOfInterest;
 
 namespace OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder {
-    public partial class CalibratorWindow : Window {
+    public sealed partial class CalibratorWindow : Window {
+
+        private static readonly JsonSerializerOptions RecordSerializerOptions = new JsonSerializerOptions() {
+            IncludeFields = true,//Needed for Vector2 and Vector3
+        };
+
+        private static readonly JsonSerializerOptions ParamSerializerOptions = new JsonSerializerOptions() {
+            IncludeFields = true,//Needed for Vector2 and Vector3
+            TypeInfoResolver = new EstimatorConfigurationTypeResolver(),
+        };
+
         public CalibratorWindow() {
             InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -35,6 +45,10 @@ namespace OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder {
                 TextBoxScreenRoll.Text = "0";
                 */
             }
+
+            ComboBoxWebcam.ItemsSource = VideoDevice.Devices();
+            ComboBoxWebcam.DisplayMemberPath = "Name";
+            ComboBoxWebcam.SelectedIndex = 0;
         }
 
         #region capture
@@ -51,6 +65,8 @@ namespace OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder {
                 WebcamSymbolicLink = (ComboBoxWebcam.SelectedItem as VideoDevice)?.Name ?? string.Empty,
                 WebcamWidth = resolution.Width,
                 WebcamHeight = resolution.Height,
+                WebcamFrameRateNumerator = resolution.FrameRateNumerator,
+                WebcamFrameRateDenominator = resolution.FrameRateDenominator,
                 WebcamFx = float.Parse(TextBoxCamFx.Text.Trim()),
                 WebcamFy = float.Parse(TextBoxCamFy.Text.Trim()),
                 WebcamCx = float.Parse(TextBoxCamCx.Text.Trim()),
@@ -68,20 +84,14 @@ namespace OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder {
                         MessageBox.Show("Empty result");
                         return;
                     }
-                    foreach (var dataPoint in calibWin.DataPoints) {
-                        ((ObservableCollection<GazeToDisplayCoordinateMappingRecord>)TabItemRegression.DataContext).Add((GazeToDisplayCoordinateMappingRecord)dataPoint);
+                    foreach (var dataPoint in data) {
+                        ((ObservableCollection<GazeToDisplayCoordinateMappingRecord>)TabItemRegression.DataContext).Add(dataPoint);
                     }
-                    MessageBox.Show($"Finished:\n{calibWin.DataPoints.Count} data points added");
+                    MessageBox.Show($"Finished:\n{data.Count} data points added");
                     break;
             }
         }
 
-        private void ComboBoxWebcam_Loaded(object sender, RoutedEventArgs e) {
-            ComboBoxWebcam.ItemsSource = VideoDevice.Devices();
-            ComboBoxWebcam.DisplayMemberPath = "Name";
-            ComboBoxWebcam.SelectedIndex = 0;
-            
-        }
         private void ComboBoxWebcam_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) {
             ComboBoxResolution.SelectedIndex = 0;
         }
@@ -90,7 +100,7 @@ namespace OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder {
         private void ButtonSaveDataPoints_Click(object sender, RoutedEventArgs e) {
             var saveFileDialog = FileDialogHelper.CreateSaveEstimatorSampleFileDialog();
             if (saveFileDialog.ShowDialog() == true) {
-                var json = JsonConvert.SerializeObject((ObservableCollection<GazeToDisplayCoordinateMappingRecord>)TabItemRegression.DataContext);
+                var json = JsonSerializer.Serialize((ObservableCollection<GazeToDisplayCoordinateMappingRecord>)TabItemRegression.DataContext, RecordSerializerOptions);
                 File.WriteAllText(saveFileDialog.FileName, json);
             }
         }
@@ -99,7 +109,7 @@ namespace OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder {
             var openFileDialog = FileDialogHelper.CreateOpenEstimatorSampleFileDialog();
             if (openFileDialog.ShowDialog() == true) {
                 var json = File.ReadAllText(openFileDialog.FileName);
-                TabItemRegression.DataContext = JsonConvert.DeserializeObject<ObservableCollection<GazeToDisplayCoordinateMappingRecord>>(json);//TODO: rewrite deserialization
+                TabItemRegression.DataContext = JsonSerializer.Deserialize<ObservableCollection<GazeToDisplayCoordinateMappingRecord>>(json, RecordSerializerOptions);
             }
         }
 
@@ -116,7 +126,7 @@ namespace OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder {
                 return false;
             }
             var param = estimator.Save();
-            var json = JsonConvert.SerializeObject(param);
+            var json = JsonSerializer.Serialize(param, ParamSerializerOptions);
             var path = TextBoxEstimatorFilename.Text.Trim();
             File.WriteAllText(path, json);
             return true;
@@ -177,10 +187,13 @@ namespace OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder {
                 WebcamSymbolicLink = (ComboBoxWebcam.SelectedItem as VideoDevice)?.Name ?? string.Empty,
                 WebcamWidth = resolution.Width,
                 WebcamHeight = resolution.Height,
+                WebcamFrameRateNumerator = resolution.FrameRateNumerator,
+                WebcamFrameRateDenominator = resolution.FrameRateDenominator,
                 WebcamFx = float.Parse(TextBoxCamFx.Text.Trim()),
                 WebcamFy = float.Parse(TextBoxCamFy.Text.Trim()),
                 WebcamCx = float.Parse(TextBoxCamCx.Text.Trim()),
                 WebcamCy = float.Parse(TextBoxCamCy.Text.Trim()),
+                NegateFlipX = CheckBoxNegateFlipX.IsChecked ?? true,
                 Estimator = estimator,
             };
             predictWin.Owner = this;
@@ -188,7 +201,5 @@ namespace OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder {
         }
 
         #endregion
-
-
     }
 }

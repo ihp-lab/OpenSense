@@ -7,47 +7,58 @@ using System.Text.Json.Serialization;
 
 namespace OpenSense.Components.OpenFace {
     //[JsonObject]
-    public class Pose /*: IEnumerable<double>, IEquatable<Pose>*/ {//Interfaces removed since no support for JsonObjectAttribute after Json.Net is removed
+    [Serializable]
+    public sealed class Pose /*: IEnumerable<double>, IEquatable<Pose>*/ {//Interfaces removed since no support for JsonObjectAttribute after Json.Net is removed
 
         /// <summary>
         /// Absolute head postion to camera in millimeter
         /// </summary>
-        [JsonInclude]
-        public readonly Vector3 Position;
+        public Vector3 Position { get; }
 
         /// <summary>
         /// Absolute head rotation to camera in radian
         /// </summary>
-        [JsonInclude]
-        public readonly Vector3 Angle;
+        public Vector3 Angle { get; }
 
-        [JsonInclude]
-        public readonly IReadOnlyList<Vector2> Landmarks;
+        public IReadOnlyList<Vector2> Landmarks { get; }
 
-        [JsonInclude]
-        public readonly IReadOnlyList<Vector2> VisiableLandmarks;
+        public IReadOnlyList<Vector2> VisiableLandmarks { get; }
 
-        [JsonInclude]
-        public readonly IReadOnlyList<Vector3> Landmarks3D;
+        public IReadOnlyList<Vector3> Landmarks3D { get; }
 
-        [JsonInclude]
-        public readonly IReadOnlyList<ValueTuple<Vector2, Vector2>> IndicatorLines;
+        public IReadOnlyList<(Vector2, Vector2)> IndicatorLines { get; }
 
         [JsonConstructor]
+        internal Pose(
+            Vector3 position, 
+            Vector3 angle, 
+            IReadOnlyList<Vector2> landmarks, 
+            IReadOnlyList<Vector2> visiableLandmarks, 
+            IReadOnlyList<Vector3> landmarks3D, 
+            IReadOnlyList<(Vector2, Vector2)> indicatorLines
+            ) {
+            Position = position;
+            Angle = angle;
+            Landmarks = landmarks;
+            VisiableLandmarks = visiableLandmarks;
+            Landmarks3D = landmarks3D;
+            IndicatorLines = indicatorLines;
+        }
+
         public Pose(
             Vector3 position,
             Vector3 angle,
             ImmutableArray<Vector2> landmarks,
             ImmutableArray<Vector2> visiableLandmarks,
             ImmutableArray<Vector3> landmarks3D,
-            ImmutableArray<ValueTuple<Vector2, Vector2>> indicatorLines
+            ImmutableArray<(Vector2, Vector2)> indicatorLines
             ) {
-            IndicatorLines = indicatorLines;
+            Position = position;
+            Angle = angle;
             Landmarks = landmarks;
             VisiableLandmarks = visiableLandmarks;
             Landmarks3D = landmarks3D;
-            Position = position;
-            Angle = angle;
+            IndicatorLines = indicatorLines;
         }
 
         public Pose(
@@ -55,7 +66,7 @@ namespace OpenSense.Components.OpenFace {
             IEnumerable<Vector2> landmarks,
             IEnumerable<Vector2> visiableLandmarks,
             IEnumerable<Vector3> landmarks3D,
-            IEnumerable<ValueTuple<Vector2, Vector2>> indicatorLines
+            IEnumerable<(Vector2, Vector2)> indicatorLines
             ) : this(
                 new Vector3(data[0], data[1], data[2]), 
                 new Vector3(data[3], data[4], data[5]), 

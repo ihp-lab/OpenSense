@@ -1,18 +1,22 @@
 ﻿namespace OpenSense.WPF.Widgets.DisplayPoiEstimatorBuilder {
-    internal struct Resolution {
+    internal readonly record struct Resolution {
 
-        public int Width;
+        public int Width { get; }
 
-        public int Height;
+        public int Height { get; }
 
-        public Resolution(int width, int height) {
+        public int FrameRateNumerator { get; }
+
+        public int FrameRateDenominator { get; }
+
+        public Resolution(int width, int height, int frameRateNumerator, int frameRateDenominator) {
             Width = width;
             Height = height;
+            FrameRateNumerator = frameRateNumerator;
+            FrameRateDenominator = frameRateDenominator;
         }
 
-        public override string ToString() => $"{Width} × {Height}";
-
-
+        public override string ToString() => $"{Width} × {Height} @ {FrameRateNumerator / FrameRateDenominator:0.##}";
     }
 
 

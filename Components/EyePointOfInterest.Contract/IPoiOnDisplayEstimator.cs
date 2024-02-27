@@ -14,7 +14,4 @@ namespace OpenSense.Components.EyePointOfInterest {
 
         Vector2 Predict(PoseAndEyeAndFace data);
     }
-
-    
-
 }

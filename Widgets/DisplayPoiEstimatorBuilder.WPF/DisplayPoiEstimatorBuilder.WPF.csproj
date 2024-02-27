@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <!--TODO: not tested after ported from .net framework to .net 6-->
         <TargetFramework>net8.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
         <Platforms>x64</Platforms>
@@ -26,18 +25,6 @@
         <ProjectReference Include="..\..\Components\Psi.Imaging\Psi.Imaging.csproj" />
         <ProjectReference Include="..\..\Components\OpenFace.Windows\OpenFace.Windows.csproj" />
         <ProjectReference Include="..\..\WpfWidgetContract\WpfWidgetContract.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Page Update="CalibratorWindow.xaml">
-            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-        </Page>
-        <Page Update="CaptureWindow.xaml">
-            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-        </Page>
-        <Page Update="PredictionWindow.xaml">
-            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-        </Page>
     </ItemGroup>
 
 </Project>

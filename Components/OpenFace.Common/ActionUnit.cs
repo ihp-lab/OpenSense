@@ -3,13 +3,10 @@ using System.Text.Json.Serialization;
 
 namespace OpenSense.Components.OpenFace {
     [Serializable]
-    public class ActionUnit: IEquatable<ActionUnit> {
+    public sealed class ActionUnit: IEquatable<ActionUnit> {
+        public double Intensity { get; }
 
-        [JsonInclude]
-        public readonly double Intensity;
-
-        [JsonInclude]
-        public readonly double Presence;
+        public double Presence { get; }
 
         [JsonConstructor]
         public ActionUnit(double intensity, double presence) {

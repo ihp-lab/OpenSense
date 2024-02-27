@@ -20,10 +20,6 @@ namespace OpenSense.WPF.Components.EyePointOfInterest {
             };
             if (openFileDialog.ShowDialog() == true) {
                 Config.EstimatorConfigurationFilename = openFileDialog.FileName;
-
-                //refresh controls
-                DataContext = null;
-                DataContext = Config;
             }
         }
     }

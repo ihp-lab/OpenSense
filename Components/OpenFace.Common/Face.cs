@@ -6,12 +6,15 @@ using System.Text.Json.Serialization;
 
 namespace OpenSense.Components.OpenFace {
     [Serializable]
-    public class Face : IEquatable<Face> {
+    public sealed class Face : IEquatable<Face> {
 
-        [JsonInclude]
-        public readonly IReadOnlyDictionary<string, ActionUnit> ActionUnits;
+        public IReadOnlyDictionary<string, ActionUnit> ActionUnits { get; }
 
         [JsonConstructor]
+        internal Face(IReadOnlyDictionary<string, ActionUnit> actionUnits) {
+            ActionUnits = actionUnits;
+        }
+
         public Face(IDictionary<string, ActionUnit> actionUnits) {
             ActionUnits = actionUnits.ToImmutableSortedDictionary();
         }

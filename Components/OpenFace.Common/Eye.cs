@@ -7,33 +7,43 @@ using System.Text.Json.Serialization;
 
 namespace OpenSense.Components.OpenFace {
     [Serializable]
-    public class Eye : IEquatable<Eye> {
+    public sealed class Eye : IEquatable<Eye> {
         /// <summary>
         /// Normalized left pupil vector to camera
         /// </summary>
-        [JsonInclude]
-        public readonly GazeVector GazeVector;
+        public GazeVector GazeVector { get; }
 
         /// <summary>
         /// Absolute gaze angle to camera in radian、
         /// mean of eyes
         /// </summary>
-        [JsonInclude]
-        public readonly Vector2 Angle;
+        public Vector2 Angle { get; }
 
-        [JsonInclude]
-        public readonly IReadOnlyList<Vector2> Landmarks;
+        public IReadOnlyList<Vector2> Landmarks { get; }
 
-        [JsonInclude]
-        public readonly IReadOnlyList<Vector3> Landmarks3D;
+        public IReadOnlyList<Vector2> VisiableLandmarks { get; }
 
-        [JsonInclude]
-        public readonly IReadOnlyList<Vector2> VisiableLandmarks;
+        public IReadOnlyList<Vector3> Landmarks3D { get; }
 
-        [JsonInclude]
-        public readonly IReadOnlyList<ValueTuple<Vector2, Vector2>> IndicatorLines;
+        public IReadOnlyList<ValueTuple<Vector2, Vector2>> IndicatorLines { get; }
 
         [JsonConstructor]
+        internal Eye(
+            GazeVector gazeVector, 
+            Vector2 angle, 
+            IReadOnlyList<Vector2> landmarks, 
+            IReadOnlyList<Vector2> visiableLandmarks, 
+            IReadOnlyList<Vector3> landmarks3D, 
+            IReadOnlyList<(Vector2, Vector2)> indicatorLines
+            ) {
+            GazeVector = gazeVector;
+            Angle = angle;
+            Landmarks = landmarks;
+            VisiableLandmarks = visiableLandmarks;
+            Landmarks3D = landmarks3D;
+            IndicatorLines = indicatorLines;
+        }
+
         public Eye(
             GazeVector gazeVector, 
             Vector2 angle,
@@ -45,8 +55,8 @@ namespace OpenSense.Components.OpenFace {
             GazeVector = gazeVector;
             Angle = angle;
             Landmarks = landmarks.ToImmutableArray();
-            Landmarks3D = landmarks3D.ToImmutableArray();
             VisiableLandmarks = visiableLandmarks.ToImmutableArray();
+            Landmarks3D = landmarks3D.ToImmutableArray();
             IndicatorLines = indicatorLines.ToImmutableArray();
         }
 
