@@ -8,8 +8,8 @@
 		<RootNamespace>LibreFace</RootNamespace>
 		<AssemblyName>LibreFace</AssemblyName>
 		<EmbedAllSources>true</EmbedAllSources>
-        <AssemblyVersion>1.1.2</AssemblyVersion>
-        <Version>1.1.2</Version>
+        <AssemblyVersion>2.0.0</AssemblyVersion>
+        <Version>2.0.0</Version>
         <Authors>Intelligent Human Perception Lab</Authors>
         <Product>LibreFace</Product>
         <Description>
@@ -28,7 +28,7 @@
     </ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.15.1" />
+		<PackageReference Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.17.1" />
 		<PackageReference Include="System.Collections.Immutable" Version="8.0.0" />
 		<PackageReference Include="System.Numerics.Tensors" Version="8.0.0" />
 	</ItemGroup>
@@ -40,11 +40,16 @@
         We are not setting ContentTargetFolders to contentFiles because files will be put into contentFiles/any/netstandard2.1, which is not what we want.
         -->
         
-		<Content Include="LibreFace_AU_Intensity.onnx">
+		<Content Include="LibreFace_AU_Encoder.onnx">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <PackagePath>contentFiles/any/any</PackagePath>
 		</Content>
+        <Content Include="LibreFace_AU_Intensity.onnx">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <PackagePath>contentFiles/any/any</PackagePath>
+        </Content>
         <Content Include="LibreFace_AU_Presence.onnx">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

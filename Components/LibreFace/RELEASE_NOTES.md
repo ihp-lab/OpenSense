@@ -1,3 +1,9 @@
+# 1.3.0
+
+Adapting to the new model structure of LibreFace 2.0.0.
+The calling convention of this component is not changed.
+For more details regarding changes in LibreFace 2.0.0, please refer to the Release Note of the [LibreFace](https://www.nuget.org/packages/LibreFace) package.
+
 # 1.2.1
 
 Update LibreFace.

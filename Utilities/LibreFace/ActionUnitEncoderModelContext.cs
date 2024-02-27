@@ -3,25 +3,25 @@ using System.Diagnostics;
 using System.Reflection;
 
 namespace LibreFace {
-    public sealed class ActionUnitPresenceModelContext : IDisposable {
+    public sealed class ActionUnitEncoderModelContext : IDisposable {
 
-        private const string InputName = "feature";
+        private const string InputName = "image";
 
-        private const string OutputName = "au_presence";
+        private const string OutputName = "feature";
 
         private readonly string ModelFilename = Path.Combine(
             Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-            "LibreFace_AU_Presence.onnx"
+            "LibreFace_AU_Encoder.onnx"
             );
 
         private readonly SessionOptions? _options;
 
         private readonly InferenceSession _session;
 
-        public ActionUnitPresenceModelContext() : this(new SessionOptions(), true) {
+        public ActionUnitEncoderModelContext() : this(new SessionOptions(), true) {
         }
 
-        public ActionUnitPresenceModelContext(SessionOptions options, bool isOwner) {
+        public ActionUnitEncoderModelContext(SessionOptions options, bool isOwner) {
             Debug.Assert(File.Exists(ModelFilename));
             _session = new InferenceSession(ModelFilename, options);
             if (isOwner) {
@@ -29,15 +29,15 @@ namespace LibreFace {
             }
         }
 
-        public ActionUnitPresenceOutput Run(ActionUnitFeatureInput feature) {
+        public ActionUnitEncoderOutput Run(ImageInput image) {
             if (disposed) {
                 throw new ObjectDisposedException(nameof(ActionUnitIntensityModelContext));
             }
             var inputs = new NamedOnnxValue[1];
-            inputs[0] = NamedOnnxValue.CreateFromTensor(InputName, feature.Tensor);
+            inputs[0] = NamedOnnxValue.CreateFromTensor(InputName, image.Tensor);
             using var outputs = _session.Run(inputs);
             var output = outputs.Single(o => o.Name == OutputName);
-            var result = new ActionUnitPresenceOutput(output);
+            var result = new ActionUnitEncoderOutput(output);
             return result;
         }
 

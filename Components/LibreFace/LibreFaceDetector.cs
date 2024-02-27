@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Google.Protobuf.WellKnownTypes;
 using Mediapipe.Net.Framework.Protobuf;
 using Microsoft.Extensions.Logging;
-using Microsoft.ML.OnnxRuntime;
 using Microsoft.Psi;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
@@ -67,16 +65,11 @@ namespace OpenSense.Components.LibreFace {
                 .PipeTo(aligner, deliveryPolicy);
             aligner.PipeTo(_alignedImagesOutConnector, deliveryPolicy);
 
-            if (auIntensity) {
-                var auIntensitiyInferenceRunner = new ActionUnitIntensityInferenceRunner(this);
-                aligner.PipeTo(auIntensitiyInferenceRunner, deliveryPolicy);
-                auIntensitiyInferenceRunner.PipeTo(_auIntensityOutConnector, deliveryPolicy);
-            }
-
-            if (auPresence) {
-                var auPresenceInferenceRunner = new ActionUnitPresenceInferenceRunner(this);
-                aligner.PipeTo(auPresenceInferenceRunner, deliveryPolicy);
-                auPresenceInferenceRunner.PipeTo(_auPresenceOutConnector, deliveryPolicy); 
+            if (auIntensity || auPresence) {
+                var auInferenceRunner = new ActionUnitInferenceRunner(this, auIntensity, auPresence);
+                aligner.PipeTo(auInferenceRunner, deliveryPolicy);
+                auInferenceRunner.IntensityOut.PipeTo(_auIntensityOutConnector, deliveryPolicy);
+                auInferenceRunner.PresenceOut.PipeTo(_auPresenceOutConnector, deliveryPolicy);
             }
 
             if (facialExpression) {
