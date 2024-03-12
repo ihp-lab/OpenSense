@@ -13,8 +13,9 @@
         <AssemblyTitle>LibreFace Console Application</AssemblyTitle>
         <Copyright>Copyright (C) 2023 Intelligent Human Perception Lab, USC</Copyright>
         <Company>Intelligent Human Perception Lab, USC</Company>
-        <AssemblyVersion>1.0.0</AssemblyVersion>
-        <Version>1.0.0</Version>
+        <AssemblyVersion>1.1.0</AssemblyVersion>
+        <Version>1.1.0</Version>
+        <PackageReleaseNotes>RELEASE_NOTES.md</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
@@ -24,6 +25,10 @@
 
     <ItemGroup>
         <ProjectReference Include="..\LibreFace.App.Core\LibreFace.App.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="RELEASE_NOTES.md" Pack="true" PackagePath="" />
     </ItemGroup>
 
 </Project>

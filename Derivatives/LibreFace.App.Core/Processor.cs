@@ -89,6 +89,7 @@ namespace LibreFace.App {
             LibreFaceJsonWriter.WriteStart(writer);
 
             using var options = SessionOptions.MakeSessionOptionWithCudaProvider(deviceId: 0);
+            using var encoderContext = new ActionUnitEncoderModelContext(options, isOwner: true);
             using var pContext = new ActionUnitPresenceModelContext(options, isOwner: true);
             using var iContext = new ActionUnitIntensityModelContext(options, isOwner: true);
             using var fContext = new FacialExpressionModelContext(options, isOwner: true);
@@ -122,8 +123,9 @@ namespace LibreFace.App {
                             unsafe {
                                 var span = new Span<byte>(img.ImageData.ToPointer(), img.Size);
                                 using var input = new ImageInput(span, img.Stride);
-                                var pResult = pContext.Run(input);
-                                var iResult = iContext.Run(input);
+                                var features = encoderContext.Run(input);
+                                var pResult = pContext.Run(features);
+                                var iResult = iContext.Run(features);
                                 var fResult = fContext.Run(input);
                                 pResults.Add(pResult);
                                 iResults.Add(iResult);
