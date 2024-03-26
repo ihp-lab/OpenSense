@@ -77,7 +77,8 @@
         <!--Additional references: All project names ending with ".WPF"-->
         <!--Components-->
         <ProjectReference Include="..\Components\Audio.Visualizer.WPF\Audio.Visualizer.WPF.csproj" />
-        <ProjectReference Include="..\Components\AzureKinect.Visualizer.WPF\AzureKinect.Visualizer.WPF.csproj" />
+        <!--removed because its SDK has not been updated for a while and it will cause compatibility issues-->
+        <!--<ProjectReference Include="..\Components\AzureKinect.Visualizer.WPF\AzureKinect.Visualizer.WPF.csproj" />-->
         <ProjectReference Include="..\Components\Biopac.Visualizer.WPF\Biopac.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\BodyGestureDetectors.WPF\BodyGestureDetectors.WPF.csproj" />
         <ProjectReference Include="..\Components\Builtin.WPF\Builtin.WPF.csproj" />
@@ -106,7 +107,8 @@
         <ProjectReference Include="..\Components\LibreFace.WPF\LibreFace.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Audio.Windows.WPF\Psi.Audio.Windows.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Audio.WPF\Psi.Audio.WPF.csproj" />
-        <ProjectReference Include="..\Components\Psi.AzureKinect.WPF\Psi.AzureKinect.WPF.csproj" />
+        <!--removed because its SDK has not been updated for a while and it will cause compatibility issues-->
+        <!--<ProjectReference Include="..\Components\Psi.AzureKinect.WPF\Psi.AzureKinect.WPF.csproj" />-->
         <ProjectReference Include="..\Components\Psi.CognitiveServices.Face.WPF\Psi.CognitiveServices.Face.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.CognitiveServices.Speech.WPF\Psi.CognitiveServices.Speech.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Data.WPF\Psi.Data.WPF.csproj" />
