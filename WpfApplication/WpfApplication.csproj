@@ -77,8 +77,7 @@
         <!--Additional references: All project names ending with ".WPF"-->
         <!--Components-->
         <ProjectReference Include="..\Components\Audio.Visualizer.WPF\Audio.Visualizer.WPF.csproj" />
-        <!--removed because its SDK has not been updated for a while and it will cause compatibility issues-->
-        <!--<ProjectReference Include="..\Components\AzureKinect.Visualizer.WPF\AzureKinect.Visualizer.WPF.csproj" />-->
+        <ProjectReference Include="..\Components\AzureKinect.Visualizer.WPF\AzureKinect.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\Biopac.Visualizer.WPF\Biopac.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\BodyGestureDetectors.WPF\BodyGestureDetectors.WPF.csproj" />
         <ProjectReference Include="..\Components\Builtin.WPF\Builtin.WPF.csproj" />
@@ -107,8 +106,7 @@
         <ProjectReference Include="..\Components\LibreFace.WPF\LibreFace.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Audio.Windows.WPF\Psi.Audio.Windows.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Audio.WPF\Psi.Audio.WPF.csproj" />
-        <!--removed because its SDK has not been updated for a while and it will cause compatibility issues-->
-        <!--<ProjectReference Include="..\Components\Psi.AzureKinect.WPF\Psi.AzureKinect.WPF.csproj" />-->
+        <ProjectReference Include="..\Components\Psi.AzureKinect.WPF\Psi.AzureKinect.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.CognitiveServices.Face.WPF\Psi.CognitiveServices.Face.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.CognitiveServices.Speech.WPF\Psi.CognitiveServices.Speech.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Data.WPF\Psi.Data.WPF.csproj" />
@@ -116,7 +114,6 @@
         <ProjectReference Include="..\Components\Psi.Imaging.WPF\Psi.Imaging.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Imaging.Windows.WPF\Psi.Imaging.Windows.WPF.csproj" />
         <!--<ProjectReference Include="..\Components\Psi.Kinect.Windows.WPF\Psi.Kinect.Windows.WPF.csproj" />-->
-        <!--removed because it may add difficulty of start using this application-->
         <ProjectReference Include="..\Components\Psi.Media.Windows.WPF\Psi.Media.Windows.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Speech.Visualizer.WPF\Psi.Speech.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Speech.Windows.WPF\Psi.Speech.Windows.WPF.csproj" />
