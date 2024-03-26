@@ -22,14 +22,14 @@
 
     <ItemGroup>
         <None Include="$(SolutionDir)/LICENSE.txt" Pack="true" PackagePath="" />
-        <None Include="README.md" Pack="true"  PackagePath=""  />
+        <None Include="README.md" Pack="true" PackagePath="" />
         <None Include="RELEASE_NOTES.md" Pack="true" PackagePath="" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Psi.Imaging" Version="0.18.72.1-beta" />
-        <PackageReference Include="OpenCvSharp4" Version="4.8.0.20230708" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
+        <PackageReference Include="Microsoft.Psi.Imaging" Version="0.19.100.1-beta" />
+        <PackageReference Include="OpenCvSharp4" Version="4.9.0.20240103" />
         <PackageReference Include="System.Composition" Version="8.0.0" />
     </ItemGroup>
 

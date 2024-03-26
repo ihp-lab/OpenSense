@@ -29,8 +29,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="$(SolutionDir)/LICENSE.txt" Pack="true" PackagePath=""/>
-        <None Include="$(SolutionDir)/README.md" Pack="true" PackagePath="\"/>
+        <None Include="$(SolutionDir)/LICENSE.txt" Pack="true" PackagePath="" />
+        <None Include="$(SolutionDir)/README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -44,8 +44,8 @@
         -->
         <PackageReference Include="Mediapipe.Net.Runtime.CPU" Version="0.8.9.1" Condition="'$(UseGPU)' != 'true'" />
         <PackageReference Include="Mediapipe.Net.Runtime.GPU" Version="0.8.9.1" Condition="'$(UseGPU)' == 'true'" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Psi.Imaging" Version="0.18.72.1-beta" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
+        <PackageReference Include="Microsoft.Psi.Imaging" Version="0.19.100.1-beta" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="System.Composition" Version="8.0.0" />
     </ItemGroup>
@@ -62,12 +62,12 @@
         -->
 
         <!--Samples-->
-        <Content Include="mediapipe/**/*.pbtxt" >
+        <Content Include="mediapipe/**/*.pbtxt">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <PackagePath>contentFiles/any/any</PackagePath>
         </Content>
-        <Content Include="mediapipe/**/*.tflite" >
+        <Content Include="mediapipe/**/*.tflite">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <PackagePath>contentFiles/any/any</PackagePath>
