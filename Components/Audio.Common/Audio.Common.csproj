@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <AssemblyName>OpenSense.Components.Audio.Common</AssemblyName>
+        <RootNamespace>OpenSense.Components.Audio</RootNamespace>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+        <EmbedAllSources>true</EmbedAllSources>
+    </PropertyGroup>
+
+</Project>

@@ -13,6 +13,7 @@ using Microsoft.Psi;
 using Microsoft.Psi.Audio;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Speech;
+using OpenSense.Components.Audio;
 using Whisper.net;
 using Whisper.net.Ggml;
 

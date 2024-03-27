@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
+using OpenSense.Components.Audio;
 using Whisper.net.Ggml;
 
 namespace OpenSense.Components.Whisper.NET {

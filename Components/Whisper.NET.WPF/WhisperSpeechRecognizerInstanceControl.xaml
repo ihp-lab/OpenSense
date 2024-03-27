@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:OpenSense.WPF.Components.Whisper.NET"
     xmlns:util="clr-namespace:OpenSense.WPF.Components.Utilities;assembly=OpenSense.WPF.Components.Contracts"
+    xmlns:common="clr-namespace:OpenSense.Components.Audio;assembly=OpenSense.Components.Audio.Common"
     xmlns:ggml="clr-namespace:Whisper.net.Ggml;assembly=Whisper.net"
     xmlns:component="clr-namespace:OpenSense.Components.Whisper.NET;assembly=OpenSense.Components.Whisper.NET"
     mc:Ignorable="d"
@@ -124,7 +125,7 @@
                     Grid.Row="7"
                     Grid.Column="1"
                     SelectedItem="{Binding InputTimestampMode}"
-                    ItemsSource="{Binding Source={util:EnumBindingSource {x:Type component:TimestampMode}}, Mode=OneTime}" />
+                    ItemsSource="{Binding Source={util:EnumBindingSource {x:Type common:TimestampMode}}, Mode=OneTime}" />
 
                 <Label
                     Grid.Row="8">
@@ -134,7 +135,7 @@
                     Grid.Row="8"
                     Grid.Column="1"
                     SelectedItem="{Binding OutputTimestampMode}"
-                    ItemsSource="{Binding Source={util:EnumBindingSource {x:Type component:TimestampMode}}, Mode=OneTime}" />
+                    ItemsSource="{Binding Source={util:EnumBindingSource {x:Type common:TimestampMode}}, Mode=OneTime}" />
 
                 <Label
                     Grid.Row="9">

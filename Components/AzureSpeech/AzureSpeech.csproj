@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <AssemblyName>OpenSense.Components.AzureSpeech</AssemblyName>
+        <RootNamespace>OpenSense.Components.AzureSpeech</RootNamespace>
+        <LangVersion>latest</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <EmbedAllSources>true</EmbedAllSources>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!--Note: On Windows, this packages requres 64-bit target architecture and Microsoft Visual C++ Redistributable to be installed.-->
+        <PackageReference Include="Microsoft.CognitiveServices.Speech" Version="1.36.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
+        <PackageReference Include="Microsoft.Psi.Speech" Version="0.19.100.1-beta" />
+        <PackageReference Include="System.Composition" Version="8.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\ComponentContract\ComponentContract.csproj" />
+        <ProjectReference Include="..\Audio.Common\Audio.Common.csproj" />
+    </ItemGroup>
+
+</Project>
