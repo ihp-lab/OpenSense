@@ -7,8 +7,8 @@
         <PackageId>OpenSense.Components.Contracts</PackageId>
         <LangVersion>latest</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
-        <AssemblyVersion>4.0.1</AssemblyVersion>
-        <Version>4.0.1</Version>
+        <AssemblyVersion>4.0.2</AssemblyVersion>
+        <Version>4.0.2</Version>
         <Authors>Intelligent Human Perception Lab</Authors>
         <Product>OpenSense</Product>
         <Description>
@@ -16,12 +16,14 @@
         </Description>
         <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageReleaseNotes>RELEASE_NOTES.md</PackageReleaseNotes>
         <RepositoryUrl>https://github.com/ihp-lab/OpenSense.git</RepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>
         <None Include="$(SolutionDir)/LICENSE.txt" Pack="true" PackagePath="" />
-        <None Include="$(SolutionDir)/README.md" Pack="true" PackagePath="\" />
+        <None Include="$(SolutionDir)/README.md" Pack="true" PackagePath="" />
+        <None Include="RELEASE_NOTES.md" Pack="true" PackagePath="" />
     </ItemGroup>
 
     <ItemGroup>

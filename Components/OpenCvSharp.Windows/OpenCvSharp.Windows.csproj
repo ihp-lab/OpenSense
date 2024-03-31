@@ -6,8 +6,8 @@
         <AssemblyName>OpenSense.Components.OpenCvSharp.Windows</AssemblyName>
         <LangVersion>latest</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
-        <AssemblyVersion>1.0.1</AssemblyVersion>
-        <Version>1.0.1</Version>
+        <AssemblyVersion>1.0.2</AssemblyVersion>
+        <Version>1.0.2</Version>
         <Authors>Intelligent Human Perception Lab</Authors>
         <Product>OpenSense</Product>
         <Description>
