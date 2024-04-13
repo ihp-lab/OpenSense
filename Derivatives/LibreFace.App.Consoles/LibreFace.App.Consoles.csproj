@@ -28,7 +28,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="RELEASE_NOTES.md" Pack="true" PackagePath="" />
+        <None Include="RELEASE_NOTES.md" Pack="true" PackagePath="">
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </None>
     </ItemGroup>
 
 </Project>
