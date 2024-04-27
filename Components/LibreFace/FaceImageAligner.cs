@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using Mediapipe.Net.Framework.Protobuf;
 using Microsoft.Psi;
@@ -749,7 +750,17 @@ namespace OpenSense.Components.LibreFace {
             Debug.Assert(sigmas.I0 == sigmas.I1);
             Debug.Assert(interim.Rows == img.Rows && interim.Columns == img.Columns);
             Debug.Assert(output.Rows == img.Rows && output.Columns == img.Columns);
-
+#if OPENCV
+            var srcSpan = MemoryMarshal.AsBytes(img.AsSpan());
+            var dstSpan = MemoryMarshal.AsBytes(output.AsSpan());
+            unsafe {
+                fixed (byte* srcPtr = srcSpan, dstPtr = dstSpan) {
+                    using var src = new Mat(img.Rows, img.Columns, MatType.CV_32FC3, (IntPtr)srcPtr);
+                    using var dst = new Mat(output.Rows, output.Columns, MatType.CV_32FC3, (IntPtr)dstPtr);
+                    Cv2.GaussianBlur(src, dst, new Size(0, 0), sigmas.I0, sigmas.I1, BorderTypes.Reflect);
+                }
+            }
+#else
             var sd = sigmas.I0;
             const float truncate = 4;
             var lw = (int)(truncate * sd + 0.5f);
@@ -759,6 +770,7 @@ namespace OpenSense.Components.LibreFace {
 
             correlate1d(img: ref img, weights: weights, axis: 0, output: ref interim);
             correlate1d(img: ref interim, weights: weights, axis: 1, output: ref output);
+#endif
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
