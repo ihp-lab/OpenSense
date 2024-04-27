@@ -31,12 +31,12 @@ namespace LibreFace.App.Consoles {
                 context = ctx;
                 return source.Task;
             });
-            for (var i = 0; i < files.Length; i++) {
+            var last = 0L;
+            Parallel.For(0, files.Length, i => {
                 var filename = files[i];
                 table.AddRow(filename, FormatTime(TimeSpan.Zero), FormatTime(TimeSpan.Zero));
                 var stopwatch = Stopwatch.StartNew();
                 var dir = options.Output ?? Path.GetDirectoryName(filename) ?? throw new ArgumentNullException();
-                var last = 0L;
                 var progress = new Progress(v => {
                     if (stopwatch.ElapsedMilliseconds - last < 100) {
                         return;
@@ -49,7 +49,7 @@ namespace LibreFace.App.Consoles {
                 using var processor = new Processor(filename, dir, options.NumFaces, progress);
                 processor.Run();
                 stopwatch.Stop();
-            }
+            });
             source.SetResult();
         }
 
