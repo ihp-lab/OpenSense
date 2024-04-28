@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "FileReader.h"
+#include "BufferSizeException.h"
 
 #include <string>
 
@@ -169,7 +170,7 @@ namespace FFMpegInterop {
             }
 
             if (srcLength != dstLength) {
-                throw gcnew System::Exception("Buffer sizes mismatch!");
+                throw gcnew BufferSizeException(String::Format("Buffer sizes mismatch. {0} bytes needed, {1} bytes provided.", srcLength, dstLength));
             }
             std::memcpy(dstData, srcData, srcLength);//I heard C++/CLR does not support Span<T>, so we use raw pointer here
 
