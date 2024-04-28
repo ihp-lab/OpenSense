@@ -627,7 +627,45 @@ namespace OpenSense.Components.LibreFace {
             var width = right - left;
             var height = lower - upper;
             var temp = ImagePool.GetOrCreate(width, height, img.Resource.PixelFormat);
-            img.Resource.Crop(temp.Resource, left, upper, width, height, clip: false);//TODO: What is clip for?
+            var outOfBound = left < 0 || upper < 0 || right > img.Resource.Width || lower > img.Resource.Height;
+            if (!outOfBound) {
+                img.Resource.Crop(temp.Resource, left, upper, width, height, clip: false);
+            } else {//TODO: test
+#if OPENCV
+                unsafe {
+                    using var srcMat = new Mat(img.Resource.Height, img.Resource.Width, MatType.CV_8UC3, (IntPtr)img.Resource.ImageData.ToPointer(), img.Resource.Stride);
+
+                    // Calculate the lengths of edges needed for extension
+                    int top = Math.Max(upper, 0) - upper;
+                    int bottom = Math.Max(lower - srcMat.Height, 0);
+                    int leftBorder = Math.Max(left, 0) - left;
+                    int rightBorder = Math.Max(right - srcMat.Width, 0);
+
+                    // Use reflect mode to extend the image borders
+                    using var extendedMat = new Mat();
+                    Cv2.CopyMakeBorder(srcMat, extendedMat, top, bottom, leftBorder, rightBorder, BorderTypes.Reflect101);
+
+                    // Ensure the new cropping coordinates are within the extended image's range
+                    var newLeft = Math.Max(left, 0);
+                    var newTop = Math.Max(upper, 0);
+                    var newWidth = Math.Min(width, extendedMat.Width - newLeft);
+                    var newHeight = Math.Min(height, extendedMat.Height - newTop);
+
+                    var cropRect = new OpenCvSharp.Rect(newLeft, newTop, newWidth, newHeight);
+                    using var cropMat = new Mat(extendedMat, cropRect);
+                    using var tempMat = new Mat(height, width, MatType.CV_8UC3, (IntPtr)temp.Resource.ImageData.ToPointer(), temp.Resource.Stride);
+                    cropMat.CopyTo(tempMat);
+                }
+#else
+                for (var i = 0; i < height; i++) {//TODO: optimize
+                    for (var j = 0; j < width; j++) {
+                        var (ii, jj) = extension_mode_reflect101(upper + i, left + j, img.Resource.Height, img.Resource.Width);
+                        var (r, g, b, a) = img.Resource.GetPixel(jj, ii);
+                        temp.Resource.SetPixel(j, i, r, g, b, a);
+                    }
+                }
+#endif
+            }
             img.Dispose();
             img = temp;
         }
@@ -829,7 +867,7 @@ namespace OpenSense.Components.LibreFace {
             return phi_x;
         }
 
-         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static int extension_mode_reflect(int x, int size) {
             if (x < 0) {
                 x = x <= -1 ? -x - 1 : 0;
@@ -841,8 +879,33 @@ namespace OpenSense.Components.LibreFace {
         }
 
 
-         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static (float y, float x) extension_mode_mirror(float y, float x, int rows, int columns) {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static (float y, float x) extension_mode_reflect101(float y, float x, int rows, int columns) {
+            bool updated;
+            do {
+                updated = false;
+                if (y < 0) {
+                    y = -y;
+                    updated = true;
+                }
+                if (x < 0) {
+                    x = -x;
+                    updated = true;
+                }
+                if (y >= rows) {
+                    y = (rows - 1) - (y - (rows - 1));
+                    updated = true;
+                }
+                if (x >= columns) {
+                    x = (columns - 1) - (x - (columns - 1));
+                    updated = true;
+                }
+            } while (updated);
+            return (y, x);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static (int y, int x) extension_mode_reflect101(int y, int x, int rows, int columns) {
             bool updated;
             do {
                 updated = false;
@@ -1033,7 +1096,7 @@ namespace OpenSense.Components.LibreFace {
             var result = total / (left.Width * left.Height * 3f);
             return result;
         }
-#endregion
+        #endregion
 
     }
 }
