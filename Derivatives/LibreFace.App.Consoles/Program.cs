@@ -1,10 +1,11 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using CommandLine;
 using CommandLine.Text;
-using Spectre.Console;
 
 namespace LibreFace.App.Consoles {
     internal static class Program {
+
         public static void Main(string[] args) {
             var parser = new Parser(with => with.HelpWriter = null);
 
@@ -16,45 +17,59 @@ namespace LibreFace.App.Consoles {
         }
 
         private static void Run(Options options) {
-            var files = options.File.ToArray();
+            var files = options.Paths
+                .SelectMany(n => { 
+                    var attr = File.GetAttributes(n);
+                    if (attr.HasFlag(FileAttributes.Directory)) {
+                        return Directory.GetFiles(n, "*", SearchOption.AllDirectories);
+                    } else {
+                        return [Path.GetFullPath(n)];
+                    }
+                })
+                .Distinct()
+                .ToArray();
             if (files.Length == 0) {
                 return;
             }
-            var source = new TaskCompletionSource();
-            var table = new Table()
-                .AddColumn("File")
-                .AddColumn("Spent")
-                .AddColumn("Processed")
-                ;
-            LiveDisplayContext? context = null;
-            AnsiConsole.Live(table).StartAsync(ctx => {
-                context = ctx;
-                return source.Task;
-            });
-            var last = 0L;
-            Parallel.For(0, files.Length, i => {
-                var filename = files[i];
-                table.AddRow(filename, FormatTime(TimeSpan.Zero), FormatTime(TimeSpan.Zero));
-                var stopwatch = Stopwatch.StartNew();
-                var dir = options.Output ?? Path.GetDirectoryName(filename) ?? throw new ArgumentNullException();
-                var progress = new Progress(v => {
-                    if (stopwatch.ElapsedMilliseconds - last < 100) {
-                        return;
-                    }
-                    table.UpdateCell(i, 1, FormatTime(stopwatch.Elapsed));
-                    table.UpdateCell(i, 2, FormatTime(v));
-                    context?.Refresh();
-                    last = stopwatch.ElapsedMilliseconds;
-                });
-                using var processor = new Processor(filename, dir, options.NumFaces, progress);
-                processor.Run();
-                stopwatch.Stop();
-            });
-            source.SetResult();
-        }
-
-        private static string FormatTime(TimeSpan time) {
-            return $"{time:d\\.hh\\:mm\\:ss\\.f}";
+            IConsoleUI ui = options.Succinct ?
+                new BarChartUI() : new TableUI();
+            try {
+                using var model = new ModelContext(options.DeviceId);
+                var items = new ConcurrentBag<int>(Enumerable.Range(0, files.Length));
+                var tasks = new Task[options.Concurrency];
+                ui.Initialize(files);
+                for (var t = 0; t < options.Concurrency; t++) {
+                    tasks[t] = Task.Run(() => {
+                        while (items.TryTake(out var i)) {
+                            var filename = files[i];
+                            var finalLength = TimeSpan.Zero;
+                            var stopwatch = Stopwatch.StartNew();
+                            var dir = options.Output ?? Path.GetDirectoryName(filename) ?? throw new ArgumentNullException();
+                            var progress = new Progress(v => {
+                                finalLength = v;
+                                ui.SetElapsed(i, stopwatch.Elapsed);
+                                ui.SetProcessed(i, v);
+                            });
+                            ui.SetState(i, State.Processing);
+                            try {
+                                using var processor = new Processor(filename, dir, options.NumFaces, model, progress);
+                                processor.Run();
+                                ui.SetProcessed(i, finalLength);
+                                ui.SetState(i, State.Done);
+                            } catch (Exception) {
+                                ui.SetState(i, State.Error);
+                            }
+                            ui.SetElapsed(i, stopwatch.Elapsed);
+                            stopwatch.Stop();
+                        }
+                    });
+                }
+                Task.WaitAll(tasks);
+            } finally {
+                if (ui is IDisposable disposable) {
+                    disposable.Dispose();
+                }
+            }
         }
 
         private static void DisplayHelp<T>(ParserResult<T> result, IEnumerable<Error> errs) {

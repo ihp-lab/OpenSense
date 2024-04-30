@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.Json;
@@ -9,7 +8,6 @@ using Mediapipe.Net.Framework.Format;
 using Mediapipe.Net.Framework.Packets;
 using Mediapipe.Net.Framework.Port;
 using Mediapipe.Net.Framework.Protobuf;
-using Microsoft.ML.OnnxRuntime;
 using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
 using OpenSense.Components.LibreFace;
@@ -29,9 +27,13 @@ namespace LibreFace.App {
 
         private static readonly RunMethod AlignMethod;
 
+        private readonly ModelContext _model;
+
         private readonly IProgress<TimeSpan> _progress;
 
         private readonly string _outFilename;
+
+        private readonly string _errFilename;
 
         private readonly FileReader _reader;
 
@@ -60,15 +62,18 @@ namespace LibreFace.App {
             AlignMethod = (RunMethod)Delegate.CreateDelegate(typeof(RunMethod), method2);
         }
 
-        public Processor(string filename, string outDir, int numFaces, IProgress<TimeSpan> progress) {
+        public Processor(string filename, string outDir, int numFaces, ModelContext model, IProgress<TimeSpan> progress) {
+            _model = model;
             _progress = progress;
             var stem = Path.GetFileNameWithoutExtension(filename);
             _outFilename = Path.Combine(outDir, stem + ".json");
+            _errFilename = Path.Combine(outDir, stem + ".err.txt");
 
             _reader = new FileReader(filename) {
                 TargetFormat = ToFFMpegPixelFormat(PsiPxielFormat),
             };
 
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!);//tflite file paths in graph file are relative to the current directory.
             var graph = File.ReadAllText(GraphPath);
             var config = CalculatorGraphConfig.Parser.ParseFromTextFormat(graph);
             _graph = new CalculatorGraph(config);
@@ -80,77 +85,84 @@ namespace LibreFace.App {
         }
 
         public void Run() {
-            var counter = 0;
+            var errStream = new Lazy<FileStream>(() => new FileStream(_errFilename, FileMode.Create, FileAccess.Write, FileShare.None));
+            var errWriter = new Lazy<StreamWriter>(() => new StreamWriter(errStream.Value));
+            try {
+                var counter = 0;
 
-            _graph.StartRun(_sidePackets).AssertOk();
+                _graph.StartRun(_sidePackets).AssertOk();
 
-            using var stream = new FileStream(_outFilename, FileMode.Create, FileAccess.Write, FileShare.None);
-            using var writer = new Utf8JsonWriter(stream, LibreFaceJsonWriter.Options);
-            LibreFaceJsonWriter.WriteStart(writer);
+                using var stream = new FileStream(_outFilename, FileMode.Create, FileAccess.Write, FileShare.None);
+                using var writer = new Utf8JsonWriter(stream, LibreFaceJsonWriter.Options);
+                LibreFaceJsonWriter.WriteStart(writer);
 
-            using var options = SessionOptions.MakeSessionOptionWithCudaProvider(deviceId: 0);
-            using var encoderContext = new ActionUnitEncoderModelContext(options, isOwner: true);
-            using var pContext = new ActionUnitPresenceModelContext(options, isOwner: true);
-            using var iContext = new ActionUnitIntensityModelContext(options, isOwner: true);
-            using var fContext = new FacialExpressionModelContext(options, isOwner: true);
-            var pResults = new List<ActionUnitPresenceOutput>();
-            var iResults = new List<ActionUnitIntensityOutput>();
-            var fResults = new List<ExpressionOutput>();
+                var pResults = new List<ActionUnitPresenceOutput>();
+                var iResults = new List<ActionUnitIntensityOutput>();
+                var fResults = new List<ExpressionOutput>();
 
-            var eof = false;
-            while (!eof) {
-                _reader.ReadOneFrame(OnAllocate, out var valid, out eof);
-                if (!valid) {
-                    continue;
-                }
+                var eof = false;
+                while (!eof) {
+                    try {
+                        _reader.ReadOneFrame(OnAllocate, out var valid, out eof);
+                        if (!valid) {
+                            continue;
+                        }
+                    } catch (BufferSizeException ex) {
+                        errWriter.Value.WriteLine($"[{frameTime.TotalMicroseconds}] {ex}");
+                        continue;
+                    }
 
-                if (landmarks is not null) {
-                    landmarks.Clear();
-                    landmarks = null;
-                }
-                using var packet = ConvertImage(image, frameTime);
-                _graph.AddPacketToInputStream("image", packet);
-                _graph.WaitUntilIdle().AssertOk();
-                pResults.Clear();
-                iResults.Clear();
-                fResults.Clear();
-                if (landmarks is not null && landmarks.Count != 0) {
-                    Debug.Assert(frameTime == landmarkTime);
-                    var croppedImages = AlignMethod(image, landmarks);
-                    foreach (var sharedImg in croppedImages) {
-                        try {
-                            var img = sharedImg.Resource;
-                            unsafe {
-                                var span = new Span<byte>(img.ImageData.ToPointer(), img.Size);
-                                using var input = new ImageInput(span, img.Stride);
-                                var features = encoderContext.Run(input);
-                                var pResult = pContext.Run(features);
-                                var iResult = iContext.Run(features);
-                                var fResult = fContext.Run(input);
+                    if (landmarks is not null) {
+                        landmarks.Clear();
+                        landmarks = null;
+                    }
+                    using var packet = ConvertImage(image, frameTime);
+                    _graph.AddPacketToInputStream("image", packet);
+                    _graph.WaitUntilIdle().AssertOk();
+                    pResults.Clear();
+                    iResults.Clear();
+                    fResults.Clear();
+                    if (landmarks is not null && landmarks.Count != 0) {
+                        Debug.Assert(frameTime == landmarkTime);
+                        var croppedImages = AlignMethod(image, landmarks);
+                        foreach (var sharedImg in croppedImages) {
+                            try {
+                                var img = sharedImg.Resource;
+                                var tcs = _model.Run(img);
+                                tcs.Task.Wait();
+                                var (pResult, iResult, fResult) = tcs.Task.Result;
                                 pResults.Add(pResult);
                                 iResults.Add(iResult);
                                 fResults.Add(fResult);
+                            } finally {
+                                sharedImg.Dispose();
                             }
-                        } finally {
-                            sharedImg.Dispose();
                         }
                     }
-                }
-                LibreFaceJsonWriter.WriteFrame(writer, counter, pResults, iResults, fResults, frameTime);
+                    LibreFaceJsonWriter.WriteFrame(writer, counter, landmarks, pResults, iResults, fResults, frameTime);
 
-                counter++;
-                _progress.Report(frameTime);
+                    counter++;
+                    _progress.Report(frameTime);
+                }
+                LibreFaceJsonWriter.WriteEnd(writer);
+
+                _graph.CloseInputStream("image").AssertOk();
+                _graph.WaitUntilDone().AssertOk();
+            } finally {
+                if (errWriter.IsValueCreated) {
+                    errWriter.Value.Dispose();
+                }
+                if (errStream.IsValueCreated) {
+                    errStream.Value.Dispose();
+                }
             }
-            LibreFaceJsonWriter.WriteEnd(writer);
-            _graph.CloseInputStream("image").AssertOk();
-            _graph.WaitUntilDone().AssertOk();
         }
 
         #region FileSource Helpers
         private (IntPtr, int) OnAllocate(FrameInfo info) {
             if (info.Width != image.Width || info.Height != image.Height) {
                 image.Dispose();
-                image = new Image(info.Width, info.Height, PixelFormat.RGB_24bpp);
+                image = new Image(info.Width, info.Height, info.Width * 3, PixelFormat.RGB_24bpp);//Stride is needed, otherwise sometime the automatic coputed buffersize will be different from the required size.
             }
             frameTime = info.Timestamp;
             var ptr = image.UnmanagedBuffer.Data;

@@ -11,8 +11,8 @@
         <Nullable>enable</Nullable>
         <LangVersion>preview</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <AssemblyVersion>1.1.0</AssemblyVersion>
-        <Version>1.1.0</Version>
+        <AssemblyVersion>1.2.0</AssemblyVersion>
+        <Version>1.2.0</Version>
     </PropertyGroup>
 
     <ItemGroup>

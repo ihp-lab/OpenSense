@@ -11,16 +11,16 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AssemblyTitle>LibreFace Console Application</AssemblyTitle>
-        <Copyright>Copyright (C) 2023 Intelligent Human Perception Lab, USC</Copyright>
+        <Copyright>Copyright (C) 2024 Intelligent Human Perception Lab, USC</Copyright>
         <Company>Intelligent Human Perception Lab, USC</Company>
-        <AssemblyVersion>1.1.0</AssemblyVersion>
-        <Version>1.1.0</Version>
+        <AssemblyVersion>1.2.0</AssemblyVersion>
+        <Version>1.2.0</Version>
         <PackageReleaseNotes>RELEASE_NOTES.md</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="CommandLineParser" Version="2.9.1" />
-        <PackageReference Include="Spectre.Console" Version="0.48.0" />
+        <PackageReference Include="Spectre.Console" Version="0.49.1" />
     </ItemGroup>
 
     <ItemGroup>

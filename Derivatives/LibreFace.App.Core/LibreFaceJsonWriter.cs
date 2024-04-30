@@ -2,8 +2,10 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using Mediapipe.Net.Framework.Protobuf;
 using Microsoft.Psi;
 using Combind = (
+    System.Collections.Generic.IReadOnlyList<Mediapipe.Net.Framework.Protobuf.NormalizedLandmarkList> Landmarks,
     System.Collections.Generic.IReadOnlyList<System.Collections.Generic.IReadOnlyDictionary<string, bool>> Presence,
     System.Collections.Generic.IReadOnlyList<System.Collections.Generic.IReadOnlyDictionary<string, float>> Intensity,
     System.Collections.Generic.IReadOnlyList<System.Collections.Generic.IReadOnlyDictionary<string, float>> Expression
@@ -45,12 +47,13 @@ namespace LibreFace.App {
         }
 
         private void Process(Combind data, Envelope envelope) {
-            var (iP, iI, iE) = data;
+            var (iL, iP, iI, iE) = data;
+            var landmarks = (List<NormalizedLandmarkList>)iL;
             var presences = (List<ActionUnitPresenceOutput>)iP;
             var intensities = (List<ActionUnitIntensityOutput>)iI;
             var expressions = (List<ExpressionOutput>)iE;
             var diff = envelope.OriginatingTime - (DateTimeOffset)startTime!;
-            WriteFrame(writer!, Counter, presences, intensities, expressions, diff);
+            WriteFrame(writer!, Counter, landmarks, presences, intensities, expressions, diff);
             Counter++;
         }
 
@@ -80,7 +83,8 @@ namespace LibreFace.App {
             writer.WriteStartArray("Frames");
         }
 
-        internal static void WriteFrame(Utf8JsonWriter writer, long index, IReadOnlyList<ActionUnitPresenceOutput> presences, IReadOnlyList<ActionUnitIntensityOutput> intensities, IReadOnlyList<ExpressionOutput> expressions, TimeSpan time) {
+        internal static void WriteFrame(Utf8JsonWriter writer, long index, IReadOnlyList<NormalizedLandmarkList>? landmarks, IReadOnlyList<ActionUnitPresenceOutput> presences, IReadOnlyList<ActionUnitIntensityOutput> intensities, IReadOnlyList<ExpressionOutput> expressions, TimeSpan time) {
+            landmarks ??= Array.Empty<NormalizedLandmarkList>();
             if (presences.Count != intensities.Count || intensities.Count != expressions.Count) {
                 throw new InvalidOperationException("Data length mismatch.");
             }
@@ -92,6 +96,20 @@ namespace LibreFace.App {
             writer.WriteStartArray("Faces");
             for (var i = 0; i < count; i++) {
                 writer.WriteStartObject();
+
+                var landmarkList = landmarks[i];
+                writer.WriteStartArray("Landmarks");
+                for (var j = 0; j < landmarkList.Landmark.Count; j++) {
+                    var landmark = landmarkList.Landmark[j];
+                    writer.WriteStartObject();
+                    writer.WriteNumber("Visibility", landmark.Visibility);
+                    writer.WriteNumber("Presence", landmark.Presence);
+                    writer.WriteNumber("X", landmark.X);
+                    writer.WriteNumber("Y", landmark.Y);
+                    writer.WriteNumber("Z", landmark.Z);
+                    writer.WriteEndObject();
+                }
+                writer.WriteEndArray();
 
                 var presense = presences[i];
                 writer.WriteStartObject("Presence");
