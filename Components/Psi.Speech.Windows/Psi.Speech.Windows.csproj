@@ -6,19 +6,30 @@
         <RootNamespace>OpenSense.Components.Psi.Speech</RootNamespace>
         <LangVersion>latest</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Psi.Language" Version="0.19.100.1-beta" /><!--Indirect referencing this package by Microsoft.Psi.Speech.Windows does not work-->
+        <!--Indirect referencing this package by Microsoft.Psi.Speech.Windows does not work-->
+        <PackageReference Include="Microsoft.Psi.Language" Version="0.19.100.1-beta" />
         <PackageReference Include="Microsoft.Psi.Speech.Windows" Version="0.19.100.1-beta">
-            <NoWarn>NU1701</NoWarn><!--Only a .net framework package is available-->
+            <!--Only a .net framework package is available-->
+            <NoWarn>NU1701</NoWarn>
         </PackageReference>
-        <PackageReference Include="System.Composition" Version="8.0.0" />
-        <PackageReference Include="System.Speech" Version="8.0.0" /><!--System.Speech does not exist in .net core. Later this package was published, made it is possible to port the project to .net core. The new Windows Compatibility Pack can be an alternitave-->
+        <PackageReference Include="System.Composition" Version="8.0.0">
+            <!-- The DLLs of this dependency will be fulfilled by the host application and will be shared across all AssemblyLoadContexts. Do not generate private copies of these DLLs. -->
+            <ExcludeAssets>runtime</ExcludeAssets>
+        </PackageReference>
+        <!--System.Speech does not exist in .net core. Later this package was published, made it is possible to port the project to .net core. The new Windows Compatibility Pack can be an alternitave-->
+        <PackageReference Include="System.Speech" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\ComponentContract\ComponentContract.csproj" />
+        <ProjectReference Include="..\..\ComponentContract\ComponentContract.csproj">
+            <!-- The DLLs of this dependency will be fulfilled by the host application and will be shared across all AssemblyLoadContexts. Do not generate private copies of these DLLs. -->
+            <Private>false</Private>
+            <ExcludeAssets>runtime</ExcludeAssets>
+        </ProjectReference>
     </ItemGroup>
 
 </Project>

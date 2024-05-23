@@ -5,8 +5,9 @@
         <RootNamespace>OpenSense.Components.Whisper.NET</RootNamespace>
         <AssemblyName>OpenSense.Components.Whisper.NET</AssemblyName>
         <LangVersion>latest</LangVersion>
-        <EmbedAllSources>true</EmbedAllSources>
         <Nullable>enable</Nullable>
+        <EmbedAllSources>true</EmbedAllSources>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
 
         <!-- cuBLAS conditions-->
         <!--Note: CUDA is required, and needed to be added to PATH.-->
@@ -17,9 +18,11 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
         <PackageReference Include="Microsoft.Psi.Audio" Version="0.19.100.1-beta" />
-        <PackageReference Include="Microsoft.Psi.Runtime" Version="0.19.100.1-beta" />
         <PackageReference Include="Microsoft.Psi.Speech" Version="0.19.100.1-beta" />
-        <PackageReference Include="System.Composition" Version="8.0.0" />
+        <PackageReference Include="System.Composition" Version="8.0.0">
+            <!-- The DLLs of this dependency will be fulfilled by the host application and will be shared across all AssemblyLoadContexts. Do not generate private copies of these DLLs. -->
+            <ExcludeAssets>runtime</ExcludeAssets>
+        </PackageReference>
         <PackageReference Include="Whisper.net" Version="1.5.0" />
         <PackageReference Include="Whisper.net.Runtime" Version="1.5.0" Condition="'$(UseCUBLAS)' != 'true'" />
         <!--TODO: After upgraded to 1.5.0, the cuBLAS runtime does not work, while the CPU runtime works.-->
@@ -27,7 +30,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\ComponentContract\ComponentContract.csproj" />
+        <ProjectReference Include="..\..\ComponentContract\ComponentContract.csproj">
+            <!-- The DLLs of this dependency will be fulfilled by the host application and will be shared across all AssemblyLoadContexts. Do not generate private copies of these DLLs. -->
+            <Private>false</Private>
+            <ExcludeAssets>runtime</ExcludeAssets>
+        </ProjectReference>
         <ProjectReference Include="..\Audio.Common\Audio.Common.csproj" />
     </ItemGroup>
 

@@ -9,11 +9,16 @@
         <AssemblyName>OpenSense.WPF.Components.FFMpeg.Windows</AssemblyName>
         <RootNamespace>OpenSense.WPF.Components.FFMpeg</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
     </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\FFMpeg.Windows\FFMpeg.Windows.csproj" />
-        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
+        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj">
+            <!-- The DLLs of this dependency will be fulfilled by the host application and will be shared across all AssemblyLoadContexts. Do not generate private copies of these DLLs. -->
+            <Private>false</Private>
+            <ExcludeAssets>runtime</ExcludeAssets>
+        </ProjectReference>
     </ItemGroup>
 
 

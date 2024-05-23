@@ -9,11 +9,16 @@
         <AssemblyName>OpenSense.WPF.Components.OpenSmile.Windows</AssemblyName>
         <RootNamespace>OpenSense.WPF.Components.OpenSmile</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
     </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\OpenSmile.Windows\OpenSmile.Windows.csproj" />
-        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
+        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj">
+            <!-- The DLLs of this dependency will be fulfilled by the host application and will be shared across all AssemblyLoadContexts. Do not generate private copies of these DLLs. -->
+            <Private>false</Private>
+            <ExcludeAssets>runtime</ExcludeAssets>
+        </ProjectReference>
     </ItemGroup>
 
     <ItemGroup>

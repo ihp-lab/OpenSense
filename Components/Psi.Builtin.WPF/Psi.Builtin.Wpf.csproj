@@ -8,16 +8,24 @@
         <RootNamespace>OpenSense.WPF.Components.Psi</RootNamespace>
         <AssemblyName>OpenSense.WPF.Components.Psi</AssemblyName>
         <EmbedAllSources>true</EmbedAllSources>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Composition" Version="8.0.0" />
+        <PackageReference Include="System.Composition" Version="8.0.0">
+            <!-- The DLLs of this dependency will be fulfilled by the host application and will be shared across all AssemblyLoadContexts. Do not generate private copies of these DLLs. -->
+            <ExcludeAssets>runtime</ExcludeAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Psi.Builtin\Psi.Builtin.csproj" />
         <ProjectReference Include="..\Psi.WPF.Common\Psi.WPF.Common.csproj" />
-        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
+        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj">
+            <!-- The DLLs of this dependency will be fulfilled by the host application and will be shared across all AssemblyLoadContexts. Do not generate private copies of these DLLs. -->
+            <Private>false</Private>
+            <ExcludeAssets>runtime</ExcludeAssets>
+        </ProjectReference>
     </ItemGroup>
 
 </Project>

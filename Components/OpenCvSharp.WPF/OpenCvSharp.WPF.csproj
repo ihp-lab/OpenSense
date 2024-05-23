@@ -6,10 +6,15 @@
         <AssemblyName>OpenSense.WPF.Components.OpenCvSharp</AssemblyName>
         <RootNamespace>OpenSense.WPF.Components.OpenCvSharp</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
+        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj">
+            <!-- The DLLs of this dependency will be fulfilled by the host application and will be shared across all AssemblyLoadContexts. Do not generate private copies of these DLLs. -->
+            <Private>false</Private>
+            <ExcludeAssets>runtime</ExcludeAssets>
+        </ProjectReference>
         <ProjectReference Include="..\OpenCvSharp\OpenCvSharp.csproj" />
     </ItemGroup>
 

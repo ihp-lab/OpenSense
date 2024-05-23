@@ -6,11 +6,16 @@
         <AssemblyName>OpenSense.WPF.Components.CsvExporter</AssemblyName>
         <RootNamespace>OpenSense.WPF.Components.CsvExporter</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
     </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\CsvExporter\CsvExporter.csproj" />
-        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
+        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj">
+            <!-- The DLLs of this dependency will be fulfilled by the host application and will be shared across all AssemblyLoadContexts. Do not generate private copies of these DLLs. -->
+            <Private>false</Private>
+            <ExcludeAssets>runtime</ExcludeAssets>
+        </ProjectReference>
     </ItemGroup>
 
 </Project>

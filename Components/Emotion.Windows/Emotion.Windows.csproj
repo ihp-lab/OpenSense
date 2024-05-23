@@ -8,6 +8,7 @@
         <RootNamespace>OpenSense.Components.Emotion</RootNamespace>
         <LangVersion>latest</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
     </PropertyGroup>
 
     <ItemGroup>
@@ -15,11 +16,18 @@
         <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="3.0.1" />
         <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="3.0.1" />
         <PackageReference Include="Microsoft.Psi.Imaging" Version="0.19.100.1-beta" />
-        <PackageReference Include="System.Composition" Version="8.0.0" />
+        <PackageReference Include="System.Composition" Version="8.0.0">
+            <!-- The DLLs of this dependency will be fulfilled by the host application and will be shared across all AssemblyLoadContexts. Do not generate private copies of these DLLs. -->
+            <ExcludeAssets>runtime</ExcludeAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\ComponentContract\ComponentContract.csproj" />
+        <ProjectReference Include="..\..\ComponentContract\ComponentContract.csproj">
+            <!-- The DLLs of this dependency will be fulfilled by the host application and will be shared across all AssemblyLoadContexts. Do not generate private copies of these DLLs. -->
+            <Private>false</Private>
+            <ExcludeAssets>runtime</ExcludeAssets>
+        </ProjectReference>
         <ProjectReference Include="..\..\DataWriterContract\DataWriterContract.csproj" />
         <ProjectReference Include="..\Emotion.Common\Emotion.Common.csproj" />
         <ProjectReference Include="..\OpenFace.Common\OpenFace.Common.csproj" />

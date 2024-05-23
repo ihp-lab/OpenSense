@@ -6,14 +6,23 @@
         <AssemblyName>OpenSense.WPF.Widgets.OpenSmileConfigurationConverter</AssemblyName>
         <RootNamespace>OpenSense.WPF.Widgets.OpenSmileConfigurationConverter</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Composition" Version="8.0.0" />
+        <PackageReference Include="System.Composition" Version="8.0.0">
+            <!-- The DLLs of this dependency will be fulfilled by the host application and will be shared across all AssemblyLoadContexts. Do not generate private copies of these DLLs. -->
+            <ExcludeAssets>runtime</ExcludeAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\WpfWidgetContract\WpfWidgetContract.csproj" />
+        <ProjectReference Include="..\..\WpfWidgetContract\WpfWidgetContract.csproj">
+            <!-- The DLLs of this dependency will be fulfilled by the host application and will be shared across all AssemblyLoadContexts. Do not generate private copies of these DLLs. -->
+            <Private>false</Private>
+            <ExcludeAssets>runtime</ExcludeAssets>
+        </ProjectReference>
+
     </ItemGroup>
 
 </Project>
