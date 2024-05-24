@@ -4,8 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Metadata;
-using System.Reflection.PortableExecutable;
 using Microsoft.Psi;
 
 namespace OpenSense.Components {
@@ -101,7 +99,7 @@ namespace OpenSense.Components {
                 var getProducerFunc = typeof(HelperExtensions)
                     .GetMethod(nameof(GetProducer))
                     .MakeGenericMethod(consumerDataType);//Note: not producer data type, so that type conversion is applied when needed
-                dynamic producer = getProducerFunc.Invoke(null, new object[] { remoteEnvironment, inputConfig.RemotePort});
+                dynamic producer = getProducerFunc.Invoke(null, new object[] { remoteEnvironment, inputConfig.RemotePort });
 
                 Operators.PipeTo(producer, consumer, inputConfig.DeliveryPolicy);
             }
@@ -132,8 +130,8 @@ namespace OpenSense.Components {
         }
 
         private static bool IsNullable(Type type) {
-            var result = type.IsGenericType 
-                && type.GetGenericTypeDefinition() == typeof(Nullable<>) 
+            var result = type.IsGenericType
+                && type.GetGenericTypeDefinition() == typeof(Nullable<>)
                 && !type.GetGenericArguments().Single().IsGenericType //We supports only one layer of nesting
                 ;
             return result;
@@ -150,8 +148,8 @@ namespace OpenSense.Components {
                         return false;
                     case (false, true):
                         return HasConversionTo_SingleWay(
-                            source, 
-                            target.GetGenericArguments()[0], 
+                            source,
+                            target.GetGenericArguments()[0],
                             unwrapNullables: true
                         );
                     case (true, true):
@@ -160,12 +158,12 @@ namespace OpenSense.Components {
                             target.GetGenericArguments()[0],
                             unwrapNullables: true
                         );
-                } 
+                }
             }
 
             /** Built-in (Conversion done by compiler)
              */
-            var bothConvertable = typeof(IConvertible).IsAssignableFrom(source) 
+            var bothConvertable = typeof(IConvertible).IsAssignableFrom(source)
                 && typeof(IConvertible).IsAssignableFrom(target);
             if (bothConvertable) {
                 return true;
@@ -185,7 +183,7 @@ namespace OpenSense.Components {
                     var parameterInfos = mi.GetParameters();
                     if (parameterInfos.Length != 1) {
                         return false;
-                    } 
+                    }
                     var result = parameterInfos.Single().ParameterType == source;
                     return result;
                 });
@@ -202,8 +200,8 @@ namespace OpenSense.Components {
         }
 
         public static bool CanBeCastTo(this Type sourceType, Type targetType) {
-            var result = targetType.IsAssignableFrom(sourceType) 
-                || HasConversionTo_SingleWay(sourceType, targetType, unwrapNullables: true) 
+            var result = targetType.IsAssignableFrom(sourceType)
+                || HasConversionTo_SingleWay(sourceType, targetType, unwrapNullables: true)
                 || HasConversionTo_SingleWay(targetType, sourceType, unwrapNullables: false);
             return result;
         }
@@ -344,7 +342,7 @@ namespace OpenSense.Components {
                             .Invoke(obj: null, parameters: Array.Empty<object>());
                         return v => (TTarget)method2(v);
                     }
-                    
+
             }
         }
 
@@ -353,13 +351,13 @@ namespace OpenSense.Components {
             return result;
         }
 
-        private static TTarget CastConvertable<TSource, TTarget>(TSource source){
+        private static TTarget CastConvertable<TSource, TTarget>(TSource source) {
             var result = (TTarget)Convert.ChangeType(source, typeof(TTarget));//object boxed
             return result;
         }
 
-        private static TTarget? CastBetweenNullables<TSource, TTarget>(TSource? source) 
-            where TSource : struct 
+        private static TTarget? CastBetweenNullables<TSource, TTarget>(TSource? source)
+            where TSource : struct
             where TTarget : struct {
             if (!source.HasValue) {
                 return null;
@@ -673,43 +671,5 @@ jump:;
             }
         }
         #endregion
-
-        public static IEnumerable<Assembly> LoadAssemblies(string rootPath) {
-            var files = Directory.EnumerateFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
-            foreach (var file in files) {
-                var info = new FileInfo(file);
-                Debug.Assert(file.Length > 0);
-                if (info.Length == 0) {
-                    continue;
-                }
-
-                /** Test if it is a valid .NET assembly without throwing any exception.
-                 * Code from https://learn.microsoft.com/en-us/dotnet/standard/assembly/identify
-                 */
-                using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
-                    using var peReader = new PEReader(fs);
-                    if (!peReader.HasMetadata) {
-                        continue;
-                    }
-                    var reader = peReader.GetMetadataReader();
-                    if (!reader.IsAssembly) {
-                        continue;
-                    }
-                }
-
-                /** Try to load assembly.
-                  */
-                Assembly asm = null;
-                try {
-                    asm = Assembly.LoadFrom(file);
-                } catch (BadImageFormatException) {
-                    ;
-                }
-                if (asm is null) {
-                    continue;
-                }
-                yield return asm;
-            }
-        }
     }
 }

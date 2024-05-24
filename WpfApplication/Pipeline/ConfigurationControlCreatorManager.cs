@@ -9,7 +9,7 @@ using OpenSense.Components;
 using OpenSense.WPF.Components;
 
 namespace OpenSense.WPF.Pipeline {
-    public class ConfigurationControlCreatorManager{
+    internal sealed class ConfigurationControlCreatorManager {
 
         [ImportMany]
         private IConfigurationControlCreator[] creators { get; set; }
@@ -19,7 +19,7 @@ namespace OpenSense.WPF.Pipeline {
                 typeof(ConfigurationControlCreatorManager).Assembly,
                 Assembly.GetEntryAssembly(),
             };
-            assemblies.AddRange(HelperExtensions.LoadAssemblies(AppDomain.CurrentDomain.BaseDirectory));
+            assemblies.AddRange(PluginAssemblyLoadContext.LoadAssemblies(AppDomain.CurrentDomain.BaseDirectory));
             var configuration = new ContainerConfiguration()
                 .WithAssemblies(assemblies);//note: Fluent interface
             using var container = configuration.CreateContainer();
