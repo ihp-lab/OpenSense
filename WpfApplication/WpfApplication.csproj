@@ -146,7 +146,7 @@
         <OpenSensePluginProject Include="..\Widgets\OpenSmileConfigurationConverter.WPF\OpenSmileConfigurationConverter.WPF.csproj" />
     </ItemGroup>
 
-    <Target Name="BuildPlugins" BeforeTargets="BeforeBuild">
+    <Target Name="BuildPlugins" DependsOnTargets="AfterBuild" AfterTargets="AfterBuild">
         <PropertyGroup>
             <!-- Set plugin output folder. $(OutDir) only contains value after a certain stage, so we have to define this property at here. -->
             <PluginGatherDir>$(OutDir)$(OpenSensePluginRootPath)</PluginGatherDir>
