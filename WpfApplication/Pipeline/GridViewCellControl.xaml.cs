@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using static IronPython.SQLite.PythonSQLite;
 
 namespace OpenSense.WPF.Pipeline {
     public partial class GridViewCellControl : UserControl {
