@@ -3,6 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net8.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
+        <!-- For System.Drawing.SystemIcons -->
+        <UseWindowsForms>true</UseWindowsForms>
         <Platforms>x64</Platforms>
         <PlatformTarget>x64</PlatformTarget>
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
@@ -21,6 +23,7 @@
         And we should maintain the version of onnxruntime dependency of our components carefully so that it aligns with those in Azure Kinect package.
         -->
         <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+        <OpenSensePluginRootPath>plugins\</OpenSensePluginRootPath>
     </PropertyGroup>
 
     <ItemGroup>
@@ -55,78 +58,12 @@
         <PackageReference Include="System.Composition" Version="8.0.0" />
     </ItemGroup>
 
-    <!--Minimal Project References: If you want a clean version of app, just copy and paste these reference. You may add additional project references to make this app shipping with components. 
     <ItemGroup>
-      <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
-      <ProjectReference Include="..\Pipeline\Pipeline.csproj" />
-      <ProjectReference Include="..\Psi.WPF.Common\Psi.WPF.Common.csproj" />
-      <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
-      <ProjectReference Include="..\WpfWidgetContract\WpfWidgetContract.csproj" />
-    </ItemGroup>
-    -->
-
-    <!--All-In-One Project References: All available components are added as dependencies-->
-    <ItemGroup>
-        <!--Minimal project references: Cannot run without these-->
         <ProjectReference Include="..\ComponentContract\ComponentContract.csproj" />
         <ProjectReference Include="..\Pipeline\Pipeline.csproj" />
         <ProjectReference Include="..\Components\Psi.WPF.Common\Psi.WPF.Common.csproj" />
         <ProjectReference Include="..\WpfComponentContract\WpfComponentContract.csproj" />
         <ProjectReference Include="..\WpfWidgetContract\WpfWidgetContract.csproj" />
-
-        <!--Additional references: All project names ending with ".WPF"-->
-        <!--Components-->
-        <ProjectReference Include="..\Components\Audio.Visualizer.WPF\Audio.Visualizer.WPF.csproj" />
-        <ProjectReference Include="..\Components\AzureKinect.Visualizer.WPF\AzureKinect.Visualizer.WPF.csproj" />
-        <ProjectReference Include="..\Components\AzureSpeech.WPF\AzureSpeech.WPF.csproj" />
-        <ProjectReference Include="..\Components\Biopac.Visualizer.WPF\Biopac.Visualizer.WPF.csproj" />
-        <ProjectReference Include="..\Components\BodyGestureDetectors.WPF\BodyGestureDetectors.WPF.csproj" />
-        <ProjectReference Include="..\Components\Builtin.WPF\Builtin.WPF.csproj" />
-        <ProjectReference Include="..\Components\Builtin.Visualizer.WPF\Builtin.Visualizer.WPF.csproj" />
-        <ProjectReference Include="..\Components\CollectionOperators.WPF\CollectionOperators.WPF.csproj" />
-        <ProjectReference Include="..\Components\CsvExporter.WPF\CsvExporter.WPF.csproj" />
-        <ProjectReference Include="..\Components\Emotion.Visualizer.WPF\Emotion.Visualizer.WPF.csproj" />
-        <ProjectReference Include="..\Components\EyePointOfInterest.Visualizer.WPF\EyePointOfInterest.Visualizer.WPF.csproj" />
-        <ProjectReference Include="..\Components\EyePointOfInterest.WPF\EyePointOfInterest.WPF.csproj" />
-        <ProjectReference Include="..\Components\FFMpeg.Windows.WPF\FFMpeg.Windows.WPF.csproj" />
-        <ProjectReference Include="..\Components\GoogleCloud.Speech.V1.WPF\GoogleCloud.Speech.V1.WPF.csproj" />
-        <ProjectReference Include="..\Components\HeadGesture\HeadGesture.csproj" />
-        <!--No settings available, thus no related WPF project here-->
-        <ProjectReference Include="..\Components\HeadGesture.Visualizer.WPF\HeadGesture.Visualizer.WPF.csproj" />
-        <ProjectReference Include="..\Components\MediaPipe.Net.Visualizer.WPF\MediaPipe.NET.Visualizer.WPF.csproj" />
-        <ProjectReference Include="..\Components\MediaPipe.NET.WPF\MediaPipe.NET.WPF.csproj" />
-        <ProjectReference Include="..\Components\OpenCvSharp.Windows\OpenCvSharp.Windows.csproj" />
-        <ProjectReference Include="..\Components\OpenCvSharp.WPF\OpenCvSharp.WPF.csproj" />
-        <ProjectReference Include="..\Components\OpenFace.Visualizer.WPF\OpenFace.Visualizer.WPF.csproj" />
-        <ProjectReference Include="..\Components\OpenFace.Windows.WPF\OpenFace.Windows.WPF.csproj" />
-        <ProjectReference Include="..\Components\OpenPose.Visualizer.WPF\OpenPose.Visualizer.WPF.csproj" />
-        <ProjectReference Include="..\Components\OpenPose.WPF\OpenPose.WPF.csproj" />
-        <ProjectReference Include="..\Components\OpenSmile.Visualizer.WPF\OpenSmile.Visualizer.WPF.csproj" />
-        <ProjectReference Include="..\Components\OpenSmile.Windows.WPF\OpenSmile.Windows.WPF.csproj" />
-        <ProjectReference Include="..\Components\LibreFace.Visualizer.WPF\LibreFace.Visualizer.WPF.csproj" />
-        <ProjectReference Include="..\Components\LibreFace.WPF\LibreFace.WPF.csproj" />
-        <ProjectReference Include="..\Components\Psi.Audio.Windows.WPF\Psi.Audio.Windows.WPF.csproj" />
-        <ProjectReference Include="..\Components\Psi.Audio.WPF\Psi.Audio.WPF.csproj" />
-        <ProjectReference Include="..\Components\Psi.AzureKinect.WPF\Psi.AzureKinect.WPF.csproj" />
-        <ProjectReference Include="..\Components\Psi.CognitiveServices.Face.WPF\Psi.CognitiveServices.Face.WPF.csproj" />
-        <ProjectReference Include="..\Components\Psi.CognitiveServices.Speech.WPF\Psi.CognitiveServices.Speech.WPF.csproj" />
-        <ProjectReference Include="..\Components\Psi.Data.WPF\Psi.Data.WPF.csproj" />
-        <ProjectReference Include="..\Components\Psi.Imaging.Visualizer.WPF\Psi.Imaging.Visualizer.WPF.csproj" />
-        <ProjectReference Include="..\Components\Psi.Imaging.WPF\Psi.Imaging.WPF.csproj" />
-        <ProjectReference Include="..\Components\Psi.Imaging.Windows.WPF\Psi.Imaging.Windows.WPF.csproj" />
-        <!--<ProjectReference Include="..\Components\Psi.Kinect.Windows.WPF\Psi.Kinect.Windows.WPF.csproj" />-->
-        <ProjectReference Include="..\Components\Psi.Media.Windows.WPF\Psi.Media.Windows.WPF.csproj" />
-        <ProjectReference Include="..\Components\Psi.Speech.Visualizer.WPF\Psi.Speech.Visualizer.WPF.csproj" />
-        <ProjectReference Include="..\Components\Psi.Speech.Windows.WPF\Psi.Speech.Windows.WPF.csproj" />
-        <ProjectReference Include="..\Components\Psi.Builtin.WPF\Psi.Builtin.WPF.csproj" />
-        <ProjectReference Include="..\Components\PythonSupports.WPF\PythonSupports.WPF.csproj" />
-        <ProjectReference Include="..\Components\Shimmer3.WPF\Shimmer3.WPF.csproj" />
-        <ProjectReference Include="..\Components\Statistics.WPF\Statistics.WPF.csproj" />
-        <ProjectReference Include="..\Components\VirtualHumanMessage.WPF\VirtualHumanMessage.WPF.csproj" />
-        <ProjectReference Include="..\Components\Whisper.NET.WPF\Whisper.NET.WPF.csproj" />
-        <!--Widgets-->
-        <ProjectReference Include="..\Widgets\DisplayPoiEstimatorBuilder.WPF\DisplayPoiEstimatorBuilder.WPF.csproj" />
-        <ProjectReference Include="..\Widgets\OpenSmileConfigurationConverter.WPF\OpenSmileConfigurationConverter.WPF.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -143,4 +80,103 @@
         <Resource Include="Resource\Icon\vflip.ico" />
     </ItemGroup>
 
+    <!-- Include all plugins: All project names ending with ".WPF"-->
+    <ItemGroup>
+        <!--Components-->
+        
+        <OpenSensePluginProject Include="..\Components\Audio.Visualizer.WPF\Audio.Visualizer.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\AzureKinect.Visualizer.WPF\AzureKinect.Visualizer.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\AzureSpeech.WPF\AzureSpeech.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\Biopac.Visualizer.WPF\Biopac.Visualizer.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\BodyGestureDetectors.WPF\BodyGestureDetectors.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\Builtin.WPF\Builtin.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\Builtin.Visualizer.WPF\Builtin.Visualizer.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\CollectionOperators.WPF\CollectionOperators.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\CsvExporter.WPF\CsvExporter.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\Emotion.Visualizer.WPF\Emotion.Visualizer.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\EyePointOfInterest.Visualizer.WPF\EyePointOfInterest.Visualizer.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\EyePointOfInterest.WPF\EyePointOfInterest.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\FFMpeg.Windows.WPF\FFMpeg.Windows.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\GoogleCloud.Speech.V1.WPF\GoogleCloud.Speech.V1.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\HeadGesture\HeadGesture.csproj" />
+        <!--No settings available, thus no related WPF project here-->
+        <OpenSensePluginProject Include="..\Components\HeadGesture.Visualizer.WPF\HeadGesture.Visualizer.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\MediaPipe.Net.Visualizer.WPF\MediaPipe.NET.Visualizer.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\MediaPipe.NET.WPF\MediaPipe.NET.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\OpenCvSharp.Windows\OpenCvSharp.Windows.csproj" />
+        <OpenSensePluginProject Include="..\Components\OpenCvSharp.WPF\OpenCvSharp.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\OpenFace.Visualizer.WPF\OpenFace.Visualizer.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\OpenFace.Windows.WPF\OpenFace.Windows.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\OpenPose.Visualizer.WPF\OpenPose.Visualizer.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\OpenPose.WPF\OpenPose.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\OpenSmile.Visualizer.WPF\OpenSmile.Visualizer.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\OpenSmile.Windows.WPF\OpenSmile.Windows.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\LibreFace.Visualizer.WPF\LibreFace.Visualizer.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\LibreFace.WPF\LibreFace.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\Psi.Audio.Windows.WPF\Psi.Audio.Windows.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\Psi.Audio.WPF\Psi.Audio.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\Psi.AzureKinect.WPF\Psi.AzureKinect.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\Psi.CognitiveServices.Face.WPF\Psi.CognitiveServices.Face.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\Psi.CognitiveServices.Speech.WPF\Psi.CognitiveServices.Speech.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\Psi.Data.WPF\Psi.Data.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\Psi.Imaging.Visualizer.WPF\Psi.Imaging.Visualizer.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\Psi.Imaging.WPF\Psi.Imaging.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\Psi.Imaging.Windows.WPF\Psi.Imaging.Windows.WPF.csproj" />
+        <!--<OpenSensePluginProject Include="..\Components\Psi.Kinect.Windows.WPF\Psi.Kinect.Windows.WPF.csproj" />-->
+        <OpenSensePluginProject Include="..\Components\Psi.Media.Windows.WPF\Psi.Media.Windows.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\Psi.Speech.Visualizer.WPF\Psi.Speech.Visualizer.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\Psi.Speech.Windows.WPF\Psi.Speech.Windows.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\Psi.Builtin.WPF\Psi.Builtin.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\PythonSupports.WPF\PythonSupports.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\Shimmer3.WPF\Shimmer3.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\Statistics.WPF\Statistics.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\VirtualHumanMessage.WPF\VirtualHumanMessage.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\Whisper.NET.WPF\Whisper.NET.WPF.csproj" />
+        
+        <!--Widgets-->
+        
+        <OpenSensePluginProject Include="..\Widgets\DisplayPoiEstimatorBuilder.WPF\DisplayPoiEstimatorBuilder.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Widgets\OpenSmileConfigurationConverter.WPF\OpenSmileConfigurationConverter.WPF.csproj" />
+    </ItemGroup>
+
+    <Target Name="BuildPlugins" BeforeTargets="BeforeBuild">
+        <PropertyGroup>
+            <!-- Set plugin output folder. $(OutDir) only contains value after a certain stage, so we have to define this property at here. -->
+            <PluginGatherDir>$(OutDir)$(OpenSensePluginRootPath)</PluginGatherDir>
+        </PropertyGroup>
+
+        <CreateProperty Value="@(OpenSensePluginProject->Count())">
+            <Output TaskParameter="Value" PropertyName="NumberOfPluginProjects" />
+        </CreateProperty>
+
+        <!-- Initialize an empty PluginOutDir to collect the output DLL paths. Only this information can be collected from MSBuild. -->
+        <ItemGroup>
+            <PluginTargetOutput />
+        </ItemGroup>
+
+        <Message Text="Building $(NumberOfPluginProjects) plugin(s)..." Importance="high" />
+
+        <!-- https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-task -->
+        <MSBuild Projects="@(OpenSensePluginProject)" Targets="Build" StopOnFirstFailure="true">
+            <Output TaskParameter="TargetOutputs" ItemName="PluginTargetOutput" />
+        </MSBuild>
+
+        <ItemGroup>
+            <!-- Convert output DLL path to its folder. -->
+            <PluginOutDir Include="@(PluginTargetOutput->'%(RootDir)%(Directory)')" />
+        </ItemGroup>
+
+        <!-- List files, as Copy does not support folders and wildcards. -->
+        <CreateItem Include="@(PluginOutDir->'%(FullPath)**\*')">
+            <Output ItemName="PluginFilesToCopy" TaskParameter="Include" />
+        </CreateItem>
+
+        <CreateProperty Value="@(PluginFilesToCopy->Count())">
+            <Output TaskParameter="Value" PropertyName="NumberOfPluginFilesToCopy" />
+        </CreateProperty>
+
+        <Message Text="Copying $(NumberOfPluginFilesToCopy) file(s)..." Importance="high" />
+        
+        <Copy SourceFiles="@(PluginFilesToCopy)" DestinationFolder="$(PluginGatherDir)%(RecursiveDir)" />
+    </Target>
 </Project>
