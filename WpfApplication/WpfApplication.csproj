@@ -16,14 +16,8 @@
         <AssemblyVersion>3.2.0</AssemblyVersion>
         <Version>3.2.0</Version>
         <AssemblyName>OpenSense.WPF</AssemblyName>
-        <!--Note:
-        The Azure Kinect package of /psi contains onnxruntime DLLs while not referencing it as a dependency. 
-        And these files conflit with other components having onnxruntime as a dependency.
-        This should be a temporary fix.
-        And we should maintain the version of onnxruntime dependency of our components carefully so that it aligns with those in Azure Kinect package.
-        -->
-        <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
         <OpenSensePluginRootPath>plugins\</OpenSensePluginRootPath>
+        <OpenSensePluginDefaultAssetBundleName>default</OpenSensePluginDefaultAssetBundleName>
     </PropertyGroup>
 
     <ItemGroup>
@@ -80,10 +74,16 @@
         <Resource Include="Resource\Icon\vflip.ico" />
     </ItemGroup>
 
+    <ItemDefinitionGroup>
+        <OpenSensePluginProject>
+            <OpenSensePluginAssetBundleName>$(OpenSensePluginDefaultAssetBundleName)</OpenSensePluginAssetBundleName>
+        </OpenSensePluginProject>
+    </ItemDefinitionGroup>
+
     <!-- Include all plugins: All project names ending with ".WPF"-->
     <ItemGroup>
         <!--Components-->
-        
+
         <OpenSensePluginProject Include="..\Components\Audio.Visualizer.WPF\Audio.Visualizer.WPF.csproj" />
         <OpenSensePluginProject Include="..\Components\AzureKinect.Visualizer.WPF\AzureKinect.Visualizer.WPF.csproj" />
         <OpenSensePluginProject Include="..\Components\AzureSpeech.WPF\AzureSpeech.WPF.csproj" />
@@ -115,7 +115,14 @@
         <OpenSensePluginProject Include="..\Components\LibreFace.WPF\LibreFace.WPF.csproj" />
         <OpenSensePluginProject Include="..\Components\Psi.Audio.Windows.WPF\Psi.Audio.Windows.WPF.csproj" />
         <OpenSensePluginProject Include="..\Components\Psi.Audio.WPF\Psi.Audio.WPF.csproj" />
-        <OpenSensePluginProject Include="..\Components\Psi.AzureKinect.WPF\Psi.AzureKinect.WPF.csproj" />
+        <OpenSensePluginProject Include="..\Components\Psi.AzureKinect.WPF\Psi.AzureKinect.WPF.csproj">
+            <!--Note:
+            The Azure Kinect package of /psi contains onnxruntime DLLs while not referencing it as a dependency.
+            And these files conflit with other components having onnxruntime as a dependency.
+            So we keep them separately.
+            -->
+            <OpenSensePluginAssetBundleName>Psi.AzureKinect.WPF</OpenSensePluginAssetBundleName>
+        </OpenSensePluginProject>
         <OpenSensePluginProject Include="..\Components\Psi.CognitiveServices.Face.WPF\Psi.CognitiveServices.Face.WPF.csproj" />
         <OpenSensePluginProject Include="..\Components\Psi.CognitiveServices.Speech.WPF\Psi.CognitiveServices.Speech.WPF.csproj" />
         <OpenSensePluginProject Include="..\Components\Psi.Data.WPF\Psi.Data.WPF.csproj" />
@@ -132,9 +139,9 @@
         <OpenSensePluginProject Include="..\Components\Statistics.WPF\Statistics.WPF.csproj" />
         <OpenSensePluginProject Include="..\Components\VirtualHumanMessage.WPF\VirtualHumanMessage.WPF.csproj" />
         <OpenSensePluginProject Include="..\Components\Whisper.NET.WPF\Whisper.NET.WPF.csproj" />
-        
+
         <!--Widgets-->
-        
+
         <OpenSensePluginProject Include="..\Widgets\DisplayPoiEstimatorBuilder.WPF\DisplayPoiEstimatorBuilder.WPF.csproj" />
         <OpenSensePluginProject Include="..\Widgets\OpenSmileConfigurationConverter.WPF\OpenSmileConfigurationConverter.WPF.csproj" />
     </ItemGroup>
@@ -145,7 +152,7 @@
             <PluginGatherDir>$(OutDir)$(OpenSensePluginRootPath)</PluginGatherDir>
         </PropertyGroup>
 
-        <CreateProperty Value="@(OpenSensePluginProject->Count())">
+        <CreateProperty Value="@(OpenSensePluginProject-&gt;Count())">
             <Output TaskParameter="Value" PropertyName="NumberOfPluginProjects" />
         </CreateProperty>
 
@@ -166,17 +173,24 @@
             <PluginOutDir Include="@(PluginTargetOutput->'%(RootDir)%(Directory)')" />
         </ItemGroup>
 
-        <!-- List files, as Copy does not support folders and wildcards. -->
-        <CreateItem Include="@(PluginOutDir->'%(FullPath)**\*')">
+        <!-- List files, as Copy does not support folders and wildcards. The special syntax was referenced from here https://learn.microsoft.com/en-us/dotnet/api/microsoft.build.tasks.createitem.additionalmetadata#remarks. -->
+        <CreateItem Include="@(PluginOutDir->'%(FullPath)**\*')" AdditionalMetadata="@(OpenSensePluginAssetBundleName->'OpenSensePluginAssetBundleName=%(OpenSensePluginAssetBundleName)\')">
             <Output ItemName="PluginFilesToCopy" TaskParameter="Include" />
         </CreateItem>
 
-        <CreateProperty Value="@(PluginFilesToCopy->Count())">
+        <ItemGroup>
+            <!-- We could not change Metadata name in CreateItem, so we convert it at here. -->
+            <PluginFilesToCopy>
+                <OpenSensePluginAssetBundlePath>%(OpenSensePluginAssetBundleName)\</OpenSensePluginAssetBundlePath>
+            </PluginFilesToCopy>
+        </ItemGroup>
+
+        <CreateProperty Value="@(PluginFilesToCopy-&gt;Count())">
             <Output TaskParameter="Value" PropertyName="NumberOfPluginFilesToCopy" />
         </CreateProperty>
 
         <Message Text="Copying $(NumberOfPluginFilesToCopy) file(s)..." Importance="high" />
-        
-        <Copy SourceFiles="@(PluginFilesToCopy)" DestinationFolder="$(PluginGatherDir)%(RecursiveDir)" />
+
+        <Copy SourceFiles="@(PluginFilesToCopy)" DestinationFolder="$(PluginGatherDir)%(OpenSensePluginAssetBundlePath)%(RecursiveDir)" />
     </Target>
 </Project>
