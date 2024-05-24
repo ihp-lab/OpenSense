@@ -181,7 +181,7 @@
         <ItemGroup>
             <!-- We could not change Metadata name in CreateItem, so we convert it at here. -->
             <PluginFilesToCopy>
-                <OpenSensePluginAssetBundlePath>%(OpenSensePluginAssetBundleName)\</OpenSensePluginAssetBundlePath>
+                <PluginAssetBundlePath>%(OpenSensePluginAssetBundleName)\</PluginAssetBundlePath>
             </PluginFilesToCopy>
         </ItemGroup>
 
@@ -191,6 +191,6 @@
 
         <Message Text="Copying $(NumberOfPluginFilesToCopy) file(s)..." Importance="high" />
 
-        <Copy SourceFiles="@(PluginFilesToCopy)" DestinationFolder="$(PluginGatherDir)%(OpenSensePluginAssetBundlePath)%(RecursiveDir)" />
+        <Copy SourceFiles="@(PluginFilesToCopy)" DestinationFolder="$(PluginGatherDir)%(PluginAssetBundlePath)%(RecursiveDir)" />
     </Target>
 </Project>
