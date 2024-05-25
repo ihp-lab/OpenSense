@@ -150,11 +150,8 @@
         <PropertyGroup>
             <!-- Set plugin output folder. $(OutDir) only contains value after a certain stage, so we have to define this property at here. -->
             <PluginGatherDir>$(OutDir)$(OpenSensePluginRootPath)</PluginGatherDir>
+            <NumberOfPluginProjects>@(OpenSensePluginProject->Count())</NumberOfPluginProjects>
         </PropertyGroup>
-
-        <CreateProperty Value="@(OpenSensePluginProject-&gt;Count())">
-            <Output TaskParameter="Value" PropertyName="NumberOfPluginProjects" />
-        </CreateProperty>
 
         <!-- Initialize an empty PluginOutDir to collect the output DLL paths. Only this information can be collected from MSBuild. -->
         <ItemGroup>
