@@ -150,7 +150,7 @@
         <PropertyGroup>
             <!-- Set plugin output folder. $(OutDir) only contains value after a certain stage, so we have to define this property at here. -->
             <PluginGatherDir>$(OutDir)$(OpenSensePluginRootPath)</PluginGatherDir>
-            <NumberOfPluginProjects>@(OpenSensePluginProject->Count())</NumberOfPluginProjects>
+            <NumberOfPluginProjects>@(OpenSensePluginProject-&gt;Count())</NumberOfPluginProjects>
         </PropertyGroup>
 
         <!-- Initialize an empty PluginOutDir to collect the output DLL paths. Only this information can be collected from MSBuild. -->
@@ -162,6 +162,7 @@
 
         <!-- https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-task -->
         <MSBuild Projects="@(OpenSensePluginProject)" Targets="Build" StopOnFirstFailure="true">
+            <!-- Metadata OpenSensePluginAssetBundleName from OpenSensePluginProject is attached to PluginTargetOutput. -->
             <Output TaskParameter="TargetOutputs" ItemName="PluginTargetOutput" />
         </MSBuild>
 
@@ -170,8 +171,8 @@
             <PluginOutDir Include="@(PluginTargetOutput->'%(RootDir)%(Directory)')" />
         </ItemGroup>
 
-        <!-- List files, as Copy does not support folders and wildcards. The special syntax was referenced from here https://learn.microsoft.com/en-us/dotnet/api/microsoft.build.tasks.createitem.additionalmetadata#remarks. -->
-        <CreateItem Include="@(PluginOutDir->'%(FullPath)**\*')" AdditionalMetadata="@(OpenSensePluginAssetBundleName->'OpenSensePluginAssetBundleName=%(OpenSensePluginAssetBundleName)\')">
+        <!-- List files, as Copy does not support folders and wildcards. Creating an Item in ItemGroup will not expand wildcards. -->
+        <CreateItem Include="@(PluginOutDir->'%(Identity)**\*')">
             <Output ItemName="PluginFilesToCopy" TaskParameter="Include" />
         </CreateItem>
 
@@ -182,7 +183,7 @@
             </PluginFilesToCopy>
         </ItemGroup>
 
-        <CreateProperty Value="@(PluginFilesToCopy-&gt;Count())">
+        <CreateProperty Value="@(PluginFilesToCopy->Count())">
             <Output TaskParameter="Value" PropertyName="NumberOfPluginFilesToCopy" />
         </CreateProperty>
 
