@@ -177,7 +177,23 @@
         </CreateItem>
 
         <ItemGroup>
-            <!-- We could not change Metadata name in CreateItem, so we convert it at here. -->
+            <!-- NOTE:
+                All the plugin projects in this solution which reference WpfComponentContract will have OpenSense.Components.Contracts.dll copied to their output folder.
+                In other words, ProjectReference's ProjectReference DLLs will be copied to the output folder.
+                This cannot be solved by changing any metadata of the ProjectReference item.
+                Though the Private metadata will exclude the referenced project's DLL itself, it does not handle the dependency's dependency.
+                PackageReference together with ExcludeAssets does not have this issue.
+                This ProjectReference issue causes problems in our case because we copy all the files in the plugin's output folder, thus having a duplicate OpenSense.Components.Contracts.dll in plugin folders.
+                Duplicate OpenSense.Components.Contracts.dll should not be allowed according to AssemblyLoadContext's documentation.
+                The good thing is, OpenSense.Components.Contracts.dll will not be included in plugin packages when packaged.
+                So, our solution is to remove the duplicates from the copy file list.
+                Another solution can be replacing all ComponentContract's ProjectReference with PackageReference, but that loses flexibility of testing ComponentContract's changes before creating a package.
+                
+                We cannot define a separate item elsewhere to list filename patterns to exclude because MSBuild does not provide a way to combine two items; in other words, item transforms cannot be nested.
+            -->
+            <PluginFilesToCopy Remove="@(PluginOutDir->'%(Identity)**\OpenSense.Components.Contracts.*')"/>
+
+            <!-- We could not change Metadata name in CreateItem, so we convert it at here. The AdditionalMetadata property of CreateItem does not work even with its special syntax. -->
             <PluginFilesToCopy>
                 <PluginAssetBundlePath>%(OpenSensePluginAssetBundleName)\</PluginAssetBundlePath>
             </PluginFilesToCopy>
