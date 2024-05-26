@@ -205,6 +205,9 @@
 
         <Message Text="Copying $(NumberOfPluginFilesToCopy) file(s)..." Importance="high" />
 
+        <!-- Remove plugins from the previous build. -->
+        <RemoveDir Directories="$(PluginGatherDir)"/>
+
         <Copy SourceFiles="@(PluginFilesToCopy)" DestinationFolder="$(PluginGatherDir)%(PluginAssetBundlePath)%(RecursiveDir)" />
     </Target>
 </Project>
