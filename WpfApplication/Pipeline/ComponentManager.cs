@@ -1,28 +1,21 @@
-﻿using System;
+﻿#nullable enable
+
 using System.Collections.Generic;
 using System.Composition;
-using System.Composition.Hosting;
-using System.Reflection;
+using System.Diagnostics;
 using OpenSense.Components;
 
 namespace OpenSense.WPF.Pipeline {
     internal sealed class ComponentManager {
 
         [ImportMany]
-        private IComponentMetadata[] components { get; set; }
+        private IComponentMetadata[] ImportedComponents { get; set; } = null!;
 
-        public IReadOnlyList<IComponentMetadata> Components => components;
+        public IReadOnlyList<IComponentMetadata> Components => ImportedComponents;
 
         public ComponentManager() {
-            var assemblies = new List<Assembly>() {
-                typeof(ComponentManager).Assembly,
-                Assembly.GetEntryAssembly(),
-            };
-            assemblies.AddRange(PluginAssemblyLoadContext.LoadAssemblies(AppDomain.CurrentDomain.BaseDirectory));
-            var configuration = new ContainerConfiguration()
-                .WithAssemblies(assemblies);//note: Fluent interface
-            using var container = configuration.CreateContainer();
-            container.SatisfyImports(this);
+            PluginBundleManager.Default.SatisfyImports(this);
+            Debug.Assert(ImportedComponents is not null);
         }
     }
 }

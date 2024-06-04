@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using OpenSense.Components;
-using OpenSense.Pipeline;
 
 namespace OpenSense.WPF.Pipeline {
     public partial class CreateComponentConfigurationWindow : Window {

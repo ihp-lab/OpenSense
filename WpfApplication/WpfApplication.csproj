@@ -16,6 +16,7 @@
         <AssemblyVersion>3.2.0</AssemblyVersion>
         <Version>3.2.0</Version>
         <AssemblyName>OpenSense.WPF</AssemblyName>
+        <!-- This path is also defined in the source code. -->
         <OpenSensePluginRootPath>plugins\</OpenSensePluginRootPath>
         <OpenSensePluginDefaultAssetBundleName>default</OpenSensePluginDefaultAssetBundleName>
     </PropertyGroup>
@@ -76,7 +77,7 @@
 
     <ItemDefinitionGroup>
         <OpenSensePluginProject>
-            <OpenSensePluginAssetBundleName>$(OpenSensePluginDefaultAssetBundleName)</OpenSensePluginAssetBundleName>
+            <OpenSensePluginBundleName>$(OpenSensePluginDefaultAssetBundleName)</OpenSensePluginBundleName>
         </OpenSensePluginProject>
     </ItemDefinitionGroup>
 
@@ -121,7 +122,7 @@
             And these files conflit with other components having onnxruntime as a dependency.
             So we keep them separately.
             -->
-            <OpenSensePluginAssetBundleName>Psi.AzureKinect.WPF</OpenSensePluginAssetBundleName>
+            <OpenSensePluginBundleName>Psi.AzureKinect.WPF</OpenSensePluginBundleName>
         </OpenSensePluginProject>
         <OpenSensePluginProject Include="..\Components\Psi.CognitiveServices.Face.WPF\Psi.CognitiveServices.Face.WPF.csproj" />
         <OpenSensePluginProject Include="..\Components\Psi.CognitiveServices.Speech.WPF\Psi.CognitiveServices.Speech.WPF.csproj" />
@@ -162,7 +163,7 @@
 
         <!-- https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-task -->
         <MSBuild Projects="@(OpenSensePluginProject)" Targets="Build" StopOnFirstFailure="true">
-            <!-- Metadata OpenSensePluginAssetBundleName from OpenSensePluginProject is attached to PluginTargetOutput. -->
+            <!-- Metadata OpenSensePluginBundleName from OpenSensePluginProject is attached to PluginTargetOutput. -->
             <Output TaskParameter="TargetOutputs" ItemName="PluginTargetOutput" />
         </MSBuild>
 
@@ -190,12 +191,16 @@
                 Another solution can be replacing all ComponentContract's ProjectReference with PackageReference, but that loses flexibility of testing ComponentContract's changes before creating a package.
                 
                 We cannot define a separate item elsewhere to list filename patterns to exclude because MSBuild does not provide a way to combine two items; in other words, item transforms cannot be nested.
+                
+                Even if these assemblies are not removed, they will be ignored, and the host application's assembly will be used instead.
+                Therefore, it is safe to leave them there; we are deleting them to save space.
+                This behavior is defined in our custom AssemblyLoadContext.
             -->
             <PluginFilesToCopy Remove="@(PluginOutDir->'%(Identity)**\OpenSense.Components.Contracts.*')"/>
 
             <!-- We could not change Metadata name in CreateItem, so we convert it at here. The AdditionalMetadata property of CreateItem does not work even with its special syntax. -->
             <PluginFilesToCopy>
-                <PluginAssetBundlePath>%(OpenSensePluginAssetBundleName)\</PluginAssetBundlePath>
+                <PluginBundlePath>%(OpenSensePluginBundleName)\</PluginBundlePath>
             </PluginFilesToCopy>
         </ItemGroup>
 
@@ -208,6 +213,6 @@
         <!-- Remove plugins from the previous build. -->
         <RemoveDir Directories="$(PluginGatherDir)"/>
 
-        <Copy SourceFiles="@(PluginFilesToCopy)" DestinationFolder="$(PluginGatherDir)%(PluginAssetBundlePath)%(RecursiveDir)" />
+        <Copy SourceFiles="@(PluginFilesToCopy)" DestinationFolder="$(PluginGatherDir)%(PluginBundlePath)%(RecursiveDir)" />
     </Target>
 </Project>
