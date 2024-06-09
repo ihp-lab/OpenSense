@@ -256,6 +256,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureSpeech.WPF", "Componen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Audio.Common", "Components\Audio.Common\Audio.Common.csproj", "{FE5EBFB4-4A8A-4C52-8350-2CEC05241377}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Whisper.NET.Tests", "Tests\Whisper.NET.Tests\Whisper.NET.Tests.csproj", "{D36A5DCE-22A6-4B5D-A392-F7249693F618}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -730,6 +732,10 @@ Global
 		{FE5EBFB4-4A8A-4C52-8350-2CEC05241377}.Debug|x64.Build.0 = Debug|Any CPU
 		{FE5EBFB4-4A8A-4C52-8350-2CEC05241377}.Release|x64.ActiveCfg = Release|Any CPU
 		{FE5EBFB4-4A8A-4C52-8350-2CEC05241377}.Release|x64.Build.0 = Release|Any CPU
+		{D36A5DCE-22A6-4B5D-A392-F7249693F618}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D36A5DCE-22A6-4B5D-A392-F7249693F618}.Debug|x64.Build.0 = Debug|Any CPU
+		{D36A5DCE-22A6-4B5D-A392-F7249693F618}.Release|x64.ActiveCfg = Release|Any CPU
+		{D36A5DCE-22A6-4B5D-A392-F7249693F618}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -846,6 +852,7 @@ Global
 		{C3591272-A7FD-4A29-8103-3409AB1DAD11} = {5C411F31-BF09-4976-95CD-8748327C8478}
 		{D960D2EA-4958-4CA7-94C4-01BEEF0D1638} = {5C411F31-BF09-4976-95CD-8748327C8478}
 		{FE5EBFB4-4A8A-4C52-8350-2CEC05241377} = {5C411F31-BF09-4976-95CD-8748327C8478}
+		{D36A5DCE-22A6-4B5D-A392-F7249693F618} = {27E2B2F6-BF7E-42CE-890C-9358E8B1ACA5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4CB31E6C-64DF-499B-B990-0C72B1A2AF47}
