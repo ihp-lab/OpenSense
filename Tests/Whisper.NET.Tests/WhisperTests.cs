@@ -53,10 +53,10 @@ namespace Whisper.NET.Tests {
         [Fact]
         public void TestMergeDescriptions() {
             var pipeline = Pipeline.Create(deliveryPolicy: DeliveryPolicy.Unlimited);
-            var waveSource = new WaveFileAudioSource(pipeline, "Resources/BlankAudio_16kHz_44sec.wav");
+            var waveSource = new WaveFileAudioSource(pipeline, "Resources/BlankAudio_16kHz_75sec.wav");
             var mockVad = waveSource.Process<AudioBuffer, bool>((_, envelope, emitter) => {
                 //Whisper component has a promblem that it can't post all the results if the last VAD is not false because \Psi does not support detecting the end of a stream.
-                var value = envelope.OriginatingTime - pipeline.StartTime <= TimeSpan.FromSeconds(40);
+                var value = envelope.OriginatingTime - pipeline.StartTime <= TimeSpan.FromSeconds(74);
                 emitter.Post(value, envelope.OriginatingTime);
             });
             var input = waveSource.Join(mockVad);

@@ -399,15 +399,17 @@ namespace OpenSense.Components.Whisper.NET {
                         sb.Append(segmentText);
 
                         /* Record Trailing Description */
-                        lastTrailingDescription = null;
-                        descriptions = DescriptionRegex.Matches(segmentText);
-                        hasDescription = descriptions.Count > 0;
-                        if (hasDescription) {
-                            var lastDescription = descriptions[descriptions.Count - 1];
-                            Debug.Assert(lastDescription.Length > 0);
-                            var hasTrailingDescription = lastDescription.Index + lastDescription.Length == segmentText.Length;
-                            if (hasTrailingDescription) {
-                                lastTrailingDescription = lastDescription.Value;
+                        if (!string.IsNullOrEmpty(segmentText)) {
+                            lastTrailingDescription = null;
+                            descriptions = DescriptionRegex.Matches(segmentText);
+                            hasDescription = descriptions.Count > 0;
+                            if (hasDescription) {
+                                var lastDescription = descriptions[descriptions.Count - 1];
+                                Debug.Assert(lastDescription.Length > 0);
+                                var hasTrailingDescription = lastDescription.Index + lastDescription.Length == segmentText.Length;
+                                if (hasTrailingDescription) {
+                                    lastTrailingDescription = lastDescription.Value;
+                                }
                             }
                         }
                     }
