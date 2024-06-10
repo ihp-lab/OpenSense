@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -25,6 +27,8 @@ namespace OpenSense.Components.Whisper.NET {
         /// This value should be set as low as possible, while still being high enough to ensure that gap filling is never triggered when the delivery policy is set to Unlimited.
         /// </remarks>
         private const int GapSampleThreshold = 1;
+
+        private static readonly Regex DescriptionRegex = new(@"\[.*?\]|\(.*?\)", RegexOptions.Compiled);//Observerd so far: [BLANK_AUDIO][ Pause ][INAUDIBLE][SOUND](wind blowing)
 
         private readonly List<Section> _sections = new();
 
@@ -367,8 +371,48 @@ namespace OpenSense.Components.Whisper.NET {
                 if (_segments.Count > 1 && SegmentationRestriction == SegmentationRestriction.OnePerUtterence) {
                     Logger?.LogWarning("{count} segments received with the SingleSegment option on. Merging them into one.", _segments.Count);
                     Debug.Assert(_segments.Last().End - _segments.First().Start > TimeSpan.FromSeconds(30));
-                    Debug.Assert(_segments.All(s => s.Text.StartsWith(" ")));//Don't know why this happens
-                    var text = string.Join("", _segments.Select(s => s.Text));
+                    Debug.Assert(_segments.All(s => s.Text[0] == ' ' && s.Text[s.Text.Length - 1] != ' '));//Don't know why this happens, but our code is based on this observation
+                    var sb = new StringBuilder(capacity: _segments.Sum(s => s.Text.Length + 1));
+
+                    /* Deduplicate Descriptions */
+                    string? lastTrailingDescription = null;
+                    foreach (var segment in _segments) {
+                        var segmentText = segment.Text;
+
+                        /* Find Leading Description */
+                        var descriptions = DescriptionRegex.Matches(segment.Text);
+                        var hasDescription = descriptions.Count > 0;
+                        if (hasDescription) {
+                            var firstDescription = descriptions[0];
+                            Debug.Assert(firstDescription.Length > 0);
+                            var hasLeadingDescription = firstDescription.Index == 1 && segmentText[0] == ' ';
+                            if (hasLeadingDescription && lastTrailingDescription is not null) {
+                                var isDuplicateDescription = string.Equals(firstDescription.Value, lastTrailingDescription, StringComparison.InvariantCultureIgnoreCase);
+                                if (isDuplicateDescription) {
+                                    /* Remove Duplication */
+                                    segmentText = segmentText.Substring(firstDescription.Index + firstDescription.Length);
+                                    Debug.Assert(segmentText == "" || segmentText[0] == ' ');
+                                }
+                            }
+                        }
+
+                        sb.Append(segmentText);
+
+                        /* Record Trailing Description */
+                        lastTrailingDescription = null;
+                        descriptions = DescriptionRegex.Matches(segmentText);
+                        hasDescription = descriptions.Count > 0;
+                        if (hasDescription) {
+                            var lastDescription = descriptions[descriptions.Count - 1];
+                            Debug.Assert(lastDescription.Length > 0);
+                            var hasTrailingDescription = lastDescription.Index + lastDescription.Length == segmentText.Length;
+                            if (hasTrailingDescription) {
+                                lastTrailingDescription = lastDescription.Value;
+                            }
+                        }
+                    }
+
+                    /* Aggregate Probabilities */
                     var minProbability = 1d;
                     var maxProbability = 1d;
                     var probability = 1d;
@@ -377,11 +421,12 @@ namespace OpenSense.Components.Whisper.NET {
                         maxProbability *= segment.MaxProbability;
                         probability *= segment.Probability;
                     }
+
                     var language = _segments
                         .GroupBy(s => s.Language)
                         .OrderByDescending(g => g.Count())
                         .First().Key;
-                    var single = new SegmentData(text, _segments.First().Start, _segments.Last().End, (float)minProbability, (float)maxProbability, (float)probability, language);
+                    var single = new SegmentData(sb.ToString(), _segments.First().Start, _segments.Last().End, (float)minProbability, (float)maxProbability, (float)probability, language);
                     _segments.Clear();
                     _segments.Add(single);
                 }
@@ -389,7 +434,7 @@ namespace OpenSense.Components.Whisper.NET {
                 /* Post Segments */
                 foreach (var segment in _segments) {
                     /* Basic Info */
-                    Debug.Assert(segment.Text.StartsWith(" "));//Don't know why this happens
+                    Debug.Assert(segment.Text[0] == ' ' && segment.Text[segment.Text.Length - 1] != ' ');//Don't know why this happens, but our code is based on this observation
                     var text = segment.Text.Trim();
                     var confidence = segment.Probability;
                     var actualEnd = segment.End > bufferedDuration ? bufferedDuration : segment.End;//Input is padded to 30 seconds, so the end time may be larger than the actual end time
