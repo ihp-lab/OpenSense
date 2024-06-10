@@ -13,7 +13,6 @@ using Microsoft.Psi.Audio;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Speech;
 using OpenSense.Components.Audio;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace OpenSense.Components.AzureSpeech {
     public sealed class AzureSpeechRecognizer : IConsumerProducer<(AudioBuffer, bool), IStreamingSpeechRecognitionResult>, INotifyPropertyChanged, IDisposable {
