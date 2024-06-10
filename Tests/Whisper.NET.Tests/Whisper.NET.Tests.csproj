@@ -17,7 +17,21 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\Components\Whisper.NET\Whisper.NET.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
         <Using Include="Xunit" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Resources\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="Resources\*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>

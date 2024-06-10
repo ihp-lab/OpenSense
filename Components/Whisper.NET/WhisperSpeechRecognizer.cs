@@ -313,8 +313,6 @@ namespace OpenSense.Components.Whisper.NET {
 
             _sections.Add(newSection);
             bufferedDuration += newSection.Buffer.Duration;
-
-            Debug.Assert(bufferedDuration <= TimeSpan.FromSeconds(30));//TODO: we haven't tested what will happen if we feed more than 30 seconds of audio
         }
 
         private void ProcessAndPost(bool isFinal) {
@@ -364,9 +362,35 @@ namespace OpenSense.Components.Whisper.NET {
                 }
                 var firstSection = _sections.First();
                 Debug.Assert(Math.Abs(bufferedDuration.TotalMilliseconds - _sections.Aggregate(TimeSpan.Zero, (v, s) => v + s.Buffer.Duration).TotalMilliseconds) < 1);
+
+                /* Merge Segments */
+                if (_segments.Count > 1 && SegmentationRestriction == SegmentationRestriction.OnePerUtterence) {
+                    Logger?.LogWarning("{count} segments received with the SingleSegment option on. Merging them into one.", _segments.Count);
+                    Debug.Assert(_segments.Last().End - _segments.First().Start > TimeSpan.FromSeconds(30));
+                    Debug.Assert(_segments.All(s => s.Text.StartsWith(" ")));//Don't know why this happens
+                    var text = string.Join("", _segments.Select(s => s.Text));
+                    var minProbability = 1d;
+                    var maxProbability = 1d;
+                    var probability = 1d;
+                    foreach (var segment in _segments) {
+                        minProbability *= segment.MinProbability;
+                        maxProbability *= segment.MaxProbability;
+                        probability *= segment.Probability;
+                    }
+                    var language = _segments
+                        .GroupBy(s => s.Language)
+                        .OrderByDescending(g => g.Count())
+                        .First().Key;
+                    var single = new SegmentData(text, _segments.First().Start, _segments.Last().End, (float)minProbability, (float)maxProbability, (float)probability, language);
+                    _segments.Clear();
+                    _segments.Add(single);
+                }
+
+                /* Post Segments */
                 foreach (var segment in _segments) {
                     /* Basic Info */
-                    var text = segment.Text;
+                    Debug.Assert(segment.Text.StartsWith(" "));//Don't know why this happens
+                    var text = segment.Text.Trim();
                     var confidence = segment.Probability;
                     var actualEnd = segment.End > bufferedDuration ? bufferedDuration : segment.End;//Input is padded to 30 seconds, so the end time may be larger than the actual end time
                     var duration = actualEnd - segment.Start;
