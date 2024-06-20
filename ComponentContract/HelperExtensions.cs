@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Psi;
+using Microsoft.Psi.Common;
+using Microsoft.Psi.Serialization;
 
 namespace OpenSense.Components {
     public static class HelperExtensions {
@@ -91,7 +93,7 @@ namespace OpenSense.Components {
                 var getConsumerFunc = typeof(HelperExtensions)
                     .GetMethod(nameof(GetStaticConsumer))
                     .MakeGenericMethod(consumerDataType);
-                dynamic consumer = getConsumerFunc.Invoke(null, new object[] { inputStaticMetadata, inputConfig.LocalPort, instance });
+                dynamic consumer = getConsumerFunc.Invoke(null, [inputStaticMetadata, inputConfig.LocalPort, instance]);
 
                 var remoteEnvironment = instantiatedComponents.Single(e => inputConfig.RemoteId == e.Configuration.Id);
                 var remoteOutputMetadata = remoteEnvironment.FindPortMetadata(inputConfig.RemotePort);
@@ -99,7 +101,7 @@ namespace OpenSense.Components {
                 var getProducerFunc = typeof(HelperExtensions)
                     .GetMethod(nameof(GetProducer))
                     .MakeGenericMethod(consumerDataType);//Note: not producer data type, so that type conversion is applied when needed
-                dynamic producer = getProducerFunc.Invoke(null, new object[] { remoteEnvironment, inputConfig.RemotePort });
+                dynamic producer = getProducerFunc.Invoke(null, [remoteEnvironment, inputConfig.RemotePort]);
 
                 Operators.PipeTo(producer, consumer, inputConfig.DeliveryPolicy);
             }
@@ -171,11 +173,11 @@ namespace OpenSense.Components {
 
             /** Custom
              */
-            var result = GetImplicitOrExplicitConverters(source, target).Any();
+            var result = GetTypeConversionDelegates(source, target).Any();
             return result;
         }
 
-        private static IEnumerable<MethodInfo> GetImplicitOrExplicitConverters_SingleWay(this Type type, Type source, Type target) {
+        private static IEnumerable<MethodInfo> GetImplicitOrExplicitConverterMethods_SingleWay(this Type type, Type source, Type target) {
             var result = type.GetMethods(BindingFlags.Public | BindingFlags.Static)
                 .Where(mi => mi.Name == "op_Implicit" || mi.Name == "op_Explicit")
                 .Where(mi => mi.ReturnType == target)
@@ -190,12 +192,40 @@ namespace OpenSense.Components {
             return result;
         }
 
-        private static IEnumerable<MethodInfo> GetImplicitOrExplicitConverters(this Type source, Type target) {
-            foreach (var mi in GetImplicitOrExplicitConverters_SingleWay(source, source, target)) {
-                yield return mi;
+        private static Func<TSource, TTarget> CreateAssemblyLoadContextConverterDelegate<TSource, TTarget>() {
+            var context = new SerializationContext(KnownSerializers.Default);
+            var bufferWriter = new BufferWriter(16);//Since this method is thread-safe, we can reuse it.
+            var func = (Func<TSource, TTarget>)(d => {
+                bufferWriter.Reset();
+                Serializer.Serialize(bufferWriter, d, context);
+                var bufferReader = new BufferReader(bufferWriter);//The buffer array of BufferWriter is not static, so we cannot reuse BufferReader.
+                TTarget result = default;
+                Serializer.Deserialize(bufferReader, ref result, context);
+                return result;
+            });
+            return func;
+        }
+
+        private static readonly MethodInfo CreateAssemblyLoadContextConverterMethodInfo = 
+            typeof(HelperExtensions)
+            .GetMethod(nameof(CreateAssemblyLoadContextConverterDelegate), BindingFlags.NonPublic | BindingFlags.Static);
+
+        private static IEnumerable<Delegate> GetTypeConversionDelegates(this Type source, Type target) {
+            var delegateType = typeof(Func<,>).MakeGenericType(source, target);
+
+            /* Implicit or Explicit Converters */
+            foreach (var mi in GetImplicitOrExplicitConverterMethods_SingleWay(source, source, target)) {
+                yield return Delegate.CreateDelegate(delegateType, mi);
             }
-            foreach (var mi in GetImplicitOrExplicitConverters_SingleWay(target, source, target)) {
-                yield return mi;
+            foreach (var mi in GetImplicitOrExplicitConverterMethods_SingleWay(target, source, target)) {
+                yield return Delegate.CreateDelegate(delegateType, mi);
+            }
+
+            /* Assembly Load Context Conversion */
+            if (source.AssemblyQualifiedName == target.AssemblyQualifiedName) {
+                var creatorMethod = CreateAssemblyLoadContextConverterMethodInfo.MakeGenericMethod([source, target]);
+                var func = (Delegate)creatorMethod.Invoke(null, Array.Empty<object>());
+                yield return func;
             }
         }
 
@@ -264,10 +294,10 @@ namespace OpenSense.Components {
             Debug.Assert(argType != typeof(T));//If match, then should have returned at the beginning.
             var methodInfo = typeof(HelperExtensions)
                 .GetMethod(nameof(CastProducerResult_Internal), BindingFlags.NonPublic | BindingFlags.Static)
-                .MakeGenericMethod(new[] {
+                .MakeGenericMethod([
                     argType,
                     typeof(T),
-                });
+                ]);
             var result = (IProducer<T>)methodInfo.Invoke(obj: null, new[] { (dynamic)instance });
             return result;
         }
@@ -281,7 +311,7 @@ namespace OpenSense.Components {
 
             var func = CastDelegate<TSource, TTarget>();
 
-            return producer.Select(func);
+            return producer.Select(func, deliveryPolicy: null, name: "Type Converter");
         }
 
         private static Func<TSource, TTarget> CastDelegate<TSource, TTarget>() {
@@ -304,11 +334,11 @@ namespace OpenSense.Components {
                             return CastConvertable<TSource, TTarget>;//Will box object
                         }
                     } else {
-                        var converterMethods = GetImplicitOrExplicitConverters(typeof(TSource), typeof(TTarget)).ToArray();
-                        if (converterMethods.Length > 0) {
-                            Debug.Assert(converterMethods.Length == 1, "It is OK to have more then 1 matched converter methods here, but their return values should be the same, the following code only uses the first converter.");
-                            var converterMethod = converterMethods.First();
-                            var result = (Func<TSource, TTarget>)Delegate.CreateDelegate(typeof(Func<TSource, TTarget>), converterMethod);
+                        var delegates = GetTypeConversionDelegates(typeof(TSource), typeof(TTarget)).ToArray();
+                        if (delegates.Length > 0) {
+                            Debug.Assert(delegates.Length == 1, "It is OK to have more then 1 matched converter methods here, but their return values should be the same, the following code only uses the first converter.");
+                            var @delegate = delegates.First();
+                            var result = (Func<TSource, TTarget>)@delegate;
                             return result;
                         } else {
                             //Fallback to cast, likly to fail
@@ -320,25 +350,25 @@ namespace OpenSense.Components {
                     var nestedTargetType = typeof(TTarget).GetGenericArguments()[0];
                     var method1 = typeof(HelperExtensions)
                         .GetMethod(nameof(CastBetweenNullables), BindingFlags.NonPublic | BindingFlags.Static)
-                        .MakeGenericMethod(new[] {
+                        .MakeGenericMethod([
                             nestedSourceType,
                             nestedTargetType
-                        });
+                        ]);
                     var funcType = typeof(Func<,>).MakeGenericType(nestedSourceType, nestedTargetType);
                     return (Func<TSource, TTarget>)Delegate.CreateDelegate(funcType, method1);
                 case (false, true):
                     var unwrappedTargetType = typeof(TTarget).GetGenericArguments()[0];
                     if (typeof(TSource) == unwrappedTargetType) {
-                        var nullableImplicitConverterMethod = GetImplicitOrExplicitConverters_SingleWay(typeof(TTarget), typeof(TSource), typeof(TTarget)).Single();
+                        var nullableImplicitConverterMethod = GetImplicitOrExplicitConverterMethods_SingleWay(typeof(TTarget), typeof(TSource), typeof(TTarget)).Single();
                         var result = (Func<TSource, TTarget>)Delegate.CreateDelegate(typeof(Func<TSource, TTarget>), nullableImplicitConverterMethod);
                         return result;
                     } else {
                         dynamic method2 = typeof(HelperExtensions)
                             .GetMethod(nameof(CastDelegate), BindingFlags.NonPublic | BindingFlags.Static) //Nested nullable occasion
-                            .MakeGenericMethod(new[] {
+                            .MakeGenericMethod([
                                 typeof(TSource),
                                 unwrappedTargetType,
-                            })
+                            ])
                             .Invoke(obj: null, parameters: Array.Empty<object>());
                         return v => (TTarget)method2(v);
                     }
@@ -399,7 +429,7 @@ namespace OpenSense.Components {
                 var remoteDataType = remoteEnv.Configuration.FindOutputPortDataType(remotePortMeta, configurations);
                 Debug.Assert(remoteDataType != null);
                 var getRemoteProducerFunc = typeof(HelperExtensions).GetMethod(nameof(HelperExtensions.GetProducer)).MakeGenericMethod(remoteDataType);
-                dynamic producer = getRemoteProducerFunc.Invoke(null, new object[] { remoteEnv, inputConfig.RemotePort });
+                dynamic producer = getRemoteProducerFunc.Invoke(null, [remoteEnv, inputConfig.RemotePort]);
                 result.Add(new(inputConfig, remoteEnv, remotePortMeta, remoteDataType, producer));
             }
             Debug.Assert(result.Count == componentConfiguration.Inputs.Count);
