@@ -11,7 +11,7 @@
     <ItemGroup>
         <PackageReference Include="IronPython" Version="3.4.1" />
         <PackageReference Include="IronPython.StdLib" Version="3.4.1" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
         <PackageReference Include="Microsoft.Psi.Runtime" Version="0.19.100.1-beta" />
         <PackageReference Include="System.Composition" Version="8.0.0" />
     </ItemGroup>
