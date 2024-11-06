@@ -436,8 +436,7 @@ namespace OpenSense.Components.Whisper.NET {
                 /* Post Segments */
                 foreach (var segment in _segments) {
                     /* Basic Info */
-                    Debug.Assert(segment.Text[0] == ' ' && segment.Text[segment.Text.Length - 1] != ' ');//Don't know why this happens, but our code is based on this observation
-                    var text = segment.Text.Trim();
+                    var text = segment.Text.Trim();//For English results, the segment text always starts with a space and ends with a non-space character. Don't know why this happens, but our code is based on this observation. Non-English results may not have this issue.
                     var confidence = segment.Probability;
                     var actualEnd = segment.End > bufferedDuration ? bufferedDuration : segment.End;//Input is padded to 30 seconds, so the end time may be larger than the actual end time
                     var duration = actualEnd - segment.Start;
