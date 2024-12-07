@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "HeadGestureDetector.App.Consoles": {
+      "commandName": "Project",
+      "commandLineArgs": "-o \"C:\\Users\\lizongjian\\Desktop\\test_out.csv\" \"C:\\Users\\lizongjian\\Desktop\\test.csv\""
+    }
+  }
+}
