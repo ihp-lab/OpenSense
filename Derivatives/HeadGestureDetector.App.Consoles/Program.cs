@@ -6,12 +6,18 @@ using OpenSense.Components.OpenFace;
 
 namespace HeadGestureDetector.App.Consoles {
     internal static class Program {
-        public static void Main(string[] args) {
+        public static int Main(string[] args) {
             var parser = new Parser();
             var parserResult = parser.ParseArguments<Options>(args);
-            parserResult
-                .WithParsed(Run)
-                ;
+            try {
+                parserResult
+                    .WithParsed(Run)
+                    ;
+            } catch (Exception ex) {
+                Console.Error.WriteLine(ex.Message);
+                return -1;
+            }
+            return 0;
         }
 
         private static void Run(Options options) {
