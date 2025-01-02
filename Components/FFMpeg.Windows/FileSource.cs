@@ -11,8 +11,7 @@ using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
 
 namespace OpenSense.Components.FFMpeg {
-    public sealed class FileSource
-        : Generator, IProducer<Shared<Image>>, IDisposable {
+    public sealed class FileSource : Generator, IProducer<Shared<Image>>, INotifyPropertyChanged, IDisposable {
 
         private readonly FileReader _reader;
 

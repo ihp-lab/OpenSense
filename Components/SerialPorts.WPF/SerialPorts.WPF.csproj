@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <RootNamespace>OpenSense.WPF.Components.SerialPorts</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Components.SerialPorts</AssemblyName>
+        <EmbedAllSources>true</EmbedAllSources>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="System.Composition" Version="8.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
+        <ProjectReference Include="..\SerialPorts\SerialPorts.csproj" />
+    </ItemGroup>
+
+</Project>
