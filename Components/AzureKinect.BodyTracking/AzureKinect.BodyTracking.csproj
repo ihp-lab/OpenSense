@@ -6,6 +6,7 @@
         <PlatformTarget>x64</PlatformTarget>
         <AssemblyName>OpenSense.Components.AzureKinect.BodyTracking</AssemblyName>
         <RootNamespace>OpenSense.Components.AzureKinect.BodyTracking</RootNamespace>
+        <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
