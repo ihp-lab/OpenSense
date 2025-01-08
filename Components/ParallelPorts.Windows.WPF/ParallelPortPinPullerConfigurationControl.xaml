@@ -1,0 +1,80 @@
+﻿<UserControl
+    x:Class="OpenSense.WPF.Components.ParallelPorts.ParallelPortPinPullerConfigurationControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:OpenSense.WPF.Components.ParallelPorts"
+    xmlns:comp="clr-namespace:OpenSense.Components.ParallelPorts;assembly=OpenSense.Components.ParallelPorts.Windows"
+    xmlns:util="clr-namespace:OpenSense.WPF.Components.Utilities;assembly=OpenSense.WPF.Components.Contracts"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
+    <d:UserControl.DataContext>
+        <comp:ParallelPortPinPullerConfiguration />
+    </d:UserControl.DataContext>
+    <UserControl.Resources>
+        <local:HexByteConverter
+            x:Key="HexByteConverter" />
+        <local:HexShortConverter
+            x:Key="HexShortConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition
+                Width="auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="0">
+            Port Memory Address (HEX)
+        </TextBlock>
+        <TextBox
+            Grid.Row="0"
+            Grid.Column="1"
+            Text="{Binding MemoryAddress, Converter={StaticResource HexShortConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0">
+            Set on Start
+        </TextBlock>
+        <CheckBox
+            Grid.Row="1"
+            Grid.Column="1"
+            IsChecked="{Binding SetOnStart}" />
+
+        <TextBlock
+            Grid.Row="2"
+            Grid.Column="0">
+            Set on Start Value (HEX)
+        </TextBlock>
+        <TextBox
+            Grid.Row="2"
+            Grid.Column="1"
+            Text="{Binding SetOnStartValue, Converter={StaticResource HexByteConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        <TextBlock
+            Grid.Row="3"
+            Grid.Column="0">
+            Use Source Originating Time
+        </TextBlock>
+        <CheckBox
+            Grid.Row="3"
+            Grid.Column="1"
+            IsChecked="{Binding UseSourceOriginatingTime}" />
+
+    </Grid>
+</UserControl>
