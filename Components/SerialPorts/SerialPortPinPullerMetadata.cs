@@ -7,7 +7,7 @@ namespace OpenSense.Components.SerialPorts {
 
         public override string Name => "Serial Port DTR/RTS Pin Puller";
 
-        public override string Description => "Open a Serial Port and drive its DTR/RTS pin.";
+        public override string Description => "Drive a Serial Port's DTR/RTS pin.";
 
         protected override Type ComponentType => typeof(SerialPortPinPuller);
 

@@ -89,14 +89,14 @@ namespace OpenSense.Components.SerialPorts {
             Debug.Assert(!_port.DtrEnable);
             if (PullUpDtrOnStart) {
                 _port.DtrEnable = true;
-                var timestamp = DtrUseSourceOriginatingTime ? args.StartOriginatingTime : DateTime.UtcNow;
+                var timestamp = DtrUseSourceOriginatingTime ? args.StartOriginatingTime : DtrOut.Pipeline.GetCurrentTime();
                 DtrOut.Post(true, timestamp);
             }
 
             Debug.Assert(!_port.RtsEnable);
             if (PullUpRtsOnStart) {
                 _port.RtsEnable = true;
-                var timestamp = RtsUseSourceOriginatingTime ? args.StartOriginatingTime : DateTime.UtcNow;
+                var timestamp = RtsUseSourceOriginatingTime ? args.StartOriginatingTime : RtsOut.Pipeline.GetCurrentTime();
                 RtsOut.Post(true, timestamp);
             }
         }
