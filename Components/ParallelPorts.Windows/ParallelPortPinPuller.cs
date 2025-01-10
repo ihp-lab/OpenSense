@@ -25,6 +25,20 @@ namespace OpenSense.Components.ParallelPorts {
             set => SetProperty(ref memoryAddress, value);
         }
 
+        private bool setAfterStop = false;
+
+        public bool SetAfterStop {
+            get => setAfterStop;
+            set => SetProperty(ref setAfterStop, value);
+        }
+
+        private byte setAfterStopValue = 0;
+
+        public byte SetAfterStopValue {
+            get => setAfterStopValue;
+            set => SetProperty(ref setAfterStopValue, value);
+        }
+
         private bool setOnStart = false;
 
         public bool SetOnStart {
@@ -59,6 +73,7 @@ namespace OpenSense.Components.ParallelPorts {
             Out = pipeline.CreateEmitter<byte>(this, nameof(Out));
 
             pipeline.PipelineRun += OnPipelineRun;
+            pipeline.PipelineCompleted += OnPipelineCompleted;
         }
 
         #region Pipeline Events
@@ -76,6 +91,13 @@ namespace OpenSense.Components.ParallelPorts {
             Inpoutx64PInvoke.Out32(MemoryAddress, SetOnStartValue);
             var timestamp = UseSourceOriginatingTime ? e.StartOriginatingTime : Out.Pipeline.GetCurrentTime();
             Out.Post(SetOnStartValue, timestamp);
+        }
+
+        private void OnPipelineCompleted(object? sender, PipelineCompletedEventArgs e) {
+            if (!SetAfterStop) {
+                return;
+            }
+            Inpoutx64PInvoke.Out32(MemoryAddress, SetAfterStopValue);
         }
         #endregion
 

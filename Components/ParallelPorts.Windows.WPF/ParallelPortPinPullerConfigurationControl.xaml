@@ -34,6 +34,10 @@
                 Height="auto" />
             <RowDefinition
                 Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
         </Grid.RowDefinitions>
 
         <TextBlock
@@ -69,10 +73,30 @@
         <TextBlock
             Grid.Row="3"
             Grid.Column="0">
-            Use Source Originating Time
+            Set after Stop
         </TextBlock>
         <CheckBox
             Grid.Row="3"
+            Grid.Column="1"
+            IsChecked="{Binding SetAfterStop}" />
+
+        <TextBlock
+            Grid.Row="4"
+            Grid.Column="0">
+            Set after Stop (HEX)
+        </TextBlock>
+        <TextBox
+            Grid.Row="4"
+            Grid.Column="1"
+            Text="{Binding SetAfterStopValue, Converter={StaticResource HexByteConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        <TextBlock
+            Grid.Row="5"
+            Grid.Column="0">
+            Use Source Originating Time
+        </TextBlock>
+        <CheckBox
+            Grid.Row="5"
             Grid.Column="1"
             IsChecked="{Binding UseSourceOriginatingTime}" />
 

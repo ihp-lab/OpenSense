@@ -33,6 +33,20 @@ namespace OpenSense.Components.ParallelPorts {
             set => SetProperty(ref setOnStartValue, value);
         }
 
+        private bool setAfterStop = false;
+
+        public bool SetAfterStop {
+            get => setAfterStop;
+            set => SetProperty(ref setAfterStop, value);
+        }
+
+        private byte setAfterStopValue = 0;
+
+        public byte SetAfterStopValue {
+            get => setAfterStopValue;
+            set => SetProperty(ref setAfterStopValue, value);
+        }
+
         private bool useSourceOriginatingTime = false;
 
         public bool UseSourceOriginatingTime {
@@ -47,6 +61,8 @@ namespace OpenSense.Components.ParallelPorts {
             MemoryAddress = MemoryAddress,
             SetOnStart = SetOnStart,
             SetOnStartValue = SetOnStartValue,
+            SetAfterStop = SetAfterStop,
+            SetAfterStopValue = SetAfterStopValue,
             UseSourceOriginatingTime = UseSourceOriginatingTime,
             Logger = (serviceProvider?.GetService(typeof(ILoggerFactory)) as ILoggerFactory)?.CreateLogger(Name),
         };
