@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.ML.FastTree" Version="3.0.1" />
+        <PackageReference Include="Microsoft.ML.FastTree" Version="4.0.1" />
         <PackageReference Include="System.Composition" Version="8.0.0" />
     </ItemGroup>
 

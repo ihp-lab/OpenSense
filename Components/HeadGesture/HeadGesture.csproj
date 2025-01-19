@@ -6,13 +6,16 @@
         <RootNamespace>OpenSense.Components.HeadGesture</RootNamespace>
         <LangVersion>latest</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
+
+        <!-- CUDA conditions-->
+        <!--NOTE: The condition is set in the Directory.Build.props file. -->
+        <UseCUDA Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*CUDA(;.*)*$'))">true</UseCUDA>
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- Use old package 1.10.0 to accommodate Azure Kinect -->
-        <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.10.0" />
-        <!-- Use old package 2.0.1 which is the highest version that allows Microsoft.ML.OnnxRuntime 1.10.0 to accommodate Azure Kinect -->
-        <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="2.0.1" />
+        <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.20.1" Condition="'$(UseCUDA)' != 'true'" />
+        <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.20.1" Condition="'$(UseCUDA)' == 'true'" />
+        <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="4.0.1" />
         <PackageReference Include="System.Composition" Version="8.0.0" />
     </ItemGroup>
 
@@ -22,13 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="Models\final_4comb_nod_32ws_12f_16u.onnx">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Models\final_4comb_shake_32ws_12f_8u.onnx">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Models\final_4comb_tilt_32ws_12f_16u.onnx">
+        <None Update="Models\*.onnx">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>

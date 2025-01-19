@@ -19,7 +19,17 @@ namespace OpenSense.Components.HeadGesture {
             modelLocation = inputModelLocation;
             mlContext = inputMlContext;
             modelSettings = inputModelSettings;
-            pipeline = mlContext.Transforms.ApplyOnnxModel(modelFile: modelLocation, outputColumnNames: new[] { modelSettings.modelOutput }, inputColumnNames: new[] { modelSettings.modelInput });
+            pipeline = mlContext.Transforms.ApplyOnnxModel(
+                modelFile: modelLocation, 
+                outputColumnNames: [modelSettings.modelOutput], 
+                inputColumnNames: [modelSettings.modelInput],
+#if CUDA
+                gpuDeviceId: 0,
+#else
+                gpuDeviceId: null,
+#endif
+                fallbackToCpu: false
+            );
         }
 
         private ITransformer FitModel(string modelLocation, IDataView data) {

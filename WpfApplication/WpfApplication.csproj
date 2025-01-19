@@ -77,10 +77,12 @@
         <!--Additional references: All project names ending with ".WPF"-->
         <!--Components-->
         <ProjectReference Include="..\Components\Audio.Visualizer.WPF\Audio.Visualizer.WPF.csproj" />
-        <ProjectReference Include="..\Components\AzureKinect.Visualizer.WPF\AzureKinect.Visualizer.WPF.csproj" />
+        <!--NOTE: This package currently depends on the Psi Azure Kinect which has compatibility issues.-->
+        <!--<ProjectReference Include="..\Components\AzureKinect.Visualizer.WPF\AzureKinect.Visualizer.WPF.csproj" />-->
         <ProjectReference Include="..\Components\AzureSpeech.WPF\AzureSpeech.WPF.csproj" />
         <ProjectReference Include="..\Components\Biopac.Visualizer.WPF\Biopac.Visualizer.WPF.csproj" />
-        <ProjectReference Include="..\Components\BodyGestureDetectors.WPF\BodyGestureDetectors.WPF.csproj" />
+        <!--NOTE: This package currently depends on the Psi Azure Kinect which has compatibility issues.-->
+        <!--<ProjectReference Include="..\Components\BodyGestureDetectors.WPF\BodyGestureDetectors.WPF.csproj" />-->
         <ProjectReference Include="..\Components\Builtin.WPF\Builtin.WPF.csproj" />
         <ProjectReference Include="..\Components\Builtin.Visualizer.WPF\Builtin.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\CollectionOperators.WPF\CollectionOperators.WPF.csproj" />
@@ -91,7 +93,7 @@
         <ProjectReference Include="..\Components\FFMpeg.Windows.WPF\FFMpeg.Windows.WPF.csproj" />
         <ProjectReference Include="..\Components\GoogleCloud.Speech.V1.WPF\GoogleCloud.Speech.V1.WPF.csproj" />
         <ProjectReference Include="..\Components\HeadGesture\HeadGesture.csproj" />
-        <!--No settings available, thus no related WPF project here-->
+        <!--NOTE: No settings available, thus no related WPF project here-->
         <ProjectReference Include="..\Components\HeadGesture.Visualizer.WPF\HeadGesture.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\MediaPipe.Net.Visualizer.WPF\MediaPipe.NET.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\MediaPipe.NET.WPF\MediaPipe.NET.WPF.csproj" />
@@ -108,13 +110,15 @@
         <ProjectReference Include="..\Components\ParallelPorts.Windows.WPF\ParallelPorts.Windows.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Audio.Windows.WPF\Psi.Audio.Windows.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Audio.WPF\Psi.Audio.WPF.csproj" />
-        <ProjectReference Include="..\Components\Psi.AzureKinect.WPF\Psi.AzureKinect.WPF.csproj" />
+        <!--NOTE: Microsoft's Azure Kinect package has compatibility issues. Its dependency Microsoft.Azure.Kinect.BodyTracking.ONNXRuntime conflicts with the official ONNX runtime.-->
+        <!--<ProjectReference Include="..\Components\Psi.AzureKinect.WPF\Psi.AzureKinect.WPF.csproj" />-->
         <ProjectReference Include="..\Components\Psi.CognitiveServices.Face.WPF\Psi.CognitiveServices.Face.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.CognitiveServices.Speech.WPF\Psi.CognitiveServices.Speech.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Data.WPF\Psi.Data.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Imaging.Visualizer.WPF\Psi.Imaging.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Imaging.WPF\Psi.Imaging.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Imaging.Windows.WPF\Psi.Imaging.Windows.WPF.csproj" />
+        <!--NOTE: This Kinect 2.0 package requires SDK installtion, even when it is not used.-->
         <!--<ProjectReference Include="..\Components\Psi.Kinect.Windows.WPF\Psi.Kinect.Windows.WPF.csproj" />-->
         <ProjectReference Include="..\Components\Psi.Media.Windows.WPF\Psi.Media.Windows.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Speech.Visualizer.WPF\Psi.Speech.Visualizer.WPF.csproj" />
