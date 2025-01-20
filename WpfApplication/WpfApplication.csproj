@@ -14,13 +14,14 @@
         <AssemblyVersion>3.3.0</AssemblyVersion>
         <Version>3.3.0</Version>
         <AssemblyName>OpenSense.WPF</AssemblyName>
-        <!--Note:
+        <!--NOTE:
         The Azure Kinect package of /psi contains onnxruntime DLLs while not referencing it as a dependency. 
         And these files conflit with other components having onnxruntime as a dependency.
         This should be a temporary fix.
         And we should maintain the version of onnxruntime dependency of our components carefully so that it aligns with those in Azure Kinect package.
         -->
         <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+        <StartupObject>OpenSense.WPF.Program</StartupObject>
     </PropertyGroup>
 
     <ItemGroup>
@@ -52,6 +53,8 @@
         <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
         <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
+        <!--Only a beta version is available right now.-->
+        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
         <PackageReference Include="System.Composition" Version="8.0.0" />
     </ItemGroup>
 

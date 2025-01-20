@@ -2,7 +2,8 @@
   "profiles": {
     "WpfApplication": {
       "commandName": "Project",
-      "nativeDebugging": true
+      "nativeDebugging": true,
+      "commandLineArgs": ""
     }
   }
 }
