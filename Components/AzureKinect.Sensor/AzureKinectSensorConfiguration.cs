@@ -176,11 +176,11 @@ namespace OpenSense.Components.AzureKinect.Sensor {
             set => SetProperty(ref powerlineFrequency, value);
         }
 
-        private bool disableStreamingIndicator;
+        private bool streamingIndicator = true;
 
-        public bool DisableStreamingIndicator {
-            get => disableStreamingIndicator;
-            set => SetProperty(ref disableStreamingIndicator, value);
+        public bool StreamingIndicator {
+            get => streamingIndicator;
+            set => SetProperty(ref streamingIndicator, value);
         }
         #endregion
 
@@ -212,7 +212,7 @@ namespace OpenSense.Components.AzureKinect.Sensor {
             BacklightCompensation = BacklightCompensation,
             Gain = Gain,
             PowerlineFrequency = PowerlineFrequency,
-            DisableStreamingIndicator = DisableStreamingIndicator,
+            DisableStreamingIndicator = !StreamingIndicator,
             Logger = serviceProvider?.GetService(typeof(ILogger)) as ILogger,
         };
         #endregion

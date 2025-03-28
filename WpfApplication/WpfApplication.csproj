@@ -77,6 +77,7 @@
         <!--Additional references: All project names ending with ".WPF"-->
         <!--Components-->
         <ProjectReference Include="..\Components\Audio.Visualizer.WPF\Audio.Visualizer.WPF.csproj" />
+        <ProjectReference Include="..\Components\AzureKinect.Sensor.WPF\AzureKinect.Sensor.WPF.csproj" />
         <ProjectReference Include="..\Components\AzureKinect.Visualizer.WPF\AzureKinect.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\AzureSpeech.WPF\AzureSpeech.WPF.csproj" />
         <ProjectReference Include="..\Components\Biopac.Visualizer.WPF\Biopac.Visualizer.WPF.csproj" />
