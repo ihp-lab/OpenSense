@@ -6,12 +6,14 @@
         <PlatformTarget>x64</PlatformTarget>
         <AssemblyName>OpenSense.Components.AzureKinect.Sensor</AssemblyName>
         <RootNamespace>OpenSense.Components.AzureKinect.Sensor</RootNamespace>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 
     <ItemGroup>
+        <!--Device Spec: https://learn.microsoft.com/en-us/previous-versions/azure/kinect-dk-->
         <PackageReference Include="Microsoft.Azure.Kinect.Sensor" Version="1.4.2" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
         <PackageReference Include="Microsoft.Psi.Calibration" Version="0.19.100.1-beta" />

@@ -15,7 +15,7 @@ namespace OpenSense.Components.AzureKinect.Sensor {
             set => SetProperty(ref deviceIndex, value);
         }
 
-        private ColorResolution colorResolution = ColorResolution.Off;
+        private ColorResolution colorResolution = ColorResolution.R2160p;
 
         public ColorResolution ColorResolution {
             get => colorResolution;
@@ -29,14 +29,14 @@ namespace OpenSense.Components.AzureKinect.Sensor {
             set => SetProperty(ref colorFormat, value);
         }
 
-        private FPS cameraFrameRate = FPS.FPS30;
+        private FPS frameRate = FPS.FPS30;
 
-        public FPS CameraFrameRate {
-            get => cameraFrameRate;
-            set => SetProperty(ref cameraFrameRate, value);
+        public FPS FrameRate {
+            get => frameRate;
+            set => SetProperty(ref frameRate, value);
         }
 
-        private DepthMode depthMode = DepthMode.Off;
+        private DepthMode depthMode = DepthMode.WFOV_2x2Binned;
 
         public DepthMode DepthMode {
             get => depthMode;
@@ -62,6 +62,13 @@ namespace OpenSense.Components.AzureKinect.Sensor {
         public ThreadPriority CaptureThreadPriority {
             get => captureThreadPriority;
             set => SetProperty(ref captureThreadPriority, value);
+        }
+
+        private TimeSpan captureSampleTimeout = TimeSpan.FromSeconds(1);
+
+        public TimeSpan CaptureSampleTimeout {
+            get => captureSampleTimeout;
+            set => SetProperty(ref captureSampleTimeout, value);
         }
 
         private TimeSpan captureThreadJoinTimeout = TimeSpan.FromSeconds(1);
@@ -191,11 +198,12 @@ namespace OpenSense.Components.AzureKinect.Sensor {
             DeviceIndex = DeviceIndex,
             ColorResolution = ColorResolution,
             ColorFormat = ColorFormat,
-            CameraFrameRate = CameraFrameRate,
+            FrameRate = FrameRate,
             DepthMode = DepthMode,
             DepthDelayOffColor = DepthDelayOffColor,
             SynchronizedImagesOnly = SynchronizedImagesOnly,
             CaptureThreadPriority = CaptureThreadPriority,
+            CaptureSampleTimeout = CaptureSampleTimeout,
             CaptureThreadJoinTimeout = CaptureThreadJoinTimeout,
             EnableIMU = EnableIMU,
             ImuThreadPriority = ImuThreadPriority,
@@ -212,7 +220,7 @@ namespace OpenSense.Components.AzureKinect.Sensor {
             BacklightCompensation = BacklightCompensation,
             Gain = Gain,
             PowerlineFrequency = PowerlineFrequency,
-            DisableStreamingIndicator = !StreamingIndicator,
+            StreamingIndicator = StreamingIndicator,
             Logger = serviceProvider?.GetService(typeof(ILogger)) as ILogger,
         };
         #endregion

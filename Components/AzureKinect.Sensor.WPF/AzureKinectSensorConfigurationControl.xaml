@@ -72,6 +72,8 @@
                 Height="auto" />
             <RowDefinition
                 Height="auto" />
+            <RowDefinition
+                Height="auto" />
         </Grid.RowDefinitions>
 
         <Label
@@ -126,12 +128,12 @@
         <Label
             Grid.Row="3"
             Grid.Column="0">
-            Camera Frame Rate
+            Frame Rate
         </Label>
         <ComboBox
             Grid.Row="3"
             Grid.Column="1"
-            SelectedItem="{Binding CameraFrameRate}"
+            SelectedItem="{Binding FrameRate}"
             ItemsSource="{Binding Source={util:EnumBindingSource {x:Type sensor:FPS}}, Mode=OneTime}" />
 
         <Label
@@ -180,7 +182,7 @@
         <Label
             Grid.Row="8"
             Grid.Column="0">
-            Capture Thread Join Timeout
+            Capture Sample Timeout
         </Label>
         <TextBlock
             Grid.Row="8"
@@ -191,167 +193,178 @@
         <Label
             Grid.Row="9"
             Grid.Column="0">
-            Enable IMU
+            Capture Thread Join Timeout
         </Label>
-        <CheckBox
+        <TextBlock
             Grid.Row="9"
-            Grid.Column="1"
-            IsChecked="{Binding EnableImu}" />
+            Grid.Column="1">
+            TODO: TimeSpan type
+        </TextBlock>
 
         <Label
             Grid.Row="10"
             Grid.Column="0">
+            Enable IMU
+        </Label>
+        <CheckBox
+            Grid.Row="10"
+            Grid.Column="1"
+            IsChecked="{Binding EnableIMU}" />
+
+        <Label
+            Grid.Row="11"
+            Grid.Column="0">
             IMU Thread Priority
         </Label>
         <ComboBox
-            Grid.Row="10"
+            Grid.Row="11"
             Grid.Column="1"
             SelectedItem="{Binding ImuThreadPriority}"
             ItemsSource="{x:Static local:ThreadPriorityEnumHelper.Values}" />
 
         <Label
-            Grid.Row="11"
+            Grid.Row="12"
             Grid.Column="0">
             IMU Sample Timeout
         </Label>
         <TextBlock
-            Grid.Row="11"
+            Grid.Row="12"
             Grid.Column="1">
             TODO: TimeSpan type
         </TextBlock>
 
         <Label
-            Grid.Row="12"
+            Grid.Row="13"
             Grid.Column="0">
             IMU Thread Join Timeout
         </Label>
         <TextBlock
-            Grid.Row="12"
+            Grid.Row="13"
             Grid.Column="1">
             TODO: TimeSpan type
         </TextBlock>
 
         <Label
-            Grid.Row="13"
+            Grid.Row="14"
             Grid.Column="0">
             Wired Sync Mode
         </Label>
         <ComboBox
-            Grid.Row="13"
+            Grid.Row="14"
             Grid.Column="1"
             SelectedItem="{Binding WiredSyncMode}"
             ItemsSource="{Binding Source={util:EnumBindingSource {x:Type sensor:WiredSyncMode}}, Mode=OneTime}" />
 
         <Label
-            Grid.Row="14"
+            Grid.Row="15"
             Grid.Column="0">
             Suboridinate Delay Off Master
         </Label>
         <TextBlock
-            Grid.Row="14"
+            Grid.Row="15"
             Grid.Column="1">
             TODO: TimeSpan type
         </TextBlock>
 
         <Label
-            Grid.Row="15"
+            Grid.Row="16"
             Grid.Column="0">
             Exposure Time (0:auto)
         </Label>
         <TextBox
-            Grid.Row="15"
+            Grid.Row="16"
             Grid.Column="1"
             Text="{Binding ExposureTime}" />
 
         <Label
-            Grid.Row="16"
+            Grid.Row="17"
             Grid.Column="0">
             Brightness
         </Label>
         <TextBox
-            Grid.Row="16"
+            Grid.Row="17"
             Grid.Column="1"
             Text="{Binding Brightness}" />
 
         <Label
-            Grid.Row="17"
+            Grid.Row="18"
             Grid.Column="0">
             Contrast
         </Label>
         <TextBox
-            Grid.Row="17"
+            Grid.Row="18"
             Grid.Column="1"
             Text="{Binding Contrast}" />
 
         <Label
-            Grid.Row="18"
+            Grid.Row="19"
             Grid.Column="0">
             Saturation
         </Label>
         <TextBox
-            Grid.Row="18"
+            Grid.Row="19"
             Grid.Column="1"
             Text="{Binding Saturation}" />
 
         <Label
-            Grid.Row="19"
+            Grid.Row="20"
             Grid.Column="0">
             Sharpness
         </Label>
         <TextBox
-            Grid.Row="19"
+            Grid.Row="20"
             Grid.Column="1"
             Text="{Binding Sharpness}" />
 
         <Label
-            Grid.Row="20"
+            Grid.Row="21"
             Grid.Column="0">
             White Balance (0:auto)
         </Label>
         <TextBox
-            Grid.Row="20"
+            Grid.Row="21"
             Grid.Column="1"
             Text="{Binding WhiteBalance}" />
 
         <Label
-            Grid.Row="21"
+            Grid.Row="22"
             Grid.Column="0">
             Backlight Compensation
         </Label>
         <ComboBox
-            Grid.Row="21"
+            Grid.Row="22"
             Grid.Column="1"
             SelectedItem="{Binding BacklightCompensation}"
             ItemsSource="{Binding Source={util:EnumBindingSource {x:Type comp:BacklightCompensation}}, Mode=OneTime}" />
 
         <Label
-            Grid.Row="22"
+            Grid.Row="23"
             Grid.Column="0">
             Gain
         </Label>
         <TextBox
-            Grid.Row="22"
+            Grid.Row="23"
             Grid.Column="1"
             Text="{Binding Gain}" />
 
         <Label
-            Grid.Row="23"
+            Grid.Row="24"
             Grid.Column="0">
             Powerline Frequency
         </Label>
         <ComboBox
-            Grid.Row="23"
+            Grid.Row="24"
             Grid.Column="1"
             SelectedItem="{Binding PowerlineFrequency}"
             ItemsSource="{Binding Source={util:EnumBindingSource {x:Type comp:PowerlineFrequency}}, Mode=OneTime}" />
 
         <Label
-            Grid.Row="24"
+            Grid.Row="25"
             Grid.Column="0">
             Streaming Indicator
         </Label>
         <CheckBox
-            Grid.Row="24"
+            Grid.Row="25"
             Grid.Column="1"
             IsChecked="{Binding StreamingIndicator}" />
 
