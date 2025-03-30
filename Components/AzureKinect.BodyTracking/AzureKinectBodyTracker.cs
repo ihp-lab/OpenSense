@@ -1,0 +1,248 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using Microsoft.Azure.Kinect.BodyTracking;
+using Microsoft.Azure.Kinect.Sensor;
+using Microsoft.Extensions.Logging;
+using Microsoft.Psi;
+
+namespace OpenSense.Components.AzureKinect.BodyTracking {
+    public sealed class AzureKinectBodyTracker : INotifyPropertyChanged, IDisposable {
+
+        /// <remarks>
+        /// Bone connections defined here: https://docs.microsoft.com/en-us/azure/Kinect-dk/body-joints.
+        /// </remarks>
+        public static readonly IReadOnlyCollection<(JointId ChildJoint, JointId ParentJoint)> Bones = [
+            // Spine
+            (JointId.SpineNavel, JointId.Pelvis),
+            (JointId.SpineChest, JointId.SpineNavel),
+            (JointId.Neck, JointId.SpineChest),
+
+            // Left arm
+            (JointId.ClavicleLeft, JointId.SpineChest),
+            (JointId.ShoulderLeft, JointId.ClavicleLeft),
+            (JointId.ElbowLeft, JointId.ShoulderLeft),
+            (JointId.WristLeft, JointId.ElbowLeft),
+            (JointId.HandLeft, JointId.WristLeft),
+            (JointId.HandTipLeft, JointId.HandLeft),
+            (JointId.ThumbLeft, JointId.WristLeft),
+
+            // Right arm
+            (JointId.ClavicleRight, JointId.SpineChest),
+            (JointId.ShoulderRight, JointId.ClavicleRight),
+            (JointId.ElbowRight, JointId.ShoulderRight),
+            (JointId.WristRight, JointId.ElbowRight),
+            (JointId.HandRight, JointId.WristRight),
+            (JointId.HandTipRight, JointId.HandRight),
+            (JointId.ThumbRight, JointId.WristRight),
+
+            // Left leg
+            (JointId.HipLeft, JointId.Pelvis),
+            (JointId.KneeLeft, JointId.HipLeft),
+            (JointId.AnkleLeft, JointId.KneeLeft),
+            (JointId.FootLeft, JointId.AnkleLeft),
+
+            // Right leg
+            (JointId.HipRight, JointId.Pelvis),
+            (JointId.KneeRight, JointId.HipRight),
+            (JointId.AnkleRight, JointId.KneeRight),
+            (JointId.FootRight, JointId.AnkleRight),
+
+            // Head
+            (JointId.Head, JointId.Neck),
+            (JointId.Nose, JointId.Head),
+            (JointId.EyeLeft, JointId.Head),
+            (JointId.EarLeft, JointId.Head),
+            (JointId.EyeRight, JointId.Head),
+            (JointId.EarRight, JointId.Head),
+        ];
+
+        private readonly Pipeline _pipeline;
+
+        #region Options
+
+        private SensorOrientation sensorOrientation;
+
+        public SensorOrientation SensorOrientation {
+            get => sensorOrientation;
+            set => SetProperty(ref sensorOrientation, value);
+        }
+
+        private TrackerProcessingMode processingBackend;
+
+        public TrackerProcessingMode ProcessingBackend {
+            get => processingBackend;
+            set => SetProperty(ref processingBackend, value);
+        }
+
+        private int gpuDeviceId;
+
+        public int GpuDeviceId {
+            get => gpuDeviceId;
+            set => SetProperty(ref gpuDeviceId, value);
+        }
+
+        private bool useLiteModel;
+
+        public bool UseLiteModel {
+            get => useLiteModel;
+            set => SetProperty(ref useLiteModel, value);
+        }
+
+        private float temporalSmoothing;
+
+        public float TemporalSmoothing {
+            get => temporalSmoothing;
+            set => SetProperty(ref temporalSmoothing, value);
+        }
+
+        private TimeSpan timeout = TimeSpan.FromSeconds(-1);
+
+        public TimeSpan Timeout {
+            get => timeout;
+            set => SetProperty(ref timeout, value);
+        }
+
+        private bool throwOnTimeout;
+
+        public bool ThrowOnTimeout {
+            get => throwOnTimeout;
+            set => SetProperty(ref throwOnTimeout, value);
+        }
+
+        private bool outputNull;
+
+        public bool OutputNull {
+            get => outputNull;
+            set => SetProperty(ref outputNull, value);
+        }
+
+        private ILogger? logger;
+
+        public ILogger? Logger {
+            get => logger;
+            set => SetProperty(ref logger, value);
+        }
+        #endregion
+
+        #region Ports
+        public Receiver<Calibration> CalibrationIn { get; }
+
+        public Receiver<Shared<Capture>> CaptureIn { get; }
+
+        public Emitter<Shared<Frame?>> FrameOut { get; }
+        #endregion
+
+        /// <remarks>According to the documentation of k4abt_tracker_create(), only one tracker is allowed to exist at the same time in each process.</remarks>
+        private Tracker? tracker;
+
+        public AzureKinectBodyTracker(Pipeline pipeline) {
+            _pipeline = pipeline;
+
+            CalibrationIn = pipeline.CreateReceiver<Calibration>(this, ProcessCalibration, nameof(CalibrationIn));
+            CaptureIn = pipeline.CreateReceiver<Shared<Capture>>(this, ProcessCapture, nameof(CaptureIn));
+
+            FrameOut = pipeline.CreateEmitter<Shared<Frame?>>(this, nameof(FrameOut));
+
+            pipeline.PipelineRun += OnPipelineRun;
+            pipeline.PipelineCompleted += OnPipelineCompleted;
+        }
+
+        #region Pipeline Events
+        private void OnPipelineRun(object? sender, PipelineRunEventArgs args) {
+            
+        }
+
+        private void OnPipelineCompleted(object? sender, PipelineCompletedEventArgs args) {
+            Dispose();
+        }
+        #endregion
+
+        private void ProcessCalibration(Calibration calibration, Envelope envelope) {
+            Trace.Assert(tracker is null);
+            Trace.Assert(0 <= TemporalSmoothing && TemporalSmoothing <= 1);
+            var modelPath = UseLiteModel ? "dnn_model_2_0_lite_op11.onnx" : "dnn_model_2_0_op11.onnx";
+            var trackerConfiguration = new TrackerConfiguration() {
+                SensorOrientation = SensorOrientation,
+                ProcessingMode = ProcessingBackend,
+                GpuDeviceId = GpuDeviceId,
+                ModelPath = modelPath,
+            };
+            /** NOTE:
+             * AzureKinectBodyTrackingCreateException does not contain any error detail.
+             * To know the detail, you need to look at its log.
+             * k4abt.dll does not expose APIs like k4a.dll does for tracking logs within the program.
+             * To view the logs, there are two options: console output or logging to a file.
+             * By default, logs are output to the console.
+             * If the component is launched by the WPF Applications, temporarily changing the OutputType from WinExe to Exe will display the terminal.
+             * If the K4ABT_ENABLE_LOG_TO_A_FILE environment variable is set, logs will be written to a file.
+             * The file path must end with .log to be valid.
+             * https://learn.microsoft.com/en-us/previous-versions/azure/kinect-dk/troubleshooting#collecting-logs
+             *
+             * One failure I have encountered was due to ONNX runtime not compatible.
+             */
+            var tkr = Tracker.Create(calibration, trackerConfiguration);
+            tkr.SetTemporalSmooting(TemporalSmoothing);
+            tracker = tkr;//Post tracker instance
+            Logger?.LogDebug("Tracker initialized.");
+        }
+
+        private void ProcessCapture(Shared<Capture> capture, Envelope envelope) {
+            if (tracker is null) {
+                Logger?.LogDebug("Calibration has not been received, skipping the capture.");
+                return;
+            }
+            var cap = capture.Resource;
+            if (cap.IR is null) {
+                Logger?.LogDebug("IR image is null, skipping the capture.");
+                return;
+            }
+            if (cap.Depth is null) {
+                Logger?.LogDebug("Depth image is null, skipping the capture.");
+                return;
+            }
+            Trace.Assert(cap.IR.Format == ImageFormat.IR16);
+            Trace.Assert(cap.Depth.Format == ImageFormat.Depth16);
+            tracker.EnqueueCapture(cap);
+            var frame = (Frame?)tracker.PopResult(Timeout, ThrowOnTimeout);
+            using var sharedFrame = Shared.Create(frame);
+            if (frame is null) {
+                if (OutputNull) {
+                    FrameOut.Post(sharedFrame, envelope.OriginatingTime);
+                }
+                return;
+            }
+            FrameOut.Post(sharedFrame, envelope.OriginatingTime);
+        }
+
+        #region INotifyPropertyChanged
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void SetProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null) {
+            if (!EqualityComparer<T>.Default.Equals(field, value)) {
+                field = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        #endregion
+
+        #region IDisposable
+        private bool disposed;
+
+        public void Dispose() {
+            if (disposed) {
+                return;
+            }
+            disposed = true;
+
+            if (tracker is not null) {
+                tracker.Shutdown();
+                tracker.Dispose();
+                tracker = null;
+            }
+        }
+        #endregion
+    }
+}
