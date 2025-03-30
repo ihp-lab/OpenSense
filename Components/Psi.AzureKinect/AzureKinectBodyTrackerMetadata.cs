@@ -6,7 +6,7 @@ namespace OpenSense.Components.Psi.AzureKinect {
     [Export(typeof(IComponentMetadata))]
     public class AzureKinectBodyTrackerMetadata : ConventionalComponentMetadata {
 
-        public override string Description => "[Deprecated] Azure Kinect body tracker. Requires outputs from Azure Kinect. The Azure Kinect Sensor component already has this tracker built-in. Microsoft has dropped support for this device, and its SDK has compatibility issues with other components.";
+        public override string Description => "[Deprecated] Azure Kinect body tracker. Requires outputs from Azure Kinect. The Azure Kinect Sensor component already has this tracker built-in. This is \\psi's implementation.";
 
         protected override Type ComponentType => typeof(AzureKinectBodyTracker);
 

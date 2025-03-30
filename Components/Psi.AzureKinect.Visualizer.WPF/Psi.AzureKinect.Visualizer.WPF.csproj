@@ -6,8 +6,8 @@
         <Platforms>x64</Platforms>
         <PlatformTarget>x64</PlatformTarget>
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-        <AssemblyName>OpenSense.WPF.Components.AzureKinect.Visualizer</AssemblyName>
-        <RootNamespace>OpenSense.WPF.Components.AzureKinect.Visualizer</RootNamespace>
+        <AssemblyName>OpenSense.WPF.Components.Psi.AzureKinect.Visualizer</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.Psi.AzureKinect.Visualizer</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

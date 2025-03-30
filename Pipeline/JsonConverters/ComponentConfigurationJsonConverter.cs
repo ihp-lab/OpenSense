@@ -34,6 +34,13 @@ namespace OpenSense.Pipeline.JsonConverters {
                 null,
                 "OpenSense.WPF.Components.LibreFace.Visualizer"
             ),
+            /* 2025/03/29 - Azure Kinect Visualizer */
+            new (
+                "OpenSense.Components.AzureKinect.Visualizer.AzureKinectBodyTrackerVisualizerConfiguration",
+                "OpenSense.WPF.Components.AzureKinect.Visualizer",
+                "OpenSense.Components.Psi.AzureKinect.Visualizer.AzureKinectBodyTrackerVisualizerConfiguration",
+                "OpenSense.WPF.Components.Psi.AzureKinect.Visualizer"
+            ),
         };
 
         private static readonly Regex TypeNameRegex = new Regex(@"^(?<type>[^,]+),\s*(?<assembly>[^,]+)(?<rest>.*)$");

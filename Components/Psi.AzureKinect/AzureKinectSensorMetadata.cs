@@ -6,7 +6,7 @@ namespace OpenSense.Components.Psi.AzureKinect {
     [Export(typeof(IComponentMetadata))]
     public class AzureKinectSensorMetadata : ConventionalComponentMetadata {
 
-        public override string Description => "Azure Kinect sensor.";
+        public override string Description => "[Deprecated] Azure Kinect sensor. This is \\psi's implementation.";
 
         protected override Type ComponentType => typeof(AzureKinectSensor);
 
