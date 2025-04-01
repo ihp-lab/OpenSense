@@ -266,6 +266,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureKinect.BodyTracking", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureKinect.BodyTracking.WPF", "Components\AzureKinect.BodyTracking.WPF\AzureKinect.BodyTracking.WPF.csproj", "{53560CA6-18B1-4E01-B1B9-7FBE3E3DA966}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureKinect.BodyTracking.Visualizer.WPF", "Components\AzureKinect.BodyTracking.Visualizer.WPF\AzureKinect.BodyTracking.Visualizer.WPF.csproj", "{CC080AC4-0D1A-4C7D-8E12-C503FAF6289B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -760,6 +762,10 @@ Global
 		{53560CA6-18B1-4E01-B1B9-7FBE3E3DA966}.Debug|x64.Build.0 = Debug|x64
 		{53560CA6-18B1-4E01-B1B9-7FBE3E3DA966}.Release|x64.ActiveCfg = Release|x64
 		{53560CA6-18B1-4E01-B1B9-7FBE3E3DA966}.Release|x64.Build.0 = Release|x64
+		{CC080AC4-0D1A-4C7D-8E12-C503FAF6289B}.Debug|x64.ActiveCfg = Debug|x64
+		{CC080AC4-0D1A-4C7D-8E12-C503FAF6289B}.Debug|x64.Build.0 = Debug|x64
+		{CC080AC4-0D1A-4C7D-8E12-C503FAF6289B}.Release|x64.ActiveCfg = Release|x64
+		{CC080AC4-0D1A-4C7D-8E12-C503FAF6289B}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -881,6 +887,7 @@ Global
 		{46199A61-B4A9-4AFB-9768-4557886BB9FB} = {5C411F31-BF09-4976-95CD-8748327C8478}
 		{E2FE64B3-5BF8-4640-BC2E-B14D99FE0966} = {5C411F31-BF09-4976-95CD-8748327C8478}
 		{53560CA6-18B1-4E01-B1B9-7FBE3E3DA966} = {5C411F31-BF09-4976-95CD-8748327C8478}
+		{CC080AC4-0D1A-4C7D-8E12-C503FAF6289B} = {5C411F31-BF09-4976-95CD-8748327C8478}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4CB31E6C-64DF-499B-B990-0C72B1A2AF47}
