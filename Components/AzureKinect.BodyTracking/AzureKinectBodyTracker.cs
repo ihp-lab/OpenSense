@@ -11,56 +11,6 @@ using Microsoft.Psi;
 namespace OpenSense.Components.AzureKinect.BodyTracking {
     public sealed class AzureKinectBodyTracker : INotifyPropertyChanged, IDisposable {
 
-        /// <remarks>
-        /// Bone connections defined here: https://docs.microsoft.com/en-us/azure/Kinect-dk/body-joints.
-        /// </remarks>
-        public static readonly IReadOnlyCollection<(JointId ChildJoint, JointId ParentJoint)> Bones = [
-            // Spine
-            (JointId.SpineNavel, JointId.Pelvis),
-            (JointId.SpineChest, JointId.SpineNavel),
-            (JointId.Neck, JointId.SpineChest),
-
-            // Left arm
-            (JointId.ClavicleLeft, JointId.SpineChest),
-            (JointId.ShoulderLeft, JointId.ClavicleLeft),
-            (JointId.ElbowLeft, JointId.ShoulderLeft),
-            (JointId.WristLeft, JointId.ElbowLeft),
-            (JointId.HandLeft, JointId.WristLeft),
-            (JointId.HandTipLeft, JointId.HandLeft),
-            (JointId.ThumbLeft, JointId.WristLeft),
-
-            // Right arm
-            (JointId.ClavicleRight, JointId.SpineChest),
-            (JointId.ShoulderRight, JointId.ClavicleRight),
-            (JointId.ElbowRight, JointId.ShoulderRight),
-            (JointId.WristRight, JointId.ElbowRight),
-            (JointId.HandRight, JointId.WristRight),
-            (JointId.HandTipRight, JointId.HandRight),
-            (JointId.ThumbRight, JointId.WristRight),
-
-            // Left leg
-            (JointId.HipLeft, JointId.Pelvis),
-            (JointId.KneeLeft, JointId.HipLeft),
-            (JointId.AnkleLeft, JointId.KneeLeft),
-            (JointId.FootLeft, JointId.AnkleLeft),
-
-            // Right leg
-            (JointId.HipRight, JointId.Pelvis),
-            (JointId.KneeRight, JointId.HipRight),
-            (JointId.AnkleRight, JointId.KneeRight),
-            (JointId.FootRight, JointId.AnkleRight),
-
-            // Head
-            (JointId.Head, JointId.Neck),
-            (JointId.Nose, JointId.Head),
-            (JointId.EyeLeft, JointId.Head),
-            (JointId.EarLeft, JointId.Head),
-            (JointId.EyeRight, JointId.Head),
-            (JointId.EarRight, JointId.Head),
-        ];
-
-        private readonly Pipeline _pipeline;
-
         #region Options
 
         private SensorOrientation sensorOrientation;
@@ -133,18 +83,19 @@ namespace OpenSense.Components.AzureKinect.BodyTracking {
         public Receiver<Shared<Capture>> CaptureIn { get; }
 
         public Emitter<Shared<Frame?>> FrameOut { get; }
+
+        public Emitter<Body[]?> BodiesOut { get; }
         #endregion
 
         /// <remarks>According to the documentation of k4abt_tracker_create(), only one tracker is allowed to exist at the same time in each process.</remarks>
         private Tracker? tracker;
 
         public AzureKinectBodyTracker(Pipeline pipeline) {
-            _pipeline = pipeline;
-
             CalibrationIn = pipeline.CreateReceiver<Calibration>(this, ProcessCalibration, nameof(CalibrationIn));
             CaptureIn = pipeline.CreateReceiver<Shared<Capture>>(this, ProcessCapture, nameof(CaptureIn));
 
             FrameOut = pipeline.CreateEmitter<Shared<Frame?>>(this, nameof(FrameOut));
+            BodiesOut = pipeline.CreateEmitter<Body[]?>(this, nameof(BodiesOut));
 
             pipeline.PipelineRun += OnPipelineRun;
             pipeline.PipelineCompleted += OnPipelineCompleted;
@@ -211,10 +162,27 @@ namespace OpenSense.Components.AzureKinect.BodyTracking {
             if (frame is null) {
                 if (OutputNull) {
                     FrameOut.Post(sharedFrame, envelope.OriginatingTime);
+                    if (BodiesOut.HasSubscribers) {
+                        BodiesOut.Post(null, envelope.OriginatingTime);
+                    }
                 }
                 return;
             }
             FrameOut.Post(sharedFrame, envelope.OriginatingTime);
+            if (BodiesOut.HasSubscribers) {
+                var numBodies = frame.NumberOfBodies;
+                Body[] bodies;
+                if (numBodies == 0) {
+                    bodies = Array.Empty<Body>();
+                } else {
+                    bodies = new Body[numBodies];
+                    for (var i = 0u; i < numBodies; i++) {
+                        var body = new Body(i, frame.GetBody(i));
+                        bodies[i] = body;
+                    }
+                }
+                BodiesOut.Post(bodies, envelope.OriginatingTime);
+            }
         }
 
         #region INotifyPropertyChanged

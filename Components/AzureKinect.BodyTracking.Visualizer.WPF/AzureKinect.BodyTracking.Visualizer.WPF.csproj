@@ -13,14 +13,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Azure.Kinect.BodyTracking" Version="1.1.2"/>
+        <PackageReference Include="Microsoft.Azure.Kinect.BodyTracking" Version="1.1.2" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
+        <PackageReference Include="Microsoft.Psi.Calibration" Version="0.19.100.1-beta" />
         <PackageReference Include="System.Composition" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\..\ComponentContract\ComponentContract.csproj" />
         <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
+        <ProjectReference Include="..\AzureKinect.BodyTracking.WPF\AzureKinect.BodyTracking.WPF.csproj" />
+        <ProjectReference Include="..\Psi.Imaging.Visualizer.WPF.Common\Psi.Imaging.Visualizer.WPF.Common.csproj" />
     </ItemGroup>
 
 </Project>

@@ -21,6 +21,8 @@ namespace OpenSense.Components.AzureKinect.BodyTracking {
                     return "The capture data.";
                 case nameof(AzureKinectBodyTracker.FrameOut):
                     return "The output of the tracker. The content of Shared<> can be null when timeout.";
+                case nameof(AzureKinectBodyTracker.BodiesOut):
+                    return "A array of detected bodies in \\psi's coordinate convention. The value can be null when timeout.";
                 default:
                     return null;
             }
