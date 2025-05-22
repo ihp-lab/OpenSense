@@ -9,10 +9,9 @@ using Microsoft.Psi;
 using Microsoft.Psi.Calibration;
 using Microsoft.Psi.Imaging;
 using OpenSense.WPF.Components.Psi.Imaging.Visualizer;
-using Body = OpenSense.Components.AzureKinect.BodyTracking.Body;
 using Image = Microsoft.Psi.Imaging.Image;
 
-namespace OpenSense.WPF.Components.AzureKinect.BodyTracking.Visualizer {
+namespace OpenSense.Components.AzureKinect.BodyTracking.Visualizer {
     public sealed class AzureKinectBodyTrackerVisualizer : IConsumer<(Shared<Image>, Body[]?)>, IProducer<Shared<Image>>, INotifyPropertyChanged {
 
         private readonly ImageHolder _imageVisualizer = new();
@@ -116,6 +115,10 @@ namespace OpenSense.WPF.Components.AzureKinect.BodyTracking.Visualizer {
             _imageVisualizer.UpdateImage(img, envelope.OriginatingTime);
             Out.Post(img, envelope.OriginatingTime);
         }
+
+        #region WPF
+        internal void RenderingCallback(object? sender, EventArgs args) => _imageVisualizer.RenderingCallback(sender, args);
+        #endregion
 
         #region Helpers
         private static bool IsValidDouble(double val) {
