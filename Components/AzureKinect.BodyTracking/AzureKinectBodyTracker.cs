@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Microsoft.Azure.Kinect.BodyTracking;
 using Microsoft.Azure.Kinect.Sensor;
 using Microsoft.Extensions.Logging;
@@ -10,6 +12,10 @@ using Microsoft.Psi;
 
 namespace OpenSense.Components.AzureKinect.BodyTracking {
     public sealed class AzureKinectBodyTracker : INotifyPropertyChanged, IDisposable {
+
+        private const string K4abtLibDir = "k4abt";//Set in csproj
+
+        private const string K4abtDll = "k4abt.dll";
 
         #region Options
 
@@ -121,6 +127,7 @@ namespace OpenSense.Components.AzureKinect.BodyTracking {
                 GpuDeviceId = GpuDeviceId,
                 ModelPath = modelPath,
             };
+            PreloadK4abtAndDependencies();
             /** NOTE:
              * AzureKinectBodyTrackingCreateException does not contain any error detail.
              * To know the detail, you need to look at its log.
@@ -192,6 +199,37 @@ namespace OpenSense.Components.AzureKinect.BodyTracking {
             if (!EqualityComparer<T>.Default.Equals(field, value)) {
                 field = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        #endregion
+
+        #region P/Invoke
+
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        private static extern IntPtr LoadLibraryEx(string lpFileName, IntPtr hFile, uint dwFlags);
+
+        public static void PreloadK4abtAndDependencies() {
+            var baseDir = AppContext.BaseDirectory;
+            if (File.Exists(Path.Combine(baseDir, K4abtDll))) {
+                /* NOTE:
+                 * Since the dependencies of k4abt.dll are located in both the application base directory and the AzureKinectLibs directory (LOAD_LIBRARY_SEARCH_USER_DIRS),
+                 * we need to enable both locations in the DLL search path.
+                 *
+                 * However, Windows only supports enabling or disabling directories for DLL searches—it does not allow us to explicitly define the search order between them.
+                 *
+                 * This means that if k4abt.dll exists in the application base directory, its dependencies (ONNX DLLs) will be loaded from the base directory, even if we explicitly load k4abt.dll from AzureKinectLibs.
+                 * This behavior is counterintuitive, but observed.
+                 *
+                 * As a result, we ensure that k4abt.dll does not exist in the application base directory.
+                 */
+                throw new Exception($"k4abt.dll exists in application base directory. It shouldn't be there.");
+            }
+            var extraDllDir = Path.Combine(baseDir, K4abtLibDir);
+            var k4abtPath = Path.Combine(extraDllDir, K4abtDll);
+            var handle = LoadLibraryEx(k4abtPath, IntPtr.Zero, 0);//We have to load this k4abt.dll, otherwise there is no chance our application knows it is there.
+            if (handle == IntPtr.Zero) {
+                int error = Marshal.GetLastWin32Error();
+                throw new InvalidOperationException($"Failed to load k4abt.dll, error code: {error}");
             }
         }
         #endregion

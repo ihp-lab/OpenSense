@@ -145,4 +145,14 @@
         <Resource Include="Resource\Icon\vflip.ico" />
     </ItemGroup>
 
+    <ItemGroup>
+        <!--We have a special k4abt.dll in a special folder. This will cause issues.-->
+        <FilesToRemove Include="$(OutputPath)k4abt.dll" Condition="'$(OutputPath)' != ''" />
+        <FilesToRemove Include="$(PublishDir)k4abt.dll" Condition="'$(PublishDir)' != ''" />
+    </ItemGroup>
+
+    <Target Name="RemoveUnwantedFiles" AfterTargets="Build;Publish">
+        <Delete Files="@(FilesToRemove)" />
+    </Target>
+
 </Project>
