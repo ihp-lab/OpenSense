@@ -12,8 +12,8 @@ namespace OpenSense.WPF.Components.OpenFace {
 
         public bool CanCreate(ComponentConfiguration configuration) => configuration is FileSourceConfiguration;
 
-        public UIElement Create(ComponentConfiguration configuration) => new FileSourceConfigurationControl() { 
-            DataContext = configuration 
+        public UIElement Create(ComponentConfiguration configuration) => new FileSourceConfigurationControl() {
+            DataContext = configuration
         };
     }
 }

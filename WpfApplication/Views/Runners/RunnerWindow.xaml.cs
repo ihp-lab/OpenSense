@@ -157,7 +157,7 @@ namespace OpenSense.WPF.Views.Runners {
             VisualizerContainerControl.SimplifyLayouts();
         }
 
-        private async void ButtonRun_Click(object? sender, RoutedEventArgs e) {
+        internal async void ButtonRun_Click(object? sender, RoutedEventArgs e) {
             if (states is not null) {
                 if (states.IsStarted && !states.IsStopped) {
                     MessageBox.Show("Pipeline is running.", "Run Pipeline", MessageBoxButton.OK, MessageBoxImage.Information);

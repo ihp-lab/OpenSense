@@ -1,0 +1,14 @@
+<Project>
+    <PropertyGroup>
+        <!--NOTE:
+            Use CUDA by default.
+            A specific range of CUDA and cuDNN versions might be required depending on the ONNX Runtime version.
+            The current ONNX Runtime version used accross this project is 1.20.1.
+            Please use this link to check the requirements: https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html#requirements
+            Please take special care of the cuDNN path. If you installed cuDNN through the executable installer, the added path might not directly point to the folder containing the DLLs.
+            In that case you will see exceptions like '[ONNXRuntimeError] : 1 : FAIL : LoadLibrary failed with error 126 "" when trying to load "<opensense_path>\onnxruntime_providers_cuda.dll".'
+            Device 0 will be used.
+        -->
+        <DefineConstants>$(DefineConstants);CUDA</DefineConstants>
+    </PropertyGroup>
+</Project>
