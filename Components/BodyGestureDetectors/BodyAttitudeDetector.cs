@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.Azure.Kinect.BodyTracking;
 using Microsoft.Azure.Kinect.Sensor;
 using Microsoft.Psi;
-using Microsoft.Psi.AzureKinect;
+using Body = OpenSense.Components.AzureKinect.BodyTracking.Body;
 
 namespace OpenSense.Components.BodyGestureDetectors {
     /// <remarks>
@@ -18,7 +18,7 @@ namespace OpenSense.Components.BodyGestureDetectors {
         #region Ports
         public Receiver<ImuSample> ImuIn { get; }
 
-        public Receiver<List<AzureKinectBody>> BodiesIn { get; }
+        public Receiver<List<Body>> BodiesIn { get; }
 
         /* Torso */
         public Emitter<float> YawRadianOut { get; }
@@ -112,7 +112,7 @@ namespace OpenSense.Components.BodyGestureDetectors {
 
         public BodyAttitudeDetector(Pipeline pipeline) {
             ImuIn = pipeline.CreateReceiver<ImuSample>(this, ProcessImu, nameof(ImuIn));
-            BodiesIn = pipeline.CreateReceiver<List<AzureKinectBody>>(this, ProcessBodies, nameof(BodiesIn));
+            BodiesIn = pipeline.CreateReceiver<List<Body>>(this, ProcessBodies, nameof(BodiesIn));
             /* Torso */
             YawRadianOut = pipeline.CreateEmitter<float>(this, nameof(YawRadianOut));
             YawDegreeOut = pipeline.CreateEmitter<float>(this, nameof(YawDegreeOut));
@@ -140,7 +140,7 @@ namespace OpenSense.Components.BodyGestureDetectors {
             }
         }
 
-        private void ProcessBodies(List<AzureKinectBody> bodies, Envelope envelope) {
+        private void ProcessBodies(List<Body> bodies, Envelope envelope) {
             if (lastImu is null) {
                 return;
             }

@@ -6,16 +6,16 @@ using System.Runtime.CompilerServices;
 using MathNet.Spatial.Euclidean;
 using Microsoft.Azure.Kinect.BodyTracking;
 using Microsoft.Psi;
-using Microsoft.Psi.AzureKinect;
 using Microsoft.Psi.Components;
+using Body = OpenSense.Components.AzureKinect.BodyTracking.Body;
 
 namespace OpenSense.Components.BodyGestureDetectors {
-    public sealed class ArmsProximityDetector : IConsumerProducer<List<AzureKinectBody>, double> {
+    public sealed class ArmsProximityDetector : IConsumerProducer<List<Body>, double> {
 
         private const double DoubleFloatingPointTolerance = double.Epsilon * 2;
 
         #region Ports
-        public Receiver<List<AzureKinectBody>> In { get; }
+        public Receiver<List<Body>> In { get; }
 
         /// <summary>
         /// Measured in meters.
@@ -61,13 +61,13 @@ namespace OpenSense.Components.BodyGestureDetectors {
         #endregion
 
         public ArmsProximityDetector(Pipeline pipeline) {
-            In = pipeline.CreateReceiver<List<AzureKinectBody>>(this, ProcessBodies, nameof(In));
+            In = pipeline.CreateReceiver<List<Body>>(this, ProcessBodies, nameof(In));
             Out = pipeline.CreateEmitter<double>(this, nameof(Out));
         }
 
 
 
-        private void ProcessBodies(List<AzureKinectBody> bodies, Envelope envelope) {
+        private void ProcessBodies(List<Body> bodies, Envelope envelope) {
             if (bodies is null || bodies.Count <= bodyIndex) {
                 return;
             }

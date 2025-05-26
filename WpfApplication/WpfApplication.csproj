@@ -75,8 +75,7 @@
         <ProjectReference Include="..\Components\AzureKinect.Sensor.WPF\AzureKinect.Sensor.WPF.csproj" />
         <ProjectReference Include="..\Components\AzureSpeech.WPF\AzureSpeech.WPF.csproj" />
         <ProjectReference Include="..\Components\Biopac.Visualizer.WPF\Biopac.Visualizer.WPF.csproj" />
-        <!--NOTE: This package currently depends on the Psi Azure Kinect which has compatibility issues.-->
-        <!--<ProjectReference Include="..\Components\BodyGestureDetectors.WPF\BodyGestureDetectors.WPF.csproj" />-->
+        <ProjectReference Include="..\Components\BodyGestureDetectors.WPF\BodyGestureDetectors.WPF.csproj" />
         <ProjectReference Include="..\Components\Builtin.WPF\Builtin.WPF.csproj" />
         <ProjectReference Include="..\Components\Builtin.Visualizer.WPF\Builtin.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\CollectionOperators.WPF\CollectionOperators.WPF.csproj" />
