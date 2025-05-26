@@ -133,7 +133,7 @@
 
     <PropertyGroup>
         <!--NOTE:
-        The Azure KInect package contains its own special onnxruntime DLLs while not referencing it as a dependency. 
+        The Azure Kinect package contains its own special onnxruntime DLLs while not referencing it as a dependency. 
         And these files conflit with other components having onnxruntime as a dependency.
         -->
         <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
