@@ -104,8 +104,10 @@
         <ProjectReference Include="..\Components\ParallelPorts.Windows.WPF\ParallelPorts.Windows.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Audio.Windows.WPF\Psi.Audio.Windows.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Audio.WPF\Psi.Audio.WPF.csproj" />
-        <ProjectReference Include="..\Components\Psi.AzureKinect.Visualizer.WPF\Psi.AzureKinect.Visualizer.WPF.csproj" />
-        <ProjectReference Include="..\Components\Psi.AzureKinect.WPF\Psi.AzureKinect.WPF.csproj" />
+        <!--NOTE: This package currently depends on the Psi Azure Kinect which has compatibility issues.-->
+        <!--<ProjectReference Include="..\Components\Psi.AzureKinect.Visualizer.WPF\Psi.AzureKinect.Visualizer.WPF.csproj" />-->
+        <!--NOTE: This package currently depends on the Psi Azure Kinect which has compatibility issues.-->
+        <!--<ProjectReference Include="..\Components\Psi.AzureKinect.WPF\Psi.AzureKinect.WPF.csproj" />-->
         <ProjectReference Include="..\Components\Psi.Builtin.WPF\Psi.Builtin.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.CognitiveServices.Face.WPF\Psi.CognitiveServices.Face.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.CognitiveServices.Speech.WPF\Psi.CognitiveServices.Speech.WPF.csproj" />
