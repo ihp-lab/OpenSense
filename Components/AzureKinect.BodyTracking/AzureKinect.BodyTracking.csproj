@@ -26,34 +26,15 @@
     
     <!--Copy special DLLs to a subfolder.-->
     <ItemGroup>
-        <!--NOTE: This native DLL loads ONNX runtime DLLs, so it also needs to be moved.-->
+        <!--NOTE: This DLL requires its special ONNX runtime DLL. We place it in a special folder, so it will not load the standard ONNX runtime DLL.-->
         <Content Include="$(NuGetPackageRoot)microsoft.azure.kinect.bodytracking\1.1.2\lib\native\amd64\release\k4abt.dll">
             <Link>$(BodyTrackerLibFolder)\k4abt.dll</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </Content>
+        <!--NOTE: This is the special ONNX runtime DLL. ONNX Provider DLLs are not needed to be moved, as the standard ones work.-->
         <Content Include="$(NuGetPackageRoot)microsoft.azure.kinect.bodytracking.onnxruntime\1.10.0\lib\native\amd64\release\onnxruntime.dll">
             <Link>$(BodyTrackerLibFolder)\onnxruntime.dll</Link>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-        </Content>
-        <Content Include="$(NuGetPackageRoot)microsoft.azure.kinect.bodytracking.onnxruntime\1.10.0\lib\native\amd64\release\onnxruntime_providers_cuda.dll">
-            <Link>$(BodyTrackerLibFolder)\onnxruntime_providers_cuda.dll</Link>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-        </Content>
-        <Content Include="$(NuGetPackageRoot)microsoft.azure.kinect.bodytracking.onnxruntime\1.10.0\lib\native\amd64\release\onnxruntime_providers_shared.dll">
-            <Link>$(BodyTrackerLibFolder)\onnxruntime_providers_shared.dll</Link>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-        </Content>
-        <Content Include="$(NuGetPackageRoot)microsoft.azure.kinect.bodytracking.onnxruntime\1.10.0\lib\native\amd64\release\onnxruntime_providers_tensorrt.dll">
-            <Link>$(BodyTrackerLibFolder)\onnxruntime_providers_tensorrt.dll</Link>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-        </Content>
-        <Content Include="$(NuGetPackageRoot)microsoft.azure.kinect.bodytracking.onnxruntime\1.10.0\lib\native\amd64\release\directml.dll">
-            <Link>$(BodyTrackerLibFolder)\directml.dll</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </Content>

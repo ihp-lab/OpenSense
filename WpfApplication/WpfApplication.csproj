@@ -6,7 +6,6 @@
         <Platforms>x64</Platforms>
         <PlatformTarget>x64</PlatformTarget>
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-        <OutputType>WinExe</OutputType>
         <RootNamespace>OpenSense.WPF</RootNamespace>
         <AssemblyName>OpenSense.WPF</AssemblyName>
         <EmbedAllSources>true</EmbedAllSources>
@@ -14,35 +13,27 @@
         <AssemblyVersion>3.3.0</AssemblyVersion>
         <Version>3.3.0</Version>
         <AssemblyName>OpenSense.WPF</AssemblyName>
-        <!--NOTE:
-        The Azure Kinect package of /psi contains onnxruntime DLLs while not referencing it as a dependency. 
-        And these files conflit with other components having onnxruntime as a dependency.
-        This should be a temporary fix.
-        And we should maintain the version of onnxruntime dependency of our components carefully so that it aligns with those in Azure Kinect package.
-        -->
-        <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
         <StartupObject>OpenSense.WPF.Program</StartupObject>
     </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <OutputType>WinExe</OutputType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)' != 'Release'">
+        <!-- Show Terminal -->
+        <OutputType>Exe</OutputType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Resource Include="Resource\Icon\*.ico" />
+    </ItemGroup>
 
     <ItemGroup>
         <Compile Remove="Utility\**" />
         <EmbeddedResource Remove="Utility\**" />
         <None Remove="Utility\**" />
         <Page Remove="Utility\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Remove="Resource\Icon\about.ico" />
-        <None Remove="Resource\Icon\devices.ico" />
-        <None Remove="Resource\Icon\exit.ico" />
-        <None Remove="Resource\Icon\export.ico" />
-        <None Remove="Resource\Icon\hflip.ico" />
-        <None Remove="Resource\Icon\import.ico" />
-        <None Remove="Resource\Icon\local.ico" />
-        <None Remove="Resource\Icon\remote.ico" />
-        <None Remove="Resource\Icon\reset.ico" />
-        <None Remove="Resource\Icon\usc.ico" />
-        <None Remove="Resource\Icon\vflip.ico" />
     </ItemGroup>
 
     <ItemGroup>
@@ -115,6 +106,7 @@
         <ProjectReference Include="..\Components\Psi.Audio.WPF\Psi.Audio.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.AzureKinect.Visualizer.WPF\Psi.AzureKinect.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.AzureKinect.WPF\Psi.AzureKinect.WPF.csproj" />
+        <ProjectReference Include="..\Components\Psi.Builtin.WPF\Psi.Builtin.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.CognitiveServices.Face.WPF\Psi.CognitiveServices.Face.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.CognitiveServices.Speech.WPF\Psi.CognitiveServices.Speech.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Data.WPF\Psi.Data.WPF.csproj" />
@@ -126,7 +118,6 @@
         <ProjectReference Include="..\Components\Psi.Media.Windows.WPF\Psi.Media.Windows.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Speech.Visualizer.WPF\Psi.Speech.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Speech.Windows.WPF\Psi.Speech.Windows.WPF.csproj" />
-        <ProjectReference Include="..\Components\Psi.Builtin.WPF\Psi.Builtin.WPF.csproj" />
         <ProjectReference Include="..\Components\PythonSupports.WPF\PythonSupports.WPF.csproj" />
         <ProjectReference Include="..\Components\SerialPorts.WPF\SerialPorts.WPF.csproj" />
         <ProjectReference Include="..\Components\Shimmer3.WPF\Shimmer3.WPF.csproj" />
@@ -138,22 +129,18 @@
         <ProjectReference Include="..\Widgets\OpenSmileConfigurationConverter.WPF\OpenSmileConfigurationConverter.WPF.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-        <Resource Include="Resource\Icon\about.ico" />
-        <Resource Include="Resource\Icon\devices.ico" />
-        <Resource Include="Resource\Icon\exit.ico" />
-        <Resource Include="Resource\Icon\export.ico" />
-        <Resource Include="Resource\Icon\hflip.ico" />
-        <Resource Include="Resource\Icon\import.ico" />
-        <Resource Include="Resource\Icon\local.ico" />
-        <Resource Include="Resource\Icon\remote.ico" />
-        <Resource Include="Resource\Icon\reset.ico" />
-        <Resource Include="Resource\Icon\usc.ico" />
-        <Resource Include="Resource\Icon\vflip.ico" />
-    </ItemGroup>
+    <!-- Azure Kinect Special Handlings -->
+
+    <PropertyGroup>
+        <!--NOTE:
+        The Azure KInect package contains its own special onnxruntime DLLs while not referencing it as a dependency. 
+        And these files conflit with other components having onnxruntime as a dependency.
+        -->
+        <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+    </PropertyGroup>
 
     <ItemGroup>
-        <!--We have a special k4abt.dll in a special folder. This will cause issues.-->
+        <!--We have a special k4abt.dll in a special folder. Having this one as well will cause issues.-->
         <FilesToRemove Include="$(OutputPath)k4abt.dll" Condition="'$(OutputPath)' != ''" />
         <FilesToRemove Include="$(PublishDir)k4abt.dll" Condition="'$(PublishDir)' != ''" />
     </ItemGroup>
