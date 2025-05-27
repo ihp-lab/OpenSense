@@ -18,7 +18,7 @@ namespace OpenSense.Components.BodyGestureDetectors {
         #region Ports
         public Receiver<ImuSample> ImuIn { get; }
 
-        public Receiver<List<Body>> BodiesIn { get; }
+        public Receiver<Body[]?> BodiesIn { get; }
 
         /* Torso */
         public Emitter<float> YawRadianOut { get; }
@@ -108,11 +108,11 @@ namespace OpenSense.Components.BodyGestureDetectors {
         }
         #endregion
 
-        private ImuSample lastImu;
+        private ImuSample? lastImu;
 
         public BodyAttitudeDetector(Pipeline pipeline) {
             ImuIn = pipeline.CreateReceiver<ImuSample>(this, ProcessImu, nameof(ImuIn));
-            BodiesIn = pipeline.CreateReceiver<List<Body>>(this, ProcessBodies, nameof(BodiesIn));
+            BodiesIn = pipeline.CreateReceiver<Body[]?>(this, ProcessBodies, nameof(BodiesIn));
             /* Torso */
             YawRadianOut = pipeline.CreateEmitter<float>(this, nameof(YawRadianOut));
             YawDegreeOut = pipeline.CreateEmitter<float>(this, nameof(YawDegreeOut));
@@ -140,11 +140,11 @@ namespace OpenSense.Components.BodyGestureDetectors {
             }
         }
 
-        private void ProcessBodies(List<Body> bodies, Envelope envelope) {
+        private void ProcessBodies(Body[]? bodies, Envelope envelope) {
             if (lastImu is null) {
                 return;
             }
-            if (bodies is null || bodies.Count <= bodyIndex) {
+            if (bodies is null || bodies.Length <= bodyIndex) {
                 return;
             }
             var body = bodies[bodyIndex];
@@ -243,9 +243,9 @@ namespace OpenSense.Components.BodyGestureDetectors {
         #endregion
 
         #region INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-        private void SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null) {
+        private void SetProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null) {
             if (!EqualityComparer<T>.Default.Equals(field, value)) {
                 field = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

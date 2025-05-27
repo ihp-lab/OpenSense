@@ -7,6 +7,7 @@
         <AssemblyName>OpenSense.Components.BodyGestureDetectors</AssemblyName>
         <RootNamespace>OpenSense.Components.BodyGestureDetectors</RootNamespace>
         <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
         <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
 

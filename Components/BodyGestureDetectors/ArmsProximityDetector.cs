@@ -10,12 +10,12 @@ using Microsoft.Psi.Components;
 using Body = OpenSense.Components.AzureKinect.BodyTracking.Body;
 
 namespace OpenSense.Components.BodyGestureDetectors {
-    public sealed class ArmsProximityDetector : IConsumerProducer<List<Body>, double> {
+    public sealed class ArmsProximityDetector : IConsumerProducer<Body[]?, double> {
 
         private const double DoubleFloatingPointTolerance = double.Epsilon * 2;
 
         #region Ports
-        public Receiver<List<Body>> In { get; }
+        public Receiver<Body[]?> In { get; }
 
         /// <summary>
         /// Measured in meters.
@@ -61,14 +61,12 @@ namespace OpenSense.Components.BodyGestureDetectors {
         #endregion
 
         public ArmsProximityDetector(Pipeline pipeline) {
-            In = pipeline.CreateReceiver<List<Body>>(this, ProcessBodies, nameof(In));
+            In = pipeline.CreateReceiver<Body[]?>(this, ProcessBodies, nameof(In));
             Out = pipeline.CreateEmitter<double>(this, nameof(Out));
         }
 
-
-
-        private void ProcessBodies(List<Body> bodies, Envelope envelope) {
-            if (bodies is null || bodies.Count <= bodyIndex) {
+        private void ProcessBodies(Body[]? bodies, Envelope envelope) {
+            if (bodies is null || bodies.Length <= bodyIndex) {
                 return;
             }
             var body = bodies[bodyIndex];
@@ -101,9 +99,9 @@ namespace OpenSense.Components.BodyGestureDetectors {
         }
 
         #region INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-        private void SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null) {
+        private void SetProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null) {
             if (!EqualityComparer<T>.Default.Equals(field, value)) {
                 field = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
