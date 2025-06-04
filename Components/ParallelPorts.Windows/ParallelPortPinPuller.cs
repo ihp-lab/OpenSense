@@ -15,12 +15,12 @@ namespace OpenSense.Components.ParallelPorts {
         #endregion
 
         #region Options
-        private short memoryAddress = 0x378;
+        private ushort memoryAddress = 0x0378;
 
         /// <remarks>
-        /// Inpoutx64 uses signed short for memory address. Here we follow its convention.
+        /// Inpoutx64 uses signed short for memory address. Here we use common convention of unsigned short.
         /// </remarks>
-        public short MemoryAddress {
+        public ushort MemoryAddress {
             get => memoryAddress;
             set => SetProperty(ref memoryAddress, value);
         }
@@ -88,7 +88,7 @@ namespace OpenSense.Components.ParallelPorts {
             if (!SetOnStart) {
                 return;
             }
-            Inpoutx64PInvoke.Out32(MemoryAddress, SetOnStartValue);
+            Inpoutx64PInvoke.Out32((short)MemoryAddress, SetOnStartValue);
             var timestamp = UseSourceOriginatingTime ? e.StartOriginatingTime : Out.Pipeline.GetCurrentTime();
             Out.Post(SetOnStartValue, timestamp);
         }
@@ -97,12 +97,12 @@ namespace OpenSense.Components.ParallelPorts {
             if (!SetAfterStop) {
                 return;
             }
-            Inpoutx64PInvoke.Out32(MemoryAddress, SetAfterStopValue);
+            Inpoutx64PInvoke.Out32((short)MemoryAddress, SetAfterStopValue);
         }
         #endregion
 
         private void Process(byte value, Envelope envelope) {
-            Inpoutx64PInvoke.Out32(MemoryAddress, value);
+            Inpoutx64PInvoke.Out32((short)MemoryAddress, value);
             var timestamp = UseSourceOriginatingTime ? envelope.OriginatingTime : Out.Pipeline.GetCurrentTime();
             Out.Post(value, timestamp);
         }

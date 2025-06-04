@@ -9,12 +9,12 @@ namespace OpenSense.Components.ParallelPorts {
         private static readonly ParallelPortPinPullerMetadata Metadata = new();
 
         #region Settings
-        private short memoryAddress = 0x378;
+        private ushort memoryAddress = 0x0378;
 
         /// <remarks>
-        /// Inpoutx64 uses signed short for memory address. Here we follow its convention.
+        /// Inpoutx64 uses signed short for memory address. Here we use common convention of unsigned short.
         /// </remarks>
-        public short MemoryAddress {
+        public ushort MemoryAddress {
             get => memoryAddress;
             set => SetProperty(ref memoryAddress, value);
         }

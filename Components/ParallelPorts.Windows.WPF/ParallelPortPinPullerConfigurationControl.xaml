@@ -16,8 +16,8 @@
     <UserControl.Resources>
         <local:HexByteConverter
             x:Key="HexByteConverter" />
-        <local:HexShortConverter
-            x:Key="HexShortConverter" />
+        <local:HexUShortConverter
+            x:Key="HexUShortConverter" />
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -48,7 +48,7 @@
         <TextBox
             Grid.Row="0"
             Grid.Column="1"
-            Text="{Binding MemoryAddress, Converter={StaticResource HexShortConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            Text="{Binding MemoryAddress, Converter={StaticResource HexUShortConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         <TextBlock
             Grid.Row="1"
