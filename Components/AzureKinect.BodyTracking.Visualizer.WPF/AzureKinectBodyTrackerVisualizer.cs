@@ -12,7 +12,7 @@ using OpenSense.WPF.Components.Psi.Imaging.Visualizer;
 using Image = Microsoft.Psi.Imaging.Image;
 
 namespace OpenSense.Components.AzureKinect.BodyTracking.Visualizer {
-    public sealed class AzureKinectBodyTrackerVisualizer : IConsumer<(Shared<Image>, Body[]?)>, IProducer<Shared<Image>>, INotifyPropertyChanged {
+    public sealed class AzureKinectBodyTrackerVisualizer : IConsumer<(Shared<Image>, IReadOnlyList<Body>?)>, IProducer<Shared<Image>>, INotifyPropertyChanged {
 
         private readonly ImageHolder _imageVisualizer = new();
 
@@ -49,7 +49,7 @@ namespace OpenSense.Components.AzureKinect.BodyTracking.Visualizer {
         #region Ports
         public Receiver<IDepthDeviceCalibrationInfo> CalibrationIn { get; }
 
-        public Receiver<(Shared<Image>, Body[]?)> In { get; }
+        public Receiver<(Shared<Image>, IReadOnlyList<Body>?)> In { get; }
 
         public Emitter<Shared<Image>> Out { get; }
         #endregion
@@ -64,7 +64,7 @@ namespace OpenSense.Components.AzureKinect.BodyTracking.Visualizer {
 
         public AzureKinectBodyTrackerVisualizer(Pipeline pipeline) {
             CalibrationIn = pipeline.CreateReceiver<IDepthDeviceCalibrationInfo>(this, ProcessCalibration, nameof(CalibrationIn));
-            In = pipeline.CreateReceiver<(Shared<Image>, Body[]?)>(this, Process, nameof(In));
+            In = pipeline.CreateReceiver<(Shared<Image>, IReadOnlyList<Body>?)>(this, Process, nameof(In));
             Out = pipeline.CreateEmitter<Shared<Image>>(this, nameof(Out));
 
             _imageVisualizer.PropertyChanged += (sender, e) => {
@@ -76,7 +76,7 @@ namespace OpenSense.Components.AzureKinect.BodyTracking.Visualizer {
             calibration = calib;
         }
 
-        private void Process((Shared<Image>, Body[]?) data, Envelope envelope) {
+        private void Process((Shared<Image>, IReadOnlyList<Body>?) data, Envelope envelope) {
             if (Mute) {
                 return;
             }

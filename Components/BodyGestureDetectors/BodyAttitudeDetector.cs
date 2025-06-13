@@ -18,7 +18,7 @@ namespace OpenSense.Components.BodyGestureDetectors {
         #region Ports
         public Receiver<ImuSample> ImuIn { get; }
 
-        public Receiver<Body[]?> BodiesIn { get; }
+        public Receiver<IReadOnlyList<Body>?> BodiesIn { get; }
 
         /* Torso */
         public Emitter<float> YawRadianOut { get; }
@@ -112,7 +112,7 @@ namespace OpenSense.Components.BodyGestureDetectors {
 
         public BodyAttitudeDetector(Pipeline pipeline) {
             ImuIn = pipeline.CreateReceiver<ImuSample>(this, ProcessImu, nameof(ImuIn));
-            BodiesIn = pipeline.CreateReceiver<Body[]?>(this, ProcessBodies, nameof(BodiesIn));
+            BodiesIn = pipeline.CreateReceiver<IReadOnlyList<Body>?>(this, ProcessBodies, nameof(BodiesIn));
             /* Torso */
             YawRadianOut = pipeline.CreateEmitter<float>(this, nameof(YawRadianOut));
             YawDegreeOut = pipeline.CreateEmitter<float>(this, nameof(YawDegreeOut));
@@ -140,11 +140,11 @@ namespace OpenSense.Components.BodyGestureDetectors {
             }
         }
 
-        private void ProcessBodies(Body[]? bodies, Envelope envelope) {
+        private void ProcessBodies(IReadOnlyList<Body>? bodies, Envelope envelope) {
             if (lastImu is null) {
                 return;
             }
-            if (bodies is null || bodies.Length <= bodyIndex) {
+            if (bodies is null || bodies.Count <= bodyIndex) {
                 return;
             }
             var body = bodies[bodyIndex];

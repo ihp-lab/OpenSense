@@ -90,7 +90,7 @@ namespace OpenSense.Components.AzureKinect.BodyTracking {
 
         public Emitter<Shared<Frame?>> FrameOut { get; }
 
-        public Emitter<Body[]?> BodiesOut { get; }
+        public Emitter<IReadOnlyList<Body>?> BodiesOut { get; }
         #endregion
 
         /// <remarks>According to the documentation of k4abt_tracker_create(), only one tracker is allowed to exist at the same time in each process.</remarks>
@@ -101,7 +101,7 @@ namespace OpenSense.Components.AzureKinect.BodyTracking {
             CaptureIn = pipeline.CreateReceiver<Shared<Capture>>(this, ProcessCapture, nameof(CaptureIn));
 
             FrameOut = pipeline.CreateEmitter<Shared<Frame?>>(this, nameof(FrameOut));
-            BodiesOut = pipeline.CreateEmitter<Body[]?>(this, nameof(BodiesOut));
+            BodiesOut = pipeline.CreateEmitter<IReadOnlyList<Body>?>(this, nameof(BodiesOut));
 
             pipeline.PipelineRun += OnPipelineRun;
             pipeline.PipelineCompleted += OnPipelineCompleted;

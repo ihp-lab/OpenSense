@@ -10,12 +10,12 @@ using Microsoft.Psi.Components;
 using Body = OpenSense.Components.AzureKinect.BodyTracking.Body;
 
 namespace OpenSense.Components.BodyGestureDetectors {
-    public sealed class ArmsProximityDetector : IConsumerProducer<Body[]?, double> {
+    public sealed class ArmsProximityDetector : IConsumerProducer<IReadOnlyList<Body>?, double> {
 
         private const double DoubleFloatingPointTolerance = double.Epsilon * 2;
 
         #region Ports
-        public Receiver<Body[]?> In { get; }
+        public Receiver<IReadOnlyList<Body>?> In { get; }
 
         /// <summary>
         /// Measured in meters.
@@ -61,12 +61,12 @@ namespace OpenSense.Components.BodyGestureDetectors {
         #endregion
 
         public ArmsProximityDetector(Pipeline pipeline) {
-            In = pipeline.CreateReceiver<Body[]?>(this, ProcessBodies, nameof(In));
+            In = pipeline.CreateReceiver<IReadOnlyList<Body>?>(this, ProcessBodies, nameof(In));
             Out = pipeline.CreateEmitter<double>(this, nameof(Out));
         }
 
-        private void ProcessBodies(Body[]? bodies, Envelope envelope) {
-            if (bodies is null || bodies.Length <= bodyIndex) {
+        private void ProcessBodies(IReadOnlyList<Body>? bodies, Envelope envelope) {
+            if (bodies is null || bodies.Count <= bodyIndex) {
                 return;
             }
             var body = bodies[bodyIndex];
