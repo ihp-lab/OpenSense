@@ -6,7 +6,7 @@ namespace OpenSense.Components.AzureKinect.BodyTracking {
     public sealed class AzureKinectBodyTrackerMetadata : ConventionalComponentMetadata {
 
         public override string Description =>
-            "This is our own Azure Kinect Body Tracker component implementation. Only one tracker can run per process. It relies on our Azure Kinect Sensor component."
+            "This is our own Azure Kinect Body Tracker component implementation. Only one tracker can run per process. It relies on our Azure Kinect Sensor component. The recommended Depth Mode is NFOV_UNBINNED or WFOV_2X2BINNED."
             ;
 
         protected override Type ComponentType => typeof(AzureKinectBodyTracker);
