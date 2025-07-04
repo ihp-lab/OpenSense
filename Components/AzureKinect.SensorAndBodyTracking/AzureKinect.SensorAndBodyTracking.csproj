@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <Platforms>x64</Platforms>
+        <PlatformTarget>x64</PlatformTarget>
+        <AssemblyName>OpenSense.Components.AzureKinect.SensorAndBodyTracking</AssemblyName>
+        <RootNamespace>OpenSense.Components.AzureKinect.SensorAndBodyTracking</RootNamespace>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+        <EmbedAllSources>true</EmbedAllSources>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\AzureKinect.BodyTracking\AzureKinect.BodyTracking.csproj" />
+        <ProjectReference Include="..\AzureKinect.Sensor\AzureKinect.Sensor.csproj" />
+    </ItemGroup>
+
+</Project>

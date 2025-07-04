@@ -6,7 +6,7 @@ using Microsoft.Psi;
 namespace OpenSense.Components.AzureKinect.BodyTracking {
     [Serializable]
     public class AzureKinectBodyTrackerConfiguration : ConventionalComponentConfiguration {
-        #region Settings
+        #region Options
         private SensorOrientation sensorOrientation;
 
         public SensorOrientation SensorOrientation {

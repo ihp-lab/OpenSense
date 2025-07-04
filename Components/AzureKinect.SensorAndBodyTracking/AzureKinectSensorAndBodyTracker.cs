@@ -2,31 +2,45 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using MathNet.Spatial.Euclidean;
+using Microsoft.Azure.Kinect.BodyTracking;
 using Microsoft.Azure.Kinect.Sensor;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using Microsoft.Psi.Calibration;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
+using OpenSense.Components.AzureKinect.Sensor;
+using Body = OpenSense.Components.AzureKinect.BodyTracking.Body;
 using Image = Microsoft.Psi.Imaging.Image;
 using KinectImage = Microsoft.Azure.Kinect.Sensor.Image;
 
-namespace OpenSense.Components.AzureKinect.Sensor {
-    /// <remarks>This component's code is based on \psi's code.</remarks>
-    public sealed class AzureKinectSensor : ISourceComponent, INotifyPropertyChanged, IDisposable {
+namespace OpenSense.Components.AzureKinect.SensorAndBodyTracking {
+    /// <summary>
+    /// This component combines the Azure Kinect Sensor and Body Tracker into a single unit, avoiding exposure of native types to potentially reduce tracker instability.
+    /// </summary>
+    /// <remarks>
+    /// Based on AzureKinectSensor and AzureKinectBodyTracker from OpenSense commit 53ae494.
+    /// </remarks>
+    public sealed class AzureKinectSensorAndBodyTracker : ISourceComponent, INotifyPropertyChanged, IDisposable {
 
         private const PixelFormat ColorImageFormat = PixelFormat.BGRA_32bpp;
 
         private const PixelFormat InfraredImageFormat = PixelFormat.Gray_16bpp;
 
         private const double DepthValueToMetersScaleFactor = 0.001;
+
+        private const string K4abtLibDir = "k4abt";//Set in csproj
+
+        private const string K4abtDll = "k4abt.dll";
 
         private readonly Pipeline _pipeline;
 
@@ -35,6 +49,7 @@ namespace OpenSense.Components.AzureKinect.Sensor {
         private readonly Thread _imuThread;
 
         #region Options
+        #region Sensor
         private int deviceIndex = 0;
 
         public int DeviceIndex {
@@ -216,6 +231,65 @@ namespace OpenSense.Components.AzureKinect.Sensor {
             get => streamingIndicator;
             set => SetProperty(ref streamingIndicator, value);
         }
+        #endregion
+
+        #region Body Tracker
+        private SensorOrientation sensorOrientation;
+
+        public SensorOrientation SensorOrientation {
+            get => sensorOrientation;
+            set => SetProperty(ref sensorOrientation, value);
+        }
+
+        private TrackerProcessingMode processingBackend;
+
+        public TrackerProcessingMode ProcessingBackend {
+            get => processingBackend;
+            set => SetProperty(ref processingBackend, value);
+        }
+
+        private int gpuDeviceId;
+
+        public int GpuDeviceId {
+            get => gpuDeviceId;
+            set => SetProperty(ref gpuDeviceId, value);
+        }
+
+        private bool useLiteModel;
+
+        public bool UseLiteModel {
+            get => useLiteModel;
+            set => SetProperty(ref useLiteModel, value);
+        }
+
+        private float temporalSmoothing;
+
+        public float TemporalSmoothing {
+            get => temporalSmoothing;
+            set => SetProperty(ref temporalSmoothing, value);
+        }
+
+        private TimeSpan timeout = TimeSpan.FromSeconds(-1);
+
+        public TimeSpan Timeout {
+            get => timeout;
+            set => SetProperty(ref timeout, value);
+        }
+
+        private bool throwOnTimeout;
+
+        public bool ThrowOnTimeout {
+            get => throwOnTimeout;
+            set => SetProperty(ref throwOnTimeout, value);
+        }
+
+        private bool outputNull;
+
+        public bool OutputNull {
+            get => outputNull;
+            set => SetProperty(ref outputNull, value);
+        }
+        #endregion
 
         private ILogger? logger;
 
@@ -226,17 +300,10 @@ namespace OpenSense.Components.AzureKinect.Sensor {
         #endregion
 
         #region Ports
+
         public Emitter<Calibration> CalibrationOut { get; }
 
         public Emitter<IDepthDeviceCalibrationInfo> PsiCalibrationOut { get; }
-
-        public Emitter<Shared<Capture>> CaptureOut { get; }
-
-        public Emitter<Shared<KinectImage>> ColorOut { get; }
-
-        public Emitter<Shared<KinectImage>> DepthOut { get; }
-
-        public Emitter<Shared<KinectImage>> InfraredOut { get; }
 
         public Emitter<Shared<Image>> PsiColorOut { get; }
 
@@ -249,12 +316,14 @@ namespace OpenSense.Components.AzureKinect.Sensor {
         public Emitter<ImuSample> ImuOut { get; }
 
         public Emitter<float> ImuTemperatureOut { get; }
+
+        public Emitter<IReadOnlyList<Body>?> BodiesOut { get; }
         #endregion
 
         #region Public Properties
         public Calibration? RawCalibration { get; private set; }
 
-        public IDepthDeviceCalibrationInfo? Calibration { get; private set; } 
+        public IDepthDeviceCalibrationInfo? Calibration { get; private set; }
 
         public bool? SyncInJackConnected => device?.SyncInJackConnected;
 
@@ -272,8 +341,11 @@ namespace OpenSense.Components.AzureKinect.Sensor {
         private bool imuEnabled;
 
         private bool stopRequested;
-        
-        public AzureKinectSensor(Pipeline pipeline) {
+
+        /// <remarks>According to the documentation of k4abt_tracker_create(), only one tracker is allowed to exist at the same time in each process.</remarks>
+        private Tracker? tracker;
+
+        public AzureKinectSensorAndBodyTracker(Pipeline pipeline) {
             _pipeline = pipeline;
             _captureThread = new Thread(CaptureThreadRun) {
                 Name = "Azure Kinect Capture Thread",
@@ -288,16 +360,13 @@ namespace OpenSense.Components.AzureKinect.Sensor {
 
             CalibrationOut = pipeline.CreateEmitter<Calibration>(this, nameof(CalibrationOut));
             PsiCalibrationOut = pipeline.CreateEmitter<IDepthDeviceCalibrationInfo>(this, nameof(PsiCalibrationOut));
-            CaptureOut = pipeline.CreateEmitter<Shared<Capture>>(this, nameof(CaptureOut));
-            ColorOut = pipeline.CreateEmitter<Shared<KinectImage>>(this, nameof(ColorOut));
-            DepthOut = pipeline.CreateEmitter<Shared<KinectImage>>(this, nameof(DepthOut));
-            InfraredOut = pipeline.CreateEmitter<Shared<KinectImage>>(this, nameof(InfraredOut));
             PsiColorOut = pipeline.CreateEmitter<Shared<Image>>(this, nameof(PsiColorOut));
             PsiDepthOut = pipeline.CreateEmitter<Shared<DepthImage>>(this, nameof(PsiDepthOut));
             PsiInfraredOut = pipeline.CreateEmitter<Shared<Image>>(this, nameof(PsiInfraredOut));
             CaptureTemperatureOut = pipeline.CreateEmitter<float>(this, nameof(CaptureTemperatureOut));
             ImuOut = pipeline.CreateEmitter<ImuSample>(this, nameof(ImuOut));
             ImuTemperatureOut = pipeline.CreateEmitter<float>(this, nameof(ImuTemperatureOut));
+            BodiesOut = pipeline.CreateEmitter<IReadOnlyList<Body>?>(this, nameof(BodiesOut));
 
             pipeline.PipelineRun += OnPipelineRun;
             pipeline.PipelineCompleted += OnPipelineCompleted;
@@ -555,6 +624,34 @@ namespace OpenSense.Components.AzureKinect.Sensor {
                 );
                 Calibration = psiCalibration;
                 PsiCalibrationOut.Post(psiCalibration, e.StartOriginatingTime);
+
+                #region Body Tracker
+                var modelPath = UseLiteModel ? "dnn_model_2_0_lite_op11.onnx" : "dnn_model_2_0_op11.onnx";
+                var trackerConfiguration = new TrackerConfiguration() {
+                    SensorOrientation = SensorOrientation,
+                    ProcessingMode = ProcessingBackend,
+                    GpuDeviceId = GpuDeviceId,
+                    ModelPath = modelPath,
+                };
+                PreloadK4abtAndDependencies();
+                /** NOTE:
+                 * AzureKinectBodyTrackingCreateException does not contain any error detail.
+                 * To know the detail, you need to look at its log.
+                 * k4abt.dll does not expose APIs like k4a.dll does for tracking logs within the program.
+                 * To view the logs, there are two options: console output or logging to a file.
+                 * By default, logs are output to the console.
+                 * If the component is launched by the WPF Applications, temporarily changing the OutputType from WinExe to Exe will display the terminal.
+                 * If the K4ABT_ENABLE_LOG_TO_A_FILE environment variable is set, logs will be written to a file.
+                 * The file path must end with .log to be valid.
+                 * https://learn.microsoft.com/en-us/previous-versions/azure/kinect-dk/troubleshooting#collecting-logs
+                 *
+                 * One failure I have encountered was due to ONNX runtime not compatible.
+                 */
+                var tkr = Tracker.Create(rawCalibration, trackerConfiguration);
+                tkr.SetTemporalSmooting(TemporalSmoothing);
+                tracker = tkr;//Post tracker instance
+                Logger?.LogDebug("Tracker initialized.");
+                #endregion
             } catch (AzureKinectException ex) {
                 LogAzureKinectExceptionDetail(ex);
                 throw;
@@ -563,6 +660,7 @@ namespace OpenSense.Components.AzureKinect.Sensor {
 
         private void OnPipelineCompleted(object? sender, PipelineCompletedEventArgs e) {
             EnsureStopSensor();
+            EnsureShutdownTracker();
         }
         #endregion
 
@@ -594,12 +692,10 @@ namespace OpenSense.Components.AzureKinect.Sensor {
             /** NOTE:
              * We only post \psi data types if there are subscribers to achieve the optimal performance.
              */
-            var colorOutHasSubscribers = ColorOut.HasSubscribers;
-            var infraredOutHasSubscribers = InfraredOut.HasSubscribers;
-            var depthOutHasSubscribers = DepthOut.HasSubscribers;
             var psiColorOutHasSubscribers = PsiColorOut.HasSubscribers;
             var psiInfraredOutHasSubscribers = PsiInfraredOut.HasSubscribers;
             var psiDepthOutHasSubscribers = PsiDepthOut.HasSubscribers;
+            var bodiesOutHasSubscribers = BodiesOut.HasSubscribers;
             try {
                 try {
                     while (!stopRequested) {
@@ -610,24 +706,17 @@ namespace OpenSense.Components.AzureKinect.Sensor {
                             Logger?.LogDebug("Timeout while getting a capture sample.");
                             continue;
                         }
-                        using var sharedCapture = Shared.Create(capture);
                         var timestamp = _pipeline.GetCurrentTime();
-                        CaptureOut.Post(sharedCapture, timestamp);
 
                         /* Temperature */
                         CaptureTemperatureOut.Post(capture.Temperature, timestamp);
 
                         /* Color */
-                        var cFlag = colorOutHasSubscribers || psiColorOutHasSubscribers;
+                        var cFlag = psiColorOutHasSubscribers;
                         if (cFlag && EnableColor) {
                             if (capture.Color is null) {
                                 Logger?.LogDebug("Color image is not available.");
                             } else {
-                                if (colorOutHasSubscribers) {
-                                    var dup = capture.Color.Reference();
-                                    using var shared = Shared.Create(dup);
-                                    ColorOut.Post(shared, timestamp);
-                                }
                                 if (psiColorOutHasSubscribers) {
                                     if (ColorFormat == ImageFormat.ColorBGRA32) {
                                         using var shared = ImagePool.GetOrCreate(colorWidth, colorHeight, ColorImageFormat);
@@ -643,8 +732,8 @@ namespace OpenSense.Components.AzureKinect.Sensor {
                         }
 
                         /* Infrared and Depth */
-                        var iFlag = infraredOutHasSubscribers || psiInfraredOutHasSubscribers;
-                        var dFlag = depthOutHasSubscribers || psiDepthOutHasSubscribers;
+                        var iFlag = psiInfraredOutHasSubscribers || bodiesOutHasSubscribers;
+                        var dFlag = psiDepthOutHasSubscribers || bodiesOutHasSubscribers;
                         var flag = iFlag || dFlag;
                         if (flag && EnableDepth) {
                             /* IR */
@@ -652,11 +741,6 @@ namespace OpenSense.Components.AzureKinect.Sensor {
                                 if (capture.IR is null) {
                                     Logger?.LogDebug("Infrared image is not available.");
                                 } else {
-                                    if (infraredOutHasSubscribers) {
-                                        var dup = capture.IR.Reference();
-                                        using var shared = Shared.Create(dup);
-                                        InfraredOut.Post(shared, timestamp);
-                                    }
                                     if (psiInfraredOutHasSubscribers) {
                                         using var shared = ImagePool.GetOrCreate(depthWidth, depthHeight, InfraredImageFormat);
                                         unsafe {
@@ -674,11 +758,6 @@ namespace OpenSense.Components.AzureKinect.Sensor {
                                 if (capture.Depth is null) {
                                     Logger?.LogDebug("Depth image is not available.");
                                 } else {
-                                    if (depthOutHasSubscribers) {
-                                        var dup = capture.Depth.Reference();
-                                        using var shared = Shared.Create(dup);
-                                        DepthOut.Post(shared, timestamp);
-                                    }
                                     if (psiDepthOutHasSubscribers) {
                                         using var shared = DepthImagePool.GetOrCreate(depthWidth, depthHeight, DepthValueSemantics.DistanceToPlane, DepthValueToMetersScaleFactor);
                                         unsafe {
@@ -688,9 +767,44 @@ namespace OpenSense.Components.AzureKinect.Sensor {
                                         }
                                         PsiDepthOut.Post(shared, timestamp);
                                     }
+
+                                    #region Body Tracker
+                                    /* Body Tracking */
+                                    if (bodiesOutHasSubscribers && tracker is not null) {//tracker might be null because we initialized it after the thread started.
+                                        Trace.Assert(capture.IR is not null);
+                                        Trace.Assert(capture.IR!.Format == ImageFormat.IR16);
+                                        Trace.Assert(capture.Depth.Format == ImageFormat.Depth16);
+                                        tracker.EnqueueCapture(capture);
+                                        var frame = (Frame?)tracker.PopResult(Timeout, ThrowOnTimeout);
+                                        using var sharedFrame = Shared.Create(frame);
+                                        if (frame is null) {
+                                            if (OutputNull) {
+                                                if (BodiesOut.HasSubscribers) {
+                                                    BodiesOut.Post(null, timestamp);
+                                                }
+                                            }
+                                            return;
+                                        }
+                                        if (BodiesOut.HasSubscribers) {
+                                            var numBodies = frame.NumberOfBodies;
+                                            Body[] bodies;
+                                            if (numBodies == 0) {
+                                                bodies = Array.Empty<Body>();
+                                            } else {
+                                                bodies = new Body[numBodies];
+                                                for (var i = 0u; i < numBodies; i++) {
+                                                    var body = new Body(i, frame.GetBody(i));
+                                                    bodies[i] = body;
+                                                }
+                                            }
+                                            BodiesOut.Post(bodies, timestamp);
+                                        }
+                                    } 
+                                    #endregion
                                 }
                             }
                         }
+
                     }
                 } catch (AzureKinectException ex) {
                     LogAzureKinectExceptionDetail(ex);
@@ -755,6 +869,16 @@ namespace OpenSense.Components.AzureKinect.Sensor {
             device = null;
         }
 
+        private void EnsureShutdownTracker() {
+            if (tracker is null) {
+                return;
+            }
+
+            tracker.Shutdown();
+            tracker.Dispose();
+            tracker = null;
+        }
+
         #region Azure Kinect Image Unsafe Methods
 
         private unsafe delegate void* GetUnsafeBuffer();
@@ -802,6 +926,37 @@ namespace OpenSense.Components.AzureKinect.Sensor {
         }
         #endregion
 
+        #region P/Invoke
+
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        private static extern IntPtr LoadLibraryEx(string lpFileName, IntPtr hFile, uint dwFlags);
+
+        public static void PreloadK4abtAndDependencies() {
+            var baseDir = AppContext.BaseDirectory;
+            if (File.Exists(Path.Combine(baseDir, K4abtDll))) {
+                /* NOTE:
+                 * Since the dependencies of k4abt.dll are located in both the application base directory and the AzureKinectLibs directory (LOAD_LIBRARY_SEARCH_USER_DIRS),
+                 * we need to enable both locations in the DLL search path.
+                 *
+                 * However, Windows only supports enabling or disabling directories for DLL searches—it does not allow us to explicitly define the search order between them.
+                 *
+                 * This means that if k4abt.dll exists in the application base directory, its dependencies (ONNX DLLs) will be loaded from the base directory, even if we explicitly load k4abt.dll from AzureKinectLibs.
+                 * This behavior is counterintuitive, but observed.
+                 *
+                 * As a result, we ensure that k4abt.dll does not exist in the application base directory.
+                 */
+                throw new Exception($"k4abt.dll exists in application base directory. It shouldn't be there.");
+            }
+            var extraDllDir = Path.Combine(baseDir, K4abtLibDir);
+            var k4abtPath = Path.Combine(extraDllDir, K4abtDll);
+            var handle = LoadLibraryEx(k4abtPath, IntPtr.Zero, 0);//We have to load this k4abt.dll, otherwise there is no chance our application knows it is there.
+            if (handle == IntPtr.Zero) {
+                int error = Marshal.GetLastWin32Error();
+                throw new InvalidOperationException($"Failed to load k4abt.dll, error code: {error}");
+            }
+        }
+        #endregion
+
         #region IDisposable
         private bool disposed;
 
@@ -812,6 +967,7 @@ namespace OpenSense.Components.AzureKinect.Sensor {
             disposed = true;
 
             EnsureStopSensor();
+            EnsureShutdownTracker();
         }
         #endregion
     }

@@ -1,0 +1,499 @@
+﻿<UserControl
+    x:Class="OpenSense.WPF.Components.AzureKinect.SensorAndBodyTracking.AzureKinectSensorAndBodyTrackerConfigurationControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:OpenSense.WPF.Components.AzureKinect.SensorAndBodyTracking"
+    xmlns:util="clr-namespace:OpenSense.WPF.Components.Utilities;assembly=OpenSense.WPF.Components.Contracts"
+    xmlns:sensor="clr-namespace:Microsoft.Azure.Kinect.Sensor;assembly=Microsoft.Azure.Kinect.Sensor"
+    xmlns:tracker="clr-namespace:Microsoft.Azure.Kinect.BodyTracking;assembly=Microsoft.Azure.Kinect.BodyTracking"
+    xmlns:comp="clr-namespace:OpenSense.Components.AzureKinect.SensorAndBodyTracking;assembly=OpenSense.Components.AzureKinect.SensorAndBodyTracking"
+    xmlns:sensorComp="clr-namespace:OpenSense.Components.AzureKinect.Sensor;assembly=OpenSense.Components.AzureKinect.Sensor"
+    mc:Ignorable="d"
+    Loaded="UserControl_Loaded"
+    d:DesignHeight="800"
+    d:DesignWidth="800">
+    <d:UserControl.DataContext>
+        <comp:AzureKinectSensorAndBodyTrackerConfiguration />
+    </d:UserControl.DataContext>
+    <ScrollViewer
+        HorizontalScrollBarVisibility="Disabled"
+        VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <Expander
+                Header="Sensor"
+                IsExpanded="True">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                    </Grid.RowDefinitions>
+
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="0">
+                        Device Index
+                    </Label>
+                    <Grid
+                        Grid.Row="0"
+                        Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition
+                                Width="auto" />
+                            <ColumnDefinition
+                                Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox
+                            Grid.Column="0"
+                            Text="{Binding DeviceIndex}" />
+                        <TextBlock
+                            Grid.Column="1">
+                            Available Count:
+                        </TextBlock>
+                        <TextBlock
+                            Grid.Column="2"
+                            Name="TextBlockInstalledDeviceCount" />
+                    </Grid>
+
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="0">
+                        Color Resolution
+                    </Label>
+                    <ComboBox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        SelectedItem="{Binding ColorResolution}"
+                        ItemsSource="{Binding Source={util:EnumBindingSource {x:Type sensor:ColorResolution}}, Mode=OneTime}" />
+
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="0">
+                        Color Format
+                    </Label>
+                    <ComboBox
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        SelectedItem="{Binding ColorFormat}"
+                        ItemsSource="{Binding Source={util:EnumBindingSource {x:Type sensor:ImageFormat}}, Mode=OneTime}" />
+
+                    <Label
+                        Grid.Row="3"
+                        Grid.Column="0">
+                        Frame Rate
+                    </Label>
+                    <ComboBox
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        SelectedItem="{Binding FrameRate}"
+                        ItemsSource="{Binding Source={util:EnumBindingSource {x:Type sensor:FPS}}, Mode=OneTime}" />
+
+                    <Label
+                        Grid.Row="4"
+                        Grid.Column="0">
+                        Depth &amp; Passive IR Mode (Resolution)
+                    </Label>
+                    <ComboBox
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        SelectedItem="{Binding DepthMode}"
+                        ItemsSource="{Binding Source={util:EnumBindingSource {x:Type sensor:DepthMode}}, Mode=OneTime}" />
+
+                    <Label
+                        Grid.Row="5"
+                        Grid.Column="0">
+                        Depth Delay Off Color
+                    </Label>
+                    <TextBlock
+                        Grid.Row="5"
+                        Grid.Column="1">
+                        TODO: TimeSpan type
+                    </TextBlock>
+
+                    <Label
+                        Grid.Row="6"
+                        Grid.Column="0">
+                        Synchronized Images Only
+                    </Label>
+                    <CheckBox
+                        Grid.Row="6"
+                        Grid.Column="1"
+                        IsChecked="{Binding SynchronizedImagesOnly}" />
+
+                    <Label
+                        Grid.Row="7"
+                        Grid.Column="0">
+                        Capture Thread Priority
+                    </Label>
+                    <ComboBox
+                        Grid.Row="7"
+                        Grid.Column="1"
+                        SelectedItem="{Binding CaptureThreadPriority}"
+                        ItemsSource="{x:Static local:ThreadPriorityEnumHelper.Values}" />
+
+                    <Label
+                        Grid.Row="8"
+                        Grid.Column="0">
+                        Capture Sample Timeout
+                    </Label>
+                    <TextBlock
+                        Grid.Row="8"
+                        Grid.Column="1">
+                        TODO: TimeSpan type
+                    </TextBlock>
+
+                    <Label
+                        Grid.Row="9"
+                        Grid.Column="0">
+                        Capture Thread Join Timeout
+                    </Label>
+                    <TextBlock
+                        Grid.Row="9"
+                        Grid.Column="1">
+                        TODO: TimeSpan type
+                    </TextBlock>
+
+                    <Label
+                        Grid.Row="10"
+                        Grid.Column="0">
+                        Enable IMU
+                    </Label>
+                    <CheckBox
+                        Grid.Row="10"
+                        Grid.Column="1"
+                        IsChecked="{Binding EnableIMU}" />
+
+                    <Label
+                        Grid.Row="11"
+                        Grid.Column="0">
+                        IMU Thread Priority
+                    </Label>
+                    <ComboBox
+                        Grid.Row="11"
+                        Grid.Column="1"
+                        SelectedItem="{Binding ImuThreadPriority}"
+                        ItemsSource="{x:Static local:ThreadPriorityEnumHelper.Values}" />
+
+                    <Label
+                        Grid.Row="12"
+                        Grid.Column="0">
+                        IMU Sample Timeout
+                    </Label>
+                    <TextBlock
+                        Grid.Row="12"
+                        Grid.Column="1">
+                        TODO: TimeSpan type
+                    </TextBlock>
+
+                    <Label
+                        Grid.Row="13"
+                        Grid.Column="0">
+                        IMU Thread Join Timeout
+                    </Label>
+                    <TextBlock
+                        Grid.Row="13"
+                        Grid.Column="1">
+                        TODO: TimeSpan type
+                    </TextBlock>
+
+                    <Label
+                        Grid.Row="14"
+                        Grid.Column="0">
+                        Wired Sync Mode
+                    </Label>
+                    <ComboBox
+                        Grid.Row="14"
+                        Grid.Column="1"
+                        SelectedItem="{Binding WiredSyncMode}"
+                        ItemsSource="{Binding Source={util:EnumBindingSource {x:Type sensor:WiredSyncMode}}, Mode=OneTime}" />
+
+                    <Label
+                        Grid.Row="15"
+                        Grid.Column="0">
+                        Suboridinate Delay Off Master
+                    </Label>
+                    <TextBlock
+                        Grid.Row="15"
+                        Grid.Column="1">
+                        TODO: TimeSpan type
+                    </TextBlock>
+
+                    <Label
+                        Grid.Row="16"
+                        Grid.Column="0">
+                        Exposure Time (0:auto)
+                    </Label>
+                    <TextBox
+                        Grid.Row="16"
+                        Grid.Column="1"
+                        Text="{Binding ExposureTime}" />
+
+                    <Label
+                        Grid.Row="17"
+                        Grid.Column="0">
+                        Brightness
+                    </Label>
+                    <TextBox
+                        Grid.Row="17"
+                        Grid.Column="1"
+                        Text="{Binding Brightness}" />
+
+                    <Label
+                        Grid.Row="18"
+                        Grid.Column="0">
+                        Contrast
+                    </Label>
+                    <TextBox
+                        Grid.Row="18"
+                        Grid.Column="1"
+                        Text="{Binding Contrast}" />
+
+                    <Label
+                        Grid.Row="19"
+                        Grid.Column="0">
+                        Saturation
+                    </Label>
+                    <TextBox
+                        Grid.Row="19"
+                        Grid.Column="1"
+                        Text="{Binding Saturation}" />
+
+                    <Label
+                        Grid.Row="20"
+                        Grid.Column="0">
+                        Sharpness
+                    </Label>
+                    <TextBox
+                        Grid.Row="20"
+                        Grid.Column="1"
+                        Text="{Binding Sharpness}" />
+
+                    <Label
+                        Grid.Row="21"
+                        Grid.Column="0">
+                        White Balance (0:auto)
+                    </Label>
+                    <TextBox
+                        Grid.Row="21"
+                        Grid.Column="1"
+                        Text="{Binding WhiteBalance}" />
+
+                    <Label
+                        Grid.Row="22"
+                        Grid.Column="0">
+                        Backlight Compensation
+                    </Label>
+                    <ComboBox
+                        Grid.Row="22"
+                        Grid.Column="1"
+                        SelectedItem="{Binding BacklightCompensation}"
+                        ItemsSource="{Binding Source={util:EnumBindingSource {x:Type sensorComp:BacklightCompensation}}, Mode=OneTime}" />
+
+                    <Label
+                        Grid.Row="23"
+                        Grid.Column="0">
+                        Gain
+                    </Label>
+                    <TextBox
+                        Grid.Row="23"
+                        Grid.Column="1"
+                        Text="{Binding Gain}" />
+
+                    <Label
+                        Grid.Row="24"
+                        Grid.Column="0">
+                        Powerline Frequency
+                    </Label>
+                    <ComboBox
+                        Grid.Row="24"
+                        Grid.Column="1"
+                        SelectedItem="{Binding PowerlineFrequency}"
+                        ItemsSource="{Binding Source={util:EnumBindingSource {x:Type sensorComp:PowerlineFrequency}}, Mode=OneTime}" />
+
+                    <Label
+                        Grid.Row="25"
+                        Grid.Column="0">
+                        Streaming Indicator
+                    </Label>
+                    <CheckBox
+                        Grid.Row="25"
+                        Grid.Column="1"
+                        IsChecked="{Binding StreamingIndicator}" />
+
+                </Grid>
+            </Expander>
+
+            <Expander
+                Header="Body Tracker"
+                IsExpanded="True">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                    </Grid.RowDefinitions>
+
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="0">
+                        Sensor Orientation
+                    </Label>
+                    <ComboBox
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        SelectedItem="{Binding SensorOrientation}"
+                        ItemsSource="{Binding Source={util:EnumBindingSource {x:Type tracker:SensorOrientation}}, Mode=OneTime}" />
+
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="0">
+                        Processing Backend
+                    </Label>
+                    <ComboBox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        SelectedItem="{Binding ProcessingBackend}"
+                        ItemsSource="{Binding Source={util:EnumBindingSource {x:Type tracker:TrackerProcessingMode}}, Mode=OneTime}" />
+
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="0">
+                        GPU Device ID
+                    </Label>
+                    <TextBox
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Text="{Binding GpuDeviceId}" />
+
+                    <Label
+                        Grid.Row="3"
+                        Grid.Column="0">
+                        Use Lite Model
+                    </Label>
+                    <CheckBox
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        IsChecked="{Binding UseLiteModel}" />
+
+                    <Label
+                        Grid.Row="4"
+                        Grid.Column="0">
+                        Temporal Smoothing (0 to 1)
+                    </Label>
+                    <TextBox
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        Text="{Binding TemporalSmoothing}" />
+
+                    <Label
+                        Grid.Row="5"
+                        Grid.Column="0">
+                        Timeout
+                    </Label>
+                    <TextBlock
+                        Grid.Row="5"
+                        Grid.Column="1">
+                        TODO: TimeSpan type
+                    </TextBlock>
+
+                    <Label
+                        Grid.Row="6"
+                        Grid.Column="0">
+                        Throw on Timeout
+                    </Label>
+                    <CheckBox
+                        Grid.Row="6"
+                        Grid.Column="1"
+                        IsChecked="{Binding ThrowOnTimeout}" />
+
+                    <Label
+                        Grid.Row="7"
+                        Grid.Column="0">
+                        Output Null
+                    </Label>
+                    <CheckBox
+                        Grid.Row="7"
+                        Grid.Column="1"
+                        IsChecked="{Binding OutputNull}" />
+
+                </Grid>
+            </Expander>
+        </StackPanel>
+
+    </ScrollViewer>
+</UserControl>

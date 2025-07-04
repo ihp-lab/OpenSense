@@ -113,7 +113,7 @@ namespace OpenSense.Components.AzureKinect.BodyTracking {
         }
 
         private void OnPipelineCompleted(object? sender, PipelineCompletedEventArgs args) {
-            Dispose();
+            EnsureShutdownTracker();
         }
         #endregion
 
@@ -192,6 +192,16 @@ namespace OpenSense.Components.AzureKinect.BodyTracking {
             }
         }
 
+        private void EnsureShutdownTracker() {
+            if (tracker is null) {
+                return;
+            }
+
+            tracker.Shutdown();
+            tracker.Dispose();
+            tracker = null;
+        }
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -243,11 +253,7 @@ namespace OpenSense.Components.AzureKinect.BodyTracking {
             }
             disposed = true;
 
-            if (tracker is not null) {
-                tracker.Shutdown();
-                tracker.Dispose();
-                tracker = null;
-            }
+            EnsureShutdownTracker();
         }
         #endregion
     }
