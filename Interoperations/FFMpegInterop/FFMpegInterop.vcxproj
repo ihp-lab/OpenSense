@@ -72,8 +72,9 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BufferSizeException.h" />
-    <ClInclude Include="FrameInfo.h" />
+    <ClInclude Include="Frame.h" />
+    <ClInclude Include="PixelFormat.h" />
+    <ClInclude Include="FileReaderExceptions.h" />
     <ClInclude Include="FFMpegInterop.h" />
     <ClInclude Include="FileReader.h" />
     <ClInclude Include="pch.h" />
@@ -81,8 +82,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
-    <ClCompile Include="BufferSizeException.cpp" />
-    <ClCompile Include="FrameInfo.cpp" />
+    <ClCompile Include="Frame.cpp" />
+    <ClCompile Include="FileReaderExceptions.cpp" />
     <ClCompile Include="FFMpegInterop.cpp" />
     <ClCompile Include="FileReader.cpp" />
     <ClCompile Include="pch.cpp">

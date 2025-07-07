@@ -9,7 +9,7 @@ namespace OpenSense.Components.FFMpeg {
 
         private static readonly FileSourceMetadata Metadata = new FileSourceMetadata();
 
-        #region Settings
+        #region Options
         private string filename = string.Empty;
 
         public string Filename {
@@ -17,11 +17,25 @@ namespace OpenSense.Components.FFMpeg {
             set => SetProperty(ref filename, value);
         }
 
-        private PixelFormat pixelFormat = PixelFormat.RGB_24bpp;
+        private PixelFormat targetFormat = PixelFormat.RGB_24bpp;
 
-        public PixelFormat PixelFormat {
-            get => pixelFormat;
-            set => SetProperty(ref pixelFormat, value);
+        public PixelFormat TargetFormat {
+            get => targetFormat;
+            set => SetProperty(ref targetFormat, value);
+        }
+
+        private int targetWidth = 0;
+
+        public int TargetWidth {
+            get => targetWidth;
+            set => SetProperty(ref targetWidth, value);
+        }
+
+        private int targetHeight = 0;
+
+        public int TargetHeight {
+            get => targetHeight;
+            set => SetProperty(ref targetHeight, value);
         }
 
         private bool onlyKeyFrames;
@@ -36,8 +50,10 @@ namespace OpenSense.Components.FFMpeg {
 
         protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new FileSource(pipeline, Filename) {
             Logger = (serviceProvider?.GetService(typeof(ILoggerFactory)) as ILoggerFactory)?.CreateLogger(Name),
-            PixelFormat = PixelFormat,
+            TargetFormat = TargetFormat,
             OnlyKeyFrames = OnlyKeyFrames,
+            TargetWidth = TargetWidth,
+            TargetHeight = TargetHeight,
         };
     }
 }

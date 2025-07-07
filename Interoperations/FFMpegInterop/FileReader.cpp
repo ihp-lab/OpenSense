@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "FileReader.h"
-#include "BufferSizeException.h"
 
 #include <string>
+#include <vcclr.h>
 
 using namespace System;
 using namespace System::Buffers;
@@ -10,235 +10,379 @@ using namespace System::Runtime::InteropServices;
 
 namespace FFMpegInterop {
 
-    FileReader::FileReader(String^ filename) 
-        : _unmanaged(new FileReaderUnmanaged()) {
+    // FileReader implementation
+    FileReader::FileReader(String^ filename)
+        : _formatContext(nullptr)
+        , _codecContext(nullptr)
+        , _packet(new AVPacket())
+        , _swsCtx(nullptr)
+        , _rawFrame(av_frame_alloc())
+        , _convertedFrame(av_frame_alloc())
+        , _videoStreamIndex(-1)
+        , _timeBase(new AVRational())
+        , _targetFormat(PixelFormat::None)
+        , _targetWidth(0)
+        , _targetHeight(0)
+        , _onlyKeyFrames(false)
+        , _prevWidth(-1)
+        , _prevHeight(-1)
+        , _prevSrcFormat(AVPixelFormat::AV_PIX_FMT_NONE)
+        , _prevDstFormat(AVPixelFormat::AV_PIX_FMT_NONE)
+        , _currentFrame(nullptr)
+        , _endOfFile(false)
+        , _started(false)
+        , _disposed(false) {
 
         // Convert System::String to std::string
-        std::string fname = msclr::interop::marshal_as<std::string>(filename);
+        auto fname = msclr::interop::marshal_as<std::string>(filename);
 
         // Open video file
-        if (avformat_open_input(&_unmanaged->formatContext, fname.c_str(), nullptr, nullptr) != 0) {
-            throw gcnew System::Exception("Could not open file.");
+        auto ctx = (AVFormatContext*)nullptr;
+        if (avformat_open_input(&ctx, fname.c_str(), nullptr, nullptr) != 0) {
+            throw gcnew FileOpenException(filename);
         }
+        this->_formatContext = ctx;
 
         // Retrieve stream information
-        if (avformat_find_stream_info(_unmanaged->formatContext, nullptr) < 0) {
-            throw gcnew System::Exception("Could not find stream information.");
+        if (avformat_find_stream_info(_formatContext, nullptr) < 0) {
+            throw gcnew FileReaderException("Could not find stream information.");
         }
 
         // Find the first video stream
-        for (unsigned i = 0; i < _unmanaged->formatContext->nb_streams; i++) {
-            if (_unmanaged->formatContext->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO) {
-                videoStreamIndex = i;
+        auto videoStreamIndex = -1;
+        for (auto i = 0u; i < _formatContext->nb_streams; i++) {
+            if (_formatContext->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO) {
+                videoStreamIndex = static_cast<int>(i);
                 break;
             }
         }
 
         if (videoStreamIndex == -1) {
-            throw gcnew System::Exception("Could not find a video stream.");
+            throw gcnew FileReaderException("Could not find a video stream.");
         }
 
-        // Get codec parameters for the video stream
-        AVCodecParameters* codecParameters = _unmanaged->formatContext->streams[videoStreamIndex]->codecpar;
+        // Set the video stream index and time base
+        _videoStreamIndex = videoStreamIndex;
+        *_timeBase = _formatContext->streams[_videoStreamIndex]->time_base;
+
+        // Initialize codec
+        auto codecParameters = _formatContext->streams[_videoStreamIndex]->codecpar;
 
         // Find the decoder for the video stream
-        const AVCodec* codec = avcodec_find_decoder(codecParameters->codec_id);
+        auto codec = avcodec_find_decoder(codecParameters->codec_id);
         if (!codec) {
-            throw gcnew System::Exception("Unsupported codec.");
+            throw gcnew CodecException("Unsupported codec.");
         }
 
         // Allocate a codec context for the decoder
-        _unmanaged->codecContext = avcodec_alloc_context3(codec);
-        if (!_unmanaged->formatContext) {
-            throw gcnew System::Exception("Could not allocate codec context.");
+        _codecContext = avcodec_alloc_context3(codec);
+        if (!_codecContext) {
+            throw gcnew CodecException("Could not allocate codec context.");
         }
 
         // Copy codec parameters from input stream to output codec context
-        if (avcodec_parameters_to_context(_unmanaged->codecContext, codecParameters) < 0) {
-            throw gcnew System::Exception("Failed to copy codec parameters.");
+        if (avcodec_parameters_to_context(_codecContext, codecParameters) < 0) {
+            throw gcnew CodecException("Failed to copy codec parameters.");
         }
 
         // Open the codec
-        if (avcodec_open2(_unmanaged->codecContext, codec, nullptr) < 0) {
-            throw gcnew System::Exception("Could not open codec.");
+        if (avcodec_open2(_codecContext, codec, nullptr) < 0) {
+            throw gcnew CodecException("Could not open codec.");
         }
-
-        // Compute time base
-        timeBase = av_q2d(_unmanaged->formatContext->streams[videoStreamIndex]->time_base);//Not from the frame, otherwise will get 0
-
-        // Allocate
-        _unmanaged->packet = new AVPacket();
-        _unmanaged->rawFrame = av_frame_alloc();
-        _unmanaged->convertedFrame = av_frame_alloc();
     }
 
-    void FileReader::ReadOneFrame(Func<FrameInfo, ValueTuple<IntPtr, int>>^ allocator, bool% success, bool% eof) {
-        success = false;
-        eof = false;
-        if (av_read_frame(_unmanaged->formatContext, _unmanaged->packet) < 0) {
-            eof = true;
-            return;
+    Frame^ FileReader::ReadNextFrame() {
+        if (_endOfFile) {
+            return nullptr;
         }
-        try {
-            if (_unmanaged->packet->stream_index != videoStreamIndex) {
-                return;
+
+        while (true) {
+            if (av_read_frame(_formatContext, _packet) < 0) {
+                _endOfFile = true;
+                return nullptr;
             }
 
-            int send_response = avcodec_send_packet(_unmanaged->codecContext, _unmanaged->packet);
-            if (send_response < 0) {
-                throw gcnew System::Exception("Error while sending packet to the decoder.");
-            }
+            try {
+                if (_packet->stream_index != _videoStreamIndex) {
+                    continue;
+                }
 
-            int receive_response = avcodec_receive_frame(_unmanaged->codecContext, _unmanaged->rawFrame);
+                auto send_response = avcodec_send_packet(_codecContext, _packet);
+                if (send_response < 0) {
+                    throw gcnew CodecException("Error while sending packet to the decoder.");
+                }
 
-            switch (receive_response) {
-            case 0:
-                break;
-            case AVERROR(EAGAIN):
-                return;
-            default:
-                throw gcnew System::Exception("Error while decoding frame.");
-            }
+                auto receive_response = avcodec_receive_frame(_codecContext, _rawFrame);
 
-            if (_unmanaged->rawFrame->pts == AV_NOPTS_VALUE) {
-                throw gcnew System::Exception("PTS is not available.");
-            }
+                switch (receive_response) {
+                case 0:
+                    break;
+                case AVERROR(EAGAIN):
+                    continue;
+                default:
+                    throw gcnew CodecException("Error while decoding frame.");
+                }
 
-            TimeSpan timestamp = TimeSpan::FromSeconds(_unmanaged->rawFrame->pts * timeBase);
+                if (_rawFrame->pts == AV_NOPTS_VALUE) {
+                    throw gcnew FileReaderException("PTS is not available.");
+                }
 
-            int width = _unmanaged->rawFrame->width;
-            int height = _unmanaged->rawFrame->height;
-            FrameInfo info = FrameInfo(timestamp, width, height, _unmanaged->rawFrame->key_frame);
-            auto tuple = allocator(info);
-            byte* dstData = static_cast<byte*>(tuple.Item1.ToPointer());
-            int dstLength = tuple.Item2;
-            if (dstData == nullptr || dstLength <= 0) {//skip this frame
-                return;
-            }
+                // Calculate timestamp: pts * timeBase
+                auto timestamp = TimeSpan::FromSeconds(_rawFrame->pts * av_q2d(*_timeBase));
+                auto width = _rawFrame->width;
+                auto height = _rawFrame->height;
+                auto keyFrame = _rawFrame->key_frame;
 
-            byte* srcData = nullptr;
-            int srcLength = 0;
-            AVPixelFormat format = targetFormat;//snapshot
-            if (format == static_cast<AVPixelFormat>(_unmanaged->rawFrame->format)) {
-                srcData = static_cast<byte*>(_unmanaged->rawFrame->data[0]);
-                srcLength = ComputeBufferSize(*_unmanaged->rawFrame);
-            } else {
-                if (width != prevWidth || height != prevHeight || format != prevFormat) {
-                    prevWidth = width;
-                    prevHeight = height;
-                    prevFormat = format;
+                // Skip non-key frames if OnlyKeyFrames is true
+                if (_onlyKeyFrames && !keyFrame) {
+                    continue;
+                }
 
-                    if (_unmanaged->swsCtx) {
-                        sws_freeContext(_unmanaged->swsCtx);
-                        _unmanaged->swsCtx = nullptr;
+                auto originalFormat = static_cast<AVPixelFormat>(_rawFrame->format);
+                auto targetFormat = static_cast<AVPixelFormat>(_targetFormat);
+                auto outputWidth = width;
+                auto outputHeight = height;
+                auto outputFormat = originalFormat;
+                auto needsFormatConversion = targetFormat != AVPixelFormat::AV_PIX_FMT_NONE && targetFormat != originalFormat;
+                CalculateOutputDimensions(width, height, _targetWidth, _targetHeight, outputWidth, outputHeight);
+                auto needsScaling = width != outputWidth || height != outputHeight;
+                auto needsConversion = needsFormatConversion || needsScaling;
+
+                if (!needsConversion) {
+                    auto isMultiPlane = IsMultiPlaneFormat(originalFormat);
+                    if (!isMultiPlane) {
+                        auto srcData = static_cast<byte*>(_rawFrame->data[0]);
+                        auto srcLength = _rawFrame->linesize[0] * _rawFrame->height;
+                        auto data = gcnew array<Byte>(srcLength);
+                        Marshal::Copy(IntPtr(srcData), data, 0, srcLength);
+                        // Create and return frame directly
+                        return gcnew Frame(timestamp, width, height, keyFrame, static_cast<PixelFormat>(originalFormat), data);
                     }
-                    if (_unmanaged->convertedFrame) {
-                        av_frame_free(&_unmanaged->convertedFrame);
-                        _unmanaged->convertedFrame = nullptr;
-                    }
 
-                    _unmanaged->swsCtx = sws_getContext(
-                        width, height, static_cast<AVPixelFormat>(_unmanaged->rawFrame->format),
-                        width, height,
-                        format,
+                    auto srcLength = CalculateMultiPlaneBufferSize(_rawFrame, originalFormat);
+                    auto data = gcnew array<Byte>(srcLength);
+                    auto offset = 0;
+                    auto ySize = _rawFrame->linesize[0] * _rawFrame->height;
+                    Marshal::Copy(IntPtr(_rawFrame->data[0]), data, offset, ySize);
+                    offset += ySize;
+                    if (!_rawFrame->data[1]) {
+                        throw gcnew FileReaderException("U plane data is null for multi-plane format.");
+                    }
+                    auto uHeight = _rawFrame->height / GetVerticalSubsamplingDivisor(originalFormat);
+                    auto uSize = _rawFrame->linesize[1] * uHeight;
+                    Marshal::Copy(IntPtr(_rawFrame->data[1]), data, offset, uSize);
+                    offset += uSize;
+                    if (!_rawFrame->data[2]) {
+                        throw gcnew FileReaderException("V plane data is null for multi-plane format.");
+                    }
+                    auto vHeight = _rawFrame->height / GetVerticalSubsamplingDivisor(originalFormat);
+                    auto vSize = _rawFrame->linesize[2] * vHeight;
+                    Marshal::Copy(IntPtr(_rawFrame->data[2]), data, offset, vSize);
+                    return gcnew Frame(timestamp, width, height, keyFrame, static_cast<PixelFormat>(originalFormat), data);
+                }
+
+
+                if (needsFormatConversion) {
+                    outputFormat = targetFormat;
+                }
+
+                if (outputWidth != _prevWidth || outputHeight != _prevHeight || originalFormat != _prevSrcFormat || outputFormat != _prevDstFormat) {
+                    _prevWidth = outputWidth;
+                    _prevHeight = outputHeight;
+                    _prevSrcFormat = originalFormat;
+                    _prevDstFormat = outputFormat;
+                    if (_swsCtx) {
+                        sws_freeContext(_swsCtx);
+                        _swsCtx = nullptr;
+                    }
+                    if (_convertedFrame) {
+                        auto tmp = _convertedFrame;
+                        av_frame_free(&tmp);
+                        _convertedFrame = nullptr;
+                    }
+                    _swsCtx = sws_getContext(
+                        width, height, originalFormat,
+                        outputWidth, outputHeight, outputFormat,
                         SWS_BILINEAR,
                         nullptr, nullptr, nullptr
                     );
-
-                    if (!_unmanaged->swsCtx) {
-                        throw gcnew System::Exception("Failed to create swsContext for pixel format conversion.");
+                    if (!_swsCtx) {
+                        throw gcnew CodecException("Failed to create swsContext for format/size conversion.");
                     }
-
-                    _unmanaged->convertedFrame = av_frame_alloc();
-                    _unmanaged->convertedFrame->format = format;
-                    _unmanaged->convertedFrame->width = width;
-                    _unmanaged->convertedFrame->height = height;
-                    av_frame_get_buffer(_unmanaged->convertedFrame, 0);
+                    _convertedFrame = av_frame_alloc();
+                    _convertedFrame->format = outputFormat;
+                    _convertedFrame->width = outputWidth;
+                    _convertedFrame->height = outputHeight;
+                    av_frame_get_buffer(_convertedFrame, 0);
                 }
+
                 sws_scale(
-                    _unmanaged->swsCtx,
-                    _unmanaged->rawFrame->data,
-                    _unmanaged->rawFrame->linesize,
+                    _swsCtx,
+                    _rawFrame->data,
+                    _rawFrame->linesize,
                     0,
-                    _unmanaged->rawFrame->height,
-                    _unmanaged->convertedFrame->data,
-                    _unmanaged->convertedFrame->linesize
+                    _rawFrame->height,
+                    _convertedFrame->data,
+                    _convertedFrame->linesize
                 );
 
-                srcData = static_cast<byte*>(_unmanaged->convertedFrame->data[0]);
-                srcLength = ComputeBufferSize(*_unmanaged->convertedFrame);
+                auto srcData = static_cast<byte*>(_convertedFrame->data[0]);
+                auto srcLength = _convertedFrame->linesize[0] * _convertedFrame->height;
+                auto data = gcnew array<Byte>(srcLength);
+                Marshal::Copy(IntPtr(srcData), data, 0, srcLength);
+                return gcnew Frame(timestamp, outputWidth, outputHeight, keyFrame, static_cast<PixelFormat>(outputFormat), data);
+            } finally {
+                av_packet_unref(_packet);
             }
-
-            if (srcLength != dstLength) {
-                throw gcnew BufferSizeException(String::Format("Buffer sizes mismatch. {0} bytes needed, {1} bytes provided.", srcLength, dstLength));
-            }
-            std::memcpy(dstData, srcData, srcLength);//I heard C++/CLR does not support Span<T>, so we use raw pointer here
-
-            success = true;
-        } finally {
-            av_packet_unref(_unmanaged->packet);
         }
     }
 
-    int FileReader::ComputeBufferSize(const AVFrame& frame) {
-        int bufferSize = 0;
-
-        switch (frame.format) {
+    bool FileReader::IsMultiPlaneFormat(AVPixelFormat format) {
+        switch (format) {
         case AV_PIX_FMT_YUV420P:
-            bufferSize = frame.linesize[0] * frame.height; // Y plane
-            bufferSize += frame.linesize[1] * (frame.height / 2); // U plane
-            bufferSize += frame.linesize[2] * (frame.height / 2); // V plane
-            break;
         case AV_PIX_FMT_YUV444P:
-            bufferSize = frame.linesize[0] * frame.height; // Y plane
-            bufferSize += frame.linesize[1] * frame.height; // U plane
-            bufferSize += frame.linesize[2] * frame.height; // V plane
-            break;
-        case AV_PIX_FMT_BGR24:
-        case AV_PIX_FMT_RGB24:
-        case AV_PIX_FMT_BGRA:
-        case AV_PIX_FMT_GRAY8:
-        case AV_PIX_FMT_GRAY16LE:
-        case AV_PIX_FMT_RGBA64LE:
-            bufferSize = frame.linesize[0] * frame.height; // RGBA plane
-            break;
+        case AV_PIX_FMT_YUV422P:
+        case AV_PIX_FMT_YUV411P:
+        case AV_PIX_FMT_YUV410P:
+            //Not a complete list
+            return true;
         default:
-            throw gcnew System::Exception("Unsupported pixel format.");
+            return false;
         }
-
-        return bufferSize;
     }
 
-
-#pragma region IDisposable
-    FileReader::~FileReader() {
-        if (disposed) {
-            return;
+    void FileReader::CalculateOutputDimensions(int originalWidth, int originalHeight, int targetWidth, int targetHeight, int& outputWidth, int& outputHeight) {
+        if (targetWidth > 0 && targetHeight > 0) {
+            // Both dimensions specified
+            outputWidth = targetWidth;
+            outputHeight = targetHeight;
+        } else if (targetWidth > 0) {
+            // Only width specified, maintain aspect ratio
+            outputWidth = targetWidth;
+            outputHeight = (int)((double)originalHeight * targetWidth / originalWidth);
+        } else if (targetHeight > 0) {
+            // Only height specified, maintain aspect ratio
+            outputWidth = (int)((double)originalWidth * targetHeight / originalHeight);
+            outputHeight = targetHeight;
+        } else {
+            // No scaling
+            outputWidth = originalWidth;
+            outputHeight = originalHeight;
         }
-        disposed = true;
+    }
+
+    int FileReader::GetVerticalSubsamplingDivisor(AVPixelFormat format) {
+        switch (format) {
+        case AV_PIX_FMT_YUV420P:
+            return 2;  // 4:2:0 subsampling
+        case AV_PIX_FMT_YUV410P:
+            return 4;  // 4:1:0 subsampling  
+        case AV_PIX_FMT_YUV444P:
+        case AV_PIX_FMT_YUV422P:
+        case AV_PIX_FMT_YUV411P:
+        default:
+            return 1;  // No vertical subsampling
+        }
+    }
+
+    int FileReader::CalculateMultiPlaneBufferSize(AVFrame* frame, AVPixelFormat format) {
+        auto totalSize = frame->linesize[0] * frame->height; // Y plane
+
+        // U and V planes have the same height calculation
+        auto chromaHeight = frame->height / GetVerticalSubsamplingDivisor(format);
+        for (int i = 1; i <= 2; i++) {
+            if (!frame->data[i]) {
+                throw gcnew FileReaderException("Chroma plane data is null for multi-plane format.");
+            }
+            totalSize += frame->linesize[i] * chromaHeight;
+        }
+
+        return totalSize;
+    }
+
+#pragma region IEnumerator<Frame^> implementation
+    Frame^ FileReader::Current::get() {
+        if (_currentFrame == nullptr) {
+            throw gcnew InvalidOperationException("No current frame available");
+        }
+        return _currentFrame;
+    }
+
+    Object^ FileReader::Current2::get() {
+        return Current;
+    }
+
+    bool FileReader::MoveNext() {
+        ThrowIfDisposed();
+        _currentFrame = ReadNextFrame();
+        return _currentFrame != nullptr;
+    }
+
+    void FileReader::Reset() {
+        ThrowIfDisposed();
+
+        // Seek to beginning of file
+        if (av_seek_frame(_formatContext, _videoStreamIndex, 0, AVSEEK_FLAG_BACKWARD) < 0) {
+            throw gcnew FileReaderException("Could not seek to beginning of file.");
+        }
+
+        _currentFrame = nullptr;
+        _endOfFile = false;
+        _started = false;
+    }
+#pragma endregion
+
+#pragma region IDisposable implementation
+    void FileReader::ThrowIfDisposed() {
+        if (_disposed) {
+            throw gcnew ObjectDisposedException("FileReader");
+        }
+    }
+
+    FileReader::~FileReader() {
         this->!FileReader();
+        GC::SuppressFinalize(this);
     }
 
     FileReader::!FileReader() {
-        av_frame_free(&_unmanaged->rawFrame);
-        av_frame_free(&_unmanaged->convertedFrame);
-
-        if (_unmanaged->swsCtx) {
-            sws_freeContext(_unmanaged->swsCtx);
+        if (_disposed) {
+            return;
         }
+        _disposed = true;
 
-        delete _unmanaged->packet;
-
-        if (_unmanaged->codecContext) {
-            avcodec_close(_unmanaged->codecContext);
-            avcodec_free_context(&_unmanaged->codecContext);
+        if (_convertedFrame) {
+            auto tmp = _convertedFrame;//create a raw pointer on stack, because getting the address of a field of a managed object will return interior_ptr<>.
+            av_frame_free(&tmp);
+            _convertedFrame = nullptr;
         }
-
-        if (_unmanaged->formatContext) {
-            avformat_close_input(&_unmanaged->formatContext);
+        if (_rawFrame) {
+            auto tmp = _rawFrame;
+            av_frame_free(&tmp);
+            _rawFrame = nullptr;
         }
-
-        delete _unmanaged;
+        if (_swsCtx) {
+            sws_freeContext(_swsCtx);
+        }
+        if (_packet) {
+            delete _packet;
+            _packet = nullptr;
+        }
+        if (_timeBase) {
+            delete _timeBase;
+            _timeBase = nullptr;
+        }
+        if (_codecContext) {
+            avcodec_close(_codecContext);
+            auto tmp = _codecContext;
+            avcodec_free_context(&tmp);
+            _codecContext = nullptr;
+        }
+        if (_formatContext) {
+            auto tmp = _formatContext;
+            avformat_close_input(&tmp);
+            _formatContext = nullptr;
+        }
     }
 #pragma endregion
+
 }
