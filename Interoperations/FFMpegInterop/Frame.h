@@ -2,7 +2,10 @@
 
 extern "C" {
 #include <libavformat/avformat.h>
+#include <libswscale/swscale.h>
 }
+
+#include <msclr\marshal_cppstd.h>
 
 #include "PixelFormat.h"
 
@@ -13,23 +16,31 @@ namespace FFMpegInterop {
     /// <summary>
     /// Comprehensive frame class that contains all frame data and metadata
     /// This class provides a managed wrapper around video frame data
-    /// All frame data is immutable once created
+    /// Frame now owns the native AVFrame and handles its lifecycle
     /// </summary>
-    public ref class Frame {
+    public ref class Frame : IDisposable {
     private:
-        // All frame data is immutable - const semantics in C++/CLI
+        // Frame metadata - immutable once created
         initonly TimeSpan _timestamp;
-        initonly int _width;
-        initonly int _height;
-        initonly bool _keyFrame;
-        initonly PixelFormat _format;
-        initonly array<Byte>^ _data;//TODO: Hold the native frame object.
+        
+        // Native frame data
+        AVFrame* _frame;
+        
+        // Lazy-loaded byte array
+        Lazy<array<Byte>^>^ _lazyData;
+
+        // Private helper methods
+        array<Byte>^ CreateByteArray();
+        static bool IsMultiPlaneFormat(AVPixelFormat format);
+        static int GetVerticalSubsamplingDivisor(AVPixelFormat format);
+        static int CalculateMultiPlaneBufferSize(AVFrame* frame, AVPixelFormat format);
 
     public:
         /// <summary>
-        /// Constructor for creating a new frame
+        /// Constructor for creating a new frame from native AVFrame
+        /// Takes ownership of the AVFrame pointer
         /// </summary>
-        Frame(TimeSpan timestamp, int width, int height, bool keyFrame, PixelFormat pixelFormat, array<Byte>^ data);
+        Frame(TimeSpan timestamp, AVFrame* frame);
 
         /// <summary>
         /// Gets the timestamp of this frame relative to the start of the video
@@ -42,36 +53,65 @@ namespace FFMpegInterop {
         /// Gets the width of the frame in pixels
         /// </summary>
         property int Width {
-            int get() { return _width; }
+            int get() { 
+                ThrowIfDisposed();
+                return _frame->width; 
+            }
         }
 
         /// <summary>
         /// Gets the height of the frame in pixels
         /// </summary>
         property int Height {
-            int get() { return _height; }
+            int get() { 
+                ThrowIfDisposed();
+                return _frame->height; 
+            }
         }
 
         /// <summary>
         /// Gets whether this frame is a key frame (I-frame)
         /// </summary>
         property bool KeyFrame {
-            bool get() { return _keyFrame; }
+            bool get() { 
+                ThrowIfDisposed();
+                return _frame->key_frame; 
+            }
         }
 
         /// <summary>
         /// Gets the pixel format of this frame
         /// </summary>
         property PixelFormat Format {
-            PixelFormat get() { return _format; }
+            PixelFormat get() { 
+                ThrowIfDisposed();
+                return static_cast<PixelFormat>(_frame->format); 
+            }
         }
 
         /// <summary>
         /// Gets the raw pixel data of this frame
-        /// The returned array is a copy to maintain immutability
+        /// The data is lazy-loaded when first accessed
         /// </summary>
         property array<Byte>^ Data {
-            array<Byte>^ get() { return _data; }
+            array<Byte>^ get() { 
+                ThrowIfDisposed();
+                return _lazyData->Value; 
+            }
         }
+
+#pragma region IDisposable
+    private:
+        bool _disposed;
+
+        /// <summary>
+        /// Throws ObjectDisposedException if the object has been disposed
+        /// </summary>
+        void ThrowIfDisposed();
+
+    public:
+        ~Frame();
+        !Frame();
+#pragma endregion
     };
 } 

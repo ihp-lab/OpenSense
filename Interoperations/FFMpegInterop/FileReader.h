@@ -6,8 +6,6 @@ extern "C" {
 #include <libswscale/swscale.h>
 }
 
-#include <msclr\marshal_cppstd.h>
-
 #include "Frame.h"
 #include "PixelFormat.h"
 #include "FileReaderExceptions.h"
@@ -31,7 +29,6 @@ namespace FFMpegInterop {
         AVPacket* _packet;
         SwsContext* _swsCtx;
         AVFrame* _rawFrame;
-        AVFrame* _convertedFrame;
         int _videoStreamIndex;
         AVRational* _timeBase;
         PixelFormat _targetFormat;
@@ -95,13 +92,6 @@ namespace FFMpegInterop {
         Frame^ ReadNextFrame();
 
         /// <summary>
-        /// Check if the pixel format is a multi-plane format
-        /// </summary>
-        /// <param name="format">The pixel format</param>
-        /// <returns>True if the format is multi-plane, false otherwise</returns>
-        static bool IsMultiPlaneFormat(AVPixelFormat format);
-
-        /// <summary>
         /// Calculate output dimensions based on target dimensions and aspect ratio
         /// </summary>
         /// <param name="originalWidth">Original frame width</param>
@@ -111,21 +101,6 @@ namespace FFMpegInterop {
         /// <param name="outputWidth">Reference to store calculated output width</param>
         /// <param name="outputHeight">Reference to store calculated output height</param>
         static void CalculateOutputDimensions(int originalWidth, int originalHeight, int targetWidth, int targetHeight, int& outputWidth, int& outputHeight);
-
-        /// <summary>
-        /// Get the vertical subsampling divisor for chroma planes based on pixel format
-        /// </summary>
-        /// <param name="format">The pixel format</param>
-        /// <returns>The divisor for chroma plane height (1, 2, or 4)</returns>
-        static int GetVerticalSubsamplingDivisor(AVPixelFormat format);
-
-        /// <summary>
-        /// Calculate the total buffer size for multi-plane formats
-        /// </summary>
-        /// <param name="frame">The AVFrame containing the video data</param>
-        /// <param name="format">The pixel format of the frame</param>
-        /// <returns>Total buffer size in bytes</returns>
-        static int CalculateMultiPlaneBufferSize(AVFrame* frame, AVPixelFormat format);
 
 #pragma region IEnumerator<Frame^>
     private:

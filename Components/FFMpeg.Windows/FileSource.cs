@@ -13,12 +13,14 @@ using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
 
 namespace OpenSense.Components.FFMpeg {
-    public sealed class FileSource : Generator, IProducer<Shared<Image>>, INotifyPropertyChanged, IDisposable {
+    public sealed class FileSource : Generator, INotifyPropertyChanged, IDisposable {
 
         private readonly FileReader _reader;
 
         #region Ports
-        public Emitter<Shared<Image>> Out { get; }
+        public Emitter<Shared<Frame>> FrameOut { get; }
+
+        public Emitter<Shared<Image>> ImageOut { get; }
         #endregion
 
         #region Settings
@@ -87,7 +89,8 @@ namespace OpenSense.Components.FFMpeg {
             }
             _reader = new FileReader(filename);
 
-            Out = pipeline.CreateEmitter<Shared<Image>>(this, nameof(Out));
+            FrameOut = pipeline.CreateEmitter<Shared<Frame>>(this, nameof(FrameOut));
+            ImageOut = pipeline.CreateEmitter<Shared<Image>>(this, nameof(ImageOut));
 
             pipeline.PipelineRun += OnPipelineRun;
         }
@@ -116,25 +119,25 @@ namespace OpenSense.Components.FFMpeg {
             if (frame is null) {
                 return DateTime.MaxValue; // End of stream
             }
-            var psiPixelFormat = ToPsiPixelFormat(frame.Format);
-            var image = (Shared<Image>?)null;
-            if (psiPixelFormat == Microsoft.Psi.Imaging.PixelFormat.Undefined) {
-                var buffer = UnmanagedBuffer.CreateCopyFrom(frame.Data);//Unnecessary copy, but no way to avoid it.
-                var img = new Image(buffer, frame.Width, frame.Height, stride: 0, psiPixelFormat);
-                image = Shared.Create(img);
-            } else {
-                image = ImagePool.GetOrCreate(frame.Width, frame.Height, psiPixelFormat);
-                Trace.Assert(image.Resource.UnmanagedBuffer.Size > 0);
-                Trace.Assert(image.Resource.Size == frame.Data.Length);
-                Marshal.Copy(frame.Data, 0, image.Resource.UnmanagedBuffer.Data, image.Resource.UnmanagedBuffer.Size);
+            using var sharedFrame = Shared.Create(frame);
+            var originatingTime = startTime + frame.Timestamp;
+            FrameOut.Post(sharedFrame, originatingTime);
+            if (ImageOut.HasSubscribers) {// Only post images when necessary, as it incurs computational cost
+                var psiPixelFormat = ToPsiPixelFormat(frame.Format);
+                if (psiPixelFormat == Microsoft.Psi.Imaging.PixelFormat.Undefined) {
+                    var buffer = UnmanagedBuffer.CreateCopyFrom(frame.Data);//Unnecessary copy, but no way to avoid it.
+                    var img = new Image(buffer, frame.Width, frame.Height, stride: 0, psiPixelFormat);
+                    using var image = Shared.Create(img);
+                    ImageOut.Post(image, originatingTime);
+                } else {
+                    using var image = ImagePool.GetOrCreate(frame.Width, frame.Height, psiPixelFormat);
+                    Trace.Assert(image.Resource.UnmanagedBuffer.Size > 0);
+                    Trace.Assert(image.Resource.Size == frame.Data.Length);
+                    Marshal.Copy(frame.Data, 0, image.Resource.UnmanagedBuffer.Data, image.Resource.UnmanagedBuffer.Size);
+                    ImageOut.Post(image, originatingTime);
+                }
             }
-            try {
-                var originatingTime = startTime + frame.Timestamp;
-                Out.Post(image, originatingTime);
-                return originatingTime;
-            } finally {
-                image.Dispose();
-            }
+            return originatingTime;
         }
         #endregion
 

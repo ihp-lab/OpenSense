@@ -17,7 +17,6 @@ namespace FFMpegInterop {
         , _packet(new AVPacket())
         , _swsCtx(nullptr)
         , _rawFrame(av_frame_alloc())
-        , _convertedFrame(av_frame_alloc())
         , _videoStreamIndex(-1)
         , _timeBase(new AVRational())
         , _targetFormat(PixelFormat::None)
@@ -149,43 +148,19 @@ namespace FFMpegInterop {
                 auto needsConversion = needsFormatConversion || needsScaling;
 
                 if (!needsConversion) {
-                    auto isMultiPlane = IsMultiPlaneFormat(originalFormat);
-                    if (!isMultiPlane) {
-                        auto srcData = static_cast<byte*>(_rawFrame->data[0]);
-                        auto srcLength = _rawFrame->linesize[0] * _rawFrame->height;
-                        auto data = gcnew array<Byte>(srcLength);
-                        Marshal::Copy(IntPtr(srcData), data, 0, srcLength);
-                        // Create and return frame directly
-                        return gcnew Frame(timestamp, width, height, keyFrame, static_cast<PixelFormat>(originalFormat), data);
-                    }
-
-                    auto srcLength = CalculateMultiPlaneBufferSize(_rawFrame, originalFormat);
-                    auto data = gcnew array<Byte>(srcLength);
-                    auto offset = 0;
-                    auto ySize = _rawFrame->linesize[0] * _rawFrame->height;
-                    Marshal::Copy(IntPtr(_rawFrame->data[0]), data, offset, ySize);
-                    offset += ySize;
-                    if (!_rawFrame->data[1]) {
-                        throw gcnew FileReaderException("U plane data is null for multi-plane format.");
-                    }
-                    auto uHeight = _rawFrame->height / GetVerticalSubsamplingDivisor(originalFormat);
-                    auto uSize = _rawFrame->linesize[1] * uHeight;
-                    Marshal::Copy(IntPtr(_rawFrame->data[1]), data, offset, uSize);
-                    offset += uSize;
-                    if (!_rawFrame->data[2]) {
-                        throw gcnew FileReaderException("V plane data is null for multi-plane format.");
-                    }
-                    auto vHeight = _rawFrame->height / GetVerticalSubsamplingDivisor(originalFormat);
-                    auto vSize = _rawFrame->linesize[2] * vHeight;
-                    Marshal::Copy(IntPtr(_rawFrame->data[2]), data, offset, vSize);
-                    return gcnew Frame(timestamp, width, height, keyFrame, static_cast<PixelFormat>(originalFormat), data);
+                    // No conversion needed, copy the raw frame
+                    auto frameCopy = av_frame_alloc();
+                    av_frame_copy(frameCopy, _rawFrame);
+                    av_frame_copy_props(frameCopy, _rawFrame);
+                    return gcnew Frame(timestamp, frameCopy);
                 }
 
-
+                // Need conversion - create converted frame locally
                 if (needsFormatConversion) {
                     outputFormat = targetFormat;
                 }
 
+                // Create or recreate SwsContext if parameters changed
                 if (outputWidth != _prevWidth || outputHeight != _prevHeight || originalFormat != _prevSrcFormat || outputFormat != _prevDstFormat) {
                     _prevWidth = outputWidth;
                     _prevHeight = outputHeight;
@@ -194,11 +169,6 @@ namespace FFMpegInterop {
                     if (_swsCtx) {
                         sws_freeContext(_swsCtx);
                         _swsCtx = nullptr;
-                    }
-                    if (_convertedFrame) {
-                        auto tmp = _convertedFrame;
-                        av_frame_free(&tmp);
-                        _convertedFrame = nullptr;
                     }
                     _swsCtx = sws_getContext(
                         width, height, originalFormat,
@@ -209,12 +179,14 @@ namespace FFMpegInterop {
                     if (!_swsCtx) {
                         throw gcnew CodecException("Failed to create swsContext for format/size conversion.");
                     }
-                    _convertedFrame = av_frame_alloc();
-                    _convertedFrame->format = outputFormat;
-                    _convertedFrame->width = outputWidth;
-                    _convertedFrame->height = outputHeight;
-                    av_frame_get_buffer(_convertedFrame, 0);
                 }
+
+                // Create converted frame for this conversion
+                auto convertedFrame = av_frame_alloc();
+                convertedFrame->format = outputFormat;
+                convertedFrame->width = outputWidth;
+                convertedFrame->height = outputHeight;
+                av_frame_get_buffer(convertedFrame, 0);
 
                 sws_scale(
                     _swsCtx,
@@ -222,34 +194,18 @@ namespace FFMpegInterop {
                     _rawFrame->linesize,
                     0,
                     _rawFrame->height,
-                    _convertedFrame->data,
-                    _convertedFrame->linesize
+                    convertedFrame->data,
+                    convertedFrame->linesize
                 );
 
-                auto srcData = static_cast<byte*>(_convertedFrame->data[0]);
-                auto srcLength = _convertedFrame->linesize[0] * _convertedFrame->height;
-                auto data = gcnew array<Byte>(srcLength);
-                Marshal::Copy(IntPtr(srcData), data, 0, srcLength);
-                return gcnew Frame(timestamp, outputWidth, outputHeight, keyFrame, static_cast<PixelFormat>(outputFormat), data);
+                return gcnew Frame(timestamp, convertedFrame);
             } finally {
                 av_packet_unref(_packet);
             }
         }
     }
 
-    bool FileReader::IsMultiPlaneFormat(AVPixelFormat format) {
-        switch (format) {
-        case AV_PIX_FMT_YUV420P:
-        case AV_PIX_FMT_YUV444P:
-        case AV_PIX_FMT_YUV422P:
-        case AV_PIX_FMT_YUV411P:
-        case AV_PIX_FMT_YUV410P:
-            //Not a complete list
-            return true;
-        default:
-            return false;
-        }
-    }
+
 
     void FileReader::CalculateOutputDimensions(int originalWidth, int originalHeight, int targetWidth, int targetHeight, int& outputWidth, int& outputHeight) {
         if (targetWidth > 0 && targetHeight > 0) {
@@ -271,34 +227,7 @@ namespace FFMpegInterop {
         }
     }
 
-    int FileReader::GetVerticalSubsamplingDivisor(AVPixelFormat format) {
-        switch (format) {
-        case AV_PIX_FMT_YUV420P:
-            return 2;  // 4:2:0 subsampling
-        case AV_PIX_FMT_YUV410P:
-            return 4;  // 4:1:0 subsampling  
-        case AV_PIX_FMT_YUV444P:
-        case AV_PIX_FMT_YUV422P:
-        case AV_PIX_FMT_YUV411P:
-        default:
-            return 1;  // No vertical subsampling
-        }
-    }
 
-    int FileReader::CalculateMultiPlaneBufferSize(AVFrame* frame, AVPixelFormat format) {
-        auto totalSize = frame->linesize[0] * frame->height; // Y plane
-
-        // U and V planes have the same height calculation
-        auto chromaHeight = frame->height / GetVerticalSubsamplingDivisor(format);
-        for (int i = 1; i <= 2; i++) {
-            if (!frame->data[i]) {
-                throw gcnew FileReaderException("Chroma plane data is null for multi-plane format.");
-            }
-            totalSize += frame->linesize[i] * chromaHeight;
-        }
-
-        return totalSize;
-    }
 
 #pragma region IEnumerator<Frame^> implementation
     Frame^ FileReader::Current::get() {
@@ -350,11 +279,6 @@ namespace FFMpegInterop {
         }
         _disposed = true;
 
-        if (_convertedFrame) {
-            auto tmp = _convertedFrame;//create a raw pointer on stack, because getting the address of a field of a managed object will return interior_ptr<>.
-            av_frame_free(&tmp);
-            _convertedFrame = nullptr;
-        }
         if (_rawFrame) {
             auto tmp = _rawFrame;
             av_frame_free(&tmp);
