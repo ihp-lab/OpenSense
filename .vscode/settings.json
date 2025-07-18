@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "ratio": "cpp",
+        "chrono": "cpp",
+        "format": "cpp",
+        "regex": "cpp",
+        "thread": "cpp",
+        "vector": "cpp"
+    }
+}
