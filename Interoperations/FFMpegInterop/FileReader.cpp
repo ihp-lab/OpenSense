@@ -62,7 +62,7 @@ namespace FFMpegInterop {
 
         // Set the video stream index and time base
         _videoStreamIndex = videoStreamIndex;
-        *_timeBase = _formatContext->streams[_videoStreamIndex]->time_base;
+        *_timeBase = _formatContext->streams[_videoStreamIndex]->time_base;//Get time base from the stream. Frame time base does not work.
 
         // Initialize codec
         auto codecParameters = _formatContext->streams[_videoStreamIndex]->codecpar;
@@ -122,16 +122,11 @@ namespace FFMpegInterop {
                     throw gcnew CodecException("Error while decoding frame.");
                 }
 
-                if (_rawFrame->pts == AV_NOPTS_VALUE) {
+                if (_rawFrame->pts == AV_NOPTS_VALUE && _rawFrame->best_effort_timestamp == AV_NOPTS_VALUE) {
                     throw gcnew FileReaderException("PTS is not available.");
                 }
 
-                // Calculate timestamp: pts * timeBase
-                auto timestamp = TimeSpan::FromSeconds(_rawFrame->pts * av_q2d(*_timeBase));
-                auto width = _rawFrame->width;
-                auto height = _rawFrame->height;
                 auto keyFrame = _rawFrame->key_frame;
-
                 // Skip non-key frames if OnlyKeyFrames is true
                 if (_onlyKeyFrames && !keyFrame) {
                     continue;
@@ -139,6 +134,8 @@ namespace FFMpegInterop {
 
                 auto originalFormat = static_cast<AVPixelFormat>(_rawFrame->format);
                 auto targetFormat = static_cast<AVPixelFormat>(_targetFormat);
+                auto width = _rawFrame->width;
+                auto height = _rawFrame->height;
                 auto outputWidth = width;
                 auto outputHeight = height;
                 auto outputFormat = originalFormat;
@@ -152,7 +149,8 @@ namespace FFMpegInterop {
                     auto frameCopy = av_frame_alloc();
                     av_frame_copy(frameCopy, _rawFrame);
                     av_frame_copy_props(frameCopy, _rawFrame);
-                    return gcnew Frame(timestamp, frameCopy);
+                    frameCopy->time_base = *_timeBase;
+                    return gcnew Frame(frameCopy);
                 }
 
                 // Need conversion - create converted frame locally
@@ -183,6 +181,9 @@ namespace FFMpegInterop {
 
                 // Create converted frame for this conversion
                 auto convertedFrame = av_frame_alloc();
+                convertedFrame->pts = _rawFrame->pts;
+                convertedFrame->best_effort_timestamp = _rawFrame->best_effort_timestamp;
+                convertedFrame->time_base = *_timeBase;
                 convertedFrame->format = outputFormat;
                 convertedFrame->width = outputWidth;
                 convertedFrame->height = outputHeight;
@@ -198,14 +199,12 @@ namespace FFMpegInterop {
                     convertedFrame->linesize
                 );
 
-                return gcnew Frame(timestamp, convertedFrame);
+                return gcnew Frame(convertedFrame);
             } finally {
                 av_packet_unref(_packet);
             }
         }
     }
-
-
 
     void FileReader::CalculateOutputDimensions(int originalWidth, int originalHeight, int targetWidth, int targetHeight, int& outputWidth, int& outputHeight) {
         if (targetWidth > 0 && targetHeight > 0) {

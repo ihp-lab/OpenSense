@@ -7,9 +7,8 @@ using namespace System::Runtime::InteropServices;
 
 namespace FFMpegInterop {
     
-    Frame::Frame(TimeSpan timestamp, AVFrame* frame)
-        : _timestamp(timestamp)
-        , _frame(frame)
+    Frame::Frame(AVFrame* frame)
+        : _frame(frame)
         , _disposed(false) {
         
         // Validate input parameters
@@ -22,53 +21,76 @@ namespace FFMpegInterop {
         if (frame->height <= 0) {
             throw gcnew ArgumentException("Frame height must be positive", "frame");
         }
-        
-        // Initialize lazy data loader
-        _lazyData = gcnew Lazy<array<Byte>^>(gcnew Func<array<Byte>^>(this, &Frame::CreateByteArray));
     }
 
-    array<Byte>^ Frame::CreateByteArray() {
-        ThrowIfDisposed();
+    Frame::Frame(long long pts, int width, int height, PixelFormat format, IntPtr data, int length)
+        : _frame(nullptr)
+        , _disposed(false) {
         
-        auto format = static_cast<AVPixelFormat>(_frame->format);
-        auto isMultiPlane = IsMultiPlaneFormat(format);
+        // Validate input parameters
+        if (data == IntPtr::Zero) {
+            throw gcnew ArgumentNullException("data");
+        }
+        if (width <= 0) {
+            throw gcnew ArgumentException("Width must be positive", "width");
+        }
+        if (height <= 0) {
+            throw gcnew ArgumentException("Height must be positive", "height");
+        }
         
-        if (!isMultiPlane) {
-            // Single plane format
-            auto srcData = static_cast<byte*>(_frame->data[0]);
-            auto srcLength = _frame->linesize[0] * _frame->height;
-            auto data = gcnew array<Byte>(srcLength);
-            Marshal::Copy(IntPtr(srcData), data, 0, srcLength);
-            return data;
-        } else {
-            // Multi-plane format
-            auto srcLength = CalculateMultiPlaneBufferSize(_frame, format);
-            auto data = gcnew array<Byte>(srcLength);
-            auto offset = 0;
+        // Validate supported pixel format
+        auto avFormat = static_cast<AVPixelFormat>(format);
+        if (!IsSupportedFormat(avFormat)) {
+            throw gcnew ArgumentException("Unsupported pixel format", "format");
+        }
+        
+        // Create new AVFrame
+        _frame = av_frame_alloc();
+        if (!_frame) {
+            throw gcnew OutOfMemoryException("Failed to allocate AVFrame");
+        }
+        
+        try {
+            // Set frame properties
+            _frame->width = width;
+            _frame->height = height;
+            _frame->format = avFormat;
+            _frame->pts = pts;
             
-            // Y plane
-            auto ySize = _frame->linesize[0] * _frame->height;
-            Marshal::Copy(IntPtr(_frame->data[0]), data, offset, ySize);
-            offset += ySize;
-            
-            // U plane
-            if (!_frame->data[1]) {
-                throw gcnew InvalidOperationException("U plane data is null for multi-plane format.");
+            // Allocate buffer for the frame
+            auto ret = av_frame_get_buffer(_frame, 0);
+            if (ret < 0) {
+                throw gcnew InvalidOperationException("Failed to allocate frame buffer");
             }
-            auto uHeight = _frame->height / GetVerticalSubsamplingDivisor(format);
-            auto uSize = _frame->linesize[1] * uHeight;
-            Marshal::Copy(IntPtr(_frame->data[1]), data, offset, uSize);
-            offset += uSize;
             
-            // V plane
-            if (!_frame->data[2]) {
-                throw gcnew InvalidOperationException("V plane data is null for multi-plane format.");
+            // Make frame writable
+            ret = av_frame_make_writable(_frame);
+            if (ret < 0) {
+                throw gcnew InvalidOperationException("Failed to make frame writable");
             }
-            auto vHeight = _frame->height / GetVerticalSubsamplingDivisor(format);
-            auto vSize = _frame->linesize[2] * vHeight;
-            Marshal::Copy(IntPtr(_frame->data[2]), data, offset, vSize);
             
-            return data;
+            // Copy data from managed array to native frame
+            CopyDataToFrame(static_cast<byte*>(data.ToPointer()), length, _frame);
+        } catch (...) {
+            if (_frame) {
+                auto tmp = _frame;
+                av_frame_free(&tmp);
+                _frame = nullptr;
+            }
+            throw;
+        }
+    }
+
+    bool Frame::IsSupportedFormat(AVPixelFormat format) {
+        switch (format) {
+        case AV_PIX_FMT_RGB24:
+        case AV_PIX_FMT_BGR24:
+        case AV_PIX_FMT_YUV422P:
+        case AV_PIX_FMT_BGRA:
+        case AV_PIX_FMT_GRAY16LE:
+            return true;
+        default:
+            return false;
         }
     }
 
@@ -100,19 +122,115 @@ namespace FFMpegInterop {
         }
     }
 
-    int Frame::CalculateMultiPlaneBufferSize(AVFrame* frame, AVPixelFormat format) {
-        auto totalSize = frame->linesize[0] * frame->height; // Y plane
-
-        // U and V planes have the same height calculation
-        auto chromaHeight = frame->height / GetVerticalSubsamplingDivisor(format);
-        for (int i = 1; i <= 2; i++) {
-            if (!frame->data[i]) {
-                throw gcnew InvalidOperationException("Chroma plane data is null for multi-plane format.");
-            }
-            totalSize += frame->linesize[i] * chromaHeight;
+    int Frame::CalculateBufferSize(AVFrame* frame, int planeIndex) {
+        if (!frame->data[planeIndex]) {
+            throw gcnew InvalidOperationException("Chroma plane data is null.");
         }
+        int divisor;
+        if (planeIndex == 0) {
+            divisor = 1;
+        } else {
+            divisor = GetVerticalSubsamplingDivisor(static_cast<AVPixelFormat>(frame->format));
+        }
+        auto height = frame->height / divisor;
+        return frame->linesize[planeIndex] * height;
+    }
 
-        return totalSize;
+    int Frame::CalculateBufferSize(AVFrame* frame) {
+        auto ySize = CalculateBufferSize(frame, 0);
+        if (!IsMultiPlaneFormat(static_cast<AVPixelFormat>(frame->format))) {
+            return ySize;
+        }
+        auto uSize = CalculateBufferSize(frame, 1);
+        auto vSize = CalculateBufferSize(frame, 2);
+        return ySize + uSize + vSize;
+    }
+
+    void Frame::CopyDataToFrame(byte* data, int length, AVFrame* frame) {
+        auto format = static_cast<AVPixelFormat>(frame->format);
+        auto isMultiPlane = IsMultiPlaneFormat(format);
+        
+        if (!isMultiPlane) {
+            // Single plane format
+            auto expectedSize = CalculateBufferSize(frame);
+            auto size = frame->linesize[0] * frame->height;
+            if (size < expectedSize) {
+                throw gcnew ArgumentException("FFMpeg allocated a smaller buffer than expected", "data");
+            }
+            if (length != expectedSize) {
+                throw gcnew ArgumentException("Data buffer size does not match the expected size for the specified format and dimensions", "data");
+            }
+            Buffer::MemoryCopy(data, frame->data[0], (long long)size, (long long)expectedSize);
+        } else {
+            // Multi-plane format (YUV422P)
+            auto expectedYSize = CalculateBufferSize(frame, 0);
+            auto ySize = frame->linesize[0] * frame->height;
+            if (ySize < expectedYSize) {
+                throw gcnew ArgumentException("FFMpeg allocated a smaller Y plane buffer than expected", "data");
+            }
+            auto expectedUSize = CalculateBufferSize(frame, 1);
+            auto uHeight = frame->height / GetVerticalSubsamplingDivisor(format);
+            auto uSize = frame->linesize[1] * uHeight;
+            if (uSize < expectedUSize) {
+                throw gcnew ArgumentException("FFMpeg allocated a smaller U plane buffer than expected", "data");
+            }
+            auto expectedVSize = CalculateBufferSize(frame, 2);
+            auto vHeight = frame->height / GetVerticalSubsamplingDivisor(format);
+            auto vSize = frame->linesize[2] * vHeight;
+            if (vSize < expectedVSize) {
+                throw gcnew ArgumentException("FFMpeg allocated a smaller V plane buffer than expected", "data");
+            }
+            if (length != expectedYSize + expectedUSize + expectedVSize) {
+                throw gcnew ArgumentException("Data buffer size does not match the expected size for the specified format and dimensions", "data");
+            }
+            auto offset = 0;
+            Buffer::MemoryCopy(data + offset, frame->data[0], (long long)ySize, (long long)expectedYSize);
+            offset += ySize;
+            Buffer::MemoryCopy(data + offset, frame->data[1], (long long)uSize, (long long)expectedUSize);
+            offset += uSize;
+            Buffer::MemoryCopy(data + offset, frame->data[2], (long long)vSize, (long long)expectedVSize);
+        }
+    }
+
+    ValueTuple<IntPtr, int, int> Frame::GetPlaneBuffer(int planeIndex) {
+        ThrowIfDisposed();
+        
+        auto format = static_cast<AVPixelFormat>(_frame->format);
+        auto isMultiPlane = IsMultiPlaneFormat(format);
+        auto maxPlanes = isMultiPlane ? 3 : 1;
+        
+        // Validate plane index
+        if (planeIndex < 0 || planeIndex >= maxPlanes) {
+            throw gcnew ArgumentOutOfRangeException("planeIndex", String::Format("Plane index {0} is out of range. Valid range is 0 to {1}.", planeIndex, maxPlanes - 1));
+        }
+        
+        // Get buffer pointer
+        auto bufferPtr = IntPtr(_frame->data[planeIndex]);
+        if (bufferPtr == IntPtr::Zero) {
+            throw gcnew InvalidOperationException(String::Format("Plane {0} data is null.", planeIndex));
+        }
+        
+        // Get stride
+        auto stride = _frame->linesize[planeIndex];
+        
+        // Calculate length based on plane and format
+        int length;
+        if (!isMultiPlane) {
+            // Single plane format
+            length = CalculateBufferSize(_frame, 0);
+        } else {
+            // Multi-plane format
+            if (planeIndex == 0) {
+                // Y plane
+                length = stride * _frame->height;
+            } else {
+                // U or V plane
+                auto chromaHeight = _frame->height / GetVerticalSubsamplingDivisor(format);
+                length = stride * chromaHeight;
+            }
+        }
+        
+        return ValueTuple<IntPtr, int, int>(bufferPtr, stride, length);
     }
 
 #pragma region IDisposable

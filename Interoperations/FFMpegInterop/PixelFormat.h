@@ -8,9 +8,8 @@ namespace FFMpegInterop {
         None = -1,      // AV_PIX_FMT_NONE
         RGB24 = 2,      // AV_PIX_FMT_RGB24
         BGR24 = 3,      // AV_PIX_FMT_BGR24
-        Gray8 = 8,      // AV_PIX_FMT_GRAY8
+        YUV422P = 4,     //AV_PIX_FMT_YUV422P
         BGRA = 28,      // AV_PIX_FMT_BGRA
         Gray16LE = 30,  // AV_PIX_FMT_GRAY16LE
-        RGBA64LE = 105, // AV_PIX_FMT_RGBA64LE
     };
 } 

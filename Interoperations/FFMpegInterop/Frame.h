@@ -10,6 +10,7 @@ extern "C" {
 #include "PixelFormat.h"
 
 using namespace System;
+using namespace System::Runtime::CompilerServices;
 using namespace System::Runtime::InteropServices;
 
 namespace FFMpegInterop {
@@ -20,33 +21,36 @@ namespace FFMpegInterop {
     /// </summary>
     public ref class Frame : IDisposable {
     private:
-        // Frame metadata - immutable once created
-        initonly TimeSpan _timestamp;
-        
+
         // Native frame data
         AVFrame* _frame;
-        
-        // Lazy-loaded byte array
-        Lazy<array<Byte>^>^ _lazyData;
 
         // Private helper methods
-        array<Byte>^ CreateByteArray();
+        static bool IsSupportedFormat(AVPixelFormat format);
         static bool IsMultiPlaneFormat(AVPixelFormat format);
         static int GetVerticalSubsamplingDivisor(AVPixelFormat format);
-        static int CalculateMultiPlaneBufferSize(AVFrame* frame, AVPixelFormat format);
+        static int CalculateBufferSize(AVFrame* frame, int planeIndex);
+        static int CalculateBufferSize(AVFrame* frame);
+        static void CopyDataToFrame(byte* data, int length, AVFrame* frame);
 
     public:
         /// <summary>
         /// Constructor for creating a new frame from native AVFrame
         /// Takes ownership of the AVFrame pointer
         /// </summary>
-        Frame(TimeSpan timestamp, AVFrame* frame);
+        Frame(AVFrame* frame);
+
+        /// <summary>
+        /// Constructor for creating a new frame from managed data
+        /// Creates a new AVFrame and copies data from the provided array
+        /// </summary>
+        Frame(long long pts, int width, int height, PixelFormat format, IntPtr data, int length);
 
         /// <summary>
         /// Gets the timestamp of this frame relative to the start of the video
         /// </summary>
         property TimeSpan Timestamp {
-            TimeSpan get() { return _timestamp; }
+            TimeSpan get() { return TimeSpan::FromSeconds((_frame->pts != AV_NOPTS_VALUE ? _frame->pts : _frame->best_effort_timestamp) * av_q2d(_frame->time_base)); }
         }
 
         /// <summary>
@@ -90,15 +94,22 @@ namespace FFMpegInterop {
         }
 
         /// <summary>
-        /// Gets the raw pixel data of this frame
-        /// The data is lazy-loaded when first accessed
+        /// Gets the number of data planes in this frame
         /// </summary>
-        property array<Byte>^ Data {
-            array<Byte>^ get() { 
+        property int PlaneCount {
+            int get() { 
                 ThrowIfDisposed();
-                return _lazyData->Value; 
+                return IsMultiPlaneFormat(static_cast<AVPixelFormat>(_frame->format)) ? 3 : 1; 
             }
         }
+
+        /// <summary>
+        /// Gets buffer information for a specific plane
+        /// </summary>
+        /// <param name="planeIndex">The zero-based index of the plane</param>
+        /// <returns>A tuple containing buffer pointer, stride, and length</returns>
+        [returnvalue: TupleElementNames(gcnew array<String^>{"Data", "Stride", "Length"})]
+        ValueTuple<IntPtr, int, int> GetPlaneBuffer(int planeIndex);
 
 #pragma region IDisposable
     private:
