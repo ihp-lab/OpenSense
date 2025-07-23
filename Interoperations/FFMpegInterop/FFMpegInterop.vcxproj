@@ -74,18 +74,20 @@
   <ItemGroup>
     <ClInclude Include="Frame.h" />
     <ClInclude Include="PixelFormat.h" />
-    <ClInclude Include="FileReaderExceptions.h" />
+    <ClInclude Include="FFMpegExceptions.h" />
     <ClInclude Include="FFMpegInterop.h" />
     <ClInclude Include="FileReader.h" />
+    <ClInclude Include="FileWriter.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="Frame.cpp" />
-    <ClCompile Include="FileReaderExceptions.cpp" />
+    <ClCompile Include="FFMpegExceptions.cpp" />
     <ClCompile Include="FFMpegInterop.cpp" />
     <ClCompile Include="FileReader.cpp" />
+    <ClCompile Include="FileWriter.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

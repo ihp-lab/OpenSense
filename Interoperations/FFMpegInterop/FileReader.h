@@ -8,12 +8,13 @@ extern "C" {
 
 #include "Frame.h"
 #include "PixelFormat.h"
-#include "FileReaderExceptions.h"
+#include "FFMpegExceptions.h"
 
 using namespace System;
 using namespace System::Collections;
 using namespace System::Collections::Generic;
 using namespace System::Runtime::InteropServices;
+using namespace System::Diagnostics::CodeAnalysis;
 
 namespace FFMpegInterop {
     struct FileReaderUnmanaged;
@@ -45,7 +46,7 @@ namespace FFMpegInterop {
         /// Initialize FileReader with specified video file
         /// </summary>
         /// <param name="filename">Path to video file</param>
-        FileReader(String^ filename);
+        FileReader([NotNull] String^ filename);
 
         /// <summary>
         /// Gets or sets the target pixel format for decoded frames

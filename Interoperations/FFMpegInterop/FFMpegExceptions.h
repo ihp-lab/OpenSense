@@ -5,18 +5,18 @@ using namespace System;
 namespace FFMpegInterop {
     
     /// <summary>
-    /// Base exception class for FileReader operations
+    /// Base exception class for FFMpeg operations
     /// </summary>
-    public ref class FileReaderException : public Exception {
+    public ref class FFMpegException : public Exception {
     public:
-        FileReaderException(String^ message);
-        FileReaderException(String^ message, Exception^ innerException);
+        FFMpegException(String^ message);
+        FFMpegException(String^ message, Exception^ innerException);
     };
 
     /// <summary>
     /// Exception thrown when a file cannot be opened
     /// </summary>
-    public ref class FileOpenException : public FileReaderException {
+    public ref class FileOpenException : public FFMpegException {
     public:
         FileOpenException(String^ filename);
     };
@@ -24,7 +24,7 @@ namespace FFMpegInterop {
     /// <summary>
     /// Exception thrown when codec operations fail
     /// </summary>
-    public ref class CodecException : public FileReaderException {
+    public ref class CodecException : public FFMpegException {
     public:
         CodecException(String^ message);
     };

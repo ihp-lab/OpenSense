@@ -27,6 +27,12 @@
     <ClInclude Include="FileReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FileWriter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FFMpegExceptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="FrameInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -45,6 +51,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FileReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FileWriter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FFMpegExceptions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FrameInfo.cpp">

@@ -12,6 +12,7 @@ extern "C" {
 using namespace System;
 using namespace System::Runtime::CompilerServices;
 using namespace System::Runtime::InteropServices;
+using namespace System::Diagnostics::CodeAnalysis;
 
 namespace FFMpegInterop {
     /// <summary>
@@ -26,7 +27,6 @@ namespace FFMpegInterop {
         AVFrame* _frame;
 
         // Private helper methods
-        static bool IsSupportedFormat(AVPixelFormat format);
         static bool IsMultiPlaneFormat(AVPixelFormat format);
         static int GetVerticalSubsamplingDivisor(AVPixelFormat format);
         static int CalculateBufferSize(AVFrame* frame, int planeIndex);
@@ -44,13 +44,37 @@ namespace FFMpegInterop {
         /// Constructor for creating a new frame from managed data
         /// Creates a new AVFrame and copies data from the provided array
         /// </summary>
-        Frame(long long pts, int width, int height, PixelFormat format, IntPtr data, int length);
+        Frame(long long pts, int width, int height, PixelFormat format, [NotNull] IntPtr data, int length);
+
+        /// <summary>
+        /// Gets the internal AVFrame pointer for direct FFmpeg operations
+        /// WARNING: This provides direct access to the internal frame data.
+        /// The caller must not free this pointer or modify frame properties that could affect lifecycle.
+        /// </summary>
+        /// <returns>Pointer to the internal AVFrame</returns>
+        property AVFrame* InternalAVFrame {
+            AVFrame* get() {
+                ThrowIfDisposed();
+                return _frame;
+            }
+        }
+
+        /// <summary>
+        /// Gets the raw presentation timestamp (PTS) value in the frame's native time base
+        /// This is useful for variable frame rate encoding where precise timing is needed
+        /// </summary>
+        property long long PTS {
+            long long get() {
+                ThrowIfDisposed();
+                return _frame->pts != AV_NOPTS_VALUE ? _frame->pts : _frame->best_effort_timestamp;
+            }
+        }
 
         /// <summary>
         /// Gets the timestamp of this frame relative to the start of the video
         /// </summary>
         property TimeSpan Timestamp {
-            TimeSpan get() { return TimeSpan::FromSeconds((_frame->pts != AV_NOPTS_VALUE ? _frame->pts : _frame->best_effort_timestamp) * av_q2d(_frame->time_base)); }
+            TimeSpan get() { return TimeSpan::FromSeconds(PTS * av_q2d(_frame->time_base)); }
         }
 
         /// <summary>

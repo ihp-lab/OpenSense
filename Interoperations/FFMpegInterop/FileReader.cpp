@@ -11,7 +11,7 @@ using namespace System::Runtime::InteropServices;
 namespace FFMpegInterop {
 
     // FileReader implementation
-    FileReader::FileReader(String^ filename)
+    FileReader::FileReader([NotNull] String^ filename)
         : _formatContext(nullptr)
         , _codecContext(nullptr)
         , _packet(new AVPacket())
@@ -44,7 +44,7 @@ namespace FFMpegInterop {
 
         // Retrieve stream information
         if (avformat_find_stream_info(_formatContext, nullptr) < 0) {
-            throw gcnew FileReaderException("Could not find stream information.");
+            throw gcnew FFMpegException("Could not find stream information.");
         }
 
         // Find the first video stream
@@ -57,7 +57,7 @@ namespace FFMpegInterop {
         }
 
         if (videoStreamIndex == -1) {
-            throw gcnew FileReaderException("Could not find a video stream.");
+            throw gcnew FFMpegException("Could not find a video stream.");
         }
 
         // Set the video stream index and time base
@@ -123,7 +123,7 @@ namespace FFMpegInterop {
                 }
 
                 if (_rawFrame->pts == AV_NOPTS_VALUE && _rawFrame->best_effort_timestamp == AV_NOPTS_VALUE) {
-                    throw gcnew FileReaderException("PTS is not available.");
+                    throw gcnew FFMpegException("PTS is not available.");
                 }
 
                 auto keyFrame = _rawFrame->key_frame;
@@ -251,7 +251,7 @@ namespace FFMpegInterop {
 
         // Seek to beginning of file
         if (av_seek_frame(_formatContext, _videoStreamIndex, 0, AVSEEK_FLAG_BACKWARD) < 0) {
-            throw gcnew FileReaderException("Could not seek to beginning of file.");
+            throw gcnew FFMpegException("Could not seek to beginning of file.");
         }
 
         _currentFrame = nullptr;

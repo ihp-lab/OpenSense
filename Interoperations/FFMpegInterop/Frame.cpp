@@ -23,7 +23,7 @@ namespace FFMpegInterop {
         }
     }
 
-    Frame::Frame(long long pts, int width, int height, PixelFormat format, IntPtr data, int length)
+    Frame::Frame(long long pts, int width, int height, PixelFormat format, [NotNull] IntPtr data, int length)
         : _frame(nullptr)
         , _disposed(false) {
         
@@ -39,10 +39,10 @@ namespace FFMpegInterop {
         }
         
         // Validate supported pixel format
-        auto avFormat = static_cast<AVPixelFormat>(format);
-        if (!IsSupportedFormat(avFormat)) {
+        if (!PixelFormatHelper::IsSupported(format)) {
             throw gcnew ArgumentException("Unsupported pixel format", "format");
         }
+        auto avFormat = static_cast<AVPixelFormat>(format);
         
         // Create new AVFrame
         _frame = av_frame_alloc();
@@ -81,19 +81,6 @@ namespace FFMpegInterop {
         }
     }
 
-    bool Frame::IsSupportedFormat(AVPixelFormat format) {
-        switch (format) {
-        case AV_PIX_FMT_RGB24:
-        case AV_PIX_FMT_BGR24:
-        case AV_PIX_FMT_YUV422P:
-        case AV_PIX_FMT_BGRA:
-        case AV_PIX_FMT_GRAY16LE:
-            return true;
-        default:
-            return false;
-        }
-    }
-
     bool Frame::IsMultiPlaneFormat(AVPixelFormat format) {
         switch (format) {
         case AV_PIX_FMT_YUV420P:
@@ -126,10 +113,8 @@ namespace FFMpegInterop {
         if (!frame->data[planeIndex]) {
             throw gcnew InvalidOperationException("Chroma plane data is null.");
         }
-        int divisor;
-        if (planeIndex == 0) {
-            divisor = 1;
-        } else {
+        auto divisor = 1;
+        if (planeIndex != 0) {
             divisor = GetVerticalSubsamplingDivisor(static_cast<AVPixelFormat>(frame->format));
         }
         auto height = frame->height / divisor;
@@ -214,7 +199,7 @@ namespace FFMpegInterop {
         auto stride = _frame->linesize[planeIndex];
         
         // Calculate length based on plane and format
-        int length;
+        auto length = 0;
         if (!isMultiPlane) {
             // Single plane format
             length = CalculateBufferSize(_frame, 0);
