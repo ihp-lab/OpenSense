@@ -145,10 +145,19 @@ namespace FFMpegInterop {
                 auto needsConversion = needsFormatConversion || needsScaling;
 
                 if (!needsConversion) {
-                    // No conversion needed, copy the raw frame
+                    // No conversion needed, reference the raw frame
                     auto frameCopy = av_frame_alloc();
-                    av_frame_copy(frameCopy, _rawFrame);
-                    av_frame_copy_props(frameCopy, _rawFrame);
+                    if (!frameCopy) {
+                        throw gcnew OutOfMemoryException("Failed to allocate frame copy");
+                    }
+                    
+                    // Use av_frame_ref to properly copy all frame properties and reference data
+                    auto ret = av_frame_ref(frameCopy, _rawFrame);
+                    if (ret < 0) {
+                        av_frame_free(&frameCopy);
+                        throw gcnew FFMpegException("Failed to reference frame data");
+                    }
+                    
                     frameCopy->time_base = *_timeBase;
                     return gcnew Frame(frameCopy);
                 }

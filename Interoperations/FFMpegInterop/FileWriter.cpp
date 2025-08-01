@@ -10,7 +10,7 @@ using namespace System::Runtime::InteropServices;
 
 namespace FFMpegInterop {
 
-    FileWriter::FileWriter([NotNull] String^ filename, int width, int height)
+    FileWriter::FileWriter([NotNull] String^ filename, int targetWidth, int targetHeight)
         : _formatContext(nullptr)
         , _codecContext(nullptr)
         , _videoStream(nullptr)
@@ -20,8 +20,8 @@ namespace FFMpegInterop {
         , _filename(filename)
         , _initialized(false)
         , _timeBase(new AVRational())
-        , _targetWidth(width)
-        , _targetHeight(height)
+        , _targetWidth(targetWidth)
+        , _targetHeight(targetHeight)
         , _lastPts(AV_NOPTS_VALUE)
         , _prevWidth(-1)
         , _prevHeight(-1)
@@ -31,11 +31,11 @@ namespace FFMpegInterop {
         if (String::IsNullOrEmpty(filename)) {
             throw gcnew ArgumentNullException("filename");
         }
-        if (width <= 0) {
-            throw gcnew ArgumentException("Width must be positive", "width");
+        if (targetWidth < 0) {
+            throw gcnew ArgumentException("Target width must be non-negative", "targetWidth");
         }
-        if (height <= 0) {
-            throw gcnew ArgumentException("Height must be positive", "height");
+        if (targetHeight < 0) {
+            throw gcnew ArgumentException("Target height must be non-negative", "targetHeight");
         }
         
         // Convert filename to std::string
@@ -48,36 +48,9 @@ namespace FFMpegInterop {
         }
         _formatContext = ctx;
         
-        // Find NVENC HEVC encoder
-        auto codec = avcodec_find_encoder_by_name("hevc_nvenc");
-        if (!codec) {
-            throw gcnew CodecException("NVENC HEVC encoder not found");
-        }
-        
-        // Allocate codec context
-        _codecContext = avcodec_alloc_context3(codec);
-        if (!_codecContext) {
-            throw gcnew CodecException("Could not allocate codec context");
-        }
-        
         // Set time base to ticks (10,000,000 ticks per second)
         _timeBase->num = 1;
         _timeBase->den = 10000000;
-        _codecContext->time_base = *_timeBase;
-        
-        // Set encoder dimensions
-        _codecContext->width = _targetWidth;
-        _codecContext->height = _targetHeight;
-        _codecContext->pix_fmt = AV_PIX_FMT_YUV420P; // Standard format for H.265
-        
-        // Set encoding parameters for real-time encoding
-        _codecContext->codec_id = codec->id;
-        _codecContext->codec_type = AVMEDIA_TYPE_VIDEO;
-        _codecContext->gop_size = 1; // No B-frames, real-time encoding
-        _codecContext->max_b_frames = 0;
-        
-        // Set NVENC lossless tuning
-        av_opt_set(_codecContext->priv_data, "preset", "lossless", 0);
     }
 
     void FileWriter::WriteFrame([NotNull] Frame^ frame) {
@@ -94,14 +67,69 @@ namespace FFMpegInterop {
         
         // Initialize encoder on first frame
         if (!_initialized) {
-            InitializeEncoder();
+            InitializeEncoder(frame->Width, frame->Height);
         }
         
         EncodeAndWriteFrame(frame);
     }
 
-    void FileWriter::InitializeEncoder() {
-        // Encoder dimensions are already set in constructor
+    void FileWriter::InitializeEncoder(int frameWidth, int frameHeight) {
+        // Determine actual encoding dimensions
+        auto encodingWidth = _targetWidth;
+        auto encodingHeight = _targetHeight;
+        
+        if (_targetWidth == 0 && _targetHeight == 0) {
+            // Both dimensions are 0: use first frame's original dimensions
+            encodingWidth = frameWidth;
+            encodingHeight = frameHeight;
+        } else if (_targetWidth == 0) {
+            // Width is 0: scale proportionally based on target height
+            auto aspectRatio = (double)frameWidth / frameHeight;
+            encodingWidth = (int)(_targetHeight * aspectRatio);
+            // Ensure even dimension for video encoding
+            if (encodingWidth % 2 != 0) encodingWidth--;
+            encodingHeight = _targetHeight;
+        } else if (_targetHeight == 0) {
+            // Height is 0: scale proportionally based on target width
+            auto aspectRatio = (double)frameHeight / frameWidth;
+            encodingHeight = (int)(_targetWidth * aspectRatio);
+            // Ensure even dimension for video encoding
+            if (encodingHeight % 2 != 0) encodingHeight--;
+            encodingWidth = _targetWidth;
+        }
+        // If both dimensions are non-zero, use them as-is (encodingWidth and encodingHeight are already set)
+        
+        // Find NVENC HEVC encoder
+        auto codec = avcodec_find_encoder_by_name("hevc_nvenc");
+        if (!codec) {
+            throw gcnew CodecException("NVENC HEVC encoder not found");
+        }
+        
+        // Allocate codec context
+        _codecContext = avcodec_alloc_context3(codec);
+        if (!_codecContext) {
+            throw gcnew CodecException("Could not allocate codec context");
+        }
+        
+        // Set time base
+        _codecContext->time_base = *_timeBase;
+        
+        // Set encoder dimensions
+        _codecContext->width = encodingWidth;
+        _codecContext->height = encodingHeight;
+        _codecContext->pix_fmt = AV_PIX_FMT_YUV420P; // Standard format for H.265
+        
+        // Set encoding parameters for real-time encoding
+        _codecContext->codec_id = codec->id;
+        _codecContext->codec_type = AVMEDIA_TYPE_VIDEO;
+        _codecContext->gop_size = 1; // No B-frames, real-time encoding
+        _codecContext->max_b_frames = 0;
+        
+        // Set NVENC lossless tuning
+        auto ret = av_opt_set(_codecContext->priv_data, "preset", "lossless", 0);
+        if (ret < 0) {
+            throw gcnew CodecException("Failed to set NVENC preset");
+        }
         
         // Create video stream
         _videoStream = avformat_new_stream(_formatContext, nullptr);
@@ -113,7 +141,7 @@ namespace FFMpegInterop {
         _videoStream->time_base = *_timeBase;
         
         // Open codec
-        auto ret = avcodec_open2(_codecContext, nullptr, nullptr);
+        ret = avcodec_open2(_codecContext, nullptr, nullptr);
         if (ret < 0) {
             throw gcnew CodecException("Could not open codec");
         }
@@ -163,8 +191,8 @@ namespace FFMpegInterop {
         auto frameHeight = frame->Height;
         auto frameFormat = static_cast<AVPixelFormat>(frame->Format);
         
-        // Calculate scaled dimensions maintaining aspect ratio
-        auto scaledDimensions = CalculateScaledDimensions(frameWidth, frameHeight, _targetWidth, _targetHeight);
+        // Calculate scaled dimensions maintaining aspect ratio using actual encoding dimensions
+        auto scaledDimensions = CalculateScaledDimensions(frameWidth, frameHeight, _codecContext->width, _codecContext->height);
         auto scaledWidth = scaledDimensions.Item1;
         auto scaledHeight = scaledDimensions.Item2;
         
@@ -197,7 +225,7 @@ namespace FFMpegInterop {
         // Check if conversion is needed
         auto needsConversion = 
             frameFormat != _codecContext->pix_fmt 
-            || scaledWidth != _codecContext->width 
+            || scaledWidth != _codecContext->width
             || scaledHeight != _codecContext->height;
         
         if (!needsConversion) {

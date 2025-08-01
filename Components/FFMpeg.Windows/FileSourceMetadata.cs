@@ -14,7 +14,7 @@ namespace OpenSense.Components.FFMpeg {
         protected override string? GetPortDescription(string portName) {
             switch (portName) {
                 case nameof(FileSource.FrameOut):
-                    return "The output frame.";
+                    return "The output frame. The pixel format might be converted to the target format.";
                 case nameof(FileSource.ImageOut):
                     return "The output frame in \\psi image format.";
                 default:

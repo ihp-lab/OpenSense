@@ -4,11 +4,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using FFMpegInterop;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
-using Microsoft.Psi.Common;
 using Microsoft.Psi.Components;
 using Microsoft.Psi.Imaging;
 
@@ -25,10 +23,10 @@ namespace OpenSense.Components.FFMpeg {
 
         #region Settings
         public Microsoft.Psi.Imaging.PixelFormat TargetFormat {
-            get => ToPsiPixelFormat(_reader.TargetFormat);
+            get => _reader.TargetFormat.ToPsiPixelFormat();
             set {
                 var old = _reader.TargetFormat;
-                var @new = ToFFMpegPixelFormat(value);
+                var @new = value.ToFFMpegPixelFormat();
                 if (old == @new) {
                     return;
                 }
@@ -102,7 +100,7 @@ namespace OpenSense.Components.FFMpeg {
 
             /* Validate pixel format compatibility at runtime */
             if (TargetFormat != Microsoft.Psi.Imaging.PixelFormat.Undefined) {
-                var ffmpegFormat = ToFFMpegPixelFormat(TargetFormat);
+                var ffmpegFormat = TargetFormat.ToFFMpegPixelFormat();
                 if (ffmpegFormat == FFMpegInterop.PixelFormat.None) {
                     throw new InvalidOperationException($"Pixel format {TargetFormat} is not supported by FFMpeg interop.");
                 }
@@ -123,9 +121,9 @@ namespace OpenSense.Components.FFMpeg {
             var originatingTime = startTime + frame.Timestamp;
             FrameOut.Post(sharedFrame, originatingTime);
             if (ImageOut.HasSubscribers) {// Only post images when necessary, as it incurs computational cost
-                var psiPixelFormat = ToPsiPixelFormat(frame.Format);
+                var psiPixelFormat = frame.Format.ToPsiPixelFormat();
                 if (psiPixelFormat == Microsoft.Psi.Imaging.PixelFormat.Undefined) {
-                    throw new NotSupportedException($"Pixel format {frame.Format} is not supported by \\psi.");
+                    throw new NotSupportedException($"Pixel format {frame.Format} is not supported by \\psi. Either set the {nameof(TargetFormat)} to a supported format, or disconnect subscribers from the {nameof(ImageOut)} emitter.");
                 }
                 Debug.Assert(frame.PlaneCount == 1);
                 var (data, stride, length) = frame.GetPlaneBuffer(0);
@@ -137,52 +135,6 @@ namespace OpenSense.Components.FFMpeg {
                 ImageOut.Post(image, originatingTime);
             }
             return originatingTime;
-        }
-        #endregion
-
-        #region Helpers
-        /// <summary>
-        /// Convert from FFMpeg PixelFormat to Psi PixelFormat.
-        /// </summary>
-        private static Microsoft.Psi.Imaging.PixelFormat ToPsiPixelFormat(FFMpegInterop.PixelFormat ffmpegFormat) {
-            switch (ffmpegFormat) {
-                case FFMpegInterop.PixelFormat.None:
-                    return Microsoft.Psi.Imaging.PixelFormat.Undefined;
-                case FFMpegInterop.PixelFormat.RGB24:
-                    return Microsoft.Psi.Imaging.PixelFormat.RGB_24bpp;
-                case FFMpegInterop.PixelFormat.BGR24:
-                    return Microsoft.Psi.Imaging.PixelFormat.BGR_24bpp;
-                case FFMpegInterop.PixelFormat.BGRA:
-                    return Microsoft.Psi.Imaging.PixelFormat.BGRA_32bpp;
-                case FFMpegInterop.PixelFormat.Gray16LE:
-                    return Microsoft.Psi.Imaging.PixelFormat.Gray_16bpp;
-                default:
-                    return Microsoft.Psi.Imaging.PixelFormat.Undefined;
-            }
-        }
-
-        /// <summary>
-        /// Convert from Psi PixelFormat to FFMpeg PixelFormat.
-        /// </summary>
-        private static FFMpegInterop.PixelFormat ToFFMpegPixelFormat(Microsoft.Psi.Imaging.PixelFormat psiFormat) {
-            switch (psiFormat) {
-                case Microsoft.Psi.Imaging.PixelFormat.Undefined:
-                    return FFMpegInterop.PixelFormat.None;
-                case Microsoft.Psi.Imaging.PixelFormat.RGB_24bpp:
-                    return FFMpegInterop.PixelFormat.RGB24;
-                case Microsoft.Psi.Imaging.PixelFormat.BGR_24bpp:
-                    return FFMpegInterop.PixelFormat.BGR24;
-                case Microsoft.Psi.Imaging.PixelFormat.BGRA_32bpp:
-                    return FFMpegInterop.PixelFormat.BGRA;
-                case Microsoft.Psi.Imaging.PixelFormat.Gray_16bpp:
-                    if (!BitConverter.IsLittleEndian) {
-                        throw new InvalidOperationException("Big endian is not supported.");
-                    }
-                    return FFMpegInterop.PixelFormat.Gray16LE;
-                default:
-                    // For unsupported formats, return None (no conversion)
-                    return FFMpegInterop.PixelFormat.None;
-            }
         }
         #endregion
 

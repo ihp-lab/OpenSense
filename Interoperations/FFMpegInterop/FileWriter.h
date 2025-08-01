@@ -46,11 +46,53 @@ namespace FFMpegInterop {
         /// <summary>
         /// Initialize FileWriter with specified output file and target resolution
         /// Finds and validates NVENC HEVC encoder availability
+        /// Resolution behavior:
+        /// - Both 0: Use first frame's original dimensions
+        /// - One 0: Scale proportionally based on the non-zero dimension
+        /// - Both non-zero: Use specified dimensions
         /// </summary>
         /// <param name="filename">Path to output MP4 video file</param>
-        /// <param name="width">Target video width</param>
-        /// <param name="height">Target video height</param>
-        FileWriter([NotNull] String^ filename, int width, int height);
+        /// <param name="targetWidth">Target video width, or 0 for proportional scaling</param>
+        /// <param name="targetHeight">Target video height, or 0 for proportional scaling</param>
+        FileWriter([NotNull] String^ filename, int targetWidth, int targetHeight);
+
+        /// <summary>
+        /// Gets the target width for video encoding
+        /// </summary>
+        property int TargetWidth {
+            int get() {
+                return _targetWidth;
+            }
+        }
+
+        /// <summary>
+        /// Gets the target height for video encoding
+        /// </summary>
+        property int TargetHeight {
+            int get() {
+                return _targetHeight;
+            }
+        }
+
+        /// <summary>
+        /// Gets the actual encoding width (determined after first frame)
+        /// </summary>
+        property int Width {
+            int get() {
+                ThrowIfDisposed();
+                return _codecContext->width;
+            }
+        }
+
+        /// <summary>
+        /// Gets the actual encoding height (determined after first frame)
+        /// </summary>
+        property int Height {
+            int get() {
+                ThrowIfDisposed();
+                return _codecContext->height;
+            }
+        }
 
         /// <summary>
         /// Write a frame to the video file
@@ -61,9 +103,11 @@ namespace FFMpegInterop {
 
     private:
         /// <summary>
-        /// Initialize encoder with target resolution
+        /// Initialize encoder with resolution determined from target settings and first frame dimensions
         /// </summary>
-        void InitializeEncoder();
+        /// <param name="frameWidth">Width of the first frame</param>
+        /// <param name="frameHeight">Height of the first frame</param>
+        void InitializeEncoder(int frameWidth, int frameHeight);
         
         /// <summary>
         /// Calculate output dimensions maintaining aspect ratio

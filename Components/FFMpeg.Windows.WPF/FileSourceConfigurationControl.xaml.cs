@@ -21,7 +21,7 @@ namespace OpenSense.WPF.Components.FFMpeg {
                 CheckFileExists = true,
                 AddExtension = true,
                 DefaultExt = "*.*",
-                Filter = "Any File | *.*",
+                Filter = "All Files (*.*)|*.*",
             };
             if (openFileDialog.ShowDialog() == true) {
                 Configuration.Filename = openFileDialog.FileName;

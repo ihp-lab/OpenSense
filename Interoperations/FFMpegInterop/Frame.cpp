@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "Frame.h"
+#include "FFMpegExceptions.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -50,35 +51,65 @@ namespace FFMpegInterop {
             throw gcnew OutOfMemoryException("Failed to allocate AVFrame");
         }
         
-        try {
-            // Set frame properties
-            _frame->width = width;
-            _frame->height = height;
-            _frame->format = avFormat;
-            _frame->pts = pts;
-            
-            // Allocate buffer for the frame
-            auto ret = av_frame_get_buffer(_frame, 0);
-            if (ret < 0) {
-                throw gcnew InvalidOperationException("Failed to allocate frame buffer");
-            }
-            
-            // Make frame writable
-            ret = av_frame_make_writable(_frame);
-            if (ret < 0) {
-                throw gcnew InvalidOperationException("Failed to make frame writable");
-            }
-            
-            // Copy data from managed array to native frame
-            CopyDataToFrame(static_cast<byte*>(data.ToPointer()), length, _frame);
-        } catch (...) {
-            if (_frame) {
-                auto tmp = _frame;
-                av_frame_free(&tmp);
-                _frame = nullptr;
-            }
-            throw;
+        // Set frame properties
+        _frame->width = width;
+        _frame->height = height;
+        _frame->format = avFormat;
+        _frame->pts = pts;
+
+        // Allocate buffer for the frame
+        auto ret = av_frame_get_buffer(_frame, 0);
+        if (ret < 0) {
+            auto tmp = _frame;
+            av_frame_free(&tmp);
+            _frame = nullptr;
+            throw gcnew FFMpegException("Failed to allocate frame buffer");
         }
+
+        // Make frame writable
+        ret = av_frame_make_writable(_frame);
+        if (ret < 0) {
+            auto tmp = _frame;
+            av_frame_free(&tmp);
+            _frame = nullptr;
+            throw gcnew FFMpegException("Failed to make frame writable");
+        }
+
+        // Copy data from managed array to native frame
+        CopyDataToFrame(static_cast<byte*>(data.ToPointer()), length, _frame);
+    }
+
+    Frame::Frame(long long pts, [NotNull] Frame^ frame)
+        : _frame(nullptr)
+        , _disposed(false) {
+        
+        // Validate input parameters
+        if (frame == nullptr) {
+            throw gcnew ArgumentNullException("frame");
+        }
+        
+        // Ensure the source frame is not disposed
+        if (frame->_disposed) {
+            throw gcnew ObjectDisposedException("frame", "Source frame has been disposed");
+        }
+
+        // Allocate new AVFrame
+        _frame = av_frame_alloc();
+        if (!_frame) {
+            throw gcnew OutOfMemoryException("Failed to allocate new AVFrame for reference");
+        }
+
+        // Reference the original frame data (shares data buffers with reference counting)
+        auto ret = av_frame_ref(_frame, frame->_frame);
+        if (ret < 0) {
+            auto tmp = _frame;
+            av_frame_free(&tmp);
+            _frame = nullptr;
+            throw gcnew FFMpegException("Failed to reference frame data during construction");
+        }
+
+        // Set the new pts value while keeping all other properties
+        _frame->pts = pts;
     }
 
     bool Frame::IsMultiPlaneFormat(AVPixelFormat format) {
