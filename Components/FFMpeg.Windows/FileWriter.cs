@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -99,6 +100,7 @@ namespace OpenSense.Components.FFMpeg {
             if (startTime is not null) {
                 return;
             }
+            Debug.Assert(originatingTime.Kind == DateTimeKind.Utc);
             startTime = originatingTime;
 
             if (!TimestampFilename) {
@@ -106,7 +108,7 @@ namespace OpenSense.Components.FFMpeg {
             }
             var directory = Path.GetDirectoryName(_writer.Filename);
             var baseFilename = Path.GetFileNameWithoutExtension(_writer.Filename);
-            var timestamp = originatingTime.Ticks;
+            var timestamp = originatingTime.ToString("yyyyMMddHHmmssfffffff");
             var extension = Path.GetExtension(_writer.Filename);
             var newFilename = $"{baseFilename}_{timestamp}{extension}";
             _writer.Filename = Path.Combine(directory ?? string.Empty, newFilename);
