@@ -28,13 +28,15 @@ namespace FFMpegInterop {
         AVPacket* _packet;
         SwsContext* _swsCtx;
         AVFrame* _convertedFrame;
-        String^ _filename;
         
         // Encoder state
         bool _initialized;
         AVRational* _timeBase;
+        String^ _filename;
         int _targetWidth;
         int _targetHeight;
+        int _gopSize;
+        int _maxBFrames;
         long long _lastPts; // Track last PTS for validation
         
         // Previous frame parameters for SwsContext reuse
@@ -44,53 +46,128 @@ namespace FFMpegInterop {
 
     public:
         /// <summary>
-        /// Initialize FileWriter with specified output file and target resolution
-        /// Finds and validates NVENC HEVC encoder availability
-        /// Resolution behavior:
-        /// - Both 0: Use first frame's original dimensions
-        /// - One 0: Scale proportionally based on the non-zero dimension
-        /// - Both non-zero: Use specified dimensions
+        /// Initialize FileWriter
         /// </summary>
-        /// <param name="filename">Path to output MP4 video file</param>
-        /// <param name="targetWidth">Target video width, or 0 for proportional scaling</param>
-        /// <param name="targetHeight">Target video height, or 0 for proportional scaling</param>
-        FileWriter([NotNull] String^ filename, int targetWidth, int targetHeight);
+        FileWriter();
 
         /// <summary>
-        /// Gets the target width for video encoding
+        /// Gets or sets the output filename for the video file
+        /// </summary>
+        property String^ Filename {
+            String^ get() {
+                return _filename;
+            }
+            void set(String^ value) {
+                if (_initialized) {
+                    throw gcnew InvalidOperationException("Cannot modify filename after encoder initialization");
+                }
+                _filename = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the target width for video encoding
+        /// Resolution behavior:
+        /// - Both TargetWidth and TargetHeight are 0: Use first frame's original dimensions
+        /// - One is 0: Scale proportionally based on the non-zero dimension
+        /// - Both non-zero: Use specified dimensions
         /// </summary>
         property int TargetWidth {
             int get() {
                 return _targetWidth;
             }
+            void set(int value) {
+                if (value < 0) {
+                    throw gcnew ArgumentException("Target width must be non-negative");
+                }
+                if (_initialized) {
+                    throw gcnew InvalidOperationException("Cannot modify target width after encoder initialization");
+                }
+                _targetWidth = value;
+            }
         }
 
         /// <summary>
-        /// Gets the target height for video encoding
+        /// Gets or sets the target height for video encoding
+        /// Resolution behavior:
+        /// - Both TargetWidth and TargetHeight are 0: Use first frame's original dimensions
+        /// - One is 0: Scale proportionally based on the non-zero dimension
+        /// - Both non-zero: Use specified dimensions
         /// </summary>
         property int TargetHeight {
             int get() {
                 return _targetHeight;
             }
+            void set(int value) {
+                if (value < 0) {
+                    throw gcnew ArgumentException("Target height must be non-negative");
+                }
+                if (_initialized) {
+                    throw gcnew InvalidOperationException("Cannot modify target height after encoder initialization");
+                }
+                _targetHeight = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the GOP size (Group of Pictures) for video encoding
+        /// Default is 0 for intra-only encoding
+        /// </summary>
+        property int GopSize {
+            int get() {
+                return _gopSize;
+            }
+            void set(int value) {
+                if (value < 0) {
+                    throw gcnew ArgumentException("GOP size must be non-negative");
+                }
+                if (_initialized) {
+                    ThrowIfDisposed();
+                    _codecContext->gop_size = value;
+                }
+                _gopSize = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum number of B-frames between non-B-frames
+        /// Default is 0. Note: The output will be delayed by MaxBFrames+1 relative to the input
+        /// </summary>
+        property int MaxBFrames {
+            int get() {
+                return _maxBFrames;
+            }
+            void set(int value) {
+                if (value < 0) {
+                    throw gcnew ArgumentException("Max B-frames must be non-negative");
+                }
+                if (_initialized) {
+                    ThrowIfDisposed();
+                    _codecContext->max_b_frames = value;
+                }
+                _maxBFrames = value;
+            }
         }
 
         /// <summary>
         /// Gets the actual encoding width (determined after first frame)
+        /// Returns -1 if encoder is not initialized
         /// </summary>
         property int Width {
             int get() {
                 ThrowIfDisposed();
-                return _codecContext->width;
+                return _codecContext ? _codecContext->width : -1;
             }
         }
 
         /// <summary>
         /// Gets the actual encoding height (determined after first frame)
+        /// Returns -1 if encoder is not initialized
         /// </summary>
         property int Height {
             int get() {
                 ThrowIfDisposed();
-                return _codecContext->height;
+                return _codecContext ? _codecContext->height : -1;
             }
         }
 
@@ -124,6 +201,13 @@ namespace FFMpegInterop {
         /// Encode and write frame to output
         /// </summary>
         void EncodeAndWriteFrame([NotNull] Frame^ frame);
+        
+        /// <summary>
+        /// Receive all available packets from encoder and write them
+        /// Uses the internal _packet buffer for receiving
+        /// </summary>
+        /// <param name="throwOnError">Whether to throw exceptions on errors (false during cleanup)</param>
+        void ReceiveAndWritePackets(bool throwOnError);
 
 #pragma region IDisposable
     private:

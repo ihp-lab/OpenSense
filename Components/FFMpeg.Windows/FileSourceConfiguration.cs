@@ -17,7 +17,7 @@ namespace OpenSense.Components.FFMpeg {
             set => SetProperty(ref filename, value);
         }
 
-        private PixelFormat targetFormat = PixelFormat.RGB_24bpp;
+        private PixelFormat targetFormat = PixelFormat.Undefined;
 
         public PixelFormat TargetFormat {
             get => targetFormat;

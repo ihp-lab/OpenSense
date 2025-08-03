@@ -10,43 +10,25 @@ using namespace System::Runtime::InteropServices;
 
 namespace FFMpegInterop {
 
-    FileWriter::FileWriter([NotNull] String^ filename, int targetWidth, int targetHeight)
+    FileWriter::FileWriter()
         : _formatContext(nullptr)
         , _codecContext(nullptr)
         , _videoStream(nullptr)
         , _packet(av_packet_alloc())
         , _swsCtx(nullptr)
         , _convertedFrame(nullptr)
-        , _filename(filename)
+        , _filename(nullptr)
         , _initialized(false)
         , _timeBase(new AVRational())
-        , _targetWidth(targetWidth)
-        , _targetHeight(targetHeight)
+        , _targetWidth(0)
+        , _targetHeight(0)
+        , _gopSize(0)
+        , _maxBFrames(0)
         , _lastPts(AV_NOPTS_VALUE)
         , _prevWidth(-1)
         , _prevHeight(-1)
         , _prevPixelFormat(AV_PIX_FMT_NONE)
         , _disposed(false) {
-        
-        if (String::IsNullOrEmpty(filename)) {
-            throw gcnew ArgumentNullException("filename");
-        }
-        if (targetWidth < 0) {
-            throw gcnew ArgumentException("Target width must be non-negative", "targetWidth");
-        }
-        if (targetHeight < 0) {
-            throw gcnew ArgumentException("Target height must be non-negative", "targetHeight");
-        }
-        
-        // Convert filename to std::string
-        auto fname = msclr::interop::marshal_as<std::string>(filename);
-        
-        // Allocate output format context for MP4
-        auto ctx = (AVFormatContext*)nullptr;
-        if (avformat_alloc_output_context2(&ctx, nullptr, nullptr, fname.c_str()) < 0) {
-            throw gcnew FFMpegException("Could not create output context for MP4 format");
-        }
-        _formatContext = ctx;
         
         // Set time base to ticks (10,000,000 ticks per second)
         _timeBase->num = 1;
@@ -60,11 +42,6 @@ namespace FFMpegInterop {
             throw gcnew ArgumentNullException("frame");
         }
         
-        // Validate pixel format
-        if (!PixelFormatHelper::IsSupported(frame->Format)) {
-            throw gcnew ArgumentException("Unsupported pixel format", "frame");
-        }
-        
         // Initialize encoder on first frame
         if (!_initialized) {
             InitializeEncoder(frame->Width, frame->Height);
@@ -74,6 +51,11 @@ namespace FFMpegInterop {
     }
 
     void FileWriter::InitializeEncoder(int frameWidth, int frameHeight) {
+        // Check if filename is set
+        if (String::IsNullOrEmpty(_filename)) {
+            throw gcnew InvalidOperationException("Filename must be set before writing frames");
+        }
+        
         // Determine actual encoding dimensions
         auto encodingWidth = _targetWidth;
         auto encodingHeight = _targetHeight;
@@ -122,14 +104,25 @@ namespace FFMpegInterop {
         // Set encoding parameters for real-time encoding
         _codecContext->codec_id = codec->id;
         _codecContext->codec_type = AVMEDIA_TYPE_VIDEO;
-        _codecContext->gop_size = 1; // No B-frames, real-time encoding
-        _codecContext->max_b_frames = 0;
+        _codecContext->gop_size = _gopSize; // the number of pictures in a group of pictures, or 0 for intra_only
+        _codecContext->max_b_frames = _maxBFrames; // maximum number of B-frames between non-B-frames Note: The output will be delayed by max_b_frames+1 relative to the input.
         
         // Set NVENC lossless tuning
         auto ret = av_opt_set(_codecContext->priv_data, "preset", "lossless", 0);
         if (ret < 0) {
             throw gcnew CodecException("Failed to set NVENC preset");
         }
+
+        // Convert filename to std::string
+        auto filename = (String^)_filename;
+        auto fname = msclr::interop::marshal_as<std::string>(filename);
+
+        // Allocate output format context for MP4
+        auto ctx = (AVFormatContext*)nullptr;
+        if (avformat_alloc_output_context2(&ctx, nullptr, nullptr, fname.c_str()) < 0) {
+            throw gcnew FFMpegException("Could not create output context for MP4 format");
+        }
+        _formatContext = ctx;
         
         // Create video stream
         _videoStream = avformat_new_stream(_formatContext, nullptr);
@@ -166,10 +159,8 @@ namespace FFMpegInterop {
         if (ret < 0) {
             throw gcnew OutOfMemoryException("Could not allocate converted frame buffer");
         }
-        
+
         // Open output file
-        String^ filename = _filename;
-        auto fname = msclr::interop::marshal_as<std::string>(filename);
         if (!(_formatContext->oformat->flags & AVFMT_NOFILE)) {
             ret = avio_open(&_formatContext->pb, fname.c_str(), AVIO_FLAG_WRITE);
             if (ret < 0) {
@@ -264,27 +255,8 @@ namespace FFMpegInterop {
             throw gcnew CodecException("Error sending frame to encoder");
         }
         
-        // Get encoded packets
-        while (ret >= 0) {
-            ret = avcodec_receive_packet(_codecContext, _packet);
-            if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
-                break;
-            } else if (ret < 0) {
-                throw gcnew CodecException("Error receiving packet from encoder");
-            }
-            
-            // Scale packet timestamps
-            av_packet_rescale_ts(_packet, _codecContext->time_base, _videoStream->time_base);
-            _packet->stream_index = _videoStream->index;
-            
-            // Write packet
-            ret = av_interleaved_write_frame(_formatContext, _packet);
-            if (ret < 0) {
-                throw gcnew FFMpegException("Error writing packet to file");
-            }
-            
-            av_packet_unref(_packet);
-        }
+        // Get encoded packets and write them
+        ReceiveAndWritePackets(true);
     }
 
     ValueTuple<int, int> FileWriter::CalculateScaledDimensions(int sourceWidth, int sourceHeight, int targetWidth, int targetHeight) {
@@ -312,6 +284,33 @@ namespace FFMpegInterop {
         return ValueTuple<int, int>(outputWidth, outputHeight);
     }
 
+    void FileWriter::ReceiveAndWritePackets(bool throwOnError) {
+        auto packetRet = 0;
+        while (packetRet >= 0) {
+            packetRet = avcodec_receive_packet(_codecContext, _packet);
+            if (packetRet == AVERROR(EAGAIN) || packetRet == AVERROR_EOF) {
+                break;
+            } else if (packetRet < 0) {
+                if (throwOnError) {
+                    throw gcnew CodecException("Error receiving packet from encoder");
+                }
+                break;
+            }
+            
+            // Scale packet timestamps
+            av_packet_rescale_ts(_packet, _codecContext->time_base, _videoStream->time_base);
+            _packet->stream_index = _videoStream->index;
+            
+            // Write packet
+            auto writeRet = av_interleaved_write_frame(_formatContext, _packet);
+            if (writeRet < 0 && throwOnError) {
+                throw gcnew FFMpegException(String::Format("Error writing packet to file. Error code: {0}", writeRet));
+            }
+            
+            av_packet_unref(_packet);
+        }
+    }
+
 #pragma region IDisposable
     void FileWriter::ThrowIfDisposed() {
         if (_disposed) {
@@ -334,21 +333,7 @@ namespace FFMpegInterop {
         if (_codecContext && _initialized) {
             avcodec_send_frame(_codecContext, nullptr);
             
-            auto pkt = av_packet_alloc();
-            int ret = 0;
-            while (ret >= 0) {
-                ret = avcodec_receive_packet(_codecContext, pkt);
-                if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
-                    break;
-                }
-                if (ret >= 0) {
-                    av_packet_rescale_ts(pkt, _codecContext->time_base, _videoStream->time_base);
-                    pkt->stream_index = _videoStream->index;
-                    av_interleaved_write_frame(_formatContext, pkt);
-                    av_packet_unref(pkt);
-                }
-            }
-            av_packet_free(&pkt);
+            ReceiveAndWritePackets(false); // Don't throw during cleanup
         }
         
         // Write file trailer
@@ -387,7 +372,7 @@ namespace FFMpegInterop {
         }
         
         if (_formatContext) {
-            if (!(_formatContext->oformat->flags & AVFMT_NOFILE)) {
+            if (_formatContext->oformat && !(_formatContext->oformat->flags & AVFMT_NOFILE)) {
                 avio_closep(&_formatContext->pb);
             }
             auto tmp = _formatContext;

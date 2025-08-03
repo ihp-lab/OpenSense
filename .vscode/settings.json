@@ -5,6 +5,8 @@
         "format": "cpp",
         "regex": "cpp",
         "thread": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "xiosbase": "cpp",
+        "xloctime": "cpp"
     }
 }

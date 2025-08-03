@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Runtime.CompilerServices;
 using FFMpegInterop;
 using Microsoft.Extensions.Logging;
@@ -10,7 +12,7 @@ using Microsoft.Psi.Imaging;
 namespace OpenSense.Components.FFMpeg {
     public sealed class FileWriter : INotifyPropertyChanged, IDisposable {
 
-        private readonly FFMpegInterop.FileWriter _writer;
+        private readonly FFMpegInterop.FileWriter _writer = new();
 
         #region Ports
         public Receiver<Shared<Frame>> FrameIn { get; }
@@ -19,6 +21,38 @@ namespace OpenSense.Components.FFMpeg {
         #endregion
 
         #region Settings
+        public string Filename {
+            get => _writer.Filename;
+            set => _writer.Filename = value;
+        }
+
+        private bool timestampFilename;
+
+        public bool TimestampFilename {
+            get => timestampFilename;
+            set => SetProperty(ref timestampFilename, value);
+        }
+
+        public int TargetWidth {
+            get => _writer.TargetWidth;
+            set => _writer.TargetWidth = value;
+        }
+
+        public int TargetHeight {
+            get => _writer.TargetHeight;
+            set => _writer.TargetHeight = value;
+        }
+
+        public int GopSize {
+            get => _writer.GopSize;
+            set => _writer.GopSize = value;
+        }
+
+        public int MaxBFrames {
+            get => _writer.MaxBFrames;
+            set => _writer.MaxBFrames = value;
+        }
+
         private ILogger? logger;
 
         public ILogger? Logger {
@@ -29,9 +63,7 @@ namespace OpenSense.Components.FFMpeg {
 
         private DateTime? startTime;
 
-        public FileWriter(Pipeline pipeline, string filename, int targetWidth, int targetHeight) {
-            _writer = new (filename, targetWidth, targetHeight);
-
+        public FileWriter(Pipeline pipeline) {
             FrameIn = pipeline.CreateReceiver<Shared<Frame>>(this, ProcessFrame, nameof(FrameIn));
             ImageIn = pipeline.CreateReceiver<Shared<Image>>(this, ProcessImage, nameof(ImageIn));
 
@@ -49,19 +81,35 @@ namespace OpenSense.Components.FFMpeg {
         #endregion
 
         private void ProcessFrame(Shared<Frame> frame, Envelope envelope) {
-            startTime ??= envelope.OriginatingTime;
-
+            SaveStartTimeIfFirstFrame(envelope.OriginatingTime);
             var pts = (envelope.OriginatingTime - (DateTime)startTime).Ticks;
             using var clone = new Frame(pts, frame.Resource);
             _writer.WriteFrame(clone);
         }
 
         private void ProcessImage(Shared<Image> image, Envelope envelope) {
-            startTime ??= envelope.OriginatingTime;
-
+            SaveStartTimeIfFirstFrame(envelope.OriginatingTime);
             var pts = (envelope.OriginatingTime - (DateTime)startTime).Ticks;
             using var frame = CreateFrame(pts, image.Resource);
             _writer.WriteFrame(frame);
+        }
+
+        [MemberNotNull(nameof(startTime))]
+        private void SaveStartTimeIfFirstFrame(DateTime originatingTime) {
+            if (startTime is not null) {
+                return;
+            }
+            startTime = originatingTime;
+
+            if (!TimestampFilename) {
+                return;
+            }
+            var directory = Path.GetDirectoryName(_writer.Filename);
+            var baseFilename = Path.GetFileNameWithoutExtension(_writer.Filename);
+            var timestamp = originatingTime.Ticks;
+            var extension = Path.GetExtension(_writer.Filename);
+            var newFilename = $"{baseFilename}_{timestamp}{extension}";
+            _writer.Filename = Path.Combine(directory ?? string.Empty, newFilename);
         }
 
         private static Frame CreateFrame(long pts, Image image) {
