@@ -15,6 +15,7 @@ namespace FFMpegInterop {
         YUV444P = 5,     // AV_PIX_FMT_YUV444P
         YUV410P = 6,   // AV_PIX_FMT_YUV410P
         YUV411P = 7,   // AV_PIX_FMT_YUV411P
+        GRAY8 = 8,      // AV_PIX_FMT_GRAY8
         BGRA = 28,      // AV_PIX_FMT_BGRA
         Gray16LE = 30,  // AV_PIX_FMT_GRAY16LE
     };

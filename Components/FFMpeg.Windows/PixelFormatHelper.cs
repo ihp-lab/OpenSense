@@ -19,6 +19,8 @@ namespace OpenSense.Components.FFMpeg {
                     return Microsoft.Psi.Imaging.PixelFormat.RGB_24bpp;
                 case FFMpegInterop.PixelFormat.BGR24:
                     return Microsoft.Psi.Imaging.PixelFormat.BGR_24bpp;
+                case FFMpegInterop.PixelFormat.GRAY8:
+                    return Microsoft.Psi.Imaging.PixelFormat.Gray_8bpp;
                 case FFMpegInterop.PixelFormat.BGRA:
                     return Microsoft.Psi.Imaging.PixelFormat.BGRA_32bpp;
                 case FFMpegInterop.PixelFormat.Gray16LE:
@@ -39,6 +41,8 @@ namespace OpenSense.Components.FFMpeg {
                     return FFMpegInterop.PixelFormat.RGB24;
                 case Microsoft.Psi.Imaging.PixelFormat.BGR_24bpp:
                     return FFMpegInterop.PixelFormat.BGR24;
+                case Microsoft.Psi.Imaging.PixelFormat.Gray_8bpp:
+                    return FFMpegInterop.PixelFormat.GRAY8;
                 case Microsoft.Psi.Imaging.PixelFormat.BGRA_32bpp:
                     return FFMpegInterop.PixelFormat.BGRA;
                 case Microsoft.Psi.Imaging.PixelFormat.Gray_16bpp:
