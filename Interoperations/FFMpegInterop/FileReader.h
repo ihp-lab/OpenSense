@@ -53,7 +53,12 @@ namespace FFMpegInterop {
         /// </summary>
         property PixelFormat TargetFormat {
             PixelFormat get() { return _targetFormat; }
-            void set(PixelFormat value) { _targetFormat = value; }
+            void set(PixelFormat value) { 
+                if (!PixelFormatHelper::IsSupported(value)) {
+                    throw gcnew ArgumentException("Invalid pixel format");
+                }
+                _targetFormat = value; 
+            }
         }
 
         /// <summary>
@@ -61,7 +66,12 @@ namespace FFMpegInterop {
         /// </summary>
         property int TargetWidth {
             int get() { return _targetWidth; }
-            void set(int value) { _targetWidth = value; }
+            void set(int value) { 
+                if (value < 0) {
+                    throw gcnew ArgumentException("Target width must be non-negative");
+                }
+                _targetWidth = value; 
+            }
         }
 
         /// <summary>
@@ -69,7 +79,12 @@ namespace FFMpegInterop {
         /// </summary>
         property int TargetHeight {
             int get() { return _targetHeight; }
-            void set(int value) { _targetHeight = value; }
+            void set(int value) { 
+                if (value < 0) {
+                    throw gcnew ArgumentException("Target height must be non-negative");
+                }
+                _targetHeight = value; 
+            }
         }
         /// <summary>
         /// Gets or sets whether to only return key frames (I-frames)

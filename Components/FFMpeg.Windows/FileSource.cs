@@ -22,15 +22,14 @@ namespace OpenSense.Components.FFMpeg {
         #endregion
 
         #region Settings
-        public Microsoft.Psi.Imaging.PixelFormat TargetFormat {
-            get => _reader.TargetFormat.ToPsiPixelFormat();
+        public FFMpegInterop.PixelFormat TargetFormat {
+            get => _reader.TargetFormat;
             set {
                 var old = _reader.TargetFormat;
-                var @new = value.ToFFMpegPixelFormat();
-                if (old == @new) {
+                if (old == value) {
                     return;
                 }
-                _reader.TargetFormat = @new;
+                _reader.TargetFormat = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TargetFormat)));
             }
         }
@@ -99,10 +98,10 @@ namespace OpenSense.Components.FFMpeg {
             startTime = args.StartOriginatingTime;
 
             /* Validate pixel format compatibility at runtime */
-            if (TargetFormat != Microsoft.Psi.Imaging.PixelFormat.Undefined) {
-                var ffmpegFormat = TargetFormat.ToFFMpegPixelFormat();
-                if (ffmpegFormat == FFMpegInterop.PixelFormat.None) {
-                    throw new InvalidOperationException($"Pixel format {TargetFormat} is not supported by FFMpeg interop.");
+            if (TargetFormat != FFMpegInterop.PixelFormat.None && ImageOut.HasSubscribers) {
+                var psiFormat = TargetFormat.ToPsiPixelFormat();
+                if (psiFormat == Microsoft.Psi.Imaging.PixelFormat.Undefined) {
+                    throw new InvalidOperationException($"Pixel format {TargetFormat} is not supported by \\psi.");
                 }
             }
         }

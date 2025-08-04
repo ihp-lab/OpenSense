@@ -1,7 +1,7 @@
 ﻿using System;
+using FFMpegInterop;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
-using Microsoft.Psi.Imaging;
 
 namespace OpenSense.Components.FFMpeg {
     [Serializable]
@@ -17,7 +17,7 @@ namespace OpenSense.Components.FFMpeg {
             set => SetProperty(ref filename, value);
         }
 
-        private PixelFormat targetFormat = PixelFormat.Undefined;
+        private PixelFormat targetFormat = PixelFormat.None;
 
         public PixelFormat TargetFormat {
             get => targetFormat;

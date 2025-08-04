@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:OpenSense.WPF.Components.FFMpeg"
     xmlns:util="clr-namespace:OpenSense.WPF.Components.Utilities;assembly=OpenSense.WPF.Components.Contracts"
+    xmlns:interop="clr-namespace:FFMpegInterop;assembly=FFMpegInterop"
     xmlns:comp="clr-namespace:OpenSense.Components.FFMpeg;assembly=OpenSense.Components.FFMpeg.Windows"
     mc:Ignorable="d"
     d:DesignHeight="450"
@@ -22,6 +23,8 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
+            <RowDefinition
+                Height="auto" />
             <RowDefinition
                 Height="auto" />
             <RowDefinition
@@ -53,8 +56,7 @@
 
             <TextBox
                 Grid.Column="0"
-                Text="{Binding Path=Filename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                ToolTip="Path to the output MP4 video file. Click 'Save' button to browse and select location." />
+                Text="{Binding Path=Filename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
             <Button
                 Grid.Column="1"
@@ -73,48 +75,61 @@
         <CheckBox
             Grid.Row="1"
             Grid.Column="1"
-            IsChecked="{Binding TimestampFilename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            IsChecked="{Binding TimestampFilename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+            ToolTip="Append a timestamp suffix to the base filename to preserve the originating timestamp of the first frame." />
 
         <TextBlock
             Grid.Row="2"
             Grid.Column="0">
+            Target Format
+        </TextBlock>
+        <ComboBox
+            Grid.Row="2"
+            Grid.Column="1"
+            SelectedItem="{Binding TargetFormat}"
+            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type interop:PixelFormat}}, Mode=OneTime}"
+            ToolTip="Select the encoding pixel format. Not all formats are supported by all codecs. Set to None to use the first frame's pixel format." />
+
+        <TextBlock
+            Grid.Row="3"
+            Grid.Column="0">
             Target Width
         </TextBlock>
         <TextBox
-            Grid.Row="2"
+            Grid.Row="3"
             Grid.Column="1"
             Text="{Binding TargetWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             ToolTip="Target video width in pixels. Set to 0 to calculate width based on first frame's aspect ratio and target height. If both are 0, uses first frame's original width." />
 
         <TextBlock
-            Grid.Row="3"
+            Grid.Row="4"
             Grid.Column="0">
             Target Height
         </TextBlock>
         <TextBox
-            Grid.Row="3"
+            Grid.Row="4"
             Grid.Column="1"
             Text="{Binding TargetHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             ToolTip="Target video height in pixels. Set to 0 to calculate height based on first frame's aspect ratio and target width. If both are 0, uses first frame's original height." />
 
         <TextBlock
-            Grid.Row="4"
+            Grid.Row="5"
             Grid.Column="0">
             GOP Size
         </TextBlock>
         <TextBox
-            Grid.Row="4"
+            Grid.Row="5"
             Grid.Column="1"
             Text="{Binding GopSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             ToolTip="Group of Pictures size. Set to 0 for intra-only encoding (every frame is a keyframe). Higher values reduce file size but may affect seek performance." />
 
         <TextBlock
-            Grid.Row="5"
+            Grid.Row="6"
             Grid.Column="0">
             Max B-Frames (NOT SUPPORTED)
         </TextBlock>
         <TextBox
-            Grid.Row="5"
+            Grid.Row="6"
             Grid.Column="1"
             Text="{Binding MaxBFrames, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             ToolTip="Maximum number of B-frames between reference frames. Set to 0 for no B-frames (lower latency). Higher values improve compression but add encoding delay." />

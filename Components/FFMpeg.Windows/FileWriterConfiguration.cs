@@ -1,4 +1,5 @@
 ﻿using System;
+using FFMpegInterop;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 
@@ -21,6 +22,13 @@ namespace OpenSense.Components.FFMpeg {
         public bool TimestampFilename {
             get => timestampFilename;
             set => SetProperty(ref timestampFilename, value);
+        }
+
+        private PixelFormat targetFormat = PixelFormat.YUV420P;
+
+        public PixelFormat TargetFormat {
+            get => targetFormat;
+            set => SetProperty(ref targetFormat, value);
         }
 
         private int targetWidth = 0;
@@ -57,6 +65,7 @@ namespace OpenSense.Components.FFMpeg {
         protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new FileWriter(pipeline) {
             Filename = Filename,
             TimestampFilename = TimestampFilename,
+            TargetFormat = TargetFormat,
             TargetWidth = TargetWidth,
             TargetHeight = TargetHeight,
             GopSize = GopSize,

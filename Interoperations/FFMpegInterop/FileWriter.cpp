@@ -20,6 +20,7 @@ namespace FFMpegInterop {
         , _filename(nullptr)
         , _initialized(false)
         , _timeBase(new AVRational())
+        , _targetFormat(PixelFormat::YUV420P)
         , _targetWidth(0)
         , _targetHeight(0)
         , _gopSize(0)
@@ -44,13 +45,13 @@ namespace FFMpegInterop {
         
         // Initialize encoder on first frame
         if (!_initialized) {
-            InitializeEncoder(frame->Width, frame->Height);
+            InitializeEncoder(frame->Format, frame->Width, frame->Height);
         }
         
         EncodeAndWriteFrame(frame);
     }
 
-    void FileWriter::InitializeEncoder(int frameWidth, int frameHeight) {
+    void FileWriter::InitializeEncoder(PixelFormat frameFormat, int frameWidth, int frameHeight) {
         // Check if filename is set
         if (String::IsNullOrEmpty(_filename)) {
             throw gcnew InvalidOperationException("Filename must be set before writing frames");
@@ -99,7 +100,7 @@ namespace FFMpegInterop {
         // Set encoder dimensions
         _codecContext->width = encodingWidth;
         _codecContext->height = encodingHeight;
-        _codecContext->pix_fmt = AV_PIX_FMT_YUV420P; // Standard format for H.265
+        _codecContext->pix_fmt = static_cast<AVPixelFormat>(_targetFormat == PixelFormat::None ? frameFormat : _targetFormat);
         
         // Set encoding parameters for real-time encoding
         _codecContext->codec_id = codec->id;
@@ -136,7 +137,10 @@ namespace FFMpegInterop {
         // Open codec
         ret = avcodec_open2(_codecContext, nullptr, nullptr);
         if (ret < 0) {
-            throw gcnew CodecException("Could not open codec");
+            char errbuf[AV_ERROR_MAX_STRING_SIZE] = {0};
+            av_strerror(ret, errbuf, sizeof(errbuf));
+            String^ errorMessage = gcnew String(errbuf);
+            throw gcnew CodecException("Could not open codec: " + errorMessage);
         }
         
         // Copy codec parameters to stream
@@ -304,7 +308,10 @@ namespace FFMpegInterop {
             // Write packet
             auto writeRet = av_interleaved_write_frame(_formatContext, _packet);
             if (writeRet < 0 && throwOnError) {
-                throw gcnew FFMpegException(String::Format("Error writing packet to file. Error code: {0}", writeRet));
+                char errbuf[AV_ERROR_MAX_STRING_SIZE] = { 0 };
+                av_strerror(writeRet, errbuf, sizeof(errbuf));
+                String^ errorMessage = gcnew String(errbuf);
+                throw gcnew FFMpegException("Error writing packet to file: " + errorMessage);
             }
             
             av_packet_unref(_packet);

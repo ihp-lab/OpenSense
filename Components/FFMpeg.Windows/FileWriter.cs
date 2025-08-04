@@ -34,6 +34,11 @@ namespace OpenSense.Components.FFMpeg {
             set => SetProperty(ref timestampFilename, value);
         }
 
+        public FFMpegInterop.PixelFormat TargetFormat {
+            get => _writer.TargetFormat;
+            set => _writer.TargetFormat = value;
+        }
+
         public int TargetWidth {
             get => _writer.TargetWidth;
             set => _writer.TargetWidth = value;

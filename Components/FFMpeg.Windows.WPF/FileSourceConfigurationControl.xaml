@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:OpenSense.WPF.Components.FFMpeg"
     xmlns:util="clr-namespace:OpenSense.WPF.Components.Utilities;assembly=OpenSense.WPF.Components.Contracts"
-    xmlns:img="clr-namespace:Microsoft.Psi.Imaging;assembly=Microsoft.Psi.Imaging"
+    xmlns:interop="clr-namespace:FFMpegInterop;assembly=FFMpegInterop"
     xmlns:comp="clr-namespace:OpenSense.Components.FFMpeg;assembly=OpenSense.Components.FFMpeg.Windows"
     mc:Ignorable="d"
     d:DesignHeight="450"
@@ -38,7 +38,7 @@
         <TextBlock
             Grid.Row="0"
             Grid.Column="0">
-            File
+            Filename
         </TextBlock>
         <Grid
             Grid.Row="0"
@@ -52,7 +52,7 @@
 
             <TextBox
                 Grid.Column="0"
-                Text="{Binding Path=Filename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                Text="{Binding Path=Filename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
             <Button
                 Grid.Column="1"
@@ -65,13 +65,14 @@
         <TextBlock
             Grid.Row="1"
             Grid.Column="0">
-            Format
+            Target Format
         </TextBlock>
         <ComboBox
             Grid.Row="1"
             Grid.Column="1"
             SelectedItem="{Binding TargetFormat}"
-            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type img:PixelFormat}}, Mode=OneTime}" />
+            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type interop:PixelFormat}}, Mode=OneTime}"
+            ToolTip="Select the output pixel format. Set to None to skip frame conversion." />
 
         <TextBlock
             Grid.Row="2"
@@ -81,7 +82,8 @@
         <TextBox
             Grid.Row="2"
             Grid.Column="1"
-            Text="{Binding TargetWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            Text="{Binding TargetWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Set the target width in pixels for the output frames. Set to 0 to calculate width based on the frame's aspect ratio and target height. If both are 0, uses the frame's original width." />
 
         <TextBlock
             Grid.Row="3"
@@ -91,7 +93,8 @@
         <TextBox
             Grid.Row="3"
             Grid.Column="1"
-            Text="{Binding TargetHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            Text="{Binding TargetHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Set the target height in pixels for the output frames. Set to 0 to calculate height based on the frame's aspect ratio and target width. If both are 0, uses the frame's original height." />
 
         <TextBlock
             Grid.Row="4"
@@ -101,6 +104,7 @@
         <CheckBox
             Grid.Row="4"
             Grid.Column="1"
-            IsChecked="{Binding OnlyKeyFrames}" />
+            IsChecked="{Binding OnlyKeyFrames}"
+            ToolTip="When enabled, only key frames (I-frames) will be output." />
     </Grid>
 </UserControl>

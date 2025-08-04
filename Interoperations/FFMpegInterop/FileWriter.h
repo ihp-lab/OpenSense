@@ -33,6 +33,7 @@ namespace FFMpegInterop {
         bool _initialized;
         AVRational* _timeBase;
         String^ _filename;
+        PixelFormat _targetFormat;
         int _targetWidth;
         int _targetHeight;
         int _gopSize;
@@ -58,10 +59,34 @@ namespace FFMpegInterop {
                 return _filename;
             }
             void set(String^ value) {
+                if (value == _filename) {
+                    return;
+                }
                 if (_initialized) {
                     throw gcnew InvalidOperationException("Cannot modify filename after encoder initialization");
                 }
                 _filename = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the target pixel format for encoded frames
+        /// </summary>
+        property PixelFormat TargetFormat {
+            PixelFormat get() { 
+                return _targetFormat; 
+            }
+            void set(PixelFormat value) {
+                if (value == _targetFormat) {
+                    return;
+                }
+                if (!PixelFormatHelper::IsSupported(value)) {
+                    throw gcnew ArgumentException("Invalid pixel format");
+                }
+                if (_initialized) {
+                    throw gcnew InvalidOperationException("Cannot modify target format after encoder initialization");
+                }
+                _targetFormat = value; 
             }
         }
 
@@ -77,6 +102,9 @@ namespace FFMpegInterop {
                 return _targetWidth;
             }
             void set(int value) {
+                if (value == _targetWidth) {
+                    return;
+                }
                 if (value < 0) {
                     throw gcnew ArgumentException("Target width must be non-negative");
                 }
@@ -99,6 +127,9 @@ namespace FFMpegInterop {
                 return _targetHeight;
             }
             void set(int value) {
+                if (value == _targetHeight) {
+                    return;
+                }
                 if (value < 0) {
                     throw gcnew ArgumentException("Target height must be non-negative");
                 }
@@ -118,6 +149,9 @@ namespace FFMpegInterop {
                 return _gopSize;
             }
             void set(int value) {
+                if (value == _gopSize) {
+                    return;
+                }
                 if (value < 0) {
                     throw gcnew ArgumentException("GOP size must be non-negative");
                 }
@@ -138,6 +172,9 @@ namespace FFMpegInterop {
                 return _maxBFrames;
             }
             void set(int value) {
+                if (value == _maxBFrames) {
+                    return;
+                }
                 if (value < 0) {
                     throw gcnew ArgumentException("Max B-frames must be non-negative");
                 }
@@ -149,25 +186,38 @@ namespace FFMpegInterop {
             }
         }
 
+        property PixelFormat Format {
+            PixelFormat get() {
+                if (!_initialized || _disposed) {
+                    return PixelFormat::None;
+                }
+                return static_cast<PixelFormat>(_codecContext->pix_fmt);
+            }
+        }
+
         /// <summary>
         /// Gets the actual encoding width (determined after first frame)
-        /// Returns -1 if encoder is not initialized
+        /// Returns -1 if encoder is not initialized or disposed
         /// </summary>
         property int Width {
             int get() {
-                ThrowIfDisposed();
-                return _codecContext ? _codecContext->width : -1;
+                if (!_initialized || _disposed) {
+                    return -1;
+                }
+                return _codecContext->width;
             }
         }
 
         /// <summary>
         /// Gets the actual encoding height (determined after first frame)
-        /// Returns -1 if encoder is not initialized
+        /// Returns -1 if encoder is not initialized or disposed
         /// </summary>
         property int Height {
             int get() {
-                ThrowIfDisposed();
-                return _codecContext ? _codecContext->height : -1;
+                if (!_initialized || _disposed) {
+                    return -1;
+                }
+                return _codecContext->height;
             }
         }
 
@@ -184,7 +234,7 @@ namespace FFMpegInterop {
         /// </summary>
         /// <param name="frameWidth">Width of the first frame</param>
         /// <param name="frameHeight">Height of the first frame</param>
-        void InitializeEncoder(int frameWidth, int frameHeight);
+        void InitializeEncoder(PixelFormat frameFormat, int frameWidth, int frameHeight);
         
         /// <summary>
         /// Calculate output dimensions maintaining aspect ratio
