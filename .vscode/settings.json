@@ -7,6 +7,18 @@
         "thread": "cpp",
         "vector": "cpp",
         "xiosbase": "cpp",
-        "xloctime": "cpp"
+        "xloctime": "cpp",
+        "algorithm": "cpp",
+        "complex": "cpp",
+        "functional": "cpp",
+        "optional": "cpp",
+        "system_error": "cpp",
+        "type_traits": "cpp",
+        "xlocmon": "cpp",
+        "xtr1common": "cpp",
+        "xutility": "cpp",
+        "*.ipp": "cpp",
+        "tuple": "cpp",
+        "condition_variable": "cpp"
     }
 }

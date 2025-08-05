@@ -33,10 +33,19 @@
     <ClInclude Include="FFMpegExceptions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FrameInfo.h">
+    <ClInclude Include="Frame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BufferSizeException.h">
+    <ClInclude Include="PixelFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CodecOptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NvencHevcOptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NvencHevcEnums.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -59,10 +68,13 @@
     <ClCompile Include="FFMpegExceptions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FrameInfo.cpp">
+    <ClCompile Include="Frame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BufferSizeException.cpp">
+    <ClCompile Include="CodecOptions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NvencHevcOptions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

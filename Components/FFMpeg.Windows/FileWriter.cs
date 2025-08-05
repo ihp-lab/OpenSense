@@ -24,7 +24,13 @@ namespace OpenSense.Components.FFMpeg {
         #region Settings
         public string Filename {
             get => _writer.Filename;
-            set => _writer.Filename = value;
+            set {
+                if (_writer.Filename == value) {
+                    return;
+                }
+                _writer.Filename = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Filename)));
+            }
         }
 
         private bool timestampFilename;
@@ -36,27 +42,57 @@ namespace OpenSense.Components.FFMpeg {
 
         public FFMpegInterop.PixelFormat TargetFormat {
             get => _writer.TargetFormat;
-            set => _writer.TargetFormat = value;
+            set {
+                if (_writer.TargetFormat == value) {
+                    return;
+                }
+                _writer.TargetFormat = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TargetFormat)));
+            }
         }
 
         public int TargetWidth {
             get => _writer.TargetWidth;
-            set => _writer.TargetWidth = value;
+            set {
+                if (_writer.TargetWidth == value) {
+                    return;
+                }
+                _writer.TargetWidth = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TargetWidth)));
+            }
         }
 
         public int TargetHeight {
             get => _writer.TargetHeight;
-            set => _writer.TargetHeight = value;
+            set {
+                if (_writer.TargetHeight == value) {
+                    return;
+                }
+                _writer.TargetHeight = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TargetHeight)));
+            }
         }
 
         public int GopSize {
             get => _writer.GopSize;
-            set => _writer.GopSize = value;
+            set {
+                if (_writer.GopSize == value) {
+                    return;
+                }
+                _writer.GopSize = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(GopSize)));
+            }
         }
 
         public int MaxBFrames {
             get => _writer.MaxBFrames;
-            set => _writer.MaxBFrames = value;
+            set {
+                if (_writer.MaxBFrames == value) {
+                    return;
+                }
+                _writer.MaxBFrames = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MaxBFrames)));
+            }
         }
 
         private ILogger? logger;
