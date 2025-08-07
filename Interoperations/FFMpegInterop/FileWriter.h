@@ -17,8 +17,7 @@ using namespace System::Diagnostics::CodeAnalysis;
 
 namespace FFMpegInterop {
     /// <summary>
-    /// FileWriter provides video encoding and writing functionality using FFmpeg NVENC HEVC encoder
-    /// Supports variable frame rate MP4 output with real-time encoding
+    /// FileWriter provides video encoding and writing to a mp4 file.
     /// </summary>
     public ref class FileWriter : IDisposable {
     private:
@@ -33,13 +32,13 @@ namespace FFMpegInterop {
         bool _initialized;
         AVRational* _timeBase;
         String^ _filename;
+        String^ _encoder;
         PixelFormat _targetFormat;
         int _targetWidth;
         int _targetHeight;
-        int _gopSize;
-        int _maxBFrames;
+        String^ _additionalArguments;
         long long _lastPts; // Track last PTS for validation
-        
+
         // Previous frame parameters for SwsContext reuse
         int _prevWidth;
         int _prevHeight;
@@ -52,13 +51,16 @@ namespace FFMpegInterop {
         FileWriter();
 
         /// <summary>
-        /// Gets or sets the output filename for the video file
+        /// Gets or sets the output filename for the video file.
+        /// Must be set before initializing the encoder.
         /// </summary>
+        [NotNull]
         property String^ Filename {
             String^ get() {
                 return _filename;
             }
             void set(String^ value) {
+                ArgumentNullException::ThrowIfNull(value, "Filename");
                 if (value == _filename) {
                     return;
                 }
@@ -70,18 +72,39 @@ namespace FFMpegInterop {
         }
 
         /// <summary>
-        /// Gets or sets the target pixel format for encoded frames
+        /// Gets or sets the encoder to use for video encoding
+        /// Default is "hevc_nvenc".
+        /// </summary>
+        [NotNull]
+        property String^ Encoder {
+            String^ get() {
+                return _encoder;
+            }
+            void set(String^ value) {
+                ArgumentNullException::ThrowIfNull(value, "Encoder");
+                if (value == _encoder) {
+                    return;
+                }
+                if (_initialized) {
+                    throw gcnew InvalidOperationException("Cannot modify encoder after encoder initialization");
+                }
+                _encoder = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the target pixel format for encoded frames.
         /// </summary>
         property PixelFormat TargetFormat {
             PixelFormat get() { 
                 return _targetFormat; 
             }
             void set(PixelFormat value) {
+                if (!PixelFormatHelper::IsDefined(value)) {
+                    throw gcnew ArgumentException("Invalid pixel format");
+                }
                 if (value == _targetFormat) {
                     return;
-                }
-                if (!PixelFormatHelper::IsSupported(value)) {
-                    throw gcnew ArgumentException("Invalid pixel format");
                 }
                 if (_initialized) {
                     throw gcnew InvalidOperationException("Cannot modify target format after encoder initialization");
@@ -141,48 +164,23 @@ namespace FFMpegInterop {
         }
 
         /// <summary>
-        /// Gets or sets the GOP size (Group of Pictures) for video encoding
-        /// Default is 0 for intra-only encoding
+        /// Gets or sets additional arguments for the encoder
+        /// Default is empty string.
         /// </summary>
-        property int GopSize {
-            int get() {
-                return _gopSize;
+        [NotNull]
+        property String^ AdditionalArguments {
+            String^ get() {
+                return _additionalArguments;
             }
-            void set(int value) {
-                if (value == _gopSize) {
+            void set(String^ value) {
+                ArgumentNullException::ThrowIfNull(value, "AdditionalArguments");
+                if (value == _additionalArguments) {
                     return;
                 }
-                if (value < 0) {
-                    throw gcnew ArgumentException("GOP size must be non-negative");
-                }
                 if (_initialized) {
-                    ThrowIfDisposed();
-                    _codecContext->gop_size = value;
+                    throw gcnew InvalidOperationException("Cannot modify additional arguments after encoder initialization");
                 }
-                _gopSize = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the maximum number of B-frames between non-B-frames
-        /// Default is 0. Note: The output will be delayed by MaxBFrames+1 relative to the input
-        /// </summary>
-        property int MaxBFrames {
-            int get() {
-                return _maxBFrames;
-            }
-            void set(int value) {
-                if (value == _maxBFrames) {
-                    return;
-                }
-                if (value < 0) {
-                    throw gcnew ArgumentException("Max B-frames must be non-negative");
-                }
-                if (_initialized) {
-                    ThrowIfDisposed();
-                    _codecContext->max_b_frames = value;
-                }
-                _maxBFrames = value;
+                _additionalArguments = value;
             }
         }
 
@@ -235,17 +233,6 @@ namespace FFMpegInterop {
         /// <param name="frameWidth">Width of the first frame</param>
         /// <param name="frameHeight">Height of the first frame</param>
         void InitializeEncoder(PixelFormat frameFormat, int frameWidth, int frameHeight);
-        
-        /// <summary>
-        /// Calculate output dimensions maintaining aspect ratio
-        /// </summary>
-        /// <param name="sourceWidth">Source frame width</param>
-        /// <param name="sourceHeight">Source frame height</param>
-        /// <param name="targetWidth">Target width</param>
-        /// <param name="targetHeight">Target height</param>
-        /// <returns>A tuple containing scaled width and height</returns>
-        [returnvalue: TupleElementNames(gcnew array<String^>{"Width", "Height"})]
-        static ValueTuple<int, int> CalculateScaledDimensions(int sourceWidth, int sourceHeight, int targetWidth, int targetHeight);
 
         /// <summary>
         /// Encode and write frame to output
@@ -258,6 +245,25 @@ namespace FFMpegInterop {
         /// </summary>
         /// <param name="throwOnError">Whether to throw exceptions on errors (false during cleanup)</param>
         void ReceiveAndWritePackets(bool throwOnError);
+
+        /// <summary>
+        /// Calculate output dimensions maintaining aspect ratio
+        /// </summary>
+        /// <param name="sourceWidth">Source frame width</param>
+        /// <param name="sourceHeight">Source frame height</param>
+        /// <param name="targetWidth">Target width</param>
+        /// <param name="targetHeight">Target height</param>
+        /// <returns>A tuple containing scaled width and height</returns>
+        [returnvalue:TupleElementNames(gcnew array<String^>{"Width", "Height"})]
+        static ValueTuple<int, int> CalculateScaledDimensions(int sourceWidth, int sourceHeight, int targetWidth, int targetHeight);
+
+        /// <summary>
+        /// Parse additional arguments string into AVDictionary
+        /// Supports FFmpeg command line format and dictionary format.
+        /// </summary>
+        /// <param name="arguments">String containing FFmpeg-style arguments</param>
+        /// <returns>Pointer to AVDictionary or nullptr if empty/invalid</returns>
+        static AVDictionary* ParseAdditionalArguments(String^ arguments);
 
 #pragma region IDisposable
     private:

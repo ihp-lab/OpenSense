@@ -20,11 +20,11 @@ namespace FFMpegInterop {
         , _filename(nullptr)
         , _initialized(false)
         , _timeBase(new AVRational())
-        , _targetFormat(PixelFormat::YUV420P)
+        , _encoder(String::Empty)
+        , _targetFormat(PixelFormat::None)
         , _targetWidth(0)
         , _targetHeight(0)
-        , _gopSize(0)
-        , _maxBFrames(0)
+        , _additionalArguments(String::Empty)
         , _lastPts(AV_NOPTS_VALUE)
         , _prevWidth(-1)
         , _prevHeight(-1)
@@ -39,7 +39,7 @@ namespace FFMpegInterop {
     void FileWriter::WriteFrame([NotNull] Frame^ frame) {
         ThrowIfDisposed();
         
-        if (frame == nullptr) {
+        if (!frame) {
             throw gcnew ArgumentNullException("frame");
         }
         
@@ -82,10 +82,13 @@ namespace FFMpegInterop {
         }
         // If both dimensions are non-zero, use them as-is (encodingWidth and encodingHeight are already set)
         
-        // Find NVENC HEVC encoder
-        auto codec = avcodec_find_encoder_by_name("hevc_nvenc");
+        // Find specified encoder
+        auto encoder = (String^)_encoder;
+        auto encoderName = msclr::interop::marshal_as<std::string>(encoder);
+        auto codec = avcodec_find_encoder_by_name(encoderName.c_str());
         if (!codec) {
-            throw gcnew CodecException("NVENC HEVC encoder not found");
+            String^ errorMessage = "Encoder '" + _encoder + "' not found";
+            throw gcnew CodecException(errorMessage);
         }
         
         // Allocate codec context
@@ -101,18 +104,6 @@ namespace FFMpegInterop {
         _codecContext->width = encodingWidth;
         _codecContext->height = encodingHeight;
         _codecContext->pix_fmt = static_cast<AVPixelFormat>(_targetFormat == PixelFormat::None ? frameFormat : _targetFormat);
-        
-        // Set encoding parameters for real-time encoding
-        _codecContext->codec_id = codec->id;
-        _codecContext->codec_type = AVMEDIA_TYPE_VIDEO;
-        _codecContext->gop_size = _gopSize; // the number of pictures in a group of pictures, or 0 for intra_only
-        _codecContext->max_b_frames = _maxBFrames; // maximum number of B-frames between non-B-frames Note: The output will be delayed by max_b_frames+1 relative to the input.
-        
-        // Set NVENC lossless tuning
-        auto ret = av_opt_set(_codecContext->priv_data, "preset", "lossless", 0);
-        if (ret < 0) {
-            throw gcnew CodecException("Failed to set NVENC preset");
-        }
 
         // Convert filename to std::string
         auto filename = (String^)_filename;
@@ -120,7 +111,8 @@ namespace FFMpegInterop {
 
         // Allocate output format context for MP4
         auto ctx = (AVFormatContext*)nullptr;
-        if (avformat_alloc_output_context2(&ctx, nullptr, nullptr, fname.c_str()) < 0) {
+        auto ret = avformat_alloc_output_context2(&ctx, nullptr, nullptr, fname.c_str());
+        if (ret < 0) {
             throw gcnew FFMpegException("Could not create output context for MP4 format");
         }
         _formatContext = ctx;
@@ -134,13 +126,23 @@ namespace FFMpegInterop {
         _videoStream->id = _formatContext->nb_streams - 1;
         _videoStream->time_base = *_timeBase;
         
-        // Open codec
-        ret = avcodec_open2(_codecContext, nullptr, nullptr);
+        // Open codec with additional options
+        AVDictionary* additionalOptions = ParseAdditionalArguments(_additionalArguments);
+        ret = avcodec_open2(_codecContext, nullptr, &additionalOptions);
         if (ret < 0) {
             char errbuf[AV_ERROR_MAX_STRING_SIZE] = {0};
             av_strerror(ret, errbuf, sizeof(errbuf));
             String^ errorMessage = gcnew String(errbuf);
+            // Clean up dictionary before throwing
+            if (additionalOptions) {
+                av_dict_free(&additionalOptions);
+            }
             throw gcnew CodecException("Could not open codec: " + errorMessage);
+        }
+        
+        // Clean up the dictionary after successful codec opening
+        if (additionalOptions) {
+            av_dict_free(&additionalOptions);
         }
         
         // Copy codec parameters to stream
@@ -148,7 +150,7 @@ namespace FFMpegInterop {
         if (ret < 0) {
             throw gcnew CodecException("Could not copy codec parameters");
         }
-        
+
         // Allocate converted frame (only used when format/size conversion is needed)
         _convertedFrame = av_frame_alloc();
         if (!_convertedFrame) {
@@ -182,6 +184,14 @@ namespace FFMpegInterop {
     }
 
     void FileWriter::EncodeAndWriteFrame([NotNull] Frame^ frame) {
+        // Check if frame timebase matches encoder timebase
+        auto frameTimeBase = frame->InternalAVFrame->time_base;
+        auto encoderTimeBase = _codecContext->time_base;
+        if (frameTimeBase.num != encoderTimeBase.num || frameTimeBase.den != encoderTimeBase.den) {
+            throw gcnew ArgumentException(
+                String::Format("Frame timebase ({0}/{1}) does not match encoder timebase ({2}/{3}).", frameTimeBase.num, frameTimeBase.den, encoderTimeBase.num, encoderTimeBase.den), "frame");
+        }
+
         auto frameWidth = frame->Width;
         auto frameHeight = frame->Height;
         auto frameFormat = static_cast<AVPixelFormat>(frame->Format);
@@ -197,7 +207,7 @@ namespace FFMpegInterop {
                 sws_freeContext(_swsCtx);
                 _swsCtx = nullptr;
             }
-            
+        
             _swsCtx = sws_getContext(
                 frameWidth, frameHeight, frameFormat,
                 scaledWidth, scaledHeight, _codecContext->pix_fmt,
@@ -249,14 +259,15 @@ namespace FFMpegInterop {
         if (_lastPts != AV_NOPTS_VALUE && inputPts <= _lastPts) {
             throw gcnew ArgumentException(String::Format("Frame PTS ({0}) must be greater than previous frame PTS ({1}) for variable frame rate encoding.", inputPts, _lastPts), "frame");
         }
-        
-        frameToEncode->pts = inputPts;
+
         _lastPts = inputPts;
         
         // Encode frame
         auto ret = avcodec_send_frame(_codecContext, frameToEncode);
         if (ret < 0) {
-            throw gcnew CodecException("Error sending frame to encoder");
+            char error[AV_ERROR_MAX_STRING_SIZE];
+            av_make_error_string(error, AV_ERROR_MAX_STRING_SIZE, ret);
+            throw gcnew CodecException(String::Format("Error sending frame to encoder: {0}", gcnew String(error)));
         }
         
         // Get encoded packets and write them
@@ -286,6 +297,97 @@ namespace FFMpegInterop {
         }
         
         return ValueTuple<int, int>(outputWidth, outputHeight);
+    }
+
+    AVDictionary* FileWriter::ParseAdditionalArguments(String^ arguments) {
+        if (String::IsNullOrWhiteSpace(arguments)) {
+            return nullptr;
+        }
+
+        AVDictionary* dict = nullptr;
+        
+        try {
+            // Convert managed string to std::string
+            auto argsStr = msclr::interop::marshal_as<std::string>(arguments);
+            
+            // Trim leading/trailing whitespace
+            auto start = argsStr.find_first_not_of(" \t");
+            if (start == std::string::npos) {
+                return nullptr;
+            }
+            auto end = argsStr.find_last_not_of(" \t");
+            argsStr = argsStr.substr(start, end - start + 1);
+            
+            // Check if it's FFmpeg command line format (starts with -)
+            if (argsStr[0] == '-') {
+                // Parse FFmpeg command line format: "-preset slow -rc vbr_hq -spatial_aq 1"
+                std::string::size_type pos = 0;
+                while (pos < argsStr.length()) {
+                    // Find next argument starting with -
+                    auto argStart = argsStr.find('-', pos);
+                    if (argStart == std::string::npos) break;
+                    
+                    // Skip the - character
+                    argStart++;
+                    
+                    // Find the end of parameter name (next space)
+                    auto nameEnd = argsStr.find(' ', argStart);
+                    if (nameEnd == std::string::npos) break;
+                    
+                    // Extract parameter name
+                    auto paramName = argsStr.substr(argStart, nameEnd - argStart);
+                    
+                    // Find the start of value (skip spaces)
+                    auto valueStart = argsStr.find_first_not_of(' ', nameEnd);
+                    if (valueStart == std::string::npos) break;
+                    
+                    // Find the end of value (next - or end of string)
+                    auto valueEnd = argsStr.find(" -", valueStart);
+                    if (valueEnd == std::string::npos) {
+                        valueEnd = argsStr.length();
+                    }
+                    
+                    // Extract parameter value and trim
+                    auto paramValue = argsStr.substr(valueStart, valueEnd - valueStart);
+                    auto valueEndTrim = paramValue.find_last_not_of(' ');
+                    if (valueEndTrim != std::string::npos) {
+                        paramValue = paramValue.substr(0, valueEndTrim + 1);
+                    }
+                    
+                    // Add to dictionary
+                    av_dict_set(&dict, paramName.c_str(), paramValue.c_str(), 0);
+                    
+                    pos = valueEnd;
+                }
+            } else {
+                // Try dictionary format first: "preset=slow rc=vbr_hq spatial_aq=1"
+                auto ret = av_dict_parse_string(&dict, argsStr.c_str(), "=", " ", 0);
+                if (ret < 0) {
+                    // If space-separated format fails, try colon-separated format
+                    if (dict) {
+                        av_dict_free(&dict);
+                        dict = nullptr;
+                    }
+                    ret = av_dict_parse_string(&dict, argsStr.c_str(), "=", ":", 0);
+                    if (ret < 0) {
+                        // If both formats fail, clean up and return nullptr
+                        if (dict) {
+                            av_dict_free(&dict);
+                        }
+                        return nullptr;
+                    }
+                }
+            }
+        }
+        catch (...) {
+            // Clean up on any exception
+            if (dict) {
+                av_dict_free(&dict);
+            }
+            return nullptr;
+        }
+
+        return dict;
     }
 
     void FileWriter::ReceiveAndWritePackets(bool throwOnError) {
@@ -346,18 +448,6 @@ namespace FFMpegInterop {
         // Write file trailer
         if (_formatContext && _initialized) {
             av_write_trailer(_formatContext);
-        }
-        
-        // Clean up resources
-        if (_convertedFrame) {
-            auto tmp = _convertedFrame;
-            av_frame_free(&tmp);
-            _convertedFrame = nullptr;
-        }
-        
-        if (_swsCtx) {
-            sws_freeContext(_swsCtx);
-            _swsCtx = nullptr;
         }
         
         if (_packet) {

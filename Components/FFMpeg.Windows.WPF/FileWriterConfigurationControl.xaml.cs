@@ -1,7 +1,9 @@
 ﻿#nullable enable
 
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 using OpenSense.Components.FFMpeg;
 
 namespace OpenSense.WPF.Components.FFMpeg {
@@ -24,6 +26,18 @@ namespace OpenSense.WPF.Components.FFMpeg {
             };
             if (saveFileDialog.ShowDialog() == true) {
                 Configuration.Filename = saveFileDialog.FileName;
+            }
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e) {
+            try {
+                Process.Start(new ProcessStartInfo {
+                    FileName = e.Uri.AbsoluteUri,
+                    UseShellExecute = true
+                });
+                e.Handled = true;
+            } catch {
+                // Silently ignore if unable to open browser
             }
         }
     }

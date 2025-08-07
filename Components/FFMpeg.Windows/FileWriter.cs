@@ -40,6 +40,17 @@ namespace OpenSense.Components.FFMpeg {
             set => SetProperty(ref timestampFilename, value);
         }
 
+        public string Encoder {
+            get => _writer.Encoder;
+            set {
+                if (_writer.Encoder == value) {
+                    return;
+                }
+                _writer.Encoder = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Encoder)));
+            }
+        }
+
         public FFMpegInterop.PixelFormat TargetFormat {
             get => _writer.TargetFormat;
             set {
@@ -73,25 +84,14 @@ namespace OpenSense.Components.FFMpeg {
             }
         }
 
-        public int GopSize {
-            get => _writer.GopSize;
+        public string AdditionalArguments {
+            get => _writer.AdditionalArguments;
             set {
-                if (_writer.GopSize == value) {
+                if (_writer.AdditionalArguments == value) {
                     return;
                 }
-                _writer.GopSize = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(GopSize)));
-            }
-        }
-
-        public int MaxBFrames {
-            get => _writer.MaxBFrames;
-            set {
-                if (_writer.MaxBFrames == value) {
-                    return;
-                }
-                _writer.MaxBFrames = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MaxBFrames)));
+                _writer.AdditionalArguments = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AdditionalArguments)));
             }
         }
 

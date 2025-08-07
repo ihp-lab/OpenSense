@@ -7,7 +7,7 @@ namespace OpenSense.Components.FFMpeg {
 
         public override string Name => "FFMpeg MP4 File Writer";
 
-        public override string Description => "[Experimental] Write images to a mp4 file using FFMpeg and NVENC. The used FFMpeg is a regular and LGPL version and is dynamically linked.";
+        public override string Description => "[Experimental] Write images to a mp4 file using FFMpeg. The used FFMpeg is a regular and LGPL version and is dynamically linked.";
 
         protected override Type ComponentType => typeof(FileWriter);
 

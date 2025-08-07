@@ -26,12 +26,23 @@ namespace FFMpegInterop {
     public ref class PixelFormatHelper abstract sealed {
     public:
         /// <summary>
+        /// Check if the pixel format is defined
+        /// </summary>
+        /// <param name="format">The pixel format to check</param>
+        /// <returns>True if the format is defined, false otherwise</returns>
+        static bool IsDefined(PixelFormat format) {
+            return Enum::IsDefined(PixelFormat::typeid, format);
+        }
+
+        /// <summary>
         /// Check if the pixel format is supported by the FFmpeg interop layer
         /// </summary>
         /// <param name="format">The pixel format to check</param>
         /// <returns>True if the format is supported, false otherwise</returns>
         static bool IsSupported(PixelFormat format) {
-            return format != PixelFormat::None && Enum::IsDefined(PixelFormat::typeid, format);
+            return format != PixelFormat::None && IsDefined(format);
         }
+
+        
     };
 } 

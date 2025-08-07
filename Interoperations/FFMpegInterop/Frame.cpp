@@ -107,7 +107,11 @@ namespace FFMpegInterop {
             _frame = nullptr;
             throw gcnew FFMpegException("Failed to reference frame data during construction");
         }
-
+        
+        // Set timebase to use ticks (10,000,000 ticks per second)
+        _frame->time_base.num = 1;
+        _frame->time_base.den = 10000000;
+        
         // Set the new pts value while keeping all other properties
         _frame->pts = pts;
     }

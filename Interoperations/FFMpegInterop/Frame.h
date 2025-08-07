@@ -47,12 +47,12 @@ namespace FFMpegInterop {
         Frame(long long pts, int width, int height, PixelFormat format, [NotNull] IntPtr data, int length);
 
         /// <summary>
-        /// Constructor for creating a new frame that shares data buffers with an existing frame but has a different PTS
-        /// This creates a shallow copy where the new frame references the same pixel data as the source frame
-        /// but can have different timing information. Uses FFmpeg's reference counting for safe memory management.
+        /// Constructor for creating a new frame by referencing data from an existing frame
+        /// Creates a new AVFrame that shares data buffers with the source frame
+        /// Uses ticks (10,000,000 ticks per second) as the time base and sets the specified pts value
         /// </summary>
-        /// <param name="pts">The presentation timestamp for the new frame</param>
-        /// <param name="frame">The source frame to share data buffers with</param>
+        /// <param name="pts">The presentation timestamp in ticks</param>
+        /// <param name="frame">The source frame to reference data from</param>
         Frame(long long pts, [NotNull] Frame^ frame);
 
         /// <summary>
