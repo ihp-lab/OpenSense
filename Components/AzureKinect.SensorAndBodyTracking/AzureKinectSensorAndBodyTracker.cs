@@ -541,89 +541,91 @@ namespace OpenSense.Components.AzureKinect.SensorAndBodyTracking {
                 var colorExtrinsics = rawCalibration.ColorCameraCalibration.Extrinsics;
                 var colorIntrinsics = rawCalibration.ColorCameraCalibration.Intrinsics;
                 var depthIntrinsics = rawCalibration.DepthCameraCalibration.Intrinsics;
-                if (colorIntrinsics.Type == CalibrationModelType.Rational6KT || depthIntrinsics.Type == CalibrationModelType.Rational6KT) {
-                    throw new InvalidOperationException("Calibration output not permitted for deprecated internal Azure Kinect cameras. Only Brown_Conrady calibration supported.");
-                }
-                if (colorIntrinsics.Type != CalibrationModelType.BrownConrady || depthIntrinsics.Type != CalibrationModelType.BrownConrady) {
-                    throw new InvalidOperationException("Calibration output only supported for Brown_Conrady model.");
-                }
-                var colorCameraMatrix = Matrix<double>.Build.Dense(3, 3);
-                colorCameraMatrix[0, 0] = colorIntrinsics.Parameters[2];
-                colorCameraMatrix[1, 1] = colorIntrinsics.Parameters[3];
-                colorCameraMatrix[0, 2] = colorIntrinsics.Parameters[0];
-                colorCameraMatrix[1, 2] = colorIntrinsics.Parameters[1];
-                colorCameraMatrix[2, 2] = 1;
-                var depthCameraMatrix = Matrix<double>.Build.Dense(3, 3);
-                depthCameraMatrix[0, 0] = depthIntrinsics.Parameters[2];
-                depthCameraMatrix[1, 1] = depthIntrinsics.Parameters[3];
-                depthCameraMatrix[0, 2] = depthIntrinsics.Parameters[0];
-                depthCameraMatrix[1, 2] = depthIntrinsics.Parameters[1];
-                depthCameraMatrix[2, 2] = 1;
-                var depthToColorMatrix = Matrix<double>.Build.Dense(4, 4);
-                for (var i = 0; i < 3; i++) {
-                    for (var j = 0; j < 3; j++) {
-                        // The AzureKinect SDK assumes that vectors are row vectors, while the MathNet SDK assumes column vectors, so we need to flip them here.
-                        depthToColorMatrix[i, j] = colorExtrinsics.Rotation[(j * 3) + i];
+                if (colorIntrinsics.Type != CalibrationModelType.Unknown && depthIntrinsics.Type != CalibrationModelType.Unknown) {//Only available when both color and depth are enabled
+                    if (colorIntrinsics.Type == CalibrationModelType.Rational6KT || depthIntrinsics.Type == CalibrationModelType.Rational6KT) {
+                        throw new InvalidOperationException("Calibration output not permitted for deprecated internal Azure Kinect cameras. Only Brown_Conrady calibration supported.");
                     }
+                    if (colorIntrinsics.Type != CalibrationModelType.BrownConrady || depthIntrinsics.Type != CalibrationModelType.BrownConrady) {
+                        throw new InvalidOperationException("Calibration output only supported for Brown_Conrady model.");
+                    }
+                    var colorCameraMatrix = Matrix<double>.Build.Dense(3, 3);
+                    colorCameraMatrix[0, 0] = colorIntrinsics.Parameters[2];
+                    colorCameraMatrix[1, 1] = colorIntrinsics.Parameters[3];
+                    colorCameraMatrix[0, 2] = colorIntrinsics.Parameters[0];
+                    colorCameraMatrix[1, 2] = colorIntrinsics.Parameters[1];
+                    colorCameraMatrix[2, 2] = 1;
+                    var depthCameraMatrix = Matrix<double>.Build.Dense(3, 3);
+                    depthCameraMatrix[0, 0] = depthIntrinsics.Parameters[2];
+                    depthCameraMatrix[1, 1] = depthIntrinsics.Parameters[3];
+                    depthCameraMatrix[0, 2] = depthIntrinsics.Parameters[0];
+                    depthCameraMatrix[1, 2] = depthIntrinsics.Parameters[1];
+                    depthCameraMatrix[2, 2] = 1;
+                    var depthToColorMatrix = Matrix<double>.Build.Dense(4, 4);
+                    for (var i = 0; i < 3; i++) {
+                        for (var j = 0; j < 3; j++) {
+                            // The AzureKinect SDK assumes that vectors are row vectors, while the MathNet SDK assumes column vectors, so we need to flip them here.
+                            depthToColorMatrix[i, j] = colorExtrinsics.Rotation[(j * 3) + i];
+                        }
+                    }
+
+                    depthToColorMatrix[3, 0] = colorExtrinsics.Translation[0];
+                    depthToColorMatrix[3, 1] = colorExtrinsics.Translation[1];
+                    depthToColorMatrix[3, 2] = colorExtrinsics.Translation[2];
+                    depthToColorMatrix[3, 3] = 1.0;
+                    var metersToMillimeters = Matrix<double>.Build.Dense(4, 4);
+                    metersToMillimeters[0, 0] = 1000.0;
+                    metersToMillimeters[1, 1] = 1000.0;
+                    metersToMillimeters[2, 2] = 1000.0;
+                    metersToMillimeters[3, 3] = 1.0;
+                    var millimetersToMeters = Matrix<double>.Build.Dense(4, 4);
+                    millimetersToMeters[0, 0] = 1.0 / 1000.0;
+                    millimetersToMeters[1, 1] = 1.0 / 1000.0;
+                    millimetersToMeters[2, 2] = 1.0 / 1000.0;
+                    millimetersToMeters[3, 3] = 1.0;
+                    depthToColorMatrix = (metersToMillimeters * depthToColorMatrix * millimetersToMeters).Transpose();
+
+                    var colorRadialDistortion = new double[6] {
+                        colorIntrinsics.Parameters[4],
+                        colorIntrinsics.Parameters[5],
+                        colorIntrinsics.Parameters[6],
+                        colorIntrinsics.Parameters[7],
+                        colorIntrinsics.Parameters[8],
+                        colorIntrinsics.Parameters[9],
+                    };
+                    var colorTangentialDistortion = new double[2] {
+                        colorIntrinsics.Parameters[13],
+                        colorIntrinsics.Parameters[12]
+                    };
+                    var depthRadialDistortion = new double[6] {
+                        depthIntrinsics.Parameters[4],
+                        depthIntrinsics.Parameters[5],
+                        depthIntrinsics.Parameters[6],
+                        depthIntrinsics.Parameters[7],
+                        depthIntrinsics.Parameters[8],
+                        depthIntrinsics.Parameters[9],
+                    };
+                    var depthTangentialDistortion = new double[2] {
+                        depthIntrinsics.Parameters[13],
+                        depthIntrinsics.Parameters[12]
+                    };
+                    var kinectBasis = new CoordinateSystem(default, UnitVector3D.ZAxis, UnitVector3D.XAxis.Negate(), UnitVector3D.YAxis.Negate());// Azure Kinect uses a basis under the hood that assumes Forward=Z, Right=X, Down=Y.
+                    var psiCalibration = new DepthDeviceCalibrationInfo(
+                        rawCalibration.ColorCameraCalibration.ResolutionWidth,
+                        rawCalibration.ColorCameraCalibration.ResolutionHeight,
+                        colorCameraMatrix,
+                        colorRadialDistortion,
+                        colorTangentialDistortion,
+                        kinectBasis.Invert() * depthToColorMatrix * kinectBasis,
+                        rawCalibration.DepthCameraCalibration.ResolutionWidth,
+                        rawCalibration.DepthCameraCalibration.ResolutionHeight,
+                        depthCameraMatrix,
+                        depthRadialDistortion,
+                        depthTangentialDistortion,
+                        DenseMatrix.CreateIdentity(4)
+                    );
+                    Calibration = psiCalibration;
+                    PsiCalibrationOut.Post(psiCalibration, e.StartOriginatingTime);
                 }
-
-                depthToColorMatrix[3, 0] = colorExtrinsics.Translation[0];
-                depthToColorMatrix[3, 1] = colorExtrinsics.Translation[1];
-                depthToColorMatrix[3, 2] = colorExtrinsics.Translation[2];
-                depthToColorMatrix[3, 3] = 1.0;
-                var metersToMillimeters = Matrix<double>.Build.Dense(4, 4);
-                metersToMillimeters[0, 0] = 1000.0;
-                metersToMillimeters[1, 1] = 1000.0;
-                metersToMillimeters[2, 2] = 1000.0;
-                metersToMillimeters[3, 3] = 1.0;
-                var millimetersToMeters = Matrix<double>.Build.Dense(4, 4);
-                millimetersToMeters[0, 0] = 1.0 / 1000.0;
-                millimetersToMeters[1, 1] = 1.0 / 1000.0;
-                millimetersToMeters[2, 2] = 1.0 / 1000.0;
-                millimetersToMeters[3, 3] = 1.0;
-                depthToColorMatrix = (metersToMillimeters * depthToColorMatrix * millimetersToMeters).Transpose();
-
-                var colorRadialDistortion = new double[6] {
-                    colorIntrinsics.Parameters[4],
-                    colorIntrinsics.Parameters[5],
-                    colorIntrinsics.Parameters[6],
-                    colorIntrinsics.Parameters[7],
-                    colorIntrinsics.Parameters[8],
-                    colorIntrinsics.Parameters[9],
-                };
-                var colorTangentialDistortion = new double[2] {
-                    colorIntrinsics.Parameters[13],
-                    colorIntrinsics.Parameters[12]
-                };
-                var depthRadialDistortion = new double[6] {
-                    depthIntrinsics.Parameters[4],
-                    depthIntrinsics.Parameters[5],
-                    depthIntrinsics.Parameters[6],
-                    depthIntrinsics.Parameters[7],
-                    depthIntrinsics.Parameters[8],
-                    depthIntrinsics.Parameters[9],
-                };
-                var depthTangentialDistortion = new double[2] {
-                    depthIntrinsics.Parameters[13],
-                    depthIntrinsics.Parameters[12]
-                };
-                var kinectBasis = new CoordinateSystem(default, UnitVector3D.ZAxis, UnitVector3D.XAxis.Negate(), UnitVector3D.YAxis.Negate());// Azure Kinect uses a basis under the hood that assumes Forward=Z, Right=X, Down=Y.
-                var psiCalibration = new DepthDeviceCalibrationInfo(
-                    rawCalibration.ColorCameraCalibration.ResolutionWidth,
-                    rawCalibration.ColorCameraCalibration.ResolutionHeight,
-                    colorCameraMatrix,
-                    colorRadialDistortion,
-                    colorTangentialDistortion,
-                    kinectBasis.Invert() * depthToColorMatrix * kinectBasis,
-                    rawCalibration.DepthCameraCalibration.ResolutionWidth,
-                    rawCalibration.DepthCameraCalibration.ResolutionHeight,
-                    depthCameraMatrix,
-                    depthRadialDistortion,
-                    depthTangentialDistortion,
-                    DenseMatrix.CreateIdentity(4)
-                );
-                Calibration = psiCalibration;
-                PsiCalibrationOut.Post(psiCalibration, e.StartOriginatingTime);
 
                 #region Body Tracker
                 var modelPath = UseLiteModel ? "dnn_model_2_0_lite_op11.onnx" : "dnn_model_2_0_op11.onnx";
