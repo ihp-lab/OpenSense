@@ -71,9 +71,9 @@
         <!--Additional references: All project names ending with ".WPF"-->
         <!--Components-->
         <!--<ProjectReference Include="..\Components\Audio.Visualizer.WPF\Audio.Visualizer.WPF.csproj" />
-        <ProjectReference Include="..\Components\AzureKinect.BodyTracking.Visualizer.WPF\AzureKinect.BodyTracking.Visualizer.WPF.csproj" />
+        <ProjectReference Include="..\Components\AzureKinect.BodyTracking.Visualizer.WPF\AzureKinect.BodyTracking.Visualizer.WPF.csproj" />-->
         <ProjectReference Include="..\Components\AzureKinect.Sensor.WPF\AzureKinect.Sensor.WPF.csproj" />
-        <ProjectReference Include="..\Components\AzureKinect.SensorAndBodyTracking.WPF\AzureKinect.SensorAndBodyTracking.WPF.csproj" />
+        <!--<ProjectReference Include="..\Components\AzureKinect.SensorAndBodyTracking.WPF\AzureKinect.SensorAndBodyTracking.WPF.csproj" />
         <ProjectReference Include="..\Components\AzureSpeech.WPF\AzureSpeech.WPF.csproj" />
         <ProjectReference Include="..\Components\Biopac.Visualizer.WPF\Biopac.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\BodyGestureDetectors.WPF\BodyGestureDetectors.WPF.csproj" />
@@ -117,8 +117,8 @@
         <ProjectReference Include="..\Components\Psi.Imaging.Windows.WPF\Psi.Imaging.Windows.WPF.csproj" />
         <!--NOTE: This Kinect 2.0 package requires SDK installtion, even when it is not used.-->
         <!--<ProjectReference Include="..\Components\Psi.Kinect.Windows.WPF\Psi.Kinect.Windows.WPF.csproj" />-->
-        <!--<ProjectReference Include="..\Components\Psi.Media.Windows.WPF\Psi.Media.Windows.WPF.csproj" />
-        <ProjectReference Include="..\Components\Psi.Speech.Visualizer.WPF\Psi.Speech.Visualizer.WPF.csproj" />
+        <ProjectReference Include="..\Components\Psi.Media.Windows.WPF\Psi.Media.Windows.WPF.csproj" />
+        <!--<ProjectReference Include="..\Components\Psi.Speech.Visualizer.WPF\Psi.Speech.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\Psi.Speech.Windows.WPF\Psi.Speech.Windows.WPF.csproj" />
         <ProjectReference Include="..\Components\PythonSupports.WPF\PythonSupports.WPF.csproj" />
         <ProjectReference Include="..\Components\SerialPorts.WPF\SerialPorts.WPF.csproj" />
