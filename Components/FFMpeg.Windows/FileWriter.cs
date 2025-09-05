@@ -129,7 +129,7 @@ namespace OpenSense.Components.FFMpeg {
             _writer.WriteFrame(clone);
         }
 
-        private void ProcessImage(Shared<Image> image, Envelope envelope) {
+        private void ProcessImage<TImage>(Shared<TImage> image, Envelope envelope) where TImage : ImageBase {
             SaveStartTimeIfFirstFrame(envelope.OriginatingTime);
             var pts = (envelope.OriginatingTime - (DateTime)startTime).Ticks;
             using var frame = CreateFrame(pts, image.Resource);
@@ -155,7 +155,7 @@ namespace OpenSense.Components.FFMpeg {
             _writer.Filename = Path.Combine(directory ?? string.Empty, newFilename);
         }
 
-        private static Frame CreateFrame(long pts, Image image) {
+        private static Frame CreateFrame(long pts, ImageBase image) {
             var width = image.Width;
             var height = image.Height;
             var format = image.PixelFormat.ToFFMpegPixelFormat();
