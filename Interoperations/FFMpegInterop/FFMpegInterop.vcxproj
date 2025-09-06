@@ -79,7 +79,6 @@
     <ClInclude Include="NvencHevcEnums.h" />
     <ClInclude Include="PixelFormat.h" />
     <ClInclude Include="FFMpegExceptions.h" />
-    <ClInclude Include="FFMpegInterop.h" />
     <ClInclude Include="FileReader.h" />
     <ClInclude Include="FileWriter.h" />
     <ClInclude Include="pch.h" />
@@ -90,7 +89,6 @@
     <ClCompile Include="CodecOptions.cpp" />
     <ClCompile Include="Frame.cpp" />
     <ClCompile Include="FFMpegExceptions.cpp" />
-    <ClCompile Include="FFMpegInterop.cpp" />
     <ClCompile Include="FileReader.cpp" />
     <ClCompile Include="FileWriter.cpp" />
     <ClCompile Include="NvencHevcOptions.cpp" />
