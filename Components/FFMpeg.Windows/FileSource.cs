@@ -58,18 +58,6 @@ namespace OpenSense.Components.FFMpeg {
             }
         }
 
-        public bool OnlyKeyFrames {
-            get => _reader.OnlyKeyFrames;
-            set {
-                var old = _reader.OnlyKeyFrames;
-                if (old == value) {
-                    return;
-                }
-                _reader.OnlyKeyFrames = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OnlyKeyFrames)));
-            }
-        }
-
         private ILogger? logger;
 
         public ILogger? Logger {

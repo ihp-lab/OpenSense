@@ -237,6 +237,7 @@ namespace FFMpegInterop {
             frameToEncode = frame->InternalAVFrame;
         } else {
             frameToEncode = _convertedFrame;
+            av_frame_copy_props(_convertedFrame, frame->InternalAVFrame);
             sws_scale(
                 _swsCtx,
                 frame->InternalAVFrame->data,
@@ -248,7 +249,7 @@ namespace FFMpegInterop {
         
         // Set frame timestamp from input frame for variable frame rate support
         // Use raw PTS value from input frame to preserve precise timing
-        auto inputPts = frame->PTS;
+        auto inputPts = frameToEncode->pts;
         
         // Validate PTS for variable frame rate encoding
         if (inputPts == AV_NOPTS_VALUE) {
@@ -462,7 +463,6 @@ namespace FFMpegInterop {
         }
         
         if (_codecContext) {
-            avcodec_close(_codecContext);
             auto tmp = _codecContext;
             avcodec_free_context(&tmp);
             _codecContext = nullptr;

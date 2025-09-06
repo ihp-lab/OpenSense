@@ -57,6 +57,10 @@ namespace FFMpegInterop {
         _frame->format = avFormat;
         _frame->pts = pts;
 
+        // Set timebase to use ticks (10,000,000 ticks per second)
+        _frame->time_base.num = 1;
+        _frame->time_base.den = 10000000;
+
         // Allocate buffer for the frame
         auto ret = av_frame_get_buffer(_frame, 0);
         if (ret < 0) {

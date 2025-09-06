@@ -7,6 +7,7 @@ extern "C" {
 
 #include <msclr\marshal_cppstd.h>
 
+#include "FrameFlags.h"
 #include "PixelFormat.h"
 
 using namespace System;
@@ -107,12 +108,12 @@ namespace FFMpegInterop {
         }
 
         /// <summary>
-        /// Gets whether this frame is a key frame (I-frame)
+        /// Gets the flags of the frame
         /// </summary>
-        property bool KeyFrame {
-            bool get() { 
+        property FrameFlags Flags {
+            FrameFlags get() {
                 ThrowIfDisposed();
-                return _frame->key_frame; 
+                return (FrameFlags)_frame->flags;
             }
         }
 

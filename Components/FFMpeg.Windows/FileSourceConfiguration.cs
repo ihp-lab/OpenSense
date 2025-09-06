@@ -37,13 +37,6 @@ namespace OpenSense.Components.FFMpeg {
             get => targetHeight;
             set => SetProperty(ref targetHeight, value);
         }
-
-        private bool onlyKeyFrames;
-
-        public bool OnlyKeyFrames {
-            get => onlyKeyFrames;
-            set => SetProperty(ref onlyKeyFrames, value);
-        }
         #endregion
 
         public override IComponentMetadata GetMetadata() => Metadata;
@@ -51,7 +44,6 @@ namespace OpenSense.Components.FFMpeg {
         protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new FileSource(pipeline, Filename) {
             Logger = (serviceProvider?.GetService(typeof(ILoggerFactory)) as ILoggerFactory)?.CreateLogger(Name),
             TargetFormat = TargetFormat,
-            OnlyKeyFrames = OnlyKeyFrames,
             TargetWidth = TargetWidth,
             TargetHeight = TargetHeight,
         };

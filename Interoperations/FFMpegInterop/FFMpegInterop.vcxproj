@@ -74,6 +74,7 @@
   <ItemGroup>
     <ClInclude Include="CodecOptions.h" />
     <ClInclude Include="Frame.h" />
+    <ClInclude Include="FrameFlags.h" />
     <ClInclude Include="NvencHevcOptions.h" />
     <ClInclude Include="NvencHevcEnums.h" />
     <ClInclude Include="PixelFormat.h" />

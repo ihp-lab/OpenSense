@@ -36,6 +36,9 @@
     <ClInclude Include="Frame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FrameFlags.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="PixelFormat.h">
       <Filter>Header Files</Filter>
     </ClInclude>

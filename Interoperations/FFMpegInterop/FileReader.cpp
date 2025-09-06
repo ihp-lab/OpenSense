@@ -22,7 +22,6 @@ namespace FFMpegInterop {
         , _targetFormat(PixelFormat::None)
         , _targetWidth(0)
         , _targetHeight(0)
-        , _onlyKeyFrames(false)
         , _prevWidth(-1)
         , _prevHeight(-1)
         , _prevSrcFormat(AVPixelFormat::AV_PIX_FMT_NONE)
@@ -124,12 +123,6 @@ namespace FFMpegInterop {
 
                 if (_rawFrame->pts == AV_NOPTS_VALUE && _rawFrame->best_effort_timestamp == AV_NOPTS_VALUE) {
                     throw gcnew FFMpegException("PTS is not available.");
-                }
-
-                auto keyFrame = _rawFrame->key_frame;
-                // Skip non-key frames if OnlyKeyFrames is true
-                if (_onlyKeyFrames && !keyFrame) {
-                    continue;
                 }
 
                 auto originalFormat = static_cast<AVPixelFormat>(_rawFrame->format);
@@ -304,7 +297,6 @@ namespace FFMpegInterop {
             _timeBase = nullptr;
         }
         if (_codecContext) {
-            avcodec_close(_codecContext);
             auto tmp = _codecContext;
             avcodec_free_context(&tmp);
             _codecContext = nullptr;

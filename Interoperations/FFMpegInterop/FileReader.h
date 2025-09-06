@@ -35,7 +35,6 @@ namespace FFMpegInterop {
         PixelFormat _targetFormat;
         int _targetWidth;
         int _targetHeight;
-        bool _onlyKeyFrames;
         int _prevWidth;
         int _prevHeight;
         AVPixelFormat _prevSrcFormat;
@@ -85,13 +84,6 @@ namespace FFMpegInterop {
                 }
                 _targetHeight = value; 
             }
-        }
-        /// <summary>
-        /// Gets or sets whether to only return key frames (I-frames)
-        /// </summary>
-        property bool OnlyKeyFrames {
-            bool get() { return _onlyKeyFrames; }
-            void set(bool value) { _onlyKeyFrames = value; }
         }
 
         /// <summary>

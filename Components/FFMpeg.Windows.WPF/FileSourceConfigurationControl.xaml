@@ -31,8 +31,6 @@
                 Height="auto" />
             <RowDefinition
                 Height="auto" />
-            <RowDefinition
-                Height="auto" />
         </Grid.RowDefinitions>
 
         <TextBlock
@@ -96,15 +94,5 @@
             Text="{Binding TargetHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             ToolTip="Set the target height in pixels for the output frames. Set to 0 to calculate height based on the frame's aspect ratio and target width. If both are 0, uses the frame's original height." />
 
-        <TextBlock
-            Grid.Row="4"
-            Grid.Column="0">
-            Only Key Frames
-        </TextBlock>
-        <CheckBox
-            Grid.Row="4"
-            Grid.Column="1"
-            IsChecked="{Binding OnlyKeyFrames}"
-            ToolTip="When enabled, only key frames (I-frames) will be output." />
     </Grid>
 </UserControl>
