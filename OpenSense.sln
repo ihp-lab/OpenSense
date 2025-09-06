@@ -288,6 +288,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kvazaar.Windows", "Componen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kvazaar.Windows.WPF", "Components\Kvazaar.Windows.WPF\Kvazaar.Windows.WPF.csproj", "{D01022EA-AFFF-41A1-B065-3E64A005C713}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Minimp4Interop", "Interoperations\Minimp4Interop\Minimp4Interop.vcxproj", "{8430B029-34D8-255F-056B-9282CC6A71DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -826,6 +828,10 @@ Global
 		{D01022EA-AFFF-41A1-B065-3E64A005C713}.Debug|x64.Build.0 = Debug|x64
 		{D01022EA-AFFF-41A1-B065-3E64A005C713}.Release|x64.ActiveCfg = Release|x64
 		{D01022EA-AFFF-41A1-B065-3E64A005C713}.Release|x64.Build.0 = Release|x64
+		{8430B029-34D8-255F-056B-9282CC6A71DC}.Debug|x64.ActiveCfg = Debug|x64
+		{8430B029-34D8-255F-056B-9282CC6A71DC}.Debug|x64.Build.0 = Debug|x64
+		{8430B029-34D8-255F-056B-9282CC6A71DC}.Release|x64.ActiveCfg = Release|x64
+		{8430B029-34D8-255F-056B-9282CC6A71DC}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -958,6 +964,7 @@ Global
 		{28E15B8B-2198-D210-488F-AD6C593114F4} = {F084F6AC-C478-4C9A-A2D5-6FB3F978DD9B}
 		{737C20F5-4F7F-498F-9988-5976ABA9905D} = {5C411F31-BF09-4976-95CD-8748327C8478}
 		{D01022EA-AFFF-41A1-B065-3E64A005C713} = {5C411F31-BF09-4976-95CD-8748327C8478}
+		{8430B029-34D8-255F-056B-9282CC6A71DC} = {F084F6AC-C478-4C9A-A2D5-6FB3F978DD9B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4CB31E6C-64DF-499B-B990-0C72B1A2AF47}

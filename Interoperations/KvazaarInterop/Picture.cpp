@@ -10,7 +10,7 @@ namespace KvazaarInterop {
     Picture::Picture(int width, int height)
         : _picture(nullptr)
         , _disposed(false) {
-        
+
         if (width <= 0) {
             throw gcnew ArgumentException("Width must be positive", "width");
         }
@@ -20,7 +20,7 @@ namespace KvazaarInterop {
 
         auto api = Api::GetApi();
         _picture = api->picture_alloc(width, height);
-        
+
         if (!_picture) {
             throw gcnew OutOfMemoryException("Failed to allocate picture");
         }
@@ -29,7 +29,7 @@ namespace KvazaarInterop {
     Picture::Picture(KvazaarInterop::ChromaFormat chromaFormat, int width, int height)
         : _picture(nullptr)
         , _disposed(false) {
-        
+
         if (width <= 0) {
             throw gcnew ArgumentException("Width must be positive", "width");
         }
@@ -40,7 +40,7 @@ namespace KvazaarInterop {
         auto api = Api::GetApi();
         auto kvzChromaFormat = static_cast<kvz_chroma_format>(chromaFormat);
         _picture = api->picture_alloc_csp(kvzChromaFormat, width, height);
-        
+
         if (!_picture) {
             throw gcnew OutOfMemoryException("Failed to allocate picture with chroma format");
         }
@@ -48,7 +48,7 @@ namespace KvazaarInterop {
 
     void Picture::CopyYPlane(array<Byte>^ data, int offset, int length) {
         ThrowIfDisposed();
-        
+
         if (data == nullptr) {
             throw gcnew ArgumentNullException("data");
         }
@@ -73,7 +73,7 @@ namespace KvazaarInterop {
 
     void Picture::CopyUPlane(array<Byte>^ data, int offset, int length) {
         ThrowIfDisposed();
-        
+
         if (data == nullptr) {
             throw gcnew ArgumentNullException("data");
         }
@@ -97,7 +97,7 @@ namespace KvazaarInterop {
 
     void Picture::CopyVPlane(array<Byte>^ data, int offset, int length) {
         ThrowIfDisposed();
-        
+
         if (data == nullptr) {
             throw gcnew ArgumentNullException("data");
         }
@@ -121,65 +121,65 @@ namespace KvazaarInterop {
 
     array<Byte>^ Picture::GetYPlane() {
         ThrowIfDisposed();
-        
+
         auto planeSize = _picture->stride * _picture->height;
         auto data = gcnew array<Byte>(planeSize);
-        
+
         pin_ptr<Byte> pinnedData = &data[0];
         memcpy(pinnedData, _picture->y, planeSize);
-        
+
         return data;
     }
 
     array<Byte>^ Picture::GetUPlane() {
         ThrowIfDisposed();
-        
+
         if (!_picture->u) {
             return nullptr;
         }
 
         auto chromaHeight = _picture->height;
         auto chromaStride = _picture->stride;
-        
+
         if (_picture->chroma_format == KVZ_CSP_420) {
             chromaHeight /= 2;
             chromaStride /= 2;
         } else if (_picture->chroma_format == KVZ_CSP_422) {
             chromaStride /= 2;
         }
-        
+
         auto planeSize = chromaStride * chromaHeight;
         auto data = gcnew array<Byte>(planeSize);
-        
+
         pin_ptr<Byte> pinnedData = &data[0];
         memcpy(pinnedData, _picture->u, planeSize);
-        
+
         return data;
     }
 
     array<Byte>^ Picture::GetVPlane() {
         ThrowIfDisposed();
-        
+
         if (!_picture->v) {
             return nullptr;
         }
 
         auto chromaHeight = _picture->height;
         auto chromaStride = _picture->stride;
-        
+
         if (_picture->chroma_format == KVZ_CSP_420) {
             chromaHeight /= 2;
             chromaStride /= 2;
         } else if (_picture->chroma_format == KVZ_CSP_422) {
             chromaStride /= 2;
         }
-        
+
         auto planeSize = chromaStride * chromaHeight;
         auto data = gcnew array<Byte>(planeSize);
-        
+
         pin_ptr<Byte> pinnedData = &data[0];
         memcpy(pinnedData, _picture->v, planeSize);
-        
+
         return data;
     }
 

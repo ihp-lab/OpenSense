@@ -7,7 +7,7 @@ namespace KvazaarInterop {
     DataChunk::DataChunk(kvz_data_chunk* chunk)
         : _chunk(chunk)
         , _disposed(false) {
-        
+
         if (!chunk) {
             throw gcnew ArgumentNullException("chunk");
         }
@@ -15,23 +15,23 @@ namespace KvazaarInterop {
 
     array<Byte>^ DataChunk::GetData() {
         ThrowIfDisposed();
-        
+
         auto totalLength = 0;
         auto current = _chunk;
-        
+
         while (current) {
             totalLength += current->len;
             current = current->next;
         }
-        
+
         if (totalLength == 0) {
             return gcnew array<Byte>(0);
         }
-        
+
         auto data = gcnew array<Byte>(totalLength);
         auto offset = 0;
         current = _chunk;
-        
+
         while (current) {
             if (current->len > 0) {
                 Marshal::Copy(IntPtr(current->data), data, offset, current->len);
@@ -39,21 +39,21 @@ namespace KvazaarInterop {
             }
             current = current->next;
         }
-        
+
         return data;
     }
 
     int DataChunk::Length::get() {
         ThrowIfDisposed();
-        
+
         auto totalLength = 0;
         auto current = _chunk;
-        
+
         while (current) {
             totalLength += current->len;
             current = current->next;
         }
-        
+
         return totalLength;
     }
 

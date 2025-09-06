@@ -12,10 +12,10 @@ namespace KvazaarInterop {
     Config::Config()
         : _config(nullptr)
         , _disposed(false) {
-        
+
         auto api = Api::GetApi();
         _config = api->config_alloc();
-        
+
         if (!_config) {
             throw gcnew OutOfMemoryException("Failed to allocate config");
         }
@@ -30,14 +30,14 @@ namespace KvazaarInterop {
 
     bool Config::Parse([NotNull] String^ name, [NotNull] String^ value) {
         ThrowIfDisposed();
-        
+
         ArgumentNullException::ThrowIfNull(name, "name");
         ArgumentNullException::ThrowIfNull(value, "value");
 
         auto api = Api::GetApi();
         auto nativeName = marshal_as<std::string>(name);
         auto nativeValue = marshal_as<std::string>(value);
-        
+
         auto result = api->config_parse(_config, nativeName.c_str(), nativeValue.c_str());
         return result != 0;
     }

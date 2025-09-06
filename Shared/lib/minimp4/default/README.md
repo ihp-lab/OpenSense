@@ -1,0 +1,1 @@
+Minimp4 header-only library from commit `4575afb` on September 6, 2025.
