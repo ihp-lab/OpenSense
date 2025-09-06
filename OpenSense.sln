@@ -282,6 +282,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureKinect.SensorAndBodyTr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureKinect.SensorAndBodyTracking.WPF", "Components\AzureKinect.SensorAndBodyTracking.WPF\AzureKinect.SensorAndBodyTracking.WPF.csproj", "{447592A1-1848-4CBE-8D3E-5ACC5AE9A0A4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KvazaarInterop", "Interoperations\KvazaarInterop\KvazaarInterop.vcxproj", "{28E15B8B-2198-D210-488F-AD6C593114F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -808,6 +810,10 @@ Global
 		{447592A1-1848-4CBE-8D3E-5ACC5AE9A0A4}.Debug|x64.Build.0 = Debug|x64
 		{447592A1-1848-4CBE-8D3E-5ACC5AE9A0A4}.Release|x64.ActiveCfg = Release|x64
 		{447592A1-1848-4CBE-8D3E-5ACC5AE9A0A4}.Release|x64.Build.0 = Release|x64
+		{28E15B8B-2198-D210-488F-AD6C593114F4}.Debug|x64.ActiveCfg = Debug|x64
+		{28E15B8B-2198-D210-488F-AD6C593114F4}.Debug|x64.Build.0 = Debug|x64
+		{28E15B8B-2198-D210-488F-AD6C593114F4}.Release|x64.ActiveCfg = Release|x64
+		{28E15B8B-2198-D210-488F-AD6C593114F4}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -937,6 +943,7 @@ Global
 		{3D06AB12-85EE-4226-80DA-6423454D03A8} = {5C411F31-BF09-4976-95CD-8748327C8478}
 		{9149E182-B601-46AF-9650-667D47EA9306} = {5C411F31-BF09-4976-95CD-8748327C8478}
 		{447592A1-1848-4CBE-8D3E-5ACC5AE9A0A4} = {5C411F31-BF09-4976-95CD-8748327C8478}
+		{28E15B8B-2198-D210-488F-AD6C593114F4} = {F084F6AC-C478-4C9A-A2D5-6FB3F978DD9B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4CB31E6C-64DF-499B-B990-0C72B1A2AF47}
