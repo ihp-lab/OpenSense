@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <Platforms>x64</Platforms>
+        <PlatformTarget>x64</PlatformTarget>
+        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+        <AssemblyName>OpenSense.WPF.Components.Kvazaar.Windows</AssemblyName>
+        <RootNamespace>OpenSense.WPF.Components.Kvazaar</RootNamespace>
+        <EmbedAllSources>true</EmbedAllSources>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Kvazaar.Windows\Kvazaar.Windows.csproj" />
+        <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
+    </ItemGroup>
+
+
+</Project>

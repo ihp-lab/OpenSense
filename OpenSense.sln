@@ -284,6 +284,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureKinect.SensorAndBodyTr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KvazaarInterop", "Interoperations\KvazaarInterop\KvazaarInterop.vcxproj", "{28E15B8B-2198-D210-488F-AD6C593114F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kvazaar.Windows", "Components\Kvazaar.Windows\Kvazaar.Windows.csproj", "{737C20F5-4F7F-498F-9988-5976ABA9905D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kvazaar.Windows.WPF", "Components\Kvazaar.Windows.WPF\Kvazaar.Windows.WPF.csproj", "{D01022EA-AFFF-41A1-B065-3E64A005C713}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -814,6 +818,14 @@ Global
 		{28E15B8B-2198-D210-488F-AD6C593114F4}.Debug|x64.Build.0 = Debug|x64
 		{28E15B8B-2198-D210-488F-AD6C593114F4}.Release|x64.ActiveCfg = Release|x64
 		{28E15B8B-2198-D210-488F-AD6C593114F4}.Release|x64.Build.0 = Release|x64
+		{737C20F5-4F7F-498F-9988-5976ABA9905D}.Debug|x64.ActiveCfg = Debug|x64
+		{737C20F5-4F7F-498F-9988-5976ABA9905D}.Debug|x64.Build.0 = Debug|x64
+		{737C20F5-4F7F-498F-9988-5976ABA9905D}.Release|x64.ActiveCfg = Release|x64
+		{737C20F5-4F7F-498F-9988-5976ABA9905D}.Release|x64.Build.0 = Release|x64
+		{D01022EA-AFFF-41A1-B065-3E64A005C713}.Debug|x64.ActiveCfg = Debug|x64
+		{D01022EA-AFFF-41A1-B065-3E64A005C713}.Debug|x64.Build.0 = Debug|x64
+		{D01022EA-AFFF-41A1-B065-3E64A005C713}.Release|x64.ActiveCfg = Release|x64
+		{D01022EA-AFFF-41A1-B065-3E64A005C713}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -944,6 +956,8 @@ Global
 		{9149E182-B601-46AF-9650-667D47EA9306} = {5C411F31-BF09-4976-95CD-8748327C8478}
 		{447592A1-1848-4CBE-8D3E-5ACC5AE9A0A4} = {5C411F31-BF09-4976-95CD-8748327C8478}
 		{28E15B8B-2198-D210-488F-AD6C593114F4} = {F084F6AC-C478-4C9A-A2D5-6FB3F978DD9B}
+		{737C20F5-4F7F-498F-9988-5976ABA9905D} = {5C411F31-BF09-4976-95CD-8748327C8478}
+		{D01022EA-AFFF-41A1-B065-3E64A005C713} = {5C411F31-BF09-4976-95CD-8748327C8478}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4CB31E6C-64DF-499B-B990-0C72B1A2AF47}

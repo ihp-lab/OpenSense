@@ -88,8 +88,9 @@
         <!--<ProjectReference Include="..\Components\GoogleCloud.Speech.V1.WPF\GoogleCloud.Speech.V1.WPF.csproj" />
         <ProjectReference Include="..\Components\HeadGesture\HeadGesture.csproj" />-->
         <!--NOTE: No settings available, thus no related WPF project here-->
-        <!--<ProjectReference Include="..\Components\HeadGesture.Visualizer.WPF\HeadGesture.Visualizer.WPF.csproj" />
-        <ProjectReference Include="..\Components\MediaPipe.Net.Visualizer.WPF\MediaPipe.NET.Visualizer.WPF.csproj" />
+        <!--<ProjectReference Include="..\Components\HeadGesture.Visualizer.WPF\HeadGesture.Visualizer.WPF.csproj" />-->
+        <ProjectReference Include="..\Components\Kvazaar.Windows.WPF\Kvazaar.Windows.WPF.csproj" />
+        <!--<ProjectReference Include="..\Components\MediaPipe.Net.Visualizer.WPF\MediaPipe.NET.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\MediaPipe.NET.WPF\MediaPipe.NET.WPF.csproj" />
         <ProjectReference Include="..\Components\OpenCvSharp.Windows\OpenCvSharp.Windows.csproj" />
         <ProjectReference Include="..\Components\OpenCvSharp.WPF\OpenCvSharp.WPF.csproj" />
