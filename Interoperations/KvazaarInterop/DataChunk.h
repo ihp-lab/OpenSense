@@ -5,17 +5,20 @@ extern "C" {
 }
 
 #include "Api.h"
+#include "DataChunkEnumerator.h"
 
 using namespace System;
+using namespace System::Collections;
+using namespace System::Collections::Generic;
 using namespace System::Runtime::InteropServices;
 using namespace System::Diagnostics::CodeAnalysis;
 using namespace System::Runtime::CompilerServices;
 
 namespace KvazaarInterop {
     /// <summary>
-    /// Managed wrapper for kvz_data_chunk
+    /// Managed wrapper for kvz_data_chunk that provides enumerable access to data
     /// </summary>
-    public ref class DataChunk : IDisposable {
+    public ref class DataChunk : System::Collections::Generic::IEnumerable<ValueTuple<IntPtr, int>>, IDisposable {
     private:
         kvz_data_chunk* _chunk;
         bool _disposed;
@@ -27,23 +30,38 @@ namespace KvazaarInterop {
         /// </summary>
         DataChunk(kvz_data_chunk* chunk);
 
+#pragma region IEnumerable
     public:
         /// <summary>
-        /// Get all data as a managed byte array
+        /// Gets an enumerator that iterates through the data chunks as pointer and length pairs
         /// </summary>
-        array<Byte>^ GetData();
+        [returnvalue:TupleElementNames(gcnew array<String^>{"Data", "Length"})]
+        virtual System::Collections::Generic::IEnumerator<ValueTuple<IntPtr, int>>^ GetEnumerator();
 
         /// <summary>
-        /// Gets the total length of data
+        /// Gets a non-generic enumerator that iterates through the data chunks
         /// </summary>
-        property int Length {
-            int get();
+        virtual System::Collections::IEnumerator^ GetEnumerator2() sealed =
+            System::Collections::IEnumerable::GetEnumerator;
+
+    internal:
+        /// <summary>
+        /// Gets the internal chunk pointer for use by enumerator
+        /// </summary>
+        property kvz_data_chunk* InternalChunk {
+            kvz_data_chunk* get() { 
+                ThrowIfDisposed();
+                return _chunk; 
+            }
         }
+#pragma endregion
 
 #pragma region IDisposable
-    private:
+    internal:
+        /// <summary>
+        /// Throws if the object has been disposed
+        /// </summary>
         void ThrowIfDisposed();
-
     public:
         ~DataChunk();
         !DataChunk();

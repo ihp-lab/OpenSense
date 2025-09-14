@@ -9,7 +9,6 @@ extern "C" {
 
 using namespace System;
 using namespace System::IO;
-using namespace System::Collections::Generic;
 using namespace System::Runtime::InteropServices;
 using namespace System::Diagnostics::CodeAnalysis;
 using namespace System::Runtime::CompilerServices;
@@ -17,45 +16,36 @@ using namespace System::Runtime::CompilerServices;
 namespace Minimp4Interop {
     /// <summary>
     /// Managed wrapper for MP4 muxer
+    /// This class manages MP4 container operations and track management.
+    /// Note: The caller retains ownership of the Stream instance.
     /// </summary>
     public ref class Muxer : IDisposable {
     private:
         MP4E_mux_t* _mux;
-        FileStream^ _fileStream;
+        Stream^ _stream;
         GCHandle _gcHandle;
-        bool _disposed;
-        Dictionary<int, Track^>^ _tracks;
         MuxMode _mode;
+        bool _disposed;
 
 
     public:
         /// <summary>
-        /// Creates a new MP4 muxer writing to a file
+        /// Creates a new MP4 muxer with specified stream and mode
+        /// Note: The caller retains ownership of the Stream. Muxer only uses it for writing.
         /// </summary>
-        Muxer(String^ filename);
-
-        /// <summary>
-        /// Creates a new MP4 muxer with specified mode
-        /// </summary>
-        Muxer(String^ filename, MuxMode mode);
+        /// <param name="stream">Writable stream for MP4 output (caller retains ownership)</param>
+        /// <param name="mode">Muxing mode (affects seeking requirements)</param>
+        Muxer([NotNull] Stream^ stream, MuxMode mode);
 
 #pragma region Methods
 
         /// <summary>
         /// Adds a track to the MP4 file
+        /// Note: Track configuration is copied internally. The caller retains ownership of the Track object.
         /// </summary>
         /// <param name="track">Track configuration</param>
         /// <returns>Track ID for use with PutSample</returns>
-        int AddTrack(Track^ track);
-
-        /// <summary>
-        /// Writes a sample to a track
-        /// </summary>
-        /// <param name="trackId">Track ID returned from AddTrack</param>
-        /// <param name="data">Sample data</param>
-        /// <param name="duration">Sample duration in track time scale units</param>
-        /// <param name="sampleType">Whether this is a sync sample</param>
-        void PutSample(int trackId, array<Byte>^ data, int duration, SampleType sampleType);
+        int AddTrack([NotNull] Track^ track);
 
         /// <summary>
         /// Writes a sample to a track
@@ -66,11 +56,6 @@ namespace Minimp4Interop {
         /// <param name="duration">Sample duration in track time scale units</param>
         /// <param name="sampleType">Whether this is a sync sample</param>
         void PutSample(int trackId, IntPtr data, int size, int duration, SampleType sampleType);
-
-        /// <summary>
-        /// Closes the MP4 file and writes final metadata
-        /// </summary>
-        void Close();
 
 #pragma endregion
 
@@ -86,25 +71,6 @@ namespace Minimp4Interop {
             }
         }
 
-        /// <summary>
-        /// Gets whether the muxer is closed
-        /// </summary>
-        property bool IsClosed {
-            bool get() {
-                return _mux == nullptr;
-            }
-        }
-
-#pragma endregion
-
-#pragma region Internal
-
-    public:
-        /// <summary>
-        /// Internal callback handler
-        /// </summary>
-        int HandleWrite(int64_t offset, const void* buffer, size_t size);
-
     internal:
         /// <summary>
         /// Gets the internal MP4E_mux_t pointer
@@ -118,8 +84,17 @@ namespace Minimp4Interop {
 
 #pragma endregion
 
+    internal:
+        /// <summary>
+        /// Internal callback handler
+        /// </summary>
+        int HandleWrite(int64_t offset, const void* buffer, size_t size);
+
 #pragma region IDisposable
     private:
+        /// <summary>
+        /// Throws ObjectDisposedException if the object has been disposed
+        /// </summary>
         void ThrowIfDisposed();
 
     public:

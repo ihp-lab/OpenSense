@@ -71,6 +71,7 @@
     <ClInclude Include="Api.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="DataChunk.h" />
+    <ClInclude Include="DataChunkEnumerator.h" />
     <ClInclude Include="Encoder.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="FrameInfo.h" />
@@ -83,6 +84,7 @@
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="DataChunk.cpp" />
+    <ClCompile Include="DataChunkEnumerator.cpp" />
     <ClCompile Include="Encoder.cpp" />
     <ClCompile Include="FrameInfo.cpp" />
     <ClCompile Include="pch.cpp">

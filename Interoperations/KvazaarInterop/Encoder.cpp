@@ -22,8 +22,8 @@ namespace KvazaarInterop {
         ThrowIfDisposed();
 
         auto api = Api::GetApi();
-        kvz_data_chunk* dataOut = nullptr;
-        uint32_t lenOut = 0;
+        auto dataOut = static_cast<kvz_data_chunk*>(nullptr);
+        auto lenOut = uint32_t{0};
 
         auto result = api->encoder_headers(_encoder, &dataOut, &lenOut);
         if (!result) {
@@ -41,8 +41,8 @@ namespace KvazaarInterop {
         ThrowIfDisposed();
 
         auto api = Api::GetApi();
-        kvz_data_chunk* dataOut = nullptr;
-        uint32_t lenOut = 0;
+        auto dataOut = static_cast<kvz_data_chunk*>(nullptr);
+        auto lenOut = uint32_t{0};
 
         auto result = api->encoder_headers(_encoder, &dataOut, &lenOut);
         if (!result) {
@@ -67,12 +67,12 @@ namespace KvazaarInterop {
         ThrowIfDisposed();
 
         auto api = Api::GetApi();
-        kvz_picture* picIn = pictureIn ? pictureIn->InternalPicture : nullptr;
-        kvz_data_chunk* dataOut = nullptr;
-        uint32_t lenOut = 0;
-        kvz_picture* picOut = nullptr;
-        kvz_picture* srcOut = nullptr;
-        kvz_frame_info infoOutNative;
+        auto picIn = pictureIn ? pictureIn->InternalPicture : static_cast<kvz_picture*>(nullptr);
+        auto dataOut = static_cast<kvz_data_chunk*>(nullptr);
+        auto lenOut = uint32_t{0};
+        auto picOut = static_cast<kvz_picture*>(nullptr);
+        auto srcOut = static_cast<kvz_picture*>(nullptr);
+        auto infoOutNative = kvz_frame_info{};
 
         auto result = api->encoder_encode(_encoder, picIn, &dataOut, &lenOut, &picOut, &srcOut, &infoOutNative);
         if (!result) {
@@ -84,13 +84,13 @@ namespace KvazaarInterop {
         infoOut = nullptr;
 
         if (picOut) {
-            pictureOut = gcnew Picture(picOut->width, picOut->height);
+            pictureOut = gcnew Picture(static_cast<KvazaarInterop::ChromaFormat>(picOut->chroma_format), picOut->width, picOut->height);
             delete pictureOut;
             pictureOut = nullptr;
         }
 
         if (srcOut) {
-            sourceOut = gcnew Picture(srcOut->width, srcOut->height);
+            sourceOut = gcnew Picture(static_cast<KvazaarInterop::ChromaFormat>(srcOut->chroma_format), srcOut->width, srcOut->height);
             delete sourceOut;
             sourceOut = nullptr;
         }
@@ -116,12 +116,12 @@ namespace KvazaarInterop {
         ThrowIfDisposed();
 
         auto api = Api::GetApi();
-        kvz_picture* picIn = pictureIn ? pictureIn->InternalPicture : nullptr;
-        kvz_data_chunk* dataOut = nullptr;
-        uint32_t lenOut = 0;
-        kvz_picture* picOut = nullptr;
-        kvz_picture* srcOut = nullptr;
-        kvz_frame_info infoOutNative;
+        auto picIn = pictureIn ? pictureIn->InternalPicture : static_cast<kvz_picture*>(nullptr);
+        auto dataOut = static_cast<kvz_data_chunk*>(nullptr);
+        auto lenOut = uint32_t{0};
+        auto picOut = static_cast<kvz_picture*>(nullptr);
+        auto srcOut = static_cast<kvz_picture*>(nullptr);
+        auto infoOutNative = kvz_frame_info{};
 
         auto result = api->encoder_encode(_encoder, picIn, &dataOut, &lenOut, &picOut, &srcOut, &infoOutNative);
         if (!result) {
@@ -134,13 +134,13 @@ namespace KvazaarInterop {
         infoOut = nullptr;
 
         if (picOut) {
-            pictureOut = gcnew Picture(picOut->width, picOut->height);
+            pictureOut = gcnew Picture(static_cast<KvazaarInterop::ChromaFormat>(picOut->chroma_format), picOut->width, picOut->height);
             delete pictureOut;
             pictureOut = nullptr;
         }
 
         if (srcOut) {
-            sourceOut = gcnew Picture(srcOut->width, srcOut->height);
+            sourceOut = gcnew Picture(static_cast<KvazaarInterop::ChromaFormat>(srcOut->chroma_format), srcOut->width, srcOut->height);
             delete sourceOut;
             sourceOut = nullptr;
         }
@@ -160,9 +160,9 @@ namespace KvazaarInterop {
         ThrowIfDisposed();
 
         auto api = Api::GetApi();
-        kvz_picture* picIn = pictureIn ? pictureIn->InternalPicture : nullptr;
-        kvz_data_chunk* dataOut = nullptr;
-        uint32_t lenOut = 0;
+        auto picIn = pictureIn ? pictureIn->InternalPicture : static_cast<kvz_picture*>(nullptr);
+        auto dataOut = static_cast<kvz_data_chunk*>(nullptr);
+        auto lenOut = uint32_t{0};
 
         auto result = api->encoder_encode(_encoder, picIn, &dataOut, &lenOut, nullptr, nullptr, nullptr);
         if (!result) {
@@ -175,6 +175,8 @@ namespace KvazaarInterop {
 
         return gcnew DataChunk(dataOut);
     }
+
+#pragma region IDisposable
 
     void Encoder::ThrowIfDisposed() {
         if (_disposed) {
@@ -198,4 +200,5 @@ namespace KvazaarInterop {
             _encoder = nullptr;
         }
     }
+#pragma endregion
 }

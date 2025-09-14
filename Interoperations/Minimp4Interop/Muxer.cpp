@@ -22,6 +22,7 @@ int MuxerWriteCallback(int64_t offset, const void* buffer, size_t size, void* to
 #pragma managed
 
 namespace Minimp4Interop {
+
     // Managed callback helper
     int MuxerWriteManagedCallback(int64_t offset, const void* buffer, size_t size, void* token) {
         GCHandle handle = GCHandle::FromIntPtr(IntPtr(token));
@@ -29,43 +30,114 @@ namespace Minimp4Interop {
         return muxer->HandleWrite(offset, buffer, size);
     }
 
-    Muxer::Muxer(String^ filename)
-        : Muxer(filename, MuxMode::Default) {}
+#pragma region Constructor
 
-    Muxer::Muxer(String^ filename, MuxMode mode)
+    Muxer::Muxer(Stream^ stream, MuxMode mode)
         : _mux(nullptr)
-        , _fileStream(nullptr)
-        , _disposed(false)
+        , _stream(nullptr)
+        , _gcHandle()
         , _mode(mode)
-        , _tracks(gcnew Dictionary<int, Track^>()) {
+        , _disposed(false) {
 
-        if (String::IsNullOrEmpty(filename)) {
-            throw gcnew ArgumentNullException("filename");
+        if (stream == nullptr) {
+            throw gcnew ArgumentNullException("stream");
         }
 
-        // Open file stream
-        try {
-            _fileStream = gcnew FileStream(filename, FileMode::Create, FileAccess::Write);
-        } catch (Exception^ ex) {
-            throw gcnew InvalidOperationException("Failed to create output file: " + ex->Message, ex);
+        if (!stream->CanWrite) {
+            throw gcnew ArgumentException("Stream must be writable", "stream");
         }
+
+        // Check if stream needs to be seekable based on mode
+        auto needsSeek = (mode != MuxMode::Sequential && mode != MuxMode::Fragmented);
+        if (needsSeek && !stream->CanSeek) {
+            throw gcnew ArgumentException("Stream must be seekable for non-sequential modes", "stream");
+        }
+
+        _stream = stream;
 
         // Pin this object for callback
         _gcHandle = GCHandle::Alloc(this);
 
         // Create muxer
-        int sequential = (mode == MuxMode::Sequential) ? 1 : 0;
-        int fragmented = (mode == MuxMode::Fragmented) ? 1 : 0;
+        auto sequential = (mode == MuxMode::Sequential) ? 1 : 0;
+        auto fragmented = (mode == MuxMode::Fragmented) ? 1 : 0;
 
         // Use unmanaged callback function defined above
         _mux = MP4E_open(sequential, fragmented, GCHandle::ToIntPtr(_gcHandle).ToPointer(), ::MuxerWriteCallback);
 
         if (_mux == nullptr) {
             _gcHandle.Free();
-            delete _fileStream;
             throw gcnew InvalidOperationException("Failed to create MP4 muxer");
         }
     }
+
+#pragma endregion
+
+#pragma region Public Methods
+
+    int Muxer::AddTrack(Track^ track) {
+        ThrowIfDisposed();
+
+        if (track == nullptr) {
+            throw gcnew ArgumentNullException("track");
+        }
+
+        auto nativeTrack = track->InternalTrack;
+        auto trackId = MP4E_add_track(_mux, nativeTrack);
+
+        if (trackId < 0) {
+            throw gcnew InvalidOperationException("Failed to add track to MP4 file");
+        }
+
+        return trackId;
+    }
+
+    void Muxer::PutSample(int trackId, IntPtr data, int size, int duration, SampleType sampleType) {
+        ThrowIfDisposed();
+
+        if (data == IntPtr::Zero || size <= 0) {
+            throw gcnew ArgumentException("Invalid sample data");
+        }
+
+        auto result = MP4E_put_sample(_mux, trackId,
+                                  data.ToPointer(), size, duration, static_cast<int>(sampleType));
+
+        if (result != 0) {
+            throw gcnew InvalidOperationException("Failed to write sample to MP4 file");
+        }
+    }
+
+#pragma endregion
+
+#pragma region Internal Methods
+
+    int Muxer::HandleWrite(int64_t offset, const void* buffer, size_t size) {
+        if (_stream == nullptr) {
+            return -1;
+        }
+
+        try {
+            // Seek to offset if stream supports it
+            if (_stream->CanSeek) {
+                _stream->Seek(offset, SeekOrigin::Begin);
+            }
+
+            // Write data
+            if (buffer != nullptr && size > 0) {
+                auto data = gcnew array<Byte>(static_cast<int>(size));
+                Marshal::Copy(IntPtr(const_cast<void*>(buffer)), data, 0, static_cast<int>(size));
+                _stream->Write(data, 0, data->Length);
+            }
+
+            return 0;
+        } catch (Exception^) {
+            return -1;
+        }
+    }
+
+#pragma endregion
+
+#pragma region IDisposable
 
     void Muxer::ThrowIfDisposed() {
         if (_disposed) {
@@ -74,15 +146,17 @@ namespace Minimp4Interop {
     }
 
     Muxer::~Muxer() {
-        if (_disposed) {
-            return;
-        }
-
         this->!Muxer();
-        _disposed = true;
+        GC::SuppressFinalize(this);
     }
 
     Muxer::!Muxer() {
+        if (_disposed) {
+            return;
+        }
+        _disposed = true;
+
+        // Close muxer and write final metadata
         if (_mux != nullptr) {
             MP4E_close(_mux);
             _mux = nullptr;
@@ -92,108 +166,13 @@ namespace Minimp4Interop {
             _gcHandle.Free();
         }
 
-        if (_fileStream != nullptr) {
-            _fileStream->Close();
-            delete _fileStream;
-            _fileStream = nullptr;
-        }
-
-        if (_tracks != nullptr) {
-            _tracks->Clear();
-            _tracks = nullptr;
+        if (_stream != nullptr) {
+            _stream->Flush();
+            // Note: We don't delete _stream as we don't own it
+            _stream = nullptr;
         }
     }
 
-    int Muxer::HandleWrite(int64_t offset, const void* buffer, size_t size) {
-        if (_fileStream == nullptr) {
-            return -1;
-        }
-
-        try {
-            // Seek to offset
-            _fileStream->Seek(offset, SeekOrigin::Begin);
-
-            // Write data
-            if (buffer != nullptr && size > 0) {
-                array<Byte>^ data = gcnew array<Byte>(static_cast<int>(size));
-                Marshal::Copy(IntPtr(const_cast<void*>(buffer)), data, 0, static_cast<int>(size));
-                _fileStream->Write(data, 0, data->Length);
-            }
-
-            return 0;
-        } catch (Exception^) {
-            return -1;
-        }
-    }
-
-    int Muxer::AddTrack(Track^ track) {
-        ThrowIfDisposed();
-
-        if (track == nullptr) {
-            throw gcnew ArgumentNullException("track");
-        }
-
-        if (IsClosed) {
-            throw gcnew InvalidOperationException("Cannot add tracks after closing");
-        }
-
-        MP4E_track_t* nativeTrack = track->InternalTrack;
-        int trackId = MP4E_add_track(_mux, nativeTrack);
-
-        if (trackId < 0) {
-            throw gcnew InvalidOperationException("Failed to add track to MP4 file");
-        }
-
-        _tracks[trackId] = track;
-        return trackId;
-    }
-
-    void Muxer::PutSample(int trackId, array<Byte>^ data, int duration, SampleType sampleType) {
-        if (data == nullptr) {
-            throw gcnew ArgumentNullException("data");
-        }
-
-        pin_ptr<Byte> pinnedData = &data[0];
-        PutSample(trackId, IntPtr(pinnedData), data->Length, duration, sampleType);
-    }
-
-    void Muxer::PutSample(int trackId, IntPtr data, int size, int duration, SampleType sampleType) {
-        ThrowIfDisposed();
-
-        if (IsClosed) {
-            throw gcnew InvalidOperationException("Cannot write samples after closing");
-        }
-
-        if (!_tracks->ContainsKey(trackId)) {
-            throw gcnew ArgumentException("Invalid track ID: " + trackId);
-        }
-
-        if (data == IntPtr::Zero || size <= 0) {
-            throw gcnew ArgumentException("Invalid sample data");
-        }
-
-        int result = MP4E_put_sample(_mux, trackId,
-                                  data.ToPointer(), size, duration, static_cast<int>(sampleType));
-
-        if (result != 0) {
-            throw gcnew InvalidOperationException("Failed to write sample to MP4 file");
-        }
-    }
-
-    void Muxer::Close() {
-        ThrowIfDisposed();
-
-        if (_mux != nullptr && !IsClosed) {
-            MP4E_close(_mux);
-            _mux = nullptr;
-        }
-
-        if (_fileStream != nullptr) {
-            _fileStream->Flush();
-            _fileStream->Close();
-            delete _fileStream;
-            _fileStream = nullptr;
-        }
-    }
+#pragma endregion
 
 }

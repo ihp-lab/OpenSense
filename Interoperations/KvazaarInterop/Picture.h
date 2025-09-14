@@ -23,11 +23,6 @@ namespace KvazaarInterop {
 
     public:
         /// <summary>
-        /// Creates a new picture with specified dimensions
-        /// </summary>
-        Picture(int width, int height);
-
-        /// <summary>
         /// Creates a new picture with specified chroma format and dimensions
         /// </summary>
         Picture(KvazaarInterop::ChromaFormat chromaFormat, int width, int height);
@@ -115,34 +110,40 @@ namespace KvazaarInterop {
         }
 
         /// <summary>
-        /// Copy Y plane data from managed array
+        /// Copy Y plane data from unmanaged memory
         /// </summary>
-        void CopyYPlane(array<Byte>^ data, int offset, int length);
+        void CopyYPlane(IntPtr data, int length);
 
         /// <summary>
-        /// Copy U plane data from managed array
+        /// Copy U plane data from unmanaged memory
         /// </summary>
-        void CopyUPlane(array<Byte>^ data, int offset, int length);
+        void CopyUPlane(IntPtr data, int length);
 
         /// <summary>
-        /// Copy V plane data from managed array
+        /// Copy V plane data from unmanaged memory
         /// </summary>
-        void CopyVPlane(array<Byte>^ data, int offset, int length);
+        void CopyVPlane(IntPtr data, int length);
 
         /// <summary>
-        /// Get Y plane data as managed array
+        /// Get Y plane data pointer and length
         /// </summary>
-        array<Byte>^ GetYPlane();
+        /// <returns>Tuple with Data pointer and Length in bytes</returns>
+        [returnvalue: TupleElementNames(gcnew array<String^>{"Data", "Length"})]
+        ValueTuple<IntPtr, int> GetYPlane();
 
         /// <summary>
-        /// Get U plane data as managed array
+        /// Get U plane data pointer and length
         /// </summary>
-        array<Byte>^ GetUPlane();
+        /// <returns>Tuple with Data pointer and Length in bytes</returns>
+        [returnvalue:TupleElementNames(gcnew array<String^>{"Data", "Length"})]
+        ValueTuple<IntPtr, int> GetUPlane();
 
         /// <summary>
-        /// Get V plane data as managed array
+        /// Get V plane data pointer and length
         /// </summary>
-        array<Byte>^ GetVPlane();
+        /// <returns>Tuple with Data pointer and Length in bytes</returns>
+        [returnvalue:TupleElementNames(gcnew array<String^>{"Data", "Length"})]
+        ValueTuple<IntPtr, int> GetVPlane();
 
     internal:
         /// <summary>

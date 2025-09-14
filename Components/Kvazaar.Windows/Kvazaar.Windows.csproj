@@ -22,6 +22,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\ComponentContract\ComponentContract.csproj" />
         <ProjectReference Include="..\..\Interoperations\KvazaarInterop\KvazaarInterop.vcxproj" />
+        <ProjectReference Include="..\..\Interoperations\Minimp4Interop\Minimp4Interop.vcxproj" />
     </ItemGroup>
 
 </Project>

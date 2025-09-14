@@ -22,7 +22,7 @@ namespace Minimp4Interop {
             throw gcnew ArgumentException("Height must be positive", "height");
         }
 
-        Track^ track = gcnew Track();
+        auto track = gcnew Track();
         track->_trackType = TrackType::Video;
         track->_track = new MP4E_track_t();
         memset(track->_track, 0, sizeof(MP4E_track_t));
@@ -45,7 +45,7 @@ namespace Minimp4Interop {
             throw gcnew ArgumentException("Channels must be positive", "channels");
         }
 
-        Track^ track = gcnew Track();
+        auto track = gcnew Track();
         track->_trackType = TrackType::Audio;
         track->_track = new MP4E_track_t();
         memset(track->_track, 0, sizeof(MP4E_track_t));
@@ -59,6 +59,7 @@ namespace Minimp4Interop {
         return track;
     }
 
+#pragma region IDisposable
     void Track::ThrowIfDisposed() {
         if (_disposed) {
             throw gcnew ObjectDisposedException(this->GetType()->FullName);
@@ -80,5 +81,5 @@ namespace Minimp4Interop {
             _track = nullptr;
         }
     }
-
+#pragma endregion
 }

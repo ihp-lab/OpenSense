@@ -33,233 +33,650 @@ namespace KvazaarInterop {
         bool Parse([NotNull] String^ name, [NotNull] String^ value);
 
         /// <summary>
-        /// Gets or sets the quantization parameter
+        /// Quantization parameter.
+        /// Default value is 22.
         /// </summary>
         property int QP {
-            int get() {
-                ThrowIfDisposed();
-                return _config->qp;
-            }
-            void set(int value) {
-                ThrowIfDisposed();
-                _config->qp = value;
-            }
+            int get();
+            void set(int value);
         }
 
         /// <summary>
-        /// Gets or sets the width
-        /// </summary>
-        property int Width {
-            int get() {
-                ThrowIfDisposed();
-                return _config->width;
-            }
-            void set(int value) {
-                ThrowIfDisposed();
-                if (value <= 0 || value % 8 != 0) {
-                    throw gcnew ArgumentException("Width must be positive and divisible by 8");
-                }
-                _config->width = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the height
-        /// </summary>
-        property int Height {
-            int get() {
-                ThrowIfDisposed();
-                return _config->height;
-            }
-            void set(int value) {
-                ThrowIfDisposed();
-                if (value <= 0 || value % 8 != 0) {
-                    throw gcnew ArgumentException("Height must be positive and divisible by 8");
-                }
-                _config->height = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the intra period
+        /// The period of intra frames in stream.
+        /// 0: only first picture is intra.
+        /// 1: all pictures are intra.
+        /// N: every Nth picture is intra.
+        /// Default value is 64.
         /// </summary>
         property int IntraPeriod {
-            int get() {
-                ThrowIfDisposed();
-                return _config->intra_period;
-            }
-            void set(int value) {
-                ThrowIfDisposed();
-                _config->intra_period = value;
-            }
+            int get();
+            void set(int value);
         }
 
         /// <summary>
-        /// Gets or sets the framerate numerator
-        /// </summary>
-        property int FramerateNumerator {
-            int get() {
-                ThrowIfDisposed();
-                return _config->framerate_num;
-            }
-            void set(int value) {
-                ThrowIfDisposed();
-                _config->framerate_num = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the framerate denominator
-        /// </summary>
-        property int FramerateDenominator {
-            int get() {
-                ThrowIfDisposed();
-                return _config->framerate_denom;
-            }
-            void set(int value) {
-                ThrowIfDisposed();
-                _config->framerate_denom = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the target bitrate
-        /// </summary>
-        property int TargetBitrate {
-            int get() {
-                ThrowIfDisposed();
-                return _config->target_bitrate;
-            }
-            void set(int value) {
-                ThrowIfDisposed();
-                _config->target_bitrate = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the VPS period
+        /// How often the VPS, SPS and PPS are re-sent.
+        /// -1: never.
+        ///  0: first frame only.
+        ///  1: every intra frame.
+        ///  2: every other intra frame.
+        ///  3: every third intra frame.
+        /// Default value is 0.
         /// </summary>
         property int VpsPeriod {
-            int get() {
-                ThrowIfDisposed();
-                return _config->vps_period;
-            }
-            void set(int value) {
-                ThrowIfDisposed();
-                _config->vps_period = value;
-            }
+            int get();
+            void set(int value);
         }
 
         /// <summary>
-        /// Gets or sets whether deblocking is enabled
+        /// Frame width, must be a multiple of 8.
+        /// Default value is 0.
+        /// </summary>
+        property int Width {
+            int get();
+            void set(int value);
+        }
+
+        /// <summary>
+        /// Frame height, must be a multiple of 8.
+        /// Default value is 0.
+        /// </summary>
+        property int Height {
+            int get();
+            void set(int value);
+        }
+
+        /// <summary>
+        /// Framerate numerator.
+        /// Default value is 25.
+        /// </summary>
+        property int FramerateNumerator {
+            int get();
+            void set(int value);
+        }
+
+        /// <summary>
+        /// Framerate denominator.
+        /// Default value is 1.
+        /// </summary>
+        property int FramerateDenominator {
+            int get();
+            void set(int value);
+        }
+
+        /// <summary>
+        /// Flag to enable deblocking filter.
+        /// Default value is true.
         /// </summary>
         property bool DeblockEnable {
-            bool get() {
-                ThrowIfDisposed();
-                return _config->deblock_enable != 0;
-            }
-            void set(bool value) {
-                ThrowIfDisposed();
-                _config->deblock_enable = value ? 1 : 0;
-            }
+            bool get();
+            void set(bool value);
         }
 
         /// <summary>
-        /// Gets or sets the SAO type
+        /// Flag to enable sample adaptive offset filter.
+        /// Default value is 3.
         /// </summary>
         property SampleAdaptiveOffset SaoType {
-            SampleAdaptiveOffset get() {
-                ThrowIfDisposed();
-                return static_cast<SampleAdaptiveOffset>(_config->sao_type);
-            }
-            void set(SampleAdaptiveOffset value) {
-                ThrowIfDisposed();
-                _config->sao_type = static_cast<kvz_sao>(value);
-            }
+            SampleAdaptiveOffset get();
+            void set(SampleAdaptiveOffset value);
         }
 
         /// <summary>
-        /// Gets or sets the IME algorithm
+        /// Flag to enable RD optimized quantization.
+        /// Default value is true.
+        /// </summary>
+        property bool RdoqEnable {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Flag to enable sign hiding.
+        /// Default value is true.
+        /// </summary>
+        property bool SignhideEnable {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Flag to enable SMP blocks.
+        /// Default value is false.
+        /// </summary>
+        property bool SmpEnable {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Flag to enable AMP blocks.
+        /// Default value is false.
+        /// </summary>
+        property bool AmpEnable {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// RD-calculation level.
+        /// Range is 0 to 2.
+        /// Default value is 1.
+        /// </summary>
+        property int Rdo {
+            int get();
+            void set(int value);
+        }
+
+        /// <summary>
+        /// If true, don't skip modes in intra search.
+        /// Default value is false.
+        /// </summary>
+        property bool FullIntraSearch {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Flag to enable transform skip for 4x4 blocks.
+        /// Default value is false.
+        /// </summary>
+        property bool TrskipEnable {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Maximum transform depth for intra.
+        /// Default value is 0.
+        /// </summary>
+        property int TrDepthIntra {
+            int get();
+            void set(int value);
+        }
+
+        /// <summary>
+        /// Integer motion estimation algorithm.
+        /// Default value is KVZ_IME_HEXBS.
         /// </summary>
         property IntegerMotionEstimationAlgorithm ImeAlgorithm {
-            IntegerMotionEstimationAlgorithm get() {
-                ThrowIfDisposed();
-                return static_cast<IntegerMotionEstimationAlgorithm>(_config->ime_algorithm);
-            }
-            void set(IntegerMotionEstimationAlgorithm value) {
-                ThrowIfDisposed();
-                _config->ime_algorithm = static_cast<kvz_ime_algorithm>(value);
-            }
+            IntegerMotionEstimationAlgorithm get();
+            void set(IntegerMotionEstimationAlgorithm value);
         }
 
         /// <summary>
-        /// Gets or sets the motion vector constraint
+        /// Fractional pixel motion estimation level.
+        /// 0: disabled, 1-4: enabled with different accuracies.
+        /// Default value is 4.
         /// </summary>
-        property MotionVectorConstraint MvConstraint {
-            MotionVectorConstraint get() {
-                ThrowIfDisposed();
-                return static_cast<MotionVectorConstraint>(_config->mv_constraint);
-            }
-            void set(MotionVectorConstraint value) {
-                ThrowIfDisposed();
-                _config->mv_constraint = static_cast<kvz_mv_constraint>(value);
-            }
+        property int FmeLevel {
+            int get();
+            void set(int value);
         }
 
         /// <summary>
-        /// Gets or sets the hash algorithm
+        /// Source scan type.
+        /// 0: progressive, 1: top field first, 2: bottom field first.
+        /// Default value is 0.
         /// </summary>
-        property HashAlgorithm Hash {
-            HashAlgorithm get() {
-                ThrowIfDisposed();
-                return static_cast<HashAlgorithm>(_config->hash);
-            }
-            void set(HashAlgorithm value) {
-                ThrowIfDisposed();
-                _config->hash = static_cast<kvz_hash>(value);
-            }
+        property int SourceScanType {
+            int get();
+            void set(int value);
         }
 
         /// <summary>
-        /// Gets or sets the input format
+        /// Bi-prediction.
+        /// Default value is false.
         /// </summary>
-        property InputFormat InputFormat {
-            KvazaarInterop::InputFormat get() {
-                ThrowIfDisposed();
-                return static_cast<KvazaarInterop::InputFormat>(_config->input_format);
-            }
-            void set(KvazaarInterop::InputFormat value) {
-                ThrowIfDisposed();
-                _config->input_format = static_cast<kvz_input_format>(value);
-            }
+        property bool Bipred {
+            bool get();
+            void set(bool value);
         }
 
         /// <summary>
-        /// Gets or sets the input bit depth
+        /// Deblocking beta offset (div 2).
+        /// Range is -6 to 6.
+        /// Default value is 0.
         /// </summary>
-        property int InputBitDepth {
-            int get() {
-                ThrowIfDisposed();
-                return _config->input_bitdepth;
-            }
-            void set(int value) {
-                ThrowIfDisposed();
-                _config->input_bitdepth = value;
-            }
+        property int DeblockBeta {
+            int get();
+            void set(int value);
         }
 
         /// <summary>
-        /// Gets or sets the number of threads
+        /// Deblocking tc offset (div 2).
+        /// Range is -6 to 6.
+        /// Default value is 0.
+        /// </summary>
+        property int DeblockTc {
+            int get();
+            void set(int value);
+        }
+
+        /// <summary>
+        /// Flag to use access unit delimiters.
+        /// Default value is false.
+        /// </summary>
+        property bool AudEnable {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Number of reference frames to use.
+        /// Default value is 1.
+        /// </summary>
+        property int RefFrames {
+            int get();
+            void set(int value);
+        }
+
+        /// <summary>
+        /// Wavefront parallel processing.
+        /// Default value is true.
+        /// </summary>
+        property bool Wpp {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Frame-level parallelism.
+        /// Set to 0 to disable, positive values indicate number of frames.
+        /// Default value is -1 (auto).
+        /// </summary>
+        property int Owf {
+            int get();
+            void set(int value);
+        }
+
+        /// <summary>
+        /// Number of threads.
+        /// Default value is -1 (auto).
         /// </summary>
         property int Threads {
-            int get() {
-                ThrowIfDisposed();
-                return _config->threads;
-            }
-            void set(int value) {
-                ThrowIfDisposed();
-                _config->threads = value;
-            }
+            int get();
+            void set(int value);
+        }
+
+        /// <summary>
+        /// Enable CPU optimizations.
+        /// Default value is true.
+        /// </summary>
+        property bool Cpuid {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Add encoder information SEI message.
+        /// Default value is true.
+        /// </summary>
+        property bool AddEncoderInfo {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Length of GOP for the video sequence.
+        /// Default value is 4.
+        /// </summary>
+        property int GopLen {
+            int get();
+            void set(int value);
+        }
+
+        /// <summary>
+        /// Specifies that the GOP does not use future pictures.
+        /// Default value is true.
+        /// </summary>
+        property bool GopLowDelay {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Target bitrate in bits per second.
+        /// Default value is 0 (disabled).
+        /// </summary>
+        property int TargetBitrate {
+            int get();
+            void set(int value);
+        }
+
+        /// <summary>
+        /// MV RDO calculation in search.
+        /// 0: estimation, 1: RDO.
+        /// Default value is false.
+        /// </summary>
+        property bool MvRdo {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Calculate PSNR.
+        /// Default value is true.
+        /// </summary>
+        property bool CalcPsnr {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Constrain movement vectors.
+        /// Default value is KVZ_MV_CONSTRAIN_NONE.
+        /// </summary>
+        property MotionVectorConstraint MvConstraint {
+            MotionVectorConstraint get();
+            void set(MotionVectorConstraint value);
+        }
+
+        /// <summary>
+        /// What hash algorithm to use.
+        /// Default value is KVZ_HASH_CHECKSUM.
+        /// </summary>
+        property HashAlgorithm Hash {
+            HashAlgorithm get();
+            void set(HashAlgorithm value);
+        }
+
+        /// <summary>
+        /// Motion estimation early termination.
+        /// Default value is KVZ_ME_EARLY_TERMINATION_ON.
+        /// </summary>
+        property MotionEstimationEarlyTermination MeEarlyTermination {
+            MotionEstimationEarlyTermination get();
+            void set(MotionEstimationEarlyTermination value);
+        }
+
+        /// <summary>
+        /// Use early termination in intra RDO.
+        /// Default value is false.
+        /// </summary>
+        property bool IntraRdoEt {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Use lossless coding.
+        /// Default value is false.
+        /// </summary>
+        property bool Lossless {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Use Temporal Motion Vector Predictors.
+        /// Default value is true.
+        /// </summary>
+        property bool TmvpEnable {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Mode of RDOQ skip.
+        /// Default value is 1.
+        /// </summary>
+        property int RdoqSkip {
+            int get();
+            void set(int value);
+        }
+
+        /// <summary>
+        /// Input picture format.
+        /// Default value is KVZ_FORMAT_P420.
+        /// </summary>
+        property InputFormat InputFormat {
+            KvazaarInterop::InputFormat get();
+            void set(KvazaarInterop::InputFormat value);
+        }
+
+        /// <summary>
+        /// Input bit depth.
+        /// Default value is 8.
+        /// </summary>
+        property int InputBitDepth {
+            int get();
+            void set(int value);
+        }
+
+        /// <summary>
+        /// Enable implicit residual DPCM.
+        /// Default value is false.
+        /// </summary>
+        property bool ImplicitRdpcm {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Use adaptive QP for 360 video with equirectangular projection.
+        /// Default value is false.
+        /// </summary>
+        property bool ErpAqp {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// The HEVC level.
+        /// Default value is 62 (level 6.2, the highest).
+        /// </summary>
+        property int Level {
+            int get();
+            void set(int value);
+        }
+
+        /// <summary>
+        /// Whether to ignore level limit violations.
+        /// Default value is true.
+        /// </summary>
+        property bool ForceLevel {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Whether to use high tier bitrates.
+        /// Requires the level to be 4.0 or higher.
+        /// Default value is false.
+        /// </summary>
+        property bool HighTier {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Maximum steps that hexagonal and diagonal motion estimation can use.
+        /// -1 to disable limit.
+        /// Default value is -1.
+        /// </summary>
+        property unsigned int MeMaxSteps {
+            unsigned int get();
+            void set(unsigned int value);
+        }
+
+        /// <summary>
+        /// Offset to add to QP for intra frames.
+        /// Default value is 0.
+        /// </summary>
+        property int IntraQpOffset {
+            int get();
+            void set(int value);
+        }
+
+        /// <summary>
+        /// Select intra QP offset automatically based on GOP length.
+        /// Default value is true.
+        /// </summary>
+        property bool IntraQpOffsetAuto {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Minimum QP that uses CABAC for residual cost instead of a fast estimate.
+        /// Default value is 0.
+        /// </summary>
+        property int FastResidualCostLimit {
+            int get();
+            void set(int value);
+        }
+
+        /// <summary>
+        /// Set QP at CU level keeping pic_init_qp_minus26 in PPS zero.
+        /// Default value is false.
+        /// </summary>
+        property bool SetQpInCu {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Flag to enable open GOP configuration.
+        /// Default value is true.
+        /// </summary>
+        property bool OpenGop {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Enable variance adaptive quantization.
+        /// Default value is 0.
+        /// </summary>
+        property int Vaq {
+            int get();
+            void set(int value);
+        }
+
+        /// <summary>
+        /// Type of scaling lists to use.
+        /// Default value is KVZ_SCALING_LIST_OFF.
+        /// </summary>
+        property KvazaarInterop::ScalingList ScalingList {
+            KvazaarInterop::ScalingList get();
+            void set(KvazaarInterop::ScalingList value);
+        }
+
+        /// <summary>
+        /// Maximum number of merge candidates.
+        /// Default value is 5.
+        /// </summary>
+        property int MaxMerge {
+            int get();
+            void set(int value);
+        }
+
+        /// <summary>
+        /// Enable Early Skip Mode Decision.
+        /// Default value is true.
+        /// </summary>
+        property bool EarlySkip {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Enable Machine learning CU depth prediction for Intra encoding.
+        /// Default value is false.
+        /// </summary>
+        property bool MlPuDepthIntra {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Always consider CU without any quantized residual.
+        /// Default value is true.
+        /// </summary>
+        property bool ZeroCoeffRdo {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Rate control algorithm to use.
+        /// Default value is KVZ_NO_RC.
+        /// </summary>
+        property RateControlAlgorithm RcAlgorithm {
+            RateControlAlgorithm get();
+            void set(RateControlAlgorithm value);
+        }
+
+        /// <summary>
+        /// Whether to use hadamard based bit allocation for intra frames.
+        /// Default value is false.
+        /// </summary>
+        property bool IntraBitAllocation {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Clip intra predictions to neighbour pixels.
+        /// Default value is true.
+        /// </summary>
+        property bool ClipNeighbour {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Input file format.
+        /// Default value is KVZ_FORMAT_AUTO.
+        /// </summary>
+        property KvazaarInterop::FileFormat FileFormat {
+            KvazaarInterop::FileFormat get();
+            void set(KvazaarInterop::FileFormat value);
+        }
+
+        /// <summary>
+        /// Try combining intra CUs at lower depth.
+        /// Default value is true.
+        /// </summary>
+        property bool CombineIntraCus {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Force inter mode for all CUs.
+        /// Default value is false.
+        /// </summary>
+        property bool ForceInter {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Enable chroma search in intra mode.
+        /// Default value is false.
+        /// </summary>
+        property bool IntraChromaSearch {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Enable fast bipred mode.
+        /// Default value is true.
+        /// </summary>
+        property bool FastBipred {
+            bool get();
+            void set(bool value);
+        }
+
+        /// <summary>
+        /// Enable logging output to stderr.
+        /// Default value is true.
+        /// </summary>
+        property bool EnableLoggingOutput {
+            bool get();
+            void set(bool value);
         }
 
     internal:
@@ -267,10 +684,7 @@ namespace KvazaarInterop {
         /// Gets the internal kvz_config pointer
         /// </summary>
         property kvz_config* InternalConfig {
-            kvz_config* get() {
-                ThrowIfDisposed();
-                return _config;
-            }
+            kvz_config* get();
         }
 
 #pragma region IDisposable
