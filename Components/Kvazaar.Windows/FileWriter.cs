@@ -17,7 +17,6 @@ namespace OpenSense.Components.Kvazaar {
     public sealed class FileWriter<TImage> : IConsumer<Shared<TImage>>, INotifyPropertyChanged, IDisposable where TImage : ImageBase {
 
         #region Ports
-
         public Receiver<Shared<TImage>> In { get; }
         #endregion
 
@@ -153,16 +152,13 @@ namespace OpenSense.Components.Kvazaar {
                 InputFormat = InputFormat.P400,
                 InputBitDepth = 16,
                 Lossless = true,
+                VpsPeriod = 0,// Emit VPS/SPS/PPS only once, that is at the beginning of the first frame. With this setting, GetHeaders() is no longer needed. 0 is the default value.
             };
             var encoder = new Encoder(config);
             var stream = new FileStream(ActualFilename, FileMode.Create, FileAccess.Write, FileShare.Read);
             var muxer = new Muxer(stream, MuxMode.Default);
             var writer = new H26xWriter(muxer, width, height, isHEVC: true);
             context = new FileWriterContext(startTime, config, encoder, stream, muxer, writer);
-
-            /* Header */
-            var header = encoder.GetHeaders();//Since we are writing mp4, this header only appears once at the beginning of the file.
-            WriteDataChunk(writer, header, timestamp90kHz: 0); // timestamp will be ignored in this case
         }
 
         private static void WriteEncodedFrameAndDisposeIfValid(H26xWriter writer, DataChunk? dataChunk, FrameInfo? frameInfo, Picture? sourcePicture) {

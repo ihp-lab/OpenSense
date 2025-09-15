@@ -1,1 +1,2 @@
-Minimp4 header-only library from commit `4575afb` on September 6, 2025.
+Minimp4 header-only library.
+We’re using a modified version of minimp4 (https://github.com/KanaLab/minimp4) to circumvent its limitations.

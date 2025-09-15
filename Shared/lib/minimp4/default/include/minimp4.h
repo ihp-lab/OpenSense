@@ -119,6 +119,8 @@ typedef boxsize_t MP4D_file_offset_t;
 #define HEVC_NAL_BLA_W_LP 16
 #define HEVC_NAL_CRA_NUT  21
 
+#define HEVC_NAL_SEI_PREFIX 39
+
 /************************************************************************/
 /*          Data structures                                             */
 /************************************************************************/
@@ -2298,6 +2300,24 @@ static int mp4_h265_write_nal(mp4_h26x_writer_t *h, const unsigned char *nal, in
         MP4E_set_pps(h->mux, h->mux_track_id, nal, sizeof_nal);
         h->need_pps = 0;
         break;
+
+    // Pass-through NAL units
+    case HEVC_NAL_SEI_PREFIX:
+        {
+            unsigned char* tmp = (unsigned char*)malloc(4 + sizeof_nal);
+            if (!tmp) {
+                return MP4E_STATUS_NO_MEMORY;
+            }
+            tmp[0] = (unsigned char)(sizeof_nal >> 24);
+            tmp[1] = (unsigned char)(sizeof_nal >> 16);
+            tmp[2] = (unsigned char)(sizeof_nal >> 8);
+            tmp[3] = (unsigned char)(sizeof_nal);
+            memcpy(tmp + 4, nal, sizeof_nal);
+            err = MP4E_put_sample(h->mux, h->mux_track_id, tmp, 4 + sizeof_nal, timeStamp90kHz_next, MP4E_SAMPLE_DEFAULT);
+            free(tmp);
+        }
+        break;
+
     default:
         if (h->need_vps || h->need_sps || h->need_pps || h->need_idr)
             return MP4E_STATUS_BAD_ARGUMENTS;
