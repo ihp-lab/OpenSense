@@ -116,10 +116,11 @@ typedef boxsize_t MP4D_file_offset_t;
 #define HEVC_NAL_VPS 32
 #define HEVC_NAL_SPS 33
 #define HEVC_NAL_PPS 34
+#define HEVC_NAL_AUD 35
+#define HEVC_NAL_SEI_PREFIX 39
+#define HEVC_NAL_SEI_SUFFIX 40
 #define HEVC_NAL_BLA_W_LP 16
 #define HEVC_NAL_CRA_NUT  21
-
-#define HEVC_NAL_SEI_PREFIX 39
 
 /************************************************************************/
 /*          Data structures                                             */
@@ -341,6 +342,11 @@ typedef struct mp4_h26x_writer_tag
 #endif
     MP4E_mux_t *mux;
     int mux_track_id, is_hevc, need_vps, need_sps, need_pps, need_idr;
+
+    // NAL caching for bundling non-VCL NALs with VCL NALs
+    unsigned char *cached_nals;      // Buffer for cached NAL units (SEI, AUD, etc.)
+    int cached_nals_size;             // Current size of cached data
+    int cached_nals_capacity;         // Allocated capacity of buffer
 } mp4_h26x_writer_t;
 
 int mp4_h26x_write_init(mp4_h26x_writer_t *h, MP4E_mux_t *mux, int width, int height, int is_hevc);
@@ -2252,6 +2258,12 @@ int mp4_h26x_write_init(mp4_h26x_writer_t *h, MP4E_mux_t *mux, int width, int he
     h->need_sps = 1;
     h->need_pps = 1;
     h->need_idr = 1;
+
+    // Initialize NAL cache
+    h->cached_nals = NULL;
+    h->cached_nals_size = 0;
+    h->cached_nals_capacity = 0;
+
 #if MINIMP4_TRANSCODE_SPS_ID
     memset(&h->sps_patcher, 0, sizeof(h264_sps_id_patcher_t));
 #endif
@@ -2260,6 +2272,13 @@ int mp4_h26x_write_init(mp4_h26x_writer_t *h, MP4E_mux_t *mux, int width, int he
 
 void mp4_h26x_write_close(mp4_h26x_writer_t *h)
 {
+    // Free NAL cache
+    if (h->cached_nals)
+    {
+        free(h->cached_nals);
+        h->cached_nals = NULL;
+    }
+
 #if MINIMP4_TRANSCODE_SPS_ID
     h264_sps_id_patcher_t *p = &h->sps_patcher;
     int i;
@@ -2275,6 +2294,92 @@ void mp4_h26x_write_close(mp4_h26x_writer_t *h)
     }
 #endif
     memset(h, 0, sizeof(*h));
+}
+
+// Helper function to append NAL to cache
+static int mp4_h26x_cache_nal(mp4_h26x_writer_t *h, const unsigned char *nal, int sizeof_nal)
+{
+    // Need 4 bytes for length prefix + NAL data
+    int required_size = h->cached_nals_size + 4 + sizeof_nal;
+
+    // Grow buffer if needed
+    if (required_size > h->cached_nals_capacity)
+    {
+        int new_capacity = h->cached_nals_capacity ? h->cached_nals_capacity * 2 : 4096;
+        while (new_capacity < required_size)
+            new_capacity *= 2;
+
+        unsigned char *new_buffer = (unsigned char *)realloc(h->cached_nals, new_capacity);
+        if (!new_buffer)
+            return MP4E_STATUS_NO_MEMORY;
+
+        h->cached_nals = new_buffer;
+        h->cached_nals_capacity = new_capacity;
+    }
+
+    // Append 4-byte length prefix
+    h->cached_nals[h->cached_nals_size++] = (unsigned char)(sizeof_nal >> 24);
+    h->cached_nals[h->cached_nals_size++] = (unsigned char)(sizeof_nal >> 16);
+    h->cached_nals[h->cached_nals_size++] = (unsigned char)(sizeof_nal >> 8);
+    h->cached_nals[h->cached_nals_size++] = (unsigned char)(sizeof_nal);
+
+    // Append NAL data
+    memcpy(h->cached_nals + h->cached_nals_size, nal, sizeof_nal);
+    h->cached_nals_size += sizeof_nal;
+
+    return MP4E_STATUS_OK;
+}
+
+// Helper function to flush cached NALs along with current NAL
+static int mp4_h26x_flush_cached_nals(mp4_h26x_writer_t *h, const unsigned char *nal, int sizeof_nal,
+                                       unsigned timeStamp90kHz, int sample_kind)
+{
+    int err;
+
+    if (h->cached_nals_size > 0)
+    {
+        // Allocate buffer for cached NALs + current NAL
+        int total_size = h->cached_nals_size + 4 + sizeof_nal;
+        unsigned char *tmp = (unsigned char *)malloc(total_size);
+        if (!tmp)
+            return MP4E_STATUS_NO_MEMORY;
+
+        // Copy cached NALs
+        memcpy(tmp, h->cached_nals, h->cached_nals_size);
+
+        // Append current NAL with length prefix
+        int offset = h->cached_nals_size;
+        tmp[offset++] = (unsigned char)(sizeof_nal >> 24);
+        tmp[offset++] = (unsigned char)(sizeof_nal >> 16);
+        tmp[offset++] = (unsigned char)(sizeof_nal >> 8);
+        tmp[offset++] = (unsigned char)(sizeof_nal);
+        memcpy(tmp + offset, nal, sizeof_nal);
+
+        // Write combined sample
+        err = MP4E_put_sample(h->mux, h->mux_track_id, tmp, total_size, timeStamp90kHz, sample_kind);
+        free(tmp);
+
+        // Clear cache
+        h->cached_nals_size = 0;
+    }
+    else
+    {
+        // No cached NALs, just write current NAL
+        unsigned char *tmp = (unsigned char *)malloc(4 + sizeof_nal);
+        if (!tmp)
+            return MP4E_STATUS_NO_MEMORY;
+
+        tmp[0] = (unsigned char)(sizeof_nal >> 24);
+        tmp[1] = (unsigned char)(sizeof_nal >> 16);
+        tmp[2] = (unsigned char)(sizeof_nal >> 8);
+        tmp[3] = (unsigned char)(sizeof_nal);
+        memcpy(tmp + 4, nal, sizeof_nal);
+
+        err = MP4E_put_sample(h->mux, h->mux_track_id, tmp, 4 + sizeof_nal, timeStamp90kHz, sample_kind);
+        free(tmp);
+    }
+
+    return err;
 }
 
 static int mp4_h265_write_nal(mp4_h26x_writer_t *h, const unsigned char *nal, int sizeof_nal, unsigned timeStamp90kHz_next)
@@ -2301,41 +2406,21 @@ static int mp4_h265_write_nal(mp4_h26x_writer_t *h, const unsigned char *nal, in
         h->need_pps = 0;
         break;
 
-    // Pass-through NAL units
+    // Cache non-VCL NAL units (SEI, AUD) to bundle with the next VCL NAL
+    case HEVC_NAL_AUD:
     case HEVC_NAL_SEI_PREFIX:
-        {
-            unsigned char* tmp = (unsigned char*)malloc(4 + sizeof_nal);
-            if (!tmp) {
-                return MP4E_STATUS_NO_MEMORY;
-            }
-            tmp[0] = (unsigned char)(sizeof_nal >> 24);
-            tmp[1] = (unsigned char)(sizeof_nal >> 16);
-            tmp[2] = (unsigned char)(sizeof_nal >> 8);
-            tmp[3] = (unsigned char)(sizeof_nal);
-            memcpy(tmp + 4, nal, sizeof_nal);
-            err = MP4E_put_sample(h->mux, h->mux_track_id, tmp, 4 + sizeof_nal, timeStamp90kHz_next, MP4E_SAMPLE_DEFAULT);
-            free(tmp);
-        }
+    case HEVC_NAL_SEI_SUFFIX:
+        // Cache these NALs instead of writing them as separate samples
+        err = mp4_h26x_cache_nal(h, nal, sizeof_nal);
         break;
 
     default:
         if (h->need_vps || h->need_sps || h->need_pps || h->need_idr)
             return MP4E_STATUS_BAD_ARGUMENTS;
-        {
-            unsigned char *tmp = (unsigned char *)malloc(4 + sizeof_nal);
-            if (!tmp)
-                return MP4E_STATUS_NO_MEMORY;
-            int sample_kind = MP4E_SAMPLE_DEFAULT;
-            tmp[0] = (unsigned char)(sizeof_nal >> 24);
-            tmp[1] = (unsigned char)(sizeof_nal >> 16);
-            tmp[2] = (unsigned char)(sizeof_nal >>  8);
-            tmp[3] = (unsigned char)(sizeof_nal);
-            memcpy(tmp + 4, nal, sizeof_nal);
-            if (is_intra)
-                sample_kind = MP4E_SAMPLE_RANDOM_ACCESS;
-            err = MP4E_put_sample(h->mux, h->mux_track_id, tmp, 4 + sizeof_nal, timeStamp90kHz_next, sample_kind);
-            free(tmp);
-        }
+
+        // This is a VCL NAL (actual video data) - flush cached NALs with it
+        int sample_kind = is_intra ? MP4E_SAMPLE_RANDOM_ACCESS : MP4E_SAMPLE_DEFAULT;
+        err = mp4_h26x_flush_cached_nals(h, nal, sizeof_nal, timeStamp90kHz_next, sample_kind);
         break;
     }
     return err;
