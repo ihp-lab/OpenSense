@@ -88,7 +88,10 @@ namespace OpenSense.Components.Kvazaar {
         #endregion
 
         private void Process(Shared<TImage> image, Envelope envelope) {
-            Debug.Assert(image.Resource.PixelFormat == PixelFormat.Gray_16bpp);
+            if (image.Resource.PixelFormat != PixelFormat.Gray_16bpp) {
+                throw new InvalidOperationException($"This Kvazaar only supports Gray_16bpp pixel format, but received {image.Resource.PixelFormat}.");
+            }
+
             var width = image.Resource.Width;
             var height = image.Resource.Height;
             EnsureContext(width, height, envelope.OriginatingTime);
@@ -149,6 +152,7 @@ namespace OpenSense.Components.Kvazaar {
                 FramerateDenominator = 10_000_000, // 1 tick precision for variable frame rate
                 InputFormat = InputFormat.P400,
                 InputBitDepth = 16,
+                Lossless = true,
             };
             var encoder = new Encoder(config);
             var stream = new FileStream(ActualFilename, FileMode.Create, FileAccess.Write, FileShare.Read);

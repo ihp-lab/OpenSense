@@ -4,9 +4,8 @@ using System.Composition;
 using System.Windows;
 using OpenSense.Components;
 using OpenSense.Components.FFMpeg;
-using OpenSense.WPF.Components.FFMpeg;
 
-namespace OpenSense.WPF.Components.OpenFace {
+namespace OpenSense.WPF.Components.FFMpeg {
     [Export(typeof(IConfigurationControlCreator))]
     public sealed class FileSourceConfigurationControlCreator : IConfigurationControlCreator {
 

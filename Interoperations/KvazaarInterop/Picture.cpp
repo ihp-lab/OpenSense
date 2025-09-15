@@ -46,9 +46,15 @@ namespace KvazaarInterop {
             throw gcnew ArgumentOutOfRangeException("length", "Length must be non-negative");
         }
 
-        auto planeSize = _picture->stride * _picture->height;
-        if (length > planeSize) {
-            throw gcnew ArgumentException("Data length exceeds Y plane size");
+        // Calculate Y plane size in bytes
+        // Note: stride and dimensions are in pixels, but for 16-bit mode each pixel is 2 bytes
+        auto planeSizeInPixels = _picture->stride * _picture->height;
+        auto planeSizeInBytes = planeSizeInPixels * sizeof(kvz_pixel);
+        if (length > planeSizeInBytes) {
+            throw gcnew ArgumentException(String::Format(
+                "Data length ({0} bytes) exceeds Y plane size ({1} bytes). Picture dimensions: {2}x{3}, stride: {4} pixels, pixel size: {5} bytes",
+                length, planeSizeInBytes, _picture->width, _picture->height, _picture->stride, sizeof(kvz_pixel)
+            ));
         }
 
         memcpy(_picture->y, data.ToPointer(), length);
@@ -68,6 +74,17 @@ namespace KvazaarInterop {
             throw gcnew InvalidOperationException("Picture has no U plane");
         }
 
+        // Calculate U plane size based on chroma format
+        auto yPlaneSizeInPixels = _picture->stride * _picture->height;
+        auto chromaFormat = static_cast<KvazaarInterop::ChromaFormat>(_picture->chroma_format);
+        auto uPlaneSizeInBytes = CalculateChromaPlaneSizeInBytes(yPlaneSizeInPixels, chromaFormat);
+        if (length > uPlaneSizeInBytes) {
+            throw gcnew ArgumentException(String::Format(
+                "Data length ({0} bytes) exceeds U plane size ({1} bytes). Picture dimensions: {2}x{3}, stride: {4}, chroma format: {5}",
+                length, uPlaneSizeInBytes, _picture->width, _picture->height, _picture->stride, chromaFormat
+            ));
+        }
+
         memcpy(_picture->u, data.ToPointer(), length);
     }
 
@@ -85,14 +102,26 @@ namespace KvazaarInterop {
             throw gcnew InvalidOperationException("Picture has no V plane");
         }
 
+        // Calculate V plane size based on chroma format
+        auto yPlaneSizeInPixels = _picture->stride * _picture->height;
+        auto chromaFormat = static_cast<KvazaarInterop::ChromaFormat>(_picture->chroma_format);
+        auto vPlaneSizeInBytes = CalculateChromaPlaneSizeInBytes(yPlaneSizeInPixels, chromaFormat);
+        if (length > vPlaneSizeInBytes) {
+            throw gcnew ArgumentException(String::Format(
+                "Data length ({0} bytes) exceeds V plane size ({1} bytes). Picture dimensions: {2}x{3}, stride: {4}, chroma format: {5}",
+                length, vPlaneSizeInBytes, _picture->width, _picture->height, _picture->stride, chromaFormat
+            ));
+        }
+
         memcpy(_picture->v, data.ToPointer(), length);
     }
 
     ValueTuple<IntPtr, int> Picture::GetYPlane() {
         ThrowIfDisposed();
 
-        auto planeSize = _picture->stride * _picture->height;
-        return ValueTuple<IntPtr, int>(IntPtr(_picture->y), planeSize);
+        auto planeSizeInPixels = _picture->stride * _picture->height;
+        auto planeSizeInBytes = planeSizeInPixels * sizeof(kvz_pixel);
+        return ValueTuple<IntPtr, int>(IntPtr(_picture->y), planeSizeInBytes);
     }
 
     ValueTuple<IntPtr, int> Picture::GetUPlane() {
@@ -102,18 +131,10 @@ namespace KvazaarInterop {
             return ValueTuple<IntPtr, int>(IntPtr::Zero, 0);
         }
 
-        auto chromaHeight = _picture->height;
-        auto chromaStride = _picture->stride;
-
-        if (_picture->chroma_format == KVZ_CSP_420) {
-            chromaHeight /= 2;
-            chromaStride /= 2;
-        } else if (_picture->chroma_format == KVZ_CSP_422) {
-            chromaStride /= 2;
-        }
-
-        auto planeSize = chromaStride * chromaHeight;
-        return ValueTuple<IntPtr, int>(IntPtr(_picture->u), planeSize);
+        auto yPlaneSizeInPixels = _picture->stride * _picture->height;
+        auto chromaFormat = static_cast<KvazaarInterop::ChromaFormat>(_picture->chroma_format);
+        auto planeSizeInBytes = CalculateChromaPlaneSizeInBytes(yPlaneSizeInPixels, chromaFormat);
+        return ValueTuple<IntPtr, int>(IntPtr(_picture->u), planeSizeInBytes);
     }
 
     ValueTuple<IntPtr, int> Picture::GetVPlane() {
@@ -123,20 +144,39 @@ namespace KvazaarInterop {
             return ValueTuple<IntPtr, int>(IntPtr::Zero, 0);
         }
 
-        auto chromaHeight = _picture->height;
-        auto chromaStride = _picture->stride;
-
-        if (_picture->chroma_format == KVZ_CSP_420) {
-            chromaHeight /= 2;
-            chromaStride /= 2;
-        } else if (_picture->chroma_format == KVZ_CSP_422) {
-            chromaStride /= 2;
-        }
-
-        auto planeSize = chromaStride * chromaHeight;
-        return ValueTuple<IntPtr, int>(IntPtr(_picture->v), planeSize);
+        auto yPlaneSizeInPixels = _picture->stride * _picture->height;
+        auto chromaFormat = static_cast<KvazaarInterop::ChromaFormat>(_picture->chroma_format);
+        auto planeSizeInBytes = CalculateChromaPlaneSizeInBytes(yPlaneSizeInPixels, chromaFormat);
+        return ValueTuple<IntPtr, int>(IntPtr(_picture->v), planeSizeInBytes);
     }
 
+    int Picture::CalculateChromaPlaneSizeInBytes(int yPlaneSizeInPixels, KvazaarInterop::ChromaFormat chromaFormat) {
+        int chromaPlaneSizeInPixels;
+        switch (chromaFormat) {
+        case KvazaarInterop::ChromaFormat::Csp400:
+            // 4:0:0 - No chroma planes
+            chromaPlaneSizeInPixels = 0;
+            break;
+        case KvazaarInterop::ChromaFormat::Csp420:
+            // 4:2:0 - Chroma planes are 1/2 width and 1/2 height of Y plane
+            chromaPlaneSizeInPixels = yPlaneSizeInPixels / 4;
+            break;
+        case KvazaarInterop::ChromaFormat::Csp422:
+            // 4:2:2 - Chroma planes are 1/2 width and full height of Y plane
+            chromaPlaneSizeInPixels = yPlaneSizeInPixels / 2;
+            break;
+        case KvazaarInterop::ChromaFormat::Csp444:
+            // 4:4:4 - Chroma planes are same size as Y plane
+            chromaPlaneSizeInPixels = yPlaneSizeInPixels;
+            break;
+        default:
+            throw gcnew ArgumentException("Unknown chroma format");
+        }
+        // Convert from pixels to bytes
+        return chromaPlaneSizeInPixels * sizeof(kvz_pixel);
+    }
+
+#pragma region IDisposable
     void Picture::ThrowIfDisposed() {
         if (_disposed) {
             throw gcnew ObjectDisposedException(this->GetType()->FullName);
@@ -159,4 +199,5 @@ namespace KvazaarInterop {
             _picture = nullptr;
         }
     }
+#pragma endregion
 }

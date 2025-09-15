@@ -154,6 +154,15 @@ namespace KvazaarInterop {
         [returnvalue:TupleElementNames(gcnew array<String^>{"Data", "Length"})]
         ValueTuple<IntPtr, int> GetVPlane();
 
+    private:
+        /// <summary>
+        /// Calculate the size of a chroma plane based on the chroma format
+        /// </summary>
+        /// <param name="yPlaneSize">Size of the Y plane in bytes</param>
+        /// <param name="chromaFormat">Chroma format</param>
+        /// <returns>Size of U or V plane in bytes</returns>
+        static int CalculateChromaPlaneSizeInBytes(int yPlaneSize, KvazaarInterop::ChromaFormat chromaFormat);
+
     internal:
         /// <summary>
         /// Gets the internal kvz_picture pointer
