@@ -10,6 +10,7 @@
         <RootNamespace>OpenSense.Components.Kvazaar</RootNamespace>
         <LangVersion>latest</LangVersion>
         <EmbedAllSources>true</EmbedAllSources>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 

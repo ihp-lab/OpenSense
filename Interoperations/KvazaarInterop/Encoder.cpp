@@ -31,149 +31,52 @@ namespace KvazaarInterop {
         }
 
         if (!dataOut) {
-            return nullptr;
+            throw gcnew InvalidOperationException("Encoder headers returned success but no data");
         }
 
-        return gcnew DataChunk(dataOut);
+        auto totalLength = static_cast<int>(lenOut);
+        return gcnew DataChunk(dataOut, totalLength);
     }
 
-    DataChunk^ Encoder::GetHeaders([Out] int% length) {
-        ThrowIfDisposed();
-
-        auto api = Api::GetApi();
-        auto dataOut = static_cast<kvz_data_chunk*>(nullptr);
-        auto lenOut = uint32_t{0};
-
-        auto result = api->encoder_headers(_encoder, &dataOut, &lenOut);
-        if (!result) {
-            throw gcnew InvalidOperationException("Failed to get encoder headers");
-        }
-
-        length = static_cast<int>(lenOut);
-
-        if (!dataOut) {
-            return nullptr;
-        }
-
-        return gcnew DataChunk(dataOut);
-    }
-
-    DataChunk^ Encoder::Encode(
-        Picture^ pictureIn,
-        [Out] Picture^% pictureOut,
-        [Out] Picture^% sourceOut,
-        [Out] FrameInfo^% infoOut
+    ValueTuple<DataChunk^, FrameInfo^, Picture^, Picture^> Encoder::Encode(
+        Picture^ inputPicture,
+        bool noDataChunk,
+        bool noFrameInfo,
+        bool noSourcePicture,
+        bool noReconstructedPicture
     ) {
         ThrowIfDisposed();
 
         auto api = Api::GetApi();
-        auto picIn = pictureIn ? pictureIn->InternalPicture : static_cast<kvz_picture*>(nullptr);
+        auto picIn = inputPicture ? inputPicture->InternalPicture : static_cast<kvz_picture*>(nullptr);
         auto dataOut = static_cast<kvz_data_chunk*>(nullptr);
         auto lenOut = uint32_t{0};
-        auto picOut = static_cast<kvz_picture*>(nullptr);
-        auto srcOut = static_cast<kvz_picture*>(nullptr);
         auto infoOutNative = kvz_frame_info{};
+        auto picOutPtr = static_cast<kvz_picture*>(nullptr);
+        auto srcOutPtr = static_cast<kvz_picture*>(nullptr);
 
-        auto result = api->encoder_encode(_encoder, picIn, &dataOut, &lenOut, &picOut, &srcOut, &infoOutNative);
+        auto result = api->encoder_encode(
+            _encoder,
+            picIn,
+            noDataChunk ? nullptr : &dataOut,
+            noDataChunk ? nullptr : &lenOut,
+            noReconstructedPicture ? nullptr : &picOutPtr,
+            noSourcePicture ? nullptr : &srcOutPtr,
+            noFrameInfo ? nullptr : &infoOutNative
+        );
         if (!result) {
             throw gcnew InvalidOperationException("Encoding failed");
         }
 
-        pictureOut = nullptr;
-        sourceOut = nullptr;
-        infoOut = nullptr;
+        auto totalLength = static_cast<int>(lenOut);
+        auto dataChunk = (!noDataChunk && dataOut) ? gcnew DataChunk(dataOut, totalLength) : nullptr;
+        auto frameInfo = (!noFrameInfo && lenOut > 0) ? gcnew FrameInfo(infoOutNative) : nullptr;
+        auto sourcePicture = (!noSourcePicture && srcOutPtr) ? gcnew Picture(srcOutPtr) : nullptr;
+        auto reconstructedPicture = (!noReconstructedPicture && picOutPtr) ? gcnew Picture(picOutPtr) : nullptr;
 
-        if (picOut) {
-            pictureOut = gcnew Picture(static_cast<KvazaarInterop::ChromaFormat>(picOut->chroma_format), picOut->width, picOut->height);
-            delete pictureOut;
-            pictureOut = nullptr;
-        }
-
-        if (srcOut) {
-            sourceOut = gcnew Picture(static_cast<KvazaarInterop::ChromaFormat>(srcOut->chroma_format), srcOut->width, srcOut->height);
-            delete sourceOut;
-            sourceOut = nullptr;
-        }
-
-        if (lenOut > 0) {
-            infoOut = gcnew FrameInfo(infoOutNative);
-        }
-
-        if (!dataOut) {
-            return nullptr;
-        }
-
-        return gcnew DataChunk(dataOut);
-    }
-
-    DataChunk^ Encoder::Encode(
-        Picture^ pictureIn,
-        [Out] int% length,
-        [Out] Picture^% pictureOut,
-        [Out] Picture^% sourceOut,
-        [Out] FrameInfo^% infoOut
-    ) {
-        ThrowIfDisposed();
-
-        auto api = Api::GetApi();
-        auto picIn = pictureIn ? pictureIn->InternalPicture : static_cast<kvz_picture*>(nullptr);
-        auto dataOut = static_cast<kvz_data_chunk*>(nullptr);
-        auto lenOut = uint32_t{0};
-        auto picOut = static_cast<kvz_picture*>(nullptr);
-        auto srcOut = static_cast<kvz_picture*>(nullptr);
-        auto infoOutNative = kvz_frame_info{};
-
-        auto result = api->encoder_encode(_encoder, picIn, &dataOut, &lenOut, &picOut, &srcOut, &infoOutNative);
-        if (!result) {
-            throw gcnew InvalidOperationException("Encoding failed");
-        }
-
-        length = static_cast<int>(lenOut);
-        pictureOut = nullptr;
-        sourceOut = nullptr;
-        infoOut = nullptr;
-
-        if (picOut) {
-            pictureOut = gcnew Picture(static_cast<KvazaarInterop::ChromaFormat>(picOut->chroma_format), picOut->width, picOut->height);
-            delete pictureOut;
-            pictureOut = nullptr;
-        }
-
-        if (srcOut) {
-            sourceOut = gcnew Picture(static_cast<KvazaarInterop::ChromaFormat>(srcOut->chroma_format), srcOut->width, srcOut->height);
-            delete sourceOut;
-            sourceOut = nullptr;
-        }
-
-        if (lenOut > 0) {
-            infoOut = gcnew FrameInfo(infoOutNative);
-        }
-
-        if (!dataOut) {
-            return nullptr;
-        }
-
-        return gcnew DataChunk(dataOut);
-    }
-
-    DataChunk^ Encoder::Encode(Picture^ pictureIn) {
-        ThrowIfDisposed();
-
-        auto api = Api::GetApi();
-        auto picIn = pictureIn ? pictureIn->InternalPicture : static_cast<kvz_picture*>(nullptr);
-        auto dataOut = static_cast<kvz_data_chunk*>(nullptr);
-        auto lenOut = uint32_t{0};
-
-        auto result = api->encoder_encode(_encoder, picIn, &dataOut, &lenOut, nullptr, nullptr, nullptr);
-        if (!result) {
-            throw gcnew InvalidOperationException("Encoding failed");
-        }
-
-        if (!dataOut) {
-            return nullptr;
-        }
-
-        return gcnew DataChunk(dataOut);
+        return ValueTuple<DataChunk^, FrameInfo^, Picture^, Picture^>(
+            dataChunk, frameInfo, sourcePicture, reconstructedPicture
+        );
     }
 
 #pragma region IDisposable

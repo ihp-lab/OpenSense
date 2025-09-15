@@ -22,15 +22,11 @@ namespace OpenSense.Components.FFMpeg {
         #endregion
 
         #region Settings
+        private string filename = "video.mp4";
+
         public string Filename {
-            get => _writer.Filename;
-            set {
-                if (_writer.Filename == value) {
-                    return;
-                }
-                _writer.Filename = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Filename)));
-            }
+            get => filename;
+            set => SetProperty(ref filename, value);
         }
 
         private bool timestampFilename;
@@ -103,6 +99,17 @@ namespace OpenSense.Components.FFMpeg {
         }
         #endregion
 
+        public string ActualFilename {
+            get => _writer.Filename;
+            private set {
+                if (_writer.Filename == value) {
+                    return;
+                }
+                _writer.Filename = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ActualFilename)));
+            }
+        }
+
         private DateTime? startTime;
 
         public FileWriter(Pipeline pipeline) {
@@ -147,12 +154,12 @@ namespace OpenSense.Components.FFMpeg {
             if (!TimestampFilename) {
                 return;
             }
-            var directory = Path.GetDirectoryName(_writer.Filename);
-            var baseFilename = Path.GetFileNameWithoutExtension(_writer.Filename);
+            var directory = Path.GetDirectoryName(Filename);
+            var baseFilename = Path.GetFileNameWithoutExtension(Filename);
             var timestamp = originatingTime.ToString("yyyyMMddHHmmssfffffff");
-            var extension = Path.GetExtension(_writer.Filename);
+            var extension = Path.GetExtension(Filename);
             var newFilename = $"{baseFilename}_{timestamp}{extension}";
-            _writer.Filename = Path.Combine(directory ?? string.Empty, newFilename);
+            ActualFilename = Path.Combine(directory ?? string.Empty, newFilename);
         }
 
         private static Frame CreateFrame(long pts, ImageBase image) {

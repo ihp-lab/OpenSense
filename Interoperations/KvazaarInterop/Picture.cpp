@@ -7,6 +7,15 @@ using namespace System;
 using namespace System::Runtime::InteropServices;
 
 namespace KvazaarInterop {
+    Picture::Picture(kvz_picture* picture)
+        : _picture(picture)
+        , _disposed(false) {
+
+        if (!picture) {
+            throw gcnew ArgumentNullException("picture");
+        }
+    }
+
     Picture::Picture(KvazaarInterop::ChromaFormat chromaFormat, int width, int height)
         : _picture(nullptr)
         , _disposed(false) {

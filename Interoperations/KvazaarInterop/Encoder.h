@@ -33,43 +33,27 @@ namespace KvazaarInterop {
         /// <summary>
         /// Get parameter sets (VPS, SPS, PPS)
         /// </summary>
+        /// <returns>DataChunk containing header data</returns>
+        [returnvalue: NotNull]
         DataChunk^ GetHeaders();
-
-        /// <summary>
-        /// Get parameter sets (VPS, SPS, PPS) with length output
-        /// </summary>
-        DataChunk^ GetHeaders([Out] int% length);
 
         /// <summary>
         /// Encode a frame
         /// </summary>
-        /// <param name="pictureIn">Input picture to encode, or nullptr to flush</param>
-        /// <param name="pictureOut">Returns the reconstructed picture</param>
-        /// <param name="sourceOut">Returns the original picture</param>
-        /// <param name="infoOut">Returns frame information</param>
-        /// <returns>Encoded data chunk, or nullptr if no output available</returns>
-        DataChunk^ Encode(
-            Picture^ pictureIn, 
-            [Out] Picture^% pictureOut, 
-            [Out] Picture^% sourceOut,
-            [Out] FrameInfo^% infoOut
+        /// <param name="inputPicture">Input picture to encode, or nullptr to flush</param>
+        /// <param name="noDataChunk">Set to true to skip returning encoded data chunk</param>
+        /// <param name="noFrameInfo">Set to true to skip returning frame info</param>
+        /// <param name="noSourcePicture">Set to true to skip returning source picture</param>
+        /// <param name="noReconstructedPicture">Set to true to skip returning reconstructed picture</param>
+        /// <returns>ValueTuple containing (DataChunk, FrameInfo, SourcePicture, ReconstructedPicture)</returns>
+        [returnvalue: TupleElementNames(gcnew array<String^>{"DataChunk", "FrameInfo", "SourcePicture", "ReconstructedPicture"})]
+        ValueTuple<DataChunk^, FrameInfo^, Picture^, Picture^> Encode(
+            Picture^ inputPicture,
+            bool noDataChunk,
+            bool noFrameInfo,
+            bool noSourcePicture,
+            bool noReconstructedPicture
         );
-
-        /// <summary>
-        /// Encode a frame with length output
-        /// </summary>
-        DataChunk^ Encode(
-            Picture^ pictureIn,
-            [Out] int% length,
-            [Out] Picture^% pictureOut,
-            [Out] Picture^% sourceOut,
-            [Out] FrameInfo^% infoOut
-        );
-
-        /// <summary>
-        /// Simple encode that only returns the data chunk
-        /// </summary>
-        DataChunk^ Encode(Picture^ pictureIn);
 
 #pragma region IDisposable
     private:

@@ -49,7 +49,7 @@ namespace Minimp4Interop {
         /// </summary>
         /// <param name="nalData">NAL unit data pointer</param>
         /// <param name="size">NAL data size in bytes</param>
-        /// <param name="timestamp90kHz">Presentation timestamp in 90kHz units</param>
+        /// <param name="timestamp90kHz">Presentation timestamp in 90kHz units (ignored for parameter sets)</param>
         void WriteNal(IntPtr nalData, int size, unsigned int timestamp90kHz);
 
 #pragma endregion

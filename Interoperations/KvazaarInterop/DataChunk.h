@@ -16,26 +16,53 @@ using namespace System::Runtime::CompilerServices;
 
 namespace KvazaarInterop {
     /// <summary>
-    /// Managed wrapper for kvz_data_chunk that provides enumerable access to data
+    /// Managed wrapper for kvz_data_chunk that provides read-only collection access to data
     /// </summary>
-    public ref class DataChunk : System::Collections::Generic::IEnumerable<ValueTuple<IntPtr, int>>, IDisposable {
+    //[TupleElementNames(gcnew array<String^>{"Data", "Length"})] //Not working, and will have compile error when used
+    public ref class DataChunk : System::Collections::Generic::IReadOnlyCollection<ValueTuple<IntPtr, int>>, IDisposable {
     private:
         kvz_data_chunk* _chunk;
         bool _disposed;
+        int _totalLength;
+        int _count;
 
     internal:
         /// <summary>
         /// Creates a DataChunk from native pointer
         /// Takes ownership of the chunk
         /// </summary>
-        DataChunk(kvz_data_chunk* chunk);
+        /// <param name="chunk">Native chunk pointer</param>
+        /// <param name="totalLength">Total byte count of all chunks in the linked list</param>
+        DataChunk(kvz_data_chunk* chunk, int totalLength);
 
-#pragma region IEnumerable
     public:
+        /// <summary>
+        /// Gets the total count of valid data bytes across all chunks in the linked list
+        /// This value comes from kvazaar's len_out parameter and represents the actual encoded data size
+        /// </summary>
+        property int TotalLength{
+            int get() {
+                ThrowIfDisposed();
+                return _totalLength;
+            }
+        }
+
+#pragma region IReadOnlyCollection
+    public:
+        /// <summary>
+        /// Gets the number of chunks in the linked list
+        /// </summary>
+        virtual property int Count {
+            int get() {
+                ThrowIfDisposed();
+                return _count;
+            }
+        }
+
         /// <summary>
         /// Gets an enumerator that iterates through the data chunks as pointer and length pairs
         /// </summary>
-        [returnvalue:TupleElementNames(gcnew array<String^>{"Data", "Length"})]
+        //[returnvalue: TupleElementNames(gcnew array<String^>{"Data", "Length"})] //Not working, and will have compile error when used
         virtual System::Collections::Generic::IEnumerator<ValueTuple<IntPtr, int>>^ GetEnumerator();
 
         /// <summary>

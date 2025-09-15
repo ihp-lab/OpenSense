@@ -21,6 +21,15 @@ namespace KvazaarInterop {
         kvz_picture* _picture;
         bool _disposed;
 
+    internal:
+        /// <summary>
+        /// Creates a Picture wrapper around an existing kvz_picture
+        /// Takes ownership of the native picture and will free it when disposed
+        /// Note: Reference copying is not supported as kvz_image_copy_ref API is not exposed
+        /// </summary>
+        /// <param name="picture">Native kvz_picture pointer to take ownership of</param>
+        Picture(kvz_picture* picture);
+
     public:
         /// <summary>
         /// Creates a new picture with specified chroma format and dimensions
