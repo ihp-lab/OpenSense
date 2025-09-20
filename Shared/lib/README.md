@@ -15,3 +15,4 @@ xmlrpc-c|1.54.1
 ffmpeg|8.0
 kvazaar|4b8a5e0
 minimp4|4575afb
+hm|ae4c8d6d
