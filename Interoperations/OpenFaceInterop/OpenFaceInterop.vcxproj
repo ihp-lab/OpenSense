@@ -14,7 +14,7 @@
     <ProjectGuid>{78196985-EE54-411F-822B-5A23EDF80642}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>MultiSenseCppInterop</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
     <ProjectName>OpenFaceInterop</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
