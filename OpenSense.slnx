@@ -1,0 +1,223 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+  </Configurations>
+  <Folder Name="/Components/">
+    <Project Path="Components/Audio.Common/Audio.Common.csproj" />
+    <Project Path="Components/Audio.Visualizer.WPF.Common/Audio.Visualizer.WPF.Common.csproj" />
+    <Project Path="Components/Audio.Visualizer.WPF/Audio.Visualizer.WPF.csproj" />
+    <Project Path="Components/Audio.Writer/Audio.Writer.csproj" />
+    <Project Path="Components/AzureKinect.BodyTracking.Visualizer.WPF/AzureKinect.BodyTracking.Visualizer.WPF.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/AzureKinect.BodyTracking.WPF/AzureKinect.BodyTracking.WPF.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/AzureKinect.BodyTracking/AzureKinect.BodyTracking.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/AzureKinect.Sensor.WPF/AzureKinect.Sensor.WPF.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/AzureKinect.Sensor/AzureKinect.Sensor.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/AzureKinect.SensorAndBodyTracking.WPF/AzureKinect.SensorAndBodyTracking.WPF.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/AzureKinect.SensorAndBodyTracking/AzureKinect.SensorAndBodyTracking.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/AzureSpeech.WPF/AzureSpeech.WPF.csproj" />
+    <Project Path="Components/AzureSpeech/AzureSpeech.csproj" />
+    <Project Path="Components/Biopac.Visualizer.WPF/Biopac.Visualizer.WPF.csproj" />
+    <Project Path="Components/Biopac/Biopac.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/BodyGestureDetectors.WPF/BodyGestureDetectors.WPF.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/BodyGestureDetectors/BodyGestureDetectors.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/Builtin.Visualizer.WPF/Builtin.Visualizer.WPF.csproj" />
+    <Project Path="Components/Builtin.WPF/Builtin.WPF.csproj" />
+    <Project Path="Components/Builtin/Builtin.csproj" />
+    <Project Path="Components/CollectionOperators.WPF/CollectionOperators.WPF.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/CollectionOperators/CollectionOperators.csproj" />
+    <Project Path="Components/CsvExporter.WPF/CsvExporter.WPF.csproj" />
+    <Project Path="Components/CsvExporter/CsvExporter.csproj" />
+    <Project Path="Components/Emotion.Common/Emotion.Common.csproj" />
+    <Project Path="Components/Emotion.Visualizer.WPF/Emotion.Visualizer.WPF.csproj" />
+    <Project Path="Components/Emotion.Windows/Emotion.Windows.csproj" />
+    <Project Path="Components/EyePointOfInterest.Contract/EyePointOfInterest.Contract.csproj" />
+    <Project Path="Components/EyePointOfInterest.Regression/EyePointOfInterest.Regression.csproj" />
+    <Project Path="Components/EyePointOfInterest.SpatialTracking/EyePointOfInterest.SpatialTracking.csproj" />
+    <Project Path="Components/EyePointOfInterest.Visualizer.WPF/EyePointOfInterest.Visualizer.WPF.csproj" />
+    <Project Path="Components/EyePointOfInterest.WPF.Common/EyePointOfInterest.WPF.Common.csproj" />
+    <Project Path="Components/EyePointOfInterest.WPF/EyePointOfInterest.WPF.csproj" />
+    <Project Path="Components/EyePointOfInterest/EyePointOfInterest.csproj" />
+    <Project Path="Components/FFMpeg.Windows.WPF/FFMpeg.Windows.WPF.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/FFMpeg.Windows/FFMpeg.Windows.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/GoogleCloud.Speech.V1.WPF/GoogleCloud.Speech.V1.WPF.csproj" />
+    <Project Path="Components/GoogleCloud.Speech.V1/GoogleCloud.Speech.V1.csproj" />
+    <Project Path="Components/HeadGesture.Visualizer.WPF/HeadGesture.Visualizer.WPF.csproj" />
+    <Project Path="Components/HeadGesture/HeadGesture.csproj" />
+    <Project Path="Components/Kvazaar.Windows.WPF/Kvazaar.Windows.WPF.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/Kvazaar.Windows/Kvazaar.Windows.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/LibreFace.Visualizer.WPF/LibreFace.Visualizer.WPF.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/LibreFace.WPF/LibreFace.WPF.csproj" />
+    <Project Path="Components/LibreFace/LibreFace.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/Media.Writer.Windows/Media.Writer.Windows.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/MediaPipe.NET.Visualizer.WPF/MediaPipe.NET.Visualizer.WPF.csproj" />
+    <Project Path="Components/MediaPipe.NET.WPF/MediaPipe.NET.WPF.csproj" />
+    <Project Path="Components/MediaPipe.NET/MediaPipe.NET.csproj" />
+    <Project Path="Components/OpenCvSharp.Windows/OpenCvSharp.Windows.csproj" />
+    <Project Path="Components/OpenCvSharp.WPF/OpenCvSharp.WPF.csproj" />
+    <Project Path="Components/OpenCvSharp/OpenCvSharp.csproj" />
+    <Project Path="Components/OpenFace.Common/OpenFace.Common.csproj" />
+    <Project Path="Components/OpenFace.Visualizer.WPF/OpenFace.Visualizer.WPF.csproj" />
+    <Project Path="Components/OpenFace.Windows.WPF/OpenFace.Windows.WPF.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/OpenFace.Windows/OpenFace.Windows.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/OpenPose.Common/OpenPose.Common.csproj" />
+    <Project Path="Components/OpenPose.Visualizer.WPF/OpenPose.Visualizer.WPF.csproj" />
+    <Project Path="Components/OpenPose.WPF/OpenPose.WPF.csproj" />
+    <Project Path="Components/OpenPose/OpenPose.csproj" />
+    <Project Path="Components/OpenSmile.Common/OpenSmile.Common.csproj" />
+    <Project Path="Components/OpenSmile.Visualizer.WPF/OpenSmile.Visualizer.WPF.csproj" />
+    <Project Path="Components/OpenSmile.Windows.WPF/OpenSmile.Windows.WPF.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/OpenSmile.Windows/OpenSmile.Windows.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/ParallelPorts.Windows.WPF/ParallelPorts.Windows.WPF.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/ParallelPorts.Windows/ParallelPorts.Windows.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/Psi.Audio.Windows.WPF/Psi.Audio.Windows.WPF.csproj" />
+    <Project Path="Components/Psi.Audio.Windows/Psi.Audio.Windows.csproj" />
+    <Project Path="Components/Psi.Audio.WPF.Common/Psi.Audio.WPF.Common.csproj" />
+    <Project Path="Components/Psi.Audio.WPF/Psi.Audio.WPF.csproj" />
+    <Project Path="Components/Psi.Audio/Psi.Audio.csproj" />
+    <Project Path="Components/Psi.AzureKinect.Visualizer.WPF/Psi.AzureKinect.Visualizer.WPF.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/Psi.AzureKinect.WPF/Psi.AzureKinect.WPF.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/Psi.AzureKinect/Psi.AzureKinect.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/Psi.Builtin.WPF/Psi.Builtin.WPF.csproj" />
+    <Project Path="Components/Psi.Builtin/Psi.Builtin.csproj" />
+    <Project Path="Components/Psi.CognitiveServices.Face.WPF/Psi.CognitiveServices.Face.WPF.csproj" />
+    <Project Path="Components/Psi.CognitiveServices.Face/Psi.CognitiveServices.Face.csproj" />
+    <Project Path="Components/Psi.CognitiveServices.Speech.WPF/Psi.CognitiveServices.Speech.WPF.csproj" />
+    <Project Path="Components/Psi.CognitiveServices.Speech/Psi.CognitiveServices.Speech.csproj" />
+    <Project Path="Components/Psi.Data.WPF/Psi.Data.WPF.csproj" />
+    <Project Path="Components/Psi.Data/Psi.Data.csproj" />
+    <Project Path="Components/Psi.Imaging.Visualizer.WPF.Common/Psi.Imaging.Visualizer.WPF.Common.csproj" />
+    <Project Path="Components/Psi.Imaging.Visualizer.WPF/Psi.Imaging.Visualizer.WPF.csproj" />
+    <Project Path="Components/Psi.Imaging.Windows.WPF/Psi.Imaging.Windows.WPF.csproj" />
+    <Project Path="Components/Psi.Imaging.Windows/Psi.Imaging.Windows.csproj" />
+    <Project Path="Components/Psi.Imaging.WPF/Psi.Imaging.WPF.csproj" />
+    <Project Path="Components/Psi.Imaging/Psi.Imaging.csproj" />
+    <Project Path="Components/Psi.Kinect.Windows.WPF/Psi.Kinect.Windows.WPF.csproj" />
+    <Project Path="Components/Psi.Kinect.Windows/Psi.Kinect.Windows.csproj" />
+    <Project Path="Components/Psi.Media.Windows.WPF/Psi.Media.Windows.WPF.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/Psi.Media.Windows/Psi.Media.Windows.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/Psi.Speech.Visualizer.WPF/Psi.Speech.Visualizer.WPF.csproj" />
+    <Project Path="Components/Psi.Speech.Windows.WPF/Psi.Speech.Windows.WPF.csproj" />
+    <Project Path="Components/Psi.Speech.Windows/Psi.Speech.Windows.csproj" />
+    <Project Path="Components/Psi.WPF.Common/Psi.WPF.Common.csproj" />
+    <Project Path="Components/PythonSupports.WPF/PythonSupports.WPF.csproj" />
+    <Project Path="Components/PythonSupports/PythonSupports.csproj" />
+    <Project Path="Components/SerialPorts.WPF/SerialPorts.WPF.csproj" />
+    <Project Path="Components/SerialPorts/SerialPorts.csproj" />
+    <Project Path="Components/Shimmer3.WPF/Shimmer3.WPF.csproj" />
+    <Project Path="Components/Shimmer3/Shimmer3.csproj" />
+    <Project Path="Components/Statistics.WPF/Statistics.WPF.csproj" />
+    <Project Path="Components/Statistics/Statistics.csproj" />
+    <Project Path="Components/VirtualHumanMessage.WPF/VirtualHumanMessage.WPF.csproj" />
+    <Project Path="Components/VirtualHumanMessage/VirtualHumanMessage.csproj" />
+    <Project Path="Components/Whisper.NET.WPF/Whisper.NET.WPF.csproj" />
+    <Project Path="Components/Whisper.NET/Whisper.NET.csproj" />
+  </Folder>
+  <Folder Name="/Derivatives/">
+    <Project Path="Derivatives/HeadGestureDetector.App.Consoles/HeadGestureDetector.App.Consoles.csproj" />
+    <Project Path="Derivatives/LibreFace.App.Consoles/LibreFace.App.Consoles.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Derivatives/LibreFace.App.Core/LibreFace.App.Core.csproj">
+      <Platform Project="x64" />
+    </Project>
+  </Folder>
+  <Folder Name="/Interoperations/">
+    <Project Path="Interoperations/BiopacInterop/BiopacInterop.vcxproj" Id="fc200e98-dc12-4276-a7cd-588cd9e638a7" />
+    <Project Path="Interoperations/FFMpegInterop/FFMpegInterop.vcxproj" Id="7c793af4-36c1-4535-a370-4ac6f96f772c" />
+    <Project Path="Interoperations/KvazaarInterop/KvazaarInterop.vcxproj" />
+    <Project Path="Interoperations/Minimp4Interop/Minimp4Interop.vcxproj" />
+    <Project Path="Interoperations/OpenFaceInterop/OpenFaceInterop.vcxproj" Id="78196985-ee54-411f-822b-5a23edf80642" />
+    <Project Path="Interoperations/OpenPose.PInvoke/OpenPose.PInvoke.csproj" />
+    <Project Path="Interoperations/OpenSmileInterop/openSmileInterop.vcxproj" Id="f7324168-9704-4996-bf61-546590f86614" />
+  </Folder>
+  <Folder Name="/Legacy/" />
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Tests/LibreFace.Benchmarks2/LibreFace.Benchmarks2.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Tests/LibreFace.Tests/LibreFace.Tests.csproj" />
+    <Project Path="Tests/LibreFaceP.Benchmarks/LibreFace.Benchmarks.csproj" />
+    <Project Path="Tests/Whisper.NET.Tests/Whisper.NET.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Utilities/">
+    <Project Path="Utilities/LibreFace/LibreFace.csproj" />
+    <Project Path="Utilities/NMS.ActiveMQ/NMS.ActiveMQ.csproj" />
+    <Project Path="Utilities/NumPy/NumPy.csproj" />
+    <Project Path="Utilities/VirtualHumanMessageClient/VirtualHumanMessageClient.csproj" />
+  </Folder>
+  <Folder Name="/Widgets/">
+    <Project Path="Widgets/DisplayPoiEstimatorBuilder.WPF/DisplayPoiEstimatorBuilder.WPF.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Widgets/OpenSmileConfigurationConverter.WPF/OpenSmileConfigurationConverter.WPF.csproj" />
+  </Folder>
+  <Project Path="ComponentContract/ComponentContract.csproj" />
+  <Project Path="DataWriterContract/DataWriterContract.csproj" />
+  <Project Path="Pipeline/Pipeline.csproj" />
+  <Project Path="WpfApplication/WpfApplication.csproj">
+    <Platform Project="x64" />
+  </Project>
+  <Project Path="WpfComponentContract/WpfComponentContract.csproj" />
+  <Project Path="WpfWidgetContract/WpfWidgetContract.csproj" />
+</Solution>
