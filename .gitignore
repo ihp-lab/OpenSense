@@ -276,3 +276,6 @@ __pycache__/
 
 # vcpkg installed packages (auto-generated from vcpkg.json)
 vcpkg_installed/
+
+# Claude Code
+.claude
