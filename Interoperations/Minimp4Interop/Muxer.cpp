@@ -92,15 +92,22 @@ namespace Minimp4Interop {
         return trackId;
     }
 
-    void Muxer::PutSample(int trackId, IntPtr data, int size, int duration, SampleType sampleType) {
+    void Muxer::PutSample(int trackId, IntPtr data, int size, int duration, SampleType sampleType, int compositionOffset) {
         ThrowIfDisposed();
 
         if (data == IntPtr::Zero || size <= 0) {
             throw gcnew ArgumentException("Invalid sample data");
         }
 
-        auto result = MP4E_put_sample(_mux, trackId,
-                                  data.ToPointer(), size, duration, static_cast<int>(sampleType));
+        auto result = MP4E_put_sample(
+            _mux,
+            trackId,
+            data.ToPointer(),
+            size,
+            duration,
+            static_cast<int>(sampleType),
+            compositionOffset
+        );
 
         if (result != 0) {
             throw gcnew InvalidOperationException("Failed to write sample to MP4 file");

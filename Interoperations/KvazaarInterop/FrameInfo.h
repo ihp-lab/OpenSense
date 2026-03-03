@@ -18,7 +18,6 @@ namespace KvazaarInterop {
     public ref class FrameInfo : IDisposable {
     private:
         kvz_frame_info* _info;
-        bool _disposed;
 
     internal:
         /// <summary>
@@ -85,6 +84,8 @@ namespace KvazaarInterop {
 
 #pragma region IDisposable
     private:
+        bool _disposed;
+
         void ThrowIfDisposed();
 
     public:

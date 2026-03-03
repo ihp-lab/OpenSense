@@ -95,31 +95,18 @@ namespace FFMpegInterop {
         }
 
         while (true) {
-            if (av_read_frame(_formatContext, _packet) < 0) {
+            // Drain: try to receive a decoded frame first
+            auto receive_response = avcodec_receive_frame(_codecContext, _rawFrame);
+            if (receive_response == AVERROR_EOF) {
                 _endOfFile = true;
                 return nullptr;
             }
-
-            try {
-                if (_packet->stream_index != _videoStreamIndex) {
-                    continue;
-                }
-
-                auto send_response = avcodec_send_packet(_codecContext, _packet);
-                if (send_response < 0) {
-                    throw gcnew CodecException("Error while sending packet to the decoder.");
-                }
-
-                auto receive_response = avcodec_receive_frame(_codecContext, _rawFrame);
-
-                switch (receive_response) {
-                case 0:
-                    break;
-                case AVERROR(EAGAIN):
-                    continue;
-                default:
-                    throw gcnew CodecException("Error while decoding frame.");
-                }
+            if (receive_response != 0 && receive_response != AVERROR(EAGAIN)) {
+                char errbuf[AV_ERROR_MAX_STRING_SIZE]{};
+                av_strerror(receive_response, errbuf, sizeof(errbuf));
+                throw gcnew CodecException(String::Format("Error while decoding frame: {0} ({1})", gcnew String(errbuf), receive_response));
+            }
+            if (receive_response == 0) {
 
                 if (_rawFrame->pts == AV_NOPTS_VALUE && _rawFrame->best_effort_timestamp == AV_NOPTS_VALUE) {
                     throw gcnew FFMpegException("PTS is not available.");
@@ -202,8 +189,29 @@ namespace FFMpegInterop {
                 );
 
                 return gcnew Frame(convertedFrame);
-            } finally {
-                av_packet_unref(_packet);
+            }
+
+            // Feed: read and send packets until we feed one or hit EOF
+            while (true) {
+                if (av_read_frame(_formatContext, _packet) < 0) {
+                    // Input exhausted - send flush signal to decoder
+                    avcodec_send_packet(_codecContext, nullptr);
+                    break;
+                }
+                try {
+                    if (_packet->stream_index != _videoStreamIndex) {
+                        continue;
+                    }
+                    auto send_response = avcodec_send_packet(_codecContext, _packet);
+                    if (send_response < 0 && send_response != AVERROR(EAGAIN)) {
+                        char errbuf[AV_ERROR_MAX_STRING_SIZE]{};
+                        av_strerror(send_response, errbuf, sizeof(errbuf));
+                        throw gcnew CodecException(String::Format("Error while sending packet to the decoder: {0} ({1})", gcnew String(errbuf), send_response));
+                    }
+                    break;
+                } finally {
+                    av_packet_unref(_packet);
+                }
             }
         }
     }

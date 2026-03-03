@@ -351,7 +351,7 @@ typedef struct mp4_h26x_writer_tag
 
 int mp4_h26x_write_init(mp4_h26x_writer_t *h, MP4E_mux_t *mux, int width, int height, int is_hevc);
 void mp4_h26x_write_close(mp4_h26x_writer_t *h);
-int mp4_h26x_write_nal(mp4_h26x_writer_t *h, const unsigned char *nal, int length, unsigned timeStamp90kHz_next);
+int mp4_h26x_write_nal(mp4_h26x_writer_t *h, const unsigned char *nal, int length, unsigned timeStamp90kHz_next, int composition_offset);
 
 /************************************************************************/
 /*          API                                                         */
@@ -437,9 +437,9 @@ int MP4E_add_track(MP4E_mux_t *mux, const MP4E_track_t *track_data);
 *   return error code MP4E_STATUS_*
 *
 *   Example:
-*       MP4E_put_sample(mux, 0, data, data_bytes, duration, MP4E_SAMPLE_DEFAULT);
+*       MP4E_put_sample(mux, 0, data, data_bytes, duration, MP4E_SAMPLE_DEFAULT, 0);
 */
-int MP4E_put_sample(MP4E_mux_t *mux, int track_num, const void *data, int data_bytes, int duration, int kind);
+int MP4E_put_sample(MP4E_mux_t *mux, int track_num, const void *data, int data_bytes, int duration, int kind, int composition_offset);
 
 /**
 *   Finalize MP4 file, de-allocated memory, and closes MP4 multiplexer.
@@ -672,6 +672,7 @@ typedef struct
     boxsize_t offset;
     unsigned duration;
     unsigned flag_random_access;
+    int composition_offset;     // composition time offset (PTS - DTS) in track timescale, signed for version 1 ctts
 } sample_t;
 
 typedef struct {
@@ -982,13 +983,14 @@ static int write_pending_data(MP4E_mux_t *mux, track_t *tr)
     return MP4E_STATUS_OK;
 }
 
-static int add_sample_descriptor(MP4E_mux_t *mux, track_t *tr, int data_bytes, int duration, int kind)
+static int add_sample_descriptor(MP4E_mux_t *mux, track_t *tr, int data_bytes, int duration, int kind, int composition_offset)
 {
     sample_t smp;
     smp.size = data_bytes;
     smp.offset = (boxsize_t)mux->write_pos;
     smp.duration = (duration ? duration : tr->info.default_duration);
     smp.flag_random_access = (kind == MP4E_SAMPLE_RANDOM_ACCESS);
+    smp.composition_offset = composition_offset;
     return NULL != minimp4_vector_put(&tr->smpl, &smp, sizeof(sample_t));
 }
 
@@ -1103,7 +1105,7 @@ static int mp4e_write_mdat_box(MP4E_mux_t *mux, uint32_t size)
 /**
 *   Add new sample to specified track
 */
-int MP4E_put_sample(MP4E_mux_t *mux, int track_num, const void *data, int data_bytes, int duration, int kind)
+int MP4E_put_sample(MP4E_mux_t *mux, int track_num, const void *data, int data_bytes, int duration, int kind, int composition_offset)
 {
     track_t *tr;
     if (!mux || !data)
@@ -1135,7 +1137,7 @@ int MP4E_put_sample(MP4E_mux_t *mux, int track_num, const void *data, int data_b
     {
         if (mux->sequential_mode_flag)
             ERR(write_pending_data(mux, tr));
-        if (!add_sample_descriptor(mux, tr, data_bytes, duration, kind))
+        if (!add_sample_descriptor(mux, tr, data_bytes, duration, kind, composition_offset))
             return MP4E_STATUS_NO_MEMORY;
     } else
     {
@@ -1611,6 +1613,40 @@ static int mp4e_flush_index(MP4E_mux_t *mux)
                             WR4(pentry_count, entry_count);
                         }
                         END_ATOM;
+
+                        // Composition Time to Sample Box (version 1: signed offsets)
+                        {
+                            int has_nonzero_ctts = 0;
+                            for (i = 0; i < samples_count; i++)
+                            {
+                                if (sample[i].composition_offset != 0)
+                                {
+                                    has_nonzero_ctts = 1;
+                                    break;
+                                }
+                            }
+                            if (has_nonzero_ctts)
+                            {
+                                ATOM_FULL(BOX_ctts, 0x01000000); // version=1, flags=0
+                                {
+                                    unsigned char *pentry_count = p;
+                                    int cnt = 1, entry_count = 0;
+                                    WRITE_4(0);
+                                    for (i = 0; i < samples_count; i++, cnt++)
+                                    {
+                                        if (i == (samples_count - 1) || sample[i].composition_offset != sample[i + 1].composition_offset)
+                                        {
+                                            WRITE_4(cnt);
+                                            WRITE_4(sample[i].composition_offset);
+                                            cnt = 0;
+                                            entry_count++;
+                                        }
+                                    }
+                                    WR4(pentry_count, entry_count);
+                                }
+                                END_ATOM;
+                            }
+                        }
 
                         // Sample To Chunk Box
                         ATOM_FULL(BOX_stsc, 0);
@@ -2332,7 +2368,7 @@ static int mp4_h26x_cache_nal(mp4_h26x_writer_t *h, const unsigned char *nal, in
 
 // Helper function to flush cached NALs along with current NAL
 static int mp4_h26x_flush_cached_nals(mp4_h26x_writer_t *h, const unsigned char *nal, int sizeof_nal,
-                                       unsigned timeStamp90kHz, int sample_kind)
+                                       unsigned timeStamp90kHz, int sample_kind, int composition_offset)
 {
     int err;
 
@@ -2356,7 +2392,7 @@ static int mp4_h26x_flush_cached_nals(mp4_h26x_writer_t *h, const unsigned char 
         memcpy(tmp + offset, nal, sizeof_nal);
 
         // Write combined sample
-        err = MP4E_put_sample(h->mux, h->mux_track_id, tmp, total_size, timeStamp90kHz, sample_kind);
+        err = MP4E_put_sample(h->mux, h->mux_track_id, tmp, total_size, timeStamp90kHz, sample_kind, composition_offset);
         free(tmp);
 
         // Clear cache
@@ -2375,14 +2411,14 @@ static int mp4_h26x_flush_cached_nals(mp4_h26x_writer_t *h, const unsigned char 
         tmp[3] = (unsigned char)(sizeof_nal);
         memcpy(tmp + 4, nal, sizeof_nal);
 
-        err = MP4E_put_sample(h->mux, h->mux_track_id, tmp, 4 + sizeof_nal, timeStamp90kHz, sample_kind);
+        err = MP4E_put_sample(h->mux, h->mux_track_id, tmp, 4 + sizeof_nal, timeStamp90kHz, sample_kind, composition_offset);
         free(tmp);
     }
 
     return err;
 }
 
-static int mp4_h265_write_nal(mp4_h26x_writer_t *h, const unsigned char *nal, int sizeof_nal, unsigned timeStamp90kHz_next)
+static int mp4_h265_write_nal(mp4_h26x_writer_t *h, const unsigned char *nal, int sizeof_nal, unsigned timeStamp90kHz_next, int composition_offset)
 {
     int payload_type = (nal[0] >> 1) & 0x3f;
     int is_intra = payload_type >= HEVC_NAL_BLA_W_LP && payload_type <= HEVC_NAL_CRA_NUT;
@@ -2420,13 +2456,13 @@ static int mp4_h265_write_nal(mp4_h26x_writer_t *h, const unsigned char *nal, in
 
         // This is a VCL NAL (actual video data) - flush cached NALs with it
         int sample_kind = is_intra ? MP4E_SAMPLE_RANDOM_ACCESS : MP4E_SAMPLE_DEFAULT;
-        err = mp4_h26x_flush_cached_nals(h, nal, sizeof_nal, timeStamp90kHz_next, sample_kind);
+        err = mp4_h26x_flush_cached_nals(h, nal, sizeof_nal, timeStamp90kHz_next, sample_kind, composition_offset);
         break;
     }
     return err;
 }
 
-int mp4_h26x_write_nal(mp4_h26x_writer_t *h, const unsigned char *nal, int length, unsigned timeStamp90kHz_next)
+int mp4_h26x_write_nal(mp4_h26x_writer_t *h, const unsigned char *nal, int length, unsigned timeStamp90kHz_next, int composition_offset)
 {
     const unsigned char *eof = nal + length;
     int payload_type, sizeof_nal, err = MP4E_STATUS_OK;
@@ -2440,7 +2476,7 @@ int mp4_h26x_write_nal(mp4_h26x_writer_t *h, const unsigned char *nal, int lengt
             break;
         if (h->is_hevc)
         {
-            ERR(mp4_h265_write_nal(h, nal, sizeof_nal, timeStamp90kHz_next));
+            ERR(mp4_h265_write_nal(h, nal, sizeof_nal, timeStamp90kHz_next, composition_offset));
             continue;
         }
         payload_type = nal[0] & 31;
@@ -2506,7 +2542,7 @@ exit_with_free:
                     sample_kind = MP4E_SAMPLE_CONTINUATION;
                 else if (payload_type == 5)
                     sample_kind = MP4E_SAMPLE_RANDOM_ACCESS;
-                err = MP4E_put_sample(h->mux, h->mux_track_id, nal2, sizeof_nal, timeStamp90kHz_next, sample_kind);
+                err = MP4E_put_sample(h->mux, h->mux_track_id, nal2, sizeof_nal, timeStamp90kHz_next, sample_kind, composition_offset);
             }
             break;
         }
@@ -2550,7 +2586,7 @@ exit_with_free:
                         sample_kind = MP4E_SAMPLE_CONTINUATION;
                     else if (payload_type == 5)
                         sample_kind = MP4E_SAMPLE_RANDOM_ACCESS;
-                    err = MP4E_put_sample(h->mux, h->mux_track_id, tmp, 4 + sizeof_nal, timeStamp90kHz_next, sample_kind);
+                    err = MP4E_put_sample(h->mux, h->mux_track_id, tmp, 4 + sizeof_nal, timeStamp90kHz_next, sample_kind, composition_offset);
                     free(tmp);
                 }
                 break;

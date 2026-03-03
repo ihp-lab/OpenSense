@@ -188,8 +188,7 @@ namespace FFMpegInterop {
         auto frameTimeBase = frame->InternalAVFrame->time_base;
         auto encoderTimeBase = _codecContext->time_base;
         if (frameTimeBase.num != encoderTimeBase.num || frameTimeBase.den != encoderTimeBase.den) {
-            throw gcnew ArgumentException(
-                String::Format("Frame timebase ({0}/{1}) does not match encoder timebase ({2}/{3}).", frameTimeBase.num, frameTimeBase.den, encoderTimeBase.num, encoderTimeBase.den), "frame");
+            throw gcnew ArgumentException(String::Format("Frame timebase ({0}/{1}) does not match encoder timebase ({2}/{3}).", frameTimeBase.num, frameTimeBase.den, encoderTimeBase.num, encoderTimeBase.den), "frame");
         }
 
         auto frameWidth = frame->Width;

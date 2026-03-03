@@ -12,7 +12,7 @@ namespace OpenSense.Components.Kvazaar {
         private static readonly FileWriterMetadata Metadata = new FileWriterMetadata();
 
         #region Options
-        private string filename = "16bit_video.mp4";
+        private string filename = "video.mp4";
 
         public string Filename {
             get => filename;
@@ -25,31 +25,44 @@ namespace OpenSense.Components.Kvazaar {
             get => timestampFilename;
             set => SetProperty(ref timestampFilename, value);
         }
+
+        private int inputBitDepth = 16;
+
+        public int InputBitDepth {
+            get => inputBitDepth;
+            set => SetProperty(ref inputBitDepth, value);
+        }
         #endregion
 
         #region ComponentConfiguration
         public override IComponentMetadata GetMetadata() => Metadata;
 
         public override object Instantiate(Pipeline pipeline, IReadOnlyList<ComponentEnvironment> instantiatedComponents, IServiceProvider? serviceProvider) {
-            // Find the input connection to determine the concrete image type
-            var inputPortMetadata = GetMetadata().Ports.Single(p => p.Name == nameof(FileWriter<ImageBase>.In));
+            var ports = GetMetadata().Ports;
+            var inPortMetadata = ports.Single(p => p.Name == nameof(FileWriter<ImageBase>.In));
+            var pictureInPortMetadata = ports.Single(p => p.Name == nameof(FileWriter<ImageBase>.PictureIn));
             var producerMappings = this.GetRemoteProducerMappings(instantiatedComponents);
-            var targetMapping = producerMappings
-                .FirstOrDefault(m => Equals(m.InputConfiguration.LocalPort.Identifier, inputPortMetadata.Identifier));
 
-            if (targetMapping is null) {
-                throw new MissingRequiredInputConnectionException(Name, inputPortMetadata.Name);
+            var inMapping = producerMappings.FirstOrDefault(m => Equals(m.InputConfiguration.LocalPort.Identifier, inPortMetadata.Identifier));
+            var pictureInMapping = producerMappings.FirstOrDefault(m => Equals(m.InputConfiguration.LocalPort.Identifier, pictureInPortMetadata.Identifier));
+
+            if (inMapping is null && pictureInMapping is null) {
+                throw new InvalidOperationException($"At least one of {nameof(FileWriter<ImageBase>.In)} or {nameof(FileWriter<ImageBase>.PictureIn)} must be connected.");
             }
 
-            // Extract the image type from Shared<TImage>
-            var remoteType = targetMapping.RemoteDataType;
-            if (!remoteType.IsGenericType || remoteType.GetGenericTypeDefinition() != typeof(Shared<>)) {
-                throw new InvalidOperationException($"Expected Shared<TImage> but got {remoteType}");
-            }
-
-            var imageType = remoteType.GetGenericArguments()[0];
-            if (!typeof(ImageBase).IsAssignableFrom(imageType)) {
-                throw new InvalidOperationException($"Type {imageType} is not derived from ImageBase");
+            // Resolve TImage: from In connection if available, otherwise default to ImageBase
+            Type imageType;
+            if (inMapping is not null) {
+                var remoteType = inMapping.RemoteDataType;
+                if (!remoteType.IsGenericType || remoteType.GetGenericTypeDefinition() != typeof(Shared<>)) {
+                    throw new InvalidOperationException($"Expected Shared<TImage> but got {remoteType}");
+                }
+                imageType = remoteType.GetGenericArguments()[0];
+                if (!typeof(ImageBase).IsAssignableFrom(imageType)) {
+                    throw new InvalidOperationException($"Type {imageType} is not derived from ImageBase");
+                }
+            } else {
+                imageType = typeof(ImageBase);
             }
 
             // Create the FileWriter<TImage> instance
@@ -58,19 +71,33 @@ namespace OpenSense.Components.Kvazaar {
 
             fileWriter.Filename = Filename;
             fileWriter.TimestampFilename = TimestampFilename;
+            fileWriter.InputBitDepth = InputBitDepth;
             fileWriter.Logger = (serviceProvider?.GetService(typeof(ILoggerFactory)) as ILoggerFactory)?.CreateLogger(Name);
 
-            // Connect the input port
-            dynamic consumer = fileWriter.In;
-            var consumerType = HelperExtensions.GetConsumerResultType(consumer);
-            var getProducerFunc = typeof(HelperExtensions)
-                .GetMethod(nameof(HelperExtensions.GetProducer))!
-                .MakeGenericMethod(consumerType);
-            dynamic producer = getProducerFunc.Invoke(null, new object[] { targetMapping.Remote, targetMapping.InputConfiguration.RemotePort });
-            Microsoft.Psi.Operators.PipeTo(producer, consumer, targetMapping.InputConfiguration.DeliveryPolicy);
+            // Connect In port if connected
+            if (inMapping is not null) {
+                dynamic consumer = fileWriter.In;
+                var consumerType = HelperExtensions.GetConsumerResultType(consumer);
+                var getProducerFunc = typeof(HelperExtensions)
+                    .GetMethod(nameof(HelperExtensions.GetProducer))!
+                    .MakeGenericMethod(consumerType);
+                dynamic producer = getProducerFunc.Invoke(null, new object[] { inMapping.Remote, inMapping.InputConfiguration.RemotePort });
+                Microsoft.Psi.Operators.PipeTo(producer, consumer, inMapping.InputConfiguration.DeliveryPolicy);
+            }
+
+            // Connect PictureIn port if connected
+            if (pictureInMapping is not null) {
+                dynamic consumer = fileWriter.PictureIn;
+                var consumerType = HelperExtensions.GetConsumerResultType(consumer);
+                var getProducerFunc = typeof(HelperExtensions)
+                    .GetMethod(nameof(HelperExtensions.GetProducer))!
+                    .MakeGenericMethod(consumerType);
+                dynamic producer = getProducerFunc.Invoke(null, new object[] { pictureInMapping.Remote, pictureInMapping.InputConfiguration.RemotePort });
+                Microsoft.Psi.Operators.PipeTo(producer, consumer, pictureInMapping.InputConfiguration.DeliveryPolicy);
+            }
 
             return fileWriter;
-        } 
+        }
         #endregion
     }
 }

@@ -46,14 +46,14 @@ namespace Minimp4Interop {
 
 #pragma region Public Methods
 
-    void H26xWriter::WriteNal(IntPtr nalData, int size, unsigned int timestamp90kHz) {
+    void H26xWriter::WriteNal(IntPtr nalData, int size, unsigned int duration90kHz, int compositionOffset90kHz) {
         ThrowIfDisposed();
 
         if (nalData == IntPtr::Zero || size <= 0) {
             throw gcnew ArgumentException("Invalid NAL data");
         }
 
-        auto result = mp4_h26x_write_nal(_writer, static_cast<const uint8_t*>(nalData.ToPointer()), size, timestamp90kHz);
+        auto result = mp4_h26x_write_nal(_writer, static_cast<const uint8_t*>(nalData.ToPointer()), size, duration90kHz, compositionOffset90kHz);
 
         if (result < 0) {
             throw gcnew InvalidOperationException("Failed to write NAL unit to MP4 file");

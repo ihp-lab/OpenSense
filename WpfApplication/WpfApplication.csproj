@@ -89,6 +89,7 @@
         <ProjectReference Include="..\Components\HeadGesture\HeadGesture.csproj" />-->
         <!--NOTE: No settings available, thus no related WPF project here-->
         <!--<ProjectReference Include="..\Components\HeadGesture.Visualizer.WPF\HeadGesture.Visualizer.WPF.csproj" />-->
+        <ProjectReference Include="..\Components\HM.Windows.WPF\HM.Windows.WPF.csproj" />
         <ProjectReference Include="..\Components\Kvazaar.Windows.WPF\Kvazaar.Windows.WPF.csproj" />
         <!--<ProjectReference Include="..\Components\MediaPipe.Net.Visualizer.WPF\MediaPipe.NET.Visualizer.WPF.csproj" />
         <ProjectReference Include="..\Components\MediaPipe.NET.WPF\MediaPipe.NET.WPF.csproj" />

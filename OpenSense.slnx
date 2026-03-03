@@ -72,6 +72,12 @@
     <Project Path="Components/Kvazaar.Windows.WPF/Kvazaar.Windows.WPF.csproj">
       <Platform Project="x64" />
     </Project>
+    <Project Path="Components/HM.Windows/HM.Windows.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Components/HM.Windows.WPF/HM.Windows.WPF.csproj">
+      <Platform Project="x64" />
+    </Project>
     <Project Path="Components/Kvazaar.Windows/Kvazaar.Windows.csproj">
       <Platform Project="x64" />
     </Project>
@@ -182,6 +188,7 @@
   <Folder Name="/Interoperations/">
     <Project Path="Interoperations/BiopacInterop/BiopacInterop.vcxproj" Id="fc200e98-dc12-4276-a7cd-588cd9e638a7" />
     <Project Path="Interoperations/FFMpegInterop/FFMpegInterop.vcxproj" Id="7c793af4-36c1-4535-a370-4ac6f96f772c" />
+    <Project Path="Interoperations/HMInterop/HMInterop.vcxproj" Id="7a3e8d1c-4b2f-5c60-9d7e-1f8a2b3c4d5e" />
     <Project Path="Interoperations/KvazaarInterop/KvazaarInterop.vcxproj" />
     <Project Path="Interoperations/Minimp4Interop/Minimp4Interop.vcxproj" />
     <Project Path="Interoperations/OpenFaceInterop/OpenFaceInterop.vcxproj" Id="78196985-ee54-411f-822b-5a23edf80642" />

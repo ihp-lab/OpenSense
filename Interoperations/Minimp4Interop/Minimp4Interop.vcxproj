@@ -75,6 +75,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Demuxer.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="H26xWriter.h" />
     <ClInclude Include="Muxer.h" />
@@ -84,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="Demuxer.cpp" />
     <ClCompile Include="H26xWriter.cpp" />
     <ClCompile Include="Minimp4Impl.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>

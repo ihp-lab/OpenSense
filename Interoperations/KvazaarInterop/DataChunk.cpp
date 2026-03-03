@@ -29,13 +29,7 @@ namespace KvazaarInterop {
         }
 
         if (calculatedLength != totalLength) {
-            throw gcnew InvalidOperationException(
-                String::Format(
-                    "Length mismatch: API reported {0} bytes, but enumeration found {1} bytes",
-                    totalLength,
-                    calculatedLength
-                )
-            );
+            throw gcnew InvalidOperationException(String::Format("Length mismatch: API reported {0} bytes, but enumeration found {1} bytes", totalLength, calculatedLength));
         }
 
         if (totalLength == 0) {

@@ -2,19 +2,31 @@
 using System.Composition;
 using System.Diagnostics;
 using Microsoft.Psi;
+using Microsoft.Psi.Imaging;
 
 namespace OpenSense.Components.Kvazaar {
     [Export(typeof(IComponentMetadata))]
     public sealed class FileWriterMetadata : IComponentMetadata {
 
-        private static readonly FileWriterInputPortMetadata InputPortMetadata = new FileWriterInputPortMetadata();
+        private static readonly ConstrainedGenericPortMetadata InputPortMetadata = new(
+            typeof(FileWriter<>).GetProperty(nameof(FileWriter<ImageBase>.In))!,
+            typeof(Shared<>),
+            typeof(ImageBase),
+            PortDirection.Input,
+            "The input \\psi image stream. Only supports Gray_16bpp pixel format, because \\psi's PixelFormat has no multi-channel 16-bit format. Use either In or PictureIn, using both simultaneously is not supported."
+        );
+        private static readonly StaticPortMetadata PictureInputPortMetadata = new(
+            typeof(FileWriter<ImageBase>).GetProperty(nameof(FileWriter<ImageBase>.PictureIn))!,
+            "The input Kvazaar Picture stream. Supports any ChromaFormat and bit depth. Use either In or PictureIn, using both simultaneously is not supported."
+        );
 
         public string Name => "Kvazaar MP4 File Writer";
 
-        public string Description => "[Experimental] Write 16-bit grayscale images to an MP4 file using Kvazaar HEVC encoder. This component is maded inteded for recording depth video.";
+        public string Description => "[Experimental] Write video to an MP4 file using Kvazaar HEVC encoder. Supports grayscale and YCbCr via the PictureIn port.";
 
         public IReadOnlyList<IPortMetadata> Ports { get; } = [
             InputPortMetadata,
+            PictureInputPortMetadata,
         ];
 
         public ComponentConfiguration CreateConfiguration() => new FileWriterConfiguration();

@@ -22,7 +22,6 @@ namespace KvazaarInterop {
     public ref class Encoder : IDisposable {
     private:
         kvz_encoder* _encoder;
-        bool _disposed;
 
     public:
         /// <summary>
@@ -57,6 +56,8 @@ namespace KvazaarInterop {
 
 #pragma region IDisposable
     private:
+        bool _disposed;
+
         void ThrowIfDisposed();
 
     public:

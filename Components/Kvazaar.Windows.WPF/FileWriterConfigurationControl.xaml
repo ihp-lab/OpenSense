@@ -25,6 +25,8 @@
                 Height="auto" />
             <RowDefinition
                 Height="auto" />
+            <RowDefinition
+                Height="auto" />
         </Grid.RowDefinitions>
 
         <TextBlock
@@ -64,5 +66,16 @@
             Grid.Column="1"
             IsChecked="{Binding TimestampFilename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             ToolTip="Append a timestamp suffix to the base filename to preserve the originating timestamp of the first frame." />
+
+        <TextBlock
+            Grid.Row="2"
+            Grid.Column="0">
+            Input Bit Depth
+        </TextBlock>
+        <TextBox
+            Grid.Row="2"
+            Grid.Column="1"
+            Text="{Binding InputBitDepth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Bit depth of input samples (e.g. 16 for 16-bit depth/IR streams)." />
     </Grid>
 </UserControl>

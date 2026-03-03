@@ -28,8 +28,6 @@ namespace Minimp4Interop {
         bool _isHEVC;
         int _width;
         int _height;
-        bool _disposed;
-
 
     public:
         /// <summary>
@@ -49,8 +47,9 @@ namespace Minimp4Interop {
         /// </summary>
         /// <param name="nalData">NAL unit data pointer</param>
         /// <param name="size">NAL data size in bytes</param>
-        /// <param name="timestamp90kHz">Presentation timestamp in 90kHz units (ignored for parameter sets)</param>
-        void WriteNal(IntPtr nalData, int size, unsigned int timestamp90kHz);
+        /// <param name="duration90kHz">Sample duration in 90kHz units (e.g. 3750 for 24fps). Ignored for parameter sets.</param>
+        /// <param name="compositionOffset90kHz">Composition time offset (PTS - DTS) in 90kHz units, signed. 0 when no B-frame reordering.</param>
+        void WriteNal(IntPtr nalData, int size, unsigned int duration90kHz, int compositionOffset90kHz);
 
 #pragma endregion
 
@@ -90,6 +89,8 @@ namespace Minimp4Interop {
 
 #pragma region IDisposable
     private:
+        bool _disposed;
+
         /// <summary>
         /// Throws ObjectDisposedException if the object has been disposed
         /// </summary>

@@ -1,0 +1,7 @@
+{
+  "dependencies": [
+    "openssl"
+  ],
+  "builtin-baseline": "544a4c5c297e60e4ac4a5a1810df66748d908869",
+  "$baseline-note": "From VS2026 embedded vcpkg (2025-12-16). Resolves to OpenSSL 3.6.0."
+}

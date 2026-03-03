@@ -13,6 +13,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Kvazaar.Windows\Kvazaar.Windows.csproj" />
+        <ProjectReference Include="..\..\Interoperations\KvazaarInterop\KvazaarInterop.vcxproj" />
         <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
     </ItemGroup>
 

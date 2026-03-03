@@ -22,7 +22,6 @@ namespace KvazaarInterop {
     public ref class DataChunk : System::Collections::Generic::IReadOnlyCollection<ValueTuple<IntPtr, int>>, IDisposable {
     private:
         kvz_data_chunk* _chunk;
-        bool _disposed;
         int _totalLength;
         int _count;
 
@@ -85,6 +84,8 @@ namespace KvazaarInterop {
 
 #pragma region IDisposable
     internal:
+        bool _disposed;
+
         /// <summary>
         /// Throws if the object has been disposed
         /// </summary>

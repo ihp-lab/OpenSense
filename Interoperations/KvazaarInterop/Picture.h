@@ -19,7 +19,6 @@ namespace KvazaarInterop {
     public ref class Picture : IDisposable {
     private:
         kvz_picture* _picture;
-        bool _disposed;
 
     internal:
         /// <summary>
@@ -31,6 +30,12 @@ namespace KvazaarInterop {
         Picture(kvz_picture* picture);
 
     public:
+        /// <summary>
+        /// Maximum bit depth for CopyYPlane/CopyUPlane/CopyVPlane input data.
+        /// Determined at compile time from the native pixel type (kvz_pixel).
+        /// </summary>
+        literal int MaxBitDepth = sizeof(kvz_pixel) * 8;
+
         /// <summary>
         /// Creates a new picture with specified chroma format and dimensions
         /// </summary>
@@ -176,6 +181,8 @@ namespace KvazaarInterop {
 
 #pragma region IDisposable
     private:
+        bool _disposed;
+
         void ThrowIfDisposed();
 
     public:

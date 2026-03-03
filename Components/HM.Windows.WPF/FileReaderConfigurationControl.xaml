@@ -1,0 +1,68 @@
+<UserControl
+    x:Class="OpenSense.WPF.Components.HM.FileReaderConfigurationControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:OpenSense.WPF.Components.HM"
+    xmlns:comp="clr-namespace:OpenSense.Components.HM;assembly=OpenSense.Components.HM.Windows"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
+    <d:UserControl.DataContext>
+        <comp:FileReaderConfiguration />
+    </d:UserControl.DataContext>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition
+                Width="auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="0">
+            Filename
+        </TextBlock>
+        <Grid
+            Grid.Row="0"
+            Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="*" />
+                <ColumnDefinition
+                    Width="auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox
+                Grid.Column="0"
+                Text="{Binding Path=Filename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+            <Button
+                Grid.Column="1"
+                Name="ButtonOpenFile"
+                Click="ButtonOpenFile_Click">
+                Open
+            </Button>
+        </Grid>
+
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0">
+            Parse Filename Timestamp
+        </TextBlock>
+        <CheckBox
+            Grid.Row="1"
+            Grid.Column="1"
+            IsChecked="{Binding ParseFilenameTimestamp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Parse the timestamp suffix from the filename and use it as the start originating time. The filename must end with _yyyyMMddHHmmssfffffff before the extension." />
+    </Grid>
+</UserControl>

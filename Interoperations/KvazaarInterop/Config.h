@@ -19,7 +19,6 @@ namespace KvazaarInterop {
     public ref class Config : IDisposable {
     private:
         kvz_config* _config;
-        bool _disposed;
 
     public:
         /// <summary>
@@ -689,6 +688,8 @@ namespace KvazaarInterop {
 
 #pragma region IDisposable
     private:
+        bool _disposed;
+
         void ThrowIfDisposed();
 
     public:

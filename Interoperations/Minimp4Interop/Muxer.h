@@ -25,8 +25,6 @@ namespace Minimp4Interop {
         Stream^ _stream;
         GCHandle _gcHandle;
         MuxMode _mode;
-        bool _disposed;
-
 
     public:
         /// <summary>
@@ -55,7 +53,8 @@ namespace Minimp4Interop {
         /// <param name="size">Sample data size in bytes</param>
         /// <param name="duration">Sample duration in track time scale units</param>
         /// <param name="sampleType">Whether this is a sync sample</param>
-        void PutSample(int trackId, IntPtr data, int size, int duration, SampleType sampleType);
+        /// <param name="compositionOffset">Composition time offset (PTS - DTS) in track time scale units, signed. 0 when no B-frame reordering.</param>
+        void PutSample(int trackId, IntPtr data, int size, int duration, SampleType sampleType, int compositionOffset);
 
 #pragma endregion
 
@@ -92,6 +91,8 @@ namespace Minimp4Interop {
 
 #pragma region IDisposable
     private:
+        bool _disposed;
+
         /// <summary>
         /// Throws ObjectDisposedException if the object has been disposed
         /// </summary>

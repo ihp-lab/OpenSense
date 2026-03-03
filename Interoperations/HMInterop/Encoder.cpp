@@ -1,0 +1,336 @@
+#include "pch.h"
+
+#pragma managed(push, off)
+#include "TLibCommon/CommonDef.h"
+#include "TLibCommon/TComList.h"
+#include "TLibCommon/TComPicYuv.h"
+#include "TLibCommon/AccessUnit.h"
+#include "TLibEncoder/TEncTop.h"
+#include "TLibEncoder/AnnexBwrite.h"
+#include "HMNativeHelpers.h"
+#include <sstream>
+#include <map>
+#include <vector>
+
+// Native helper struct for encoded output
+struct NativeEncodedUnit {
+    uint8_t* data;
+    int length;
+    int poc;
+    long long pts;
+    bool ptsFound;
+};
+
+// Create a TComList<TComPicYuv*>
+static void* CreateRecPicList() {
+    return new TComList<TComPicYuv*>();
+}
+
+
+// Create a PTS map
+static void* CreatePtsMap() {
+    return new std::map<Int, long long>();
+}
+
+// Destroy a PTS map
+static void DestroyPtsMap(void* ptr) {
+    if (ptr) {
+        delete static_cast<std::map<Int, long long>*>(ptr);
+    }
+}
+
+// Record PTS in the map
+static void RecordPts(void* ptsMapPtr, Int frameIndex, long long pts) {
+    auto ptsMap = static_cast<std::map<Int, long long>*>(ptsMapPtr);
+    (*ptsMap)[frameIndex] = pts;
+}
+
+// Push a reconstruction buffer into recPicList before each encode() call.
+// TEncGOP::xGetBuffer iterates backwards from end(), so the list must
+// already contain at least one entry per received picture.
+// Mirrors TAppEncTop::xGetBuffer in the reference application.
+static void PrepareRecBuffer(
+    TComList<TComPicYuv*>* recPicList,
+    Int gopSize,
+    Int width,
+    Int height,
+    ChromaFormat chromaFormat,
+    UInt maxCUWidth,
+    UInt maxCUHeight,
+    UInt maxCUDepth
+) {
+    TComPicYuv* recBuf;
+    if (static_cast<Int>(recPicList->size()) >= gopSize) {
+        recBuf = recPicList->popFront();
+    } else {
+        recBuf = new TComPicYuv;
+        recBuf->create(width, height, chromaFormat, maxCUWidth, maxCUHeight, maxCUDepth, true);
+    }
+    recPicList->pushBack(recBuf);
+}
+
+// Destroy all reconstruction buffers in recPicList
+static void DestroyRecBuffers(TComList<TComPicYuv*>* recPicList) {
+    for (auto it = recPicList->begin(); it != recPicList->end(); it++) {
+        (*it)->destroy();
+        delete *it;
+    }
+    recPicList->clear();
+}
+
+// Perform native encode and return results
+// Returns number of encoded units; fills outputUnits array (caller must delete[])
+static int NativeEncode(
+    TEncTop* encoder,
+    bool flush,
+    TComPicYuv* picOrg,
+    void* recPicListPtr,
+    void* ptsMapPtr,
+    int inputFrameCountFallback,
+    NativeEncodedUnit** outUnits
+) {
+    auto recPicList = static_cast<TComList<TComPicYuv*>*>(recPicListPtr);
+    auto ptsMap = static_cast<std::map<Int, long long>*>(ptsMapPtr);
+    std::list<AccessUnit> accessUnitsOut;
+    auto numEncoded = 0;
+
+    // In streaming mode, framesToBeEncoded is INT_MAX. Before flush, set it to
+    // the actual frame count so compressGOP's guard condition correctly skips
+    // GOP entries beyond the last received frame (prevents xGetBuffer crash).
+    if (flush) {
+        encoder->setFramesToBeEncoded(inputFrameCountFallback);
+    }
+
+    encoder->encode(
+        flush,
+        picOrg,
+        picOrg,          // true original (same for us)
+        nullptr,         // film grain filtered (JVET_X0048_X0103_FILM_GRAIN)
+        IPCOLOURSPACE_UNCHANGED,
+        IPCOLOURSPACE_UNCHANGED,
+        *recPicList,
+        accessUnitsOut,
+        numEncoded
+    );
+
+    if (numEncoded == 0 || accessUnitsOut.empty()) {
+        *outUnits = nullptr;
+        return 0;
+    }
+
+    auto gopSize = encoder->getGOPSize();
+    auto iPOCLast = inputFrameCountFallback - 1;
+    // HM fires compressGOP after the very first frame (iPOCLast==0) as a
+    // special single-frame batch.  This consumes 1 frame before the regular
+    // GOP cycling begins, so the remaining count for flush is off-by-one
+    // compared to a naive modulus.
+    auto iNumPicRcvd = flush
+        ? ((inputFrameCountFallback - 1) % gopSize)
+        : gopSize;
+
+    // Replicate compressGOP's iGOPid iteration to determine the POC
+    // of each output AccessUnit, since recPicList pointer matching
+    // does not work (HM's internal reconstruction buffers are separate
+    // objects from the ones we provide via rcListPicYuvRecOut).
+    std::vector<int> codingOrderPOCs;
+    for (auto iGOPid = 0; iGOPid < gopSize; iGOPid++) {
+        auto pocCurr = (iPOCLast == 0)
+            ? 0
+            : iPOCLast - iNumPicRcvd + encoder->getGOPEntry(iGOPid).m_POC;
+        if (pocCurr >= encoder->getFramesToBeEncoded()) {
+            continue;
+        }
+        codingOrderPOCs.push_back(pocCurr);
+    }
+
+    auto units = new NativeEncodedUnit[numEncoded];
+    auto count = 0;
+    auto auIt = accessUnitsOut.begin();
+
+    for (auto i = 0; i < numEncoded && auIt != accessUnitsOut.end(); i++, ++auIt) {
+        auto poc = (i < static_cast<int>(codingOrderPOCs.size()))
+            ? codingOrderPOCs[i]
+            : (inputFrameCountFallback - 1);
+
+        auto framePts = 0LL;
+        auto found = false;
+        auto it = ptsMap->find(poc);
+        if (it != ptsMap->end()) {
+            framePts = it->second;
+            found = true;
+        }
+
+        std::ostringstream stream;
+        writeAnnexB(stream, *auIt);
+        auto str = stream.str();
+        auto length = static_cast<int>(str.size());
+
+        if (length > 0) {
+            auto data = new uint8_t[length];
+            memcpy(data, str.data(), length);
+            units[count].data = data;
+            units[count].length = length;
+            units[count].poc = poc;
+            units[count].pts = framePts;
+            units[count].ptsFound = found;
+            count++;
+        }
+    }
+
+    *outUnits = units;
+    return count;
+}
+
+#pragma managed(pop)
+
+#include "Encoder.h"
+
+using namespace System;
+using namespace System::Collections::Generic;
+
+namespace HMInterop {
+    Encoder::Encoder([NotNull] EncoderConfig^ config)
+        : _config(config)
+        , _encoder(nullptr)
+        , _ptsMap(nullptr)
+        , _inputFrameCount(0)
+        , _recPicList(nullptr)
+        , _disposed(false) {
+
+        ArgumentNullException::ThrowIfNull(config, "config");
+
+        _encoder = new TEncTop();
+        _ptsMap = CreatePtsMap();
+        _recPicList = CreateRecPicList();
+
+        // Apply configuration
+        config->ApplyTo(_encoder);
+
+        // Initialize encoder
+        _encoder->create();
+        _encoder->init(false);  // not field coding
+    }
+
+    cli::array<AccessUnitData^>^ Encoder::Encode([NotNull] PicYuv^ inputPicture, long long pts) {
+        ThrowIfDisposed();
+        ArgumentNullException::ThrowIfNull(inputPicture, "inputPicture");
+
+        // Create internal TComPicYuv for the encoder
+        auto picOrg = new TComPicYuv();
+        picOrg->createWithoutCUInfo(_encoder->getSourceWidth(), _encoder->getSourceHeight(), _encoder->getChromaFormatIdc(), false);
+
+        // Copy pixel data from input picture to internal buffer
+        CopyPicYuvData(inputPicture->InternalPicYuv, picOrg);
+
+        // Record PTS mapping
+        RecordPts(_ptsMap, _inputFrameCount, pts);
+        _inputFrameCount++;
+
+        // Push reconstruction buffer (required by TEncGOP::xGetBuffer)
+        PrepareRecBuffer(
+            static_cast<TComList<TComPicYuv*>*>(_recPicList),
+            _config->GOPEntries->Length,
+            _config->SourceWidth,
+            _config->SourceHeight,
+            static_cast<::ChromaFormat>(_config->ChromaFormatIdc),
+            _config->MaxCUWidth,
+            _config->MaxCUHeight,
+            _config->MaxTotalCUDepth
+        );
+
+        // Encode
+        NativeEncodedUnit* outUnits = nullptr;
+        auto count = NativeEncode(
+            _encoder,
+            false,
+            picOrg,
+            _recPicList,
+            _ptsMap,
+            _inputFrameCount,
+            &outUnits
+        );
+
+        // Collect output
+        auto results = gcnew cli::array<AccessUnitData^>(count);
+        for (auto i = 0; i < count; i++) {
+            if (!outUnits[i].ptsFound) {
+                throw gcnew InvalidOperationException(System::String::Format("Could not find PTS for POC {0}", outUnits[i].poc));
+            }
+            results[i] = gcnew AccessUnitData(outUnits[i].data, outUnits[i].length, outUnits[i].pts, outUnits[i].poc);
+        }
+        if (outUnits) {
+            delete[] outUnits;
+        }
+
+        // Clean up the input buffer
+        picOrg->destroy();
+        delete picOrg;
+
+        return results;
+    }
+
+    cli::array<AccessUnitData^>^ Encoder::Flush() {
+        ThrowIfDisposed();
+
+        // HM flushes all remaining frames in a single encode(flush=true) call.
+        // Do NOT loop — after flush, HM resets m_iPOCLast and m_iNumPicRcvd to 0,
+        // and a second call would crash in xGetBuffer.
+        NativeEncodedUnit* outUnits = nullptr;
+        auto count = NativeEncode(
+            _encoder,
+            true,
+            nullptr,
+            _recPicList,
+            _ptsMap,
+            _inputFrameCount,
+            &outUnits
+        );
+
+        auto results = gcnew cli::array<AccessUnitData^>(count);
+        for (auto i = 0; i < count; i++) {
+            if (!outUnits[i].ptsFound) {
+                throw gcnew InvalidOperationException(System::String::Format("Could not find PTS for POC {0}", outUnits[i].poc));
+            }
+            results[i] = gcnew AccessUnitData(outUnits[i].data, outUnits[i].length, outUnits[i].pts, outUnits[i].poc);
+        }
+        if (outUnits) {
+            delete[] outUnits;
+        }
+
+        return results;
+    }
+
+#pragma region IDisposable
+    void Encoder::ThrowIfDisposed() {
+        if (_disposed) {
+            throw gcnew System::ObjectDisposedException(this->GetType()->FullName);
+        }
+    }
+
+    Encoder::~Encoder() {
+        if (_disposed) {
+            return;
+        }
+
+        this->!Encoder();
+        _disposed = true;
+    }
+
+    Encoder::!Encoder() {
+        if (_encoder) {
+            _encoder->destroy();
+            delete _encoder;
+            _encoder = nullptr;
+        }
+
+        DestroyPtsMap(_ptsMap);
+        _ptsMap = nullptr;
+
+        if (_recPicList) {
+            DestroyRecBuffers(static_cast<TComList<TComPicYuv*>*>(_recPicList));
+            delete static_cast<TComList<TComPicYuv*>*>(_recPicList);
+            _recPicList = nullptr;
+        }
+    }
+#pragma endregion
+}
