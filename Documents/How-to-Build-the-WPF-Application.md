@@ -38,7 +38,7 @@ Click `Initialize Git LFS` if this window pops out.
 
 ## Build
 
-Open the file `OpenSense.sln` with Visual Studio.
+Open the file `OpenSense.slnx` with Visual Studio.
 
 You may see security warnings like this.
 ![image](images/visual-studio-security-warning.png)

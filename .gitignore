@@ -273,3 +273,9 @@ __pycache__/
 
 # Exclude WPF tmp files
 *_wpftmp.csproj
+
+# vcpkg installed packages (auto-generated from vcpkg.json)
+vcpkg_installed/
+
+# Claude Code
+.claude
