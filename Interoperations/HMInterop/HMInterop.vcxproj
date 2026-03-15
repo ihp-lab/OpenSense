@@ -76,8 +76,14 @@
     <ClInclude Include="Enums.h" />
     <ClInclude Include="HMNativeHelpers.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="PicYuv.h" />
+    <ClInclude Include="BitDepths.h" />
+    <ClInclude Include="PictureSnapshot.h" />
+    <ClInclude Include="PictureYuv.h" />
+    <ClInclude Include="PictureYuvPool.h" />
+    <ClInclude Include="ProfileTierLevelSnapshot.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SequenceParameterSetSnapshot.h" />
+    <ClInclude Include="VideoUsabilityInfoSnapshot.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AccessUnitData.cpp" />
@@ -89,7 +95,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="PicYuv.cpp" />
+    <ClCompile Include="PictureSnapshot.cpp" />
+    <ClCompile Include="PictureYuv.cpp" />
+    <ClCompile Include="PictureYuvPool.cpp" />
+    <ClCompile Include="ProfileTierLevelSnapshot.cpp" />
+    <ClCompile Include="SequenceParameterSetSnapshot.cpp" />
+    <ClCompile Include="VideoUsabilityInfoSnapshot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />

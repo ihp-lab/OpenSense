@@ -16,7 +16,7 @@ namespace OpenSense.Components.HM {
                 case nameof(ImageToPictureConverter.In):
                     return "The input \\psi Image stream.";
                 case nameof(ImageToPictureConverter.Out):
-                    return "The converted HM Picture stream.";
+                    return "The converted HM PictureSnapshot stream containing pixel data and metadata (bit depth, chroma format).";
                 default:
                     return null;
             }

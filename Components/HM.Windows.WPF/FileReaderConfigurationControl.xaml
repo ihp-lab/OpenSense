@@ -4,10 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:OpenSense.WPF.Components.HM"
     xmlns:comp="clr-namespace:OpenSense.Components.HM;assembly=OpenSense.Components.HM.Windows"
+    xmlns:util="clr-namespace:OpenSense.WPF.Components.Utilities;assembly=OpenSense.WPF.Components.Contracts"
     mc:Ignorable="d"
-    d:DesignHeight="450"
+    d:DesignHeight="200"
     d:DesignWidth="800">
     <d:UserControl.DataContext>
         <comp:FileReaderConfiguration />
@@ -21,17 +21,21 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
+            <!-- 0: Filename -->
             <RowDefinition
                 Height="auto" />
+            <!-- 1: Start Time Mode -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 2: Manual Start Time -->
             <RowDefinition
                 Height="auto" />
         </Grid.RowDefinitions>
 
+        <!-- Row 0: Filename -->
         <TextBlock
             Grid.Row="0"
-            Grid.Column="0">
-            Filename
-        </TextBlock>
+            Grid.Column="0">Filename</TextBlock>
         <Grid
             Grid.Row="0"
             Grid.Column="1">
@@ -41,28 +45,72 @@
                 <ColumnDefinition
                     Width="auto" />
             </Grid.ColumnDefinitions>
-
             <TextBox
                 Grid.Column="0"
                 Text="{Binding Path=Filename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
             <Button
                 Grid.Column="1"
                 Name="ButtonOpenFile"
-                Click="ButtonOpenFile_Click">
-                Open
-            </Button>
+                Click="ButtonOpenFile_Click">Open</Button>
         </Grid>
 
+        <!-- Row 1: Start Time Mode -->
         <TextBlock
             Grid.Row="1"
-            Grid.Column="0">
-            Parse Filename Timestamp
-        </TextBlock>
-        <CheckBox
+            Grid.Column="0">Start Time Mode</TextBlock>
+        <ComboBox
             Grid.Row="1"
             Grid.Column="1"
-            IsChecked="{Binding ParseFilenameTimestamp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            ToolTip="Parse the timestamp suffix from the filename and use it as the start originating time. The filename must end with _yyyyMMddHHmmssfffffff before the extension." />
+            SelectedItem="{Binding StartTimeMode}"
+            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type comp:StartTimeMode}}, Mode=OneTime}"
+            ToolTip="How to determine the start originating time. PipelineStartTime uses the pipeline's start time. ParseFromFilename extracts the timestamp from the filename suffix. Manual uses the value below." />
+
+        <!-- Row 2: Manual Start Time (visible only when StartTimeMode == Manual) -->
+        <TextBlock
+            Grid.Row="2"
+            Grid.Column="0"
+            ToolTip="UTC DateTime for manual start time mode.">
+            <TextBlock.Style>
+                <Style
+                    TargetType="TextBlock">
+                    <Setter
+                        Property="Visibility"
+                        Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger
+                            Binding="{Binding StartTimeMode}"
+                            Value="Manual">
+                            <Setter
+                                Property="Visibility"
+                                Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+            Manual Start Time
+        </TextBlock>
+        <TextBox
+            Grid.Row="2"
+            Grid.Column="1"
+            Text="{Binding ManualStartTime, Mode=TwoWay, UpdateSourceTrigger=LostFocus, StringFormat='yyyy-MM-dd HH:mm:ss.fffffff'}"
+            ToolTip="UTC DateTime in format: yyyy-MM-dd HH:mm:ss.fffffff">
+            <TextBox.Style>
+                <Style
+                    TargetType="TextBox">
+                    <Setter
+                        Property="Visibility"
+                        Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger
+                            Binding="{Binding StartTimeMode}"
+                            Value="Manual">
+                            <Setter
+                                Property="Visibility"
+                                Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
     </Grid>
 </UserControl>

@@ -94,9 +94,23 @@ namespace Minimp4Interop {
         return _demux->track[trackIndex].object_type_indication;
     }
 
-    cli::array<Byte>^ Demuxer::ReadSample(
+    unsigned int Demuxer::GetSampleSize(unsigned int trackIndex, unsigned int sampleIndex) {
+        ThrowIfDisposed();
+        ThrowIfInvalidTrack(trackIndex);
+
+        if (sampleIndex >= _demux->track[trackIndex].sample_count) {
+            throw gcnew ArgumentOutOfRangeException("sampleIndex");
+        }
+
+        unsigned int frameBytes = 0;
+        MP4D_frame_offset(_demux, trackIndex, sampleIndex, &frameBytes, nullptr, nullptr);
+        return frameBytes;
+    }
+
+    int Demuxer::ReadSample(
         unsigned int trackIndex,
         unsigned int sampleIndex,
+        cli::array<Byte>^ buffer,
         [Out] unsigned int% timestamp,
         [Out] unsigned int% duration
     ) {
@@ -116,23 +130,24 @@ namespace Minimp4Interop {
         duration = dur;
 
         if (frameBytes == 0) {
-            return Array::Empty<Byte>();
+            return 0;
+        }
+        if (buffer->Length < static_cast<int>(frameBytes)) {
+            throw gcnew ArgumentException("Buffer too small", "buffer");
         }
 
-        // Read sample data from stream
-        auto data = gcnew cli::array<Byte>(frameBytes);
         _stream->Seek(offset, SeekOrigin::Begin);
 
         auto totalRead = 0;
         while (totalRead < static_cast<int>(frameBytes)) {
-            auto bytesRead = _stream->Read(data, totalRead, static_cast<int>(frameBytes) - totalRead);
+            auto bytesRead = _stream->Read(buffer, totalRead, static_cast<int>(frameBytes) - totalRead);
             if (bytesRead == 0) {
                 throw gcnew InvalidOperationException("Unexpected end of stream while reading sample");
             }
             totalRead += bytesRead;
         }
 
-        return data;
+        return static_cast<int>(frameBytes);
     }
 
     cli::array<Byte>^ Demuxer::ReadParameterSet(unsigned int trackIndex, int index) {

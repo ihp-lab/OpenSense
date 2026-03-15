@@ -6,28 +6,36 @@ namespace OpenSense.Components.HM {
     [Serializable]
     public sealed class FileReaderConfiguration : ConventionalComponentConfiguration {
 
-        private static readonly FileReaderMetadata Metadata = new FileReaderMetadata();
-
-        #region Options
+        #region File Settings
         private string filename = string.Empty;
 
         public string Filename {
             get => filename;
             set => SetProperty(ref filename, value);
         }
+        #endregion
 
-        private bool parseFilenameTimestamp;
+        #region Timestamp Settings
+        private StartTimeMode startTimeMode = StartTimeMode.PipelineStartTime;
 
-        public bool ParseFilenameTimestamp {
-            get => parseFilenameTimestamp;
-            set => SetProperty(ref parseFilenameTimestamp, value);
+        public StartTimeMode StartTimeMode {
+            get => startTimeMode;
+            set => SetProperty(ref startTimeMode, value);
+        }
+
+        private DateTime manualStartTime = DateTime.MinValue;
+
+        public DateTime ManualStartTime {
+            get => manualStartTime;
+            set => SetProperty(ref manualStartTime, value);
         }
         #endregion
 
-        public override IComponentMetadata GetMetadata() => Metadata;
+        public override IComponentMetadata GetMetadata() => new FileReaderMetadata();
 
         protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new FileReader(pipeline, Filename) {
-            ParseFilenameTimestamp = ParseFilenameTimestamp,
+            StartTimeMode = StartTimeMode,
+            ManualStartTime = ManualStartTime,
             Logger = (serviceProvider?.GetService(typeof(ILoggerFactory)) as ILoggerFactory)?.CreateLogger(Name),
         };
     }

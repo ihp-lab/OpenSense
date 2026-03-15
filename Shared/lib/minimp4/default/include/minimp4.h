@@ -908,6 +908,89 @@ static int items_count(minimp4_vector_t *v)
     return count;
 }
 
+#if MP4D_HEVC_SUPPORTED
+/**
+*   Read one bit from byte array at given bit position, advance bit_pos.
+*/
+static int hevc_read_bit(const unsigned char *data, int *bit_pos)
+{
+    int val = (data[*bit_pos >> 3] >> (7 - (*bit_pos & 7))) & 1;
+    (*bit_pos)++;
+    return val;
+}
+
+/**
+*   Read unsigned exp-golomb coded value from byte array at given bit position.
+*/
+static unsigned hevc_read_ue(const unsigned char *data, int *bit_pos)
+{
+    int zeros = 0;
+    while (!hevc_read_bit(data, bit_pos))
+        zeros++;
+    unsigned val = (1u << zeros) - 1;
+    while (zeros--)
+        val += hevc_read_bit(data, bit_pos) << zeros;
+    return val;
+}
+
+/**
+*   Parse chroma_format_idc, bit_depth_luma_minus8, bit_depth_chroma_minus8
+*   from an HEVC SPS NAL unit.
+*   sps points to raw NAL bytes (without length prefix), sps_len is byte count.
+*   Returns 0 on success, -1 on parse failure.
+*/
+static int hevc_parse_sps_chroma_depth(
+    const unsigned char *sps, int sps_len,
+    int *chroma_format_idc, int *bit_depth_luma_m8, int *bit_depth_chroma_m8)
+{
+    int i;
+    if (sps_len < 17)
+        return -1;
+    int max_sub_layers_minus1 = (sps[2] >> 1) & 7;
+
+    /* bit position after NAL header (2B) + SPS header byte (1B) + general PTL (12B) = 120 bits */
+    int bp = (2 + 1 + 12) * 8;
+
+    /* skip sub-layer PTL */
+    if (max_sub_layers_minus1 > 0)
+    {
+        int sub_profile_present[7], sub_level_present[7];
+        for (i = 0; i < max_sub_layers_minus1; i++)
+        {
+            sub_profile_present[i] = hevc_read_bit(sps, &bp);
+            sub_level_present[i] = hevc_read_bit(sps, &bp);
+        }
+        /* padding to byte boundary */
+        bp += (8 - max_sub_layers_minus1) * 2;
+        for (i = 0; i < max_sub_layers_minus1; i++)
+        {
+            if (sub_profile_present[i]) bp += 88; /* 11 bytes */
+            if (sub_level_present[i])   bp += 8;  /* 1 byte */
+        }
+    }
+
+    if (bp / 8 >= sps_len)
+        return -1;
+
+    hevc_read_ue(sps, &bp);                    /* sps_seq_parameter_set_id */
+    *chroma_format_idc = hevc_read_ue(sps, &bp);
+    if (*chroma_format_idc == 3)
+        hevc_read_bit(sps, &bp);               /* separate_colour_plane_flag */
+    hevc_read_ue(sps, &bp);                    /* pic_width_in_luma_samples */
+    hevc_read_ue(sps, &bp);                    /* pic_height_in_luma_samples */
+    if (hevc_read_bit(sps, &bp))               /* conformance_window_flag */
+    {
+        hevc_read_ue(sps, &bp);                /* conf_win_left_offset */
+        hevc_read_ue(sps, &bp);                /* conf_win_right_offset */
+        hevc_read_ue(sps, &bp);                /* conf_win_top_offset */
+        hevc_read_ue(sps, &bp);                /* conf_win_bottom_offset */
+    }
+    *bit_depth_luma_m8 = hevc_read_ue(sps, &bp);
+    *bit_depth_chroma_m8 = hevc_read_ue(sps, &bp);
+    return 0;
+}
+#endif /* MP4D_HEVC_SUPPORTED */
+
 int MP4E_set_dsi(MP4E_mux_t *mux, int track_id, const void *dsi, int bytes)
 {
     track_t* tr = ((track_t*)mux->tracks.data) + track_id;
@@ -1214,7 +1297,7 @@ static int mp4e_flush_index(MP4E_mux_t *mux)
 #define TRACK_HEADER_BYTES 512
     index_bytes = FILE_HEADER_BYTES;
     if (mux->text_comment)
-        index_bytes += 128 + strlen(mux->text_comment);
+        index_bytes += 128 + (unsigned int)strlen(mux->text_comment);
     for (ntr = 0; ntr < ntracks; ntr++)
     {
         track_t *tr = ((track_t*)mux->tracks.data) + ntr;
@@ -1547,22 +1630,42 @@ static int mp4e_flush_index(MP4E_mux_t *mux)
                                 }
                             } else
                             {
-                                int numOfVPS  = items_count(&tr->vpps);
+                                int numOfVPS  = items_count(&tr->vvps);
                                 ATOM(BOX_hvcC);
-                                // TODO: read actual params from stream
-                                WRITE_1(1);    // configurationVersion
-                                WRITE_1(1);    // Profile Space (2), Tier (1), Profile (5)
-                                WRITE_4(0x60000000); // Profile Compatibility
-                                WRITE_2(0);    // progressive, interlaced, non packed constraint, frame only constraint flags
-                                WRITE_4(0);    // constraint indicator flags
-                                WRITE_1(0);    // level_idc
-                                WRITE_2(0xf000); // Min Spatial Segmentation
-                                WRITE_1(0xfc); // Parallelism Type
-                                WRITE_1(0xfc); // Chroma Format
-                                WRITE_1(0xf8); // Luma Depth
-                                WRITE_1(0xf8); // Chroma Depth
-                                WRITE_2(0);    // Avg Frame Rate
-                                WRITE_1(3);    // ConstantFrameRate (2), NumTemporalLayers (3), TemporalIdNested (1), LengthSizeMinusOne (2)
+                                {
+                                    /* Extract profile/tier/level from VPS NAL (fixed offsets) */
+                                    /* Vector format: [2B length][NAL data...] */
+                                    /* VPS NAL: [2B NAL hdr][2B VPS hdr][2B reserved 0xFFFF][12B general PTL] */
+                                    const unsigned char *vps_nal = tr->vvps.data + 2; /* skip length prefix */
+                                    int max_sub_layers = ((vps_nal[3] >> 1) & 7) + 1;
+                                    int temporal_id_nesting = vps_nal[3] & 1;
+                                    /* general PTL starts at VPS NAL byte 6 */
+                                    unsigned char ptl_byte0 = vps_nal[6];
+                                    unsigned char level_idc = vps_nal[17];
+
+                                    /* Extract chroma format and bit depth from SPS NAL */
+                                    int chroma_idc = 1, bd_luma_m8 = 0, bd_chroma_m8 = 0;
+                                    if (tr->vsps.bytes > 2)
+                                    {
+                                        int sps_len = tr->vsps.data[0] * 256 + tr->vsps.data[1];
+                                        hevc_parse_sps_chroma_depth(tr->vsps.data + 2, sps_len,
+                                            &chroma_idc, &bd_luma_m8, &bd_chroma_m8);
+                                    }
+
+                                    WRITE_1(1);                                             /* configurationVersion */
+                                    WRITE_1(ptl_byte0);                                     /* profile_space(2)|tier(1)|profile(5) */
+                                    WRITE_4((vps_nal[7]<<24)|(vps_nal[8]<<16)|(vps_nal[9]<<8)|vps_nal[10]); /* profile_compatibility_flags */
+                                    WRITE_2((vps_nal[11]<<8)|vps_nal[12]);                  /* constraint_indicator_flags bytes 0-1 */
+                                    WRITE_4((vps_nal[13]<<24)|(vps_nal[14]<<16)|(vps_nal[15]<<8)|vps_nal[16]); /* constraint_indicator_flags bytes 2-5 */
+                                    WRITE_1(level_idc);                                     /* general_level_idc */
+                                    WRITE_2(0xf000);                                        /* min_spatial_segmentation_idc (reserved + 0) */
+                                    WRITE_1(0xfc);                                          /* parallelismType (reserved + 0) */
+                                    WRITE_1(0xfc | (chroma_idc & 3));                       /* chromaFormat */
+                                    WRITE_1(0xf8 | (bd_luma_m8 & 7));                       /* bitDepthLumaMinus8 */
+                                    WRITE_1(0xf8 | (bd_chroma_m8 & 7));                     /* bitDepthChromaMinus8 */
+                                    WRITE_2(0);                                             /* avgFrameRate */
+                                    WRITE_1((max_sub_layers << 1) | temporal_id_nesting | 3); /* cfr(2)|numTempLayers(3)|nesting(1)|lenSizeM1(2) */
+                                }
 
                                 WRITE_1(3);    // Num Of Arrays
                                 WRITE_1((1 << 7) | (HEVC_NAL_VPS & 0x3f)); // Array Completeness + NAL Unit Type
@@ -2790,6 +2893,7 @@ int MP4D_open(MP4D_demux_t *mp4, int (*read_callback)(int64_t offset, void *buff
 #endif
 #if MP4D_HEVC_SUPPORTED
             {BOX_hvc1, BOX_ATOM},
+            {BOX_hev1, BOX_ATOM},
 #endif
             {BOX_udta, BOX_ATOM},
             {BOX_meta, BOX_ATOM},
@@ -3025,13 +3129,22 @@ broken_android_meta_hack:
         case BOX_ctts:
             {
                 unsigned count = READ(4);
+#if MP4D_TIMESTAMPS_SUPPORTED
+                unsigned k = 0;
+#endif
                 for (i = 0; i < count; i++)
                 {
                     int sc = READ(4);
                     int d =  READ(4);
-                    (void)sc;
-                    (void)d;
                     TRACE(("sample %8d count %8d decoding to composition offset %8d\n", i, sc, d));
+#if MP4D_TIMESTAMPS_SUPPORTED
+                    if (tr->timestamp)
+                    {
+                        unsigned j;
+                        for (j = 0; j < (unsigned)sc; j++, k++)
+                            tr->timestamp[k] = (unsigned)((int)tr->timestamp[k] + d);
+                    }
+#endif
                 }
             }
             break;
@@ -3142,6 +3255,10 @@ broken_android_meta_hack:
         case BOX_avc1:  // AVCSampleEntry extends VisualSampleEntry
 //         case BOX_avc2:   - no test
 //         case BOX_svc1:   - no test
+#if MP4D_HEVC_SUPPORTED
+        case BOX_hvc1:  // HEVCSampleEntry extends VisualSampleEntry
+        case BOX_hev1:
+#endif
         case BOX_mp4v:
             if (!tr)
             {
@@ -3210,6 +3327,21 @@ broken_android_meta_hack:
             }
             break;
 #endif  // MP4D_AVC_SUPPORTED
+
+#if MP4D_HEVC_SUPPORTED
+        case BOX_hvcC:  // HEVCDecoderConfigurationRecord
+            tr->object_type_indication = MP4_OBJECT_TYPE_HEVC;
+            tr->dsi = (unsigned char*)malloc((size_t)payload_bytes);
+            tr->dsi_bytes = (unsigned)payload_bytes;
+            {
+                unsigned char *p = tr->dsi;
+                for (i = 0; i < tr->dsi_bytes; i++)
+                {
+                    p[i] = READ(1);
+                }
+            }
+            break;
+#endif  // MP4D_HEVC_SUPPORTED
 
         case OD_ESD:
             {
@@ -3322,7 +3454,7 @@ broken_android_meta_hack:
         // if box is not envelope, just skip it
         if (i == NELEM(g_envelope_box))
         {
-            if (payload_bytes > file_size)
+            if (file_size < 0 || payload_bytes > (boxsize_t)file_size)
             {
                 eof_flag = 1;
             } else

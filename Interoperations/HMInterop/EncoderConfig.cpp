@@ -150,9 +150,9 @@ namespace HMInterop {
         FrameRate = 30;
         ChromaFormatIdc = ChromaFormat::Chroma400;
 
-        // Bit Depth
-        InputBitDepth = 16;
-        InternalBitDepth = 16;
+        // Bit Depth (0 = auto-detect from input at runtime)
+        InputBitDepth = 0;
+        InternalBitDepth = 0;
 
         // Coding Structure
         IntraPeriod = 32;

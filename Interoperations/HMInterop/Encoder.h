@@ -1,7 +1,7 @@
 #pragma once
 
 #include "EncoderConfig.h"
-#include "PicYuv.h"
+#include "PictureYuv.h"
 #include "AccessUnitData.h"
 
 using namespace System;
@@ -39,7 +39,7 @@ namespace HMInterop {
         /// <param name="pts">Presentation timestamp for this frame</param>
         /// <returns>Array of encoded access units</returns>
         [returnvalue: NotNull]
-        cli::array<AccessUnitData^>^ Encode([NotNull] PicYuv^ inputPicture, long long pts);
+        cli::array<AccessUnitData^>^ Encode([NotNull] PictureYuv^ inputPicture, long long pts);
 
         /// <summary>
         /// Flush remaining frames. Call after all input is done.

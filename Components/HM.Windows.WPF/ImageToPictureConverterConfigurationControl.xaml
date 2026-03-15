@@ -8,6 +8,8 @@
     xmlns:util="clr-namespace:OpenSense.WPF.Components.Utilities;assembly=OpenSense.WPF.Components.Contracts"
     xmlns:interop="clr-namespace:HMInterop;assembly=HMInterop"
     xmlns:comp="clr-namespace:OpenSense.Components.HM;assembly=OpenSense.Components.HM.Windows"
+    xmlns:imaging="clr-namespace:Microsoft.Psi.Imaging;assembly=Microsoft.Psi.Imaging"
+    xmlns:sys="clr-namespace:System;assembly=System.Runtime"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
@@ -23,32 +25,254 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
+            <!-- 0: Input Pixel Format -->
             <RowDefinition
                 Height="auto" />
+            <!-- 1: Source Bit Depth -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 2: Scale Shift -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 3: Window Start -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 4: Mapping Preview -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 5: Output Bit Depth -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 6: Output Chroma Format -->
             <RowDefinition
                 Height="auto" />
         </Grid.RowDefinitions>
 
+        <!-- Row 0: Input Pixel Format -->
         <TextBlock
             Grid.Row="0"
-            Grid.Column="0">
-            Chroma Format
-        </TextBlock>
+            Grid.Column="0">Input Pixel Format</TextBlock>
         <ComboBox
             Grid.Row="0"
             Grid.Column="1"
-            SelectedItem="{Binding ChromaFormat}"
-            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type interop:ChromaFormat}}, Mode=OneTime}" />
+            SelectedValue="{Binding InputPixelFormat}"
+            SelectedValuePath="Tag"
+            ToolTip="Expected input pixel format. Auto = accept any supported format. Set to validate input at runtime.">
+            <ComboBoxItem
+                Content="Auto"
+                Tag="{x:Null}" />
+            <ComboBoxItem
+                Content="Gray_8bpp">
+                <ComboBoxItem.Tag>
+                    <imaging:PixelFormat>Gray_8bpp</imaging:PixelFormat>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="Gray_16bpp">
+                <ComboBoxItem.Tag>
+                    <imaging:PixelFormat>Gray_16bpp</imaging:PixelFormat>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="BGR_24bpp">
+                <ComboBoxItem.Tag>
+                    <imaging:PixelFormat>BGR_24bpp</imaging:PixelFormat>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="RGB_24bpp">
+                <ComboBoxItem.Tag>
+                    <imaging:PixelFormat>RGB_24bpp</imaging:PixelFormat>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="BGRA_32bpp">
+                <ComboBoxItem.Tag>
+                    <imaging:PixelFormat>BGRA_32bpp</imaging:PixelFormat>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="BGRX_32bpp">
+                <ComboBoxItem.Tag>
+                    <imaging:PixelFormat>BGRX_32bpp</imaging:PixelFormat>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+        </ComboBox>
 
+        <!-- Row 1: Source Bit Depth -->
         <TextBlock
             Grid.Row="1"
-            Grid.Column="0">
-            Output Bit Depth
-        </TextBlock>
-        <TextBox
+            Grid.Column="0">Source Bit Depth</TextBlock>
+        <ComboBox
             Grid.Row="1"
             Grid.Column="1"
-            Text="{Binding OutputBitDepth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            ToolTip="Bit depth of output Picture samples (e.g. 8, 10, 16)." />
+            SelectedValue="{Binding SourceBitDepth}"
+            SelectedValuePath="Tag"
+            ToolTip="Expected source bit depth. Auto (0) = detect at runtime. Set to validate input.">
+            <ComboBoxItem
+                Content="Auto">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>0</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="8">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>8</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="9">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>9</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="10">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>10</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="11">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>11</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="12">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>12</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="13">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>13</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="14">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>14</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="15">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>15</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="16">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>16</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+        </ComboBox>
+
+        <!-- Row 2: Scale Shift (Slider + TextBox) -->
+        <TextBlock
+            Grid.Row="2"
+            Grid.Column="0">Scale Shift</TextBlock>
+        <Grid
+            Grid.Row="2"
+            Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="*" />
+                <ColumnDefinition
+                    Width="50" />
+            </Grid.ColumnDefinitions>
+            <Slider
+                x:Name="ScaleShiftSlider"
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                IsSnapToTickEnabled="True"
+                TickFrequency="1"
+                Value="{Binding BitDepthMappingScaleShift, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                ToolTip="Positive = right-shift (downscale), negative = left-shift (upscale), 0 = no scaling." />
+            <TextBox
+                Grid.Column="1"
+                Text="{Binding BitDepthMappingScaleShift, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                VerticalAlignment="Center"
+                Margin="4,0,0,0" />
+        </Grid>
+
+        <!-- Row 3: Window Start (Slider + TextBox) -->
+        <TextBlock
+            Grid.Row="3"
+            Grid.Column="0">Window Start</TextBlock>
+        <Grid
+            Grid.Row="3"
+            Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="*" />
+                <ColumnDefinition
+                    Width="50" />
+            </Grid.ColumnDefinitions>
+            <Slider
+                x:Name="WindowStartSlider"
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                IsSnapToTickEnabled="True"
+                Value="{Binding BitDepthMappingWindow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                ToolTip="Starting position of the mapping window in the source value range." />
+            <TextBox
+                Grid.Column="1"
+                Text="{Binding BitDepthMappingWindow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                VerticalAlignment="Center"
+                Margin="4,0,0,0" />
+        </Grid>
+
+        <!-- Row 4: Mapping Preview -->
+        <local:BitDepthMappingPreview
+            Grid.Row="4"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            TargetBitDepth="{Binding OutputBitDepth}"
+            ScaleShift="{Binding BitDepthMappingScaleShift}"
+            WindowStart="{Binding BitDepthMappingWindow}"
+            SourceBitDepth="{Binding SourceBitDepth}" />
+
+        <!-- Row 5: Output Bit Depth (Slider + TextBox) -->
+        <TextBlock
+            Grid.Row="5"
+            Grid.Column="0">Output Bit Depth</TextBlock>
+        <Grid
+            Grid.Row="5"
+            Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="*" />
+                <ColumnDefinition
+                    Width="50" />
+            </Grid.ColumnDefinitions>
+            <Slider
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                Minimum="8"
+                Maximum="16"
+                IsSnapToTickEnabled="True"
+                TickFrequency="1"
+                Value="{Binding OutputBitDepth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                ToolTip="Target bit depth for output PictureYuv samples (8-16)." />
+            <TextBox
+                Grid.Column="1"
+                Text="{Binding OutputBitDepth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                VerticalAlignment="Center"
+                Margin="4,0,0,0" />
+        </Grid>
+
+        <!-- Row 6: Output Chroma Format -->
+        <TextBlock
+            Grid.Row="6"
+            Grid.Column="0">Output Chroma Format</TextBlock>
+        <ComboBox
+            Grid.Row="6"
+            Grid.Column="1"
+            SelectedItem="{Binding OutputChromaFormat}"
+            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type interop:ChromaFormat}}, Mode=OneTime}" />
     </Grid>
 </UserControl>

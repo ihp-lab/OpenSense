@@ -92,4 +92,21 @@ namespace HMInterop {
         Selective = 2,        // MESEARCH_SELECTIVE
         DiamondEnhanced = 3,  // MESEARCH_DIAMOND_ENHANCED
     };
+
+    /// <summary>
+    /// Picture component ID (maps to ::ComponentID in TypeDef.h)
+    /// </summary>
+    public enum class ComponentId : int {
+        Y  = 0,  // COMPONENT_Y (luma)
+        Cb = 1,  // COMPONENT_Cb (chroma blue)
+        Cr = 2,  // COMPONENT_Cr (chroma red)
+    };
+
+    /// <summary>
+    /// Determines how a PictureSnapshot disposes its PictureYuv.
+    /// </summary>
+    public enum class PictureYuvOwnership : int {
+        Owned = 0,    // Dispose (destroy the PictureYuv)
+        Pooled = 1,   // Return to PictureYuvPool
+    };
 }

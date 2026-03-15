@@ -211,7 +211,7 @@ namespace HMInterop {
         _encoder->init(false);  // not field coding
     }
 
-    cli::array<AccessUnitData^>^ Encoder::Encode([NotNull] PicYuv^ inputPicture, long long pts) {
+    cli::array<AccessUnitData^>^ Encoder::Encode([NotNull] PictureYuv^ inputPicture, long long pts) {
         ThrowIfDisposed();
         ArgumentNullException::ThrowIfNull(inputPicture, "inputPicture");
 

@@ -61,16 +61,18 @@ namespace Minimp4Interop {
         unsigned int GetObjectType(unsigned int trackIndex);
 
         /// <summary>
-        /// Reads a sample (frame) from the specified track.
-        /// Returns the raw sample data (length-prefixed NAL units for video).
+        /// Gets the size in bytes of a sample without reading it.
         /// </summary>
-        /// <param name="trackIndex">Track index</param>
-        /// <param name="sampleIndex">Sample index (0-based)</param>
-        /// <param name="timestamp">OUT: presentation timestamp in track timescale units</param>
-        /// <param name="duration">OUT: sample duration in track timescale units</param>
-        cli::array<Byte>^ ReadSample(
+        unsigned int GetSampleSize(unsigned int trackIndex, unsigned int sampleIndex);
+
+        /// <summary>
+        /// Reads a sample (frame) into a caller-provided buffer. Returns actual bytes read.
+        /// Buffer must be at least GetSampleSize() bytes.
+        /// </summary>
+        int ReadSample(
             unsigned int trackIndex,
             unsigned int sampleIndex,
+            cli::array<Byte>^ buffer,
             [Out] unsigned int% timestamp,
             [Out] unsigned int% duration
         );

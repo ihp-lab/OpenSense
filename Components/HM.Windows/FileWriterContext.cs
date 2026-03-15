@@ -4,23 +4,32 @@ using HMInterop;
 using Minimp4Interop;
 
 namespace OpenSense.Components.HM {
-    internal sealed record class FileWriterContext(
-        DateTime StartTime,
-        EncoderConfig Config,
-        Encoder Encoder,
-        FileStream Stream,
-        Muxer Muxer,
-        H26xWriter Writer
-    ) : IDisposable {
+    internal sealed class FileWriterContext : IDisposable {
+
+        public DateTime StartTime { get; }
+        public EncoderConfig Config { get; }
+        public Encoder Encoder { get; }
+        public FileStream Stream { get; }
+        public Muxer Muxer { get; }
+        public H26xWriter Writer { get; }
+
+        public FileWriterContext(DateTime startTime, EncoderConfig config, Encoder encoder, FileStream stream, Muxer muxer, H26xWriter writer) {
+            StartTime = startTime;
+            Config = config;
+            Encoder = encoder;
+            Stream = stream;
+            Muxer = muxer;
+            Writer = writer;
+        }
 
         #region IDisposable
-        private bool _disposed;
+        private bool disposed;
 
         public void Dispose() {
-            if (_disposed) {
+            if (disposed) {
                 return;
             }
-            _disposed = true;
+            disposed = true;
 
             Encoder.Dispose();
 

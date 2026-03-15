@@ -36,10 +36,25 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PicYuv.h">
+    <ClInclude Include="BitDepths.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PictureSnapshot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PictureYuv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProfileTierLevelSnapshot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SequenceParameterSetSnapshot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoUsabilityInfoSnapshot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -59,13 +74,22 @@
     <ClCompile Include="EncoderConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="openssl_stubs.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PicYuv.cpp">
+    <ClCompile Include="PictureSnapshot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PictureYuv.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProfileTierLevelSnapshot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SequenceParameterSetSnapshot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoUsabilityInfoSnapshot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

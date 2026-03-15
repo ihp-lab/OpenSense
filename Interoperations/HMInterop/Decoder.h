@@ -1,11 +1,13 @@
 #pragma once
 
-#include "PicYuv.h"
+#include "PictureSnapshot.h"
+#include <vector>
 
 using namespace System;
 using namespace System::Diagnostics::CodeAnalysis;
 
 class TDecTop;
+struct NativeDecodedPic;
 
 namespace HMInterop {
     /// <summary>
@@ -22,26 +24,26 @@ namespace HMInterop {
 
         /// <summary>
         /// Feed one NAL unit (without start code or length prefix) to the decoder.
-        /// Returns decoded frames (0 or more due to B-frame reordering).
+        /// Decoded pictures (0 or more due to B-frame reordering) are appended to output.
+        /// PictureYuv buffers are obtained from PictureYuvPool.
         /// </summary>
-        /// <param name="nalData">Raw NAL unit data (without start code or length prefix)</param>
-        [returnvalue: NotNull]
-        cli::array<PicYuv^>^ FeedNal([NotNull] cli::array<Byte>^ nalData);
+        /// <param name="nalData">Buffer containing NAL unit data</param>
+        /// <param name="length">Number of valid bytes in nalData (use -1 for nalData.Length)</param>
+        /// <param name="output">List to append decoded pictures to</param>
+        void FeedNal([NotNull] cli::array<Byte>^ nalData, int length, [NotNull] System::Collections::Generic::IList<PictureSnapshot^>^ output);
 
         /// <summary>
         /// Signal end of stream, flush remaining B-frames.
-        /// Returns all remaining decoded frames.
+        /// Decoded pictures are appended to output.
         /// </summary>
-        [returnvalue: NotNull]
-        cli::array<PicYuv^>^ FlushAndCollect();
+        void FlushAndCollect([NotNull] System::Collections::Generic::IList<PictureSnapshot^>^ output);
 
     private:
         /// <summary>
-        /// Convert native decoded picture array to managed array.
+        /// Create PictureSnapshot objects from native decoded pictures and append to output.
+        /// Rents PictureYuv from pool and copies pixel data.
         /// </summary>
-        /// <param name="pics">Pointer to NativeDecodedPic array (passed as void* to avoid native types in header)</param>
-        /// <param name="count">Number of pictures</param>
-        static cli::array<PicYuv^>^ ConvertDecodedPics(void* pics, int count);
+        static void AppendDecodedPics(const std::vector<NativeDecodedPic>& pics, System::Collections::Generic::IList<PictureSnapshot^>^ output);
 
 #pragma region IDisposable
     private:

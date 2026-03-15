@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -6,40 +7,50 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Threading;
 using HMInterop;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 using Microsoft.Psi.Components;
-using Microsoft.Psi.Imaging;
 using Minimp4Interop;
 
 namespace OpenSense.Components.HM {
-    public sealed class FileReader : Generator, INotifyPropertyChanged, IDisposable {
+    public sealed class FileReader : Generator, ISourceComponent, INotifyPropertyChanged, IDisposable {
+
+        /// <summary>
+        /// Timestamp format used by FileWriter: yyyyMMddHHmmssfffffff (21 characters).
+        /// </summary>
+        private const string TimestampFormat = "yyyyMMddHHmmssfffffff";
+
+        private static readonly Regex TimestampPattern = new Regex(@"_(\d{21})$", RegexOptions.Compiled);
 
         private readonly string _filename;
-        private Decoder? _decoder;
-        private Queue<(PicYuv picture, TimeSpan timestamp)>? _frameBuffer;
-
-        // MP4 demuxer state
-        private FileStream? _fileStream;
-        private Demuxer? _demuxer;
-        private int _videoTrackIndex;
-        private int _sampleIndex;
-        private uint _timescale;
+        private readonly Queue<(PictureSnapshot picture, TimeSpan timestamp)> _frameBuffer = new();
+        private readonly PriorityQueue<TimeSpan, TimeSpan> _ptsQueue = new();
+        private readonly CancellationTokenSource _cts = new();
+        private readonly List<PictureSnapshot> _decodedFrames = new();
 
         #region Ports
-        public Emitter<Shared<Image>> Out { get; }
-
-        public Emitter<Shared<PicYuv>> PictureOut { get; }
+        public Emitter<Shared<PictureSnapshot>> Out { get; }
         #endregion
 
         #region Options
-        private bool parseFilenameTimestamp;
 
-        public bool ParseFilenameTimestamp {
-            get => parseFilenameTimestamp;
-            set => SetProperty(ref parseFilenameTimestamp, value);
+        #region Timestamp Settings
+        private StartTimeMode startTimeMode = StartTimeMode.PipelineStartTime;
+
+        public StartTimeMode StartTimeMode {
+            get => startTimeMode;
+            set => SetProperty(ref startTimeMode, value);
         }
+
+        private DateTime manualStartTime = DateTime.MinValue;
+
+        public DateTime ManualStartTime {
+            get => manualStartTime;
+            set => SetProperty(ref manualStartTime, value);
+        }
+        #endregion
 
         private ILogger? logger;
 
@@ -49,7 +60,11 @@ namespace OpenSense.Components.HM {
         }
         #endregion
 
-        private DateTime _startTime;
+        public SequenceParameterSetSnapshot? SequenceParameterSetSnapshot { get; private set; }
+
+        private FileReaderContext? context;
+        private int sampleIndex;
+        private bool spsPosted;
 
         public FileReader(Pipeline pipeline, string filename) : base(pipeline) {
             if (!File.Exists(filename)) {
@@ -57,99 +72,182 @@ namespace OpenSense.Components.HM {
             }
             _filename = filename;
 
-            Out = pipeline.CreateEmitter<Shared<Image>>(this, nameof(Out));
-            PictureOut = pipeline.CreateEmitter<Shared<PicYuv>>(this, nameof(PictureOut));
+            Out = pipeline.CreateEmitter<Shared<PictureSnapshot>>(this, nameof(Out));
 
             pipeline.PipelineRun += OnPipelineRun;
         }
 
         #region Pipeline Event Handlers
-        /// <summary>
-        /// Timestamp format used by FileWriter: yyyyMMddHHmmssfffffff (21 characters).
-        /// </summary>
-        private const string TimestampFormat = "yyyyMMddHHmmssfffffff";
-
-        private static readonly Regex TimestampPattern = new Regex(@"_(\d{21})$", RegexOptions.Compiled);
-
         private void OnPipelineRun(object? sender, PipelineRunEventArgs args) {
             Debug.Assert(args.StartOriginatingTime.Kind == DateTimeKind.Utc);
-            if (ParseFilenameTimestamp) {
-                var baseName = Path.GetFileNameWithoutExtension(_filename);
-                var match = TimestampPattern.Match(baseName);
-                if (!match.Success) {
-                    throw new InvalidOperationException($"ParseFilenameTimestamp is enabled but filename '{Path.GetFileName(_filename)}' does not contain a timestamp suffix in the expected format '_yyyyMMddHHmmssfffffff'.");
-                }
-                _startTime = DateTime.ParseExact(match.Groups[1].Value, TimestampFormat, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
-            } else {
-                _startTime = args.StartOriginatingTime;
-            }
+
+            var startTime = StartTimeMode switch {
+                StartTimeMode.PipelineStartTime => args.StartOriginatingTime,
+                StartTimeMode.ParseFromFilename => ParseTimestampFromFilename(),
+                StartTimeMode.Manual => ManualStartTime,
+                _ => throw new InvalidOperationException($"Unknown StartTimeMode: {StartTimeMode}"),
+            };
 
             // Open MP4 file via demuxer
-            _fileStream = new FileStream(_filename, FileMode.Open, FileAccess.Read, FileShare.Read);
-            _demuxer = new Demuxer(_fileStream);
+            var fileStream = new FileStream(_filename, FileMode.Open, FileAccess.Read, FileShare.Read);
+            var demuxer = new Demuxer(fileStream);
 
             // Find HEVC video track
-            _videoTrackIndex = -1;
-            for (uint i = 0; i < _demuxer.TrackCount; i++) {
-                if (_demuxer.GetObjectType(i) == 0x23) {
-                    _videoTrackIndex = (int)i;
+            var videoTrackIndex = -1;
+            for (var i = 0u; i < demuxer.TrackCount; i++) {
+                if (demuxer.GetObjectType(i) == (uint)ObjectType.HEVC) {
+                    videoTrackIndex = (int)i;
                     break;
                 }
             }
-            if (_videoTrackIndex < 0) {
+            if (videoTrackIndex < 0) {
                 throw new InvalidOperationException("No HEVC video track found in MP4 file.");
             }
 
-            _timescale = _demuxer.GetTimescale((uint)_videoTrackIndex);
+            var timescale = demuxer.GetTimescale((uint)videoTrackIndex);
 
             // Create decoder and feed VPS/SPS/PPS from MP4 container
-            _decoder = new Decoder();
-            FeedParameterSets();
-
-            _sampleIndex = 0;
-            _frameBuffer = new Queue<(PicYuv picture, TimeSpan timestamp)>();
-        }
-        #endregion
-
-        /// <summary>
-        /// Feed VPS/SPS/PPS extracted from HEVC DSI to the decoder.
-        /// </summary>
-        private void FeedParameterSets() {
-            Debug.Assert(_demuxer is not null);
-            Debug.Assert(_decoder is not null);
-
-            for (int i = 0; ; i++) {
-                var parameterSet = _demuxer.ReadParameterSet((uint)_videoTrackIndex, i);
+            var decoder = new Decoder();
+            var initFrames = new List<PictureSnapshot>();
+            for (var i = 0; ; i++) {
+                var parameterSet = demuxer.ReadParameterSet((uint)videoTrackIndex, i);
                 if (parameterSet is null) {
                     break;
                 }
-                _decoder.FeedNal(parameterSet);
+                decoder.FeedNal(parameterSet, -1, initFrames);
             }
+            foreach (var pic in initFrames) {
+                pic.Dispose();
+            }
+
+            context = new FileReaderContext(startTime, fileStream, demuxer, videoTrackIndex, timescale, decoder);
+        }
+
+        #endregion
+
+        #region ISourceComponent
+
+        /// <summary>
+        /// Re-implementation of <see cref="ISourceComponent.Stop"/> to cancel the decoding loop
+        /// before Generator's Stop sets internal flags. Without this, GenerateNext would remain
+        /// blocked in EnsureFrameBuffered, preventing the pipeline from completing.
+        /// </summary>
+        void ISourceComponent.Stop(DateTime finalOriginatingTime, Action notifyCompleted) {
+            _cts.Cancel();
+            Stop(finalOriginatingTime, notifyCompleted);
+        }
+
+        #endregion
+
+        #region Generator
+
+        /// <summary>
+        /// Decode samples until the frame buffer has at least one frame.
+        /// Returns true if a frame is available, false if EOF or cancelled.
+        /// </summary>
+        private bool EnsureFrameBuffered() {
+            while (_frameBuffer.Count == 0) {
+                if (_cts.IsCancellationRequested) {
+                    return false;
+                }
+                var sampleCount = context!.Demuxer.GetSampleCount((uint)context!.VideoTrackIndex);
+                if (sampleIndex >= sampleCount) {
+                    // EOF: flush remaining B-frames
+                    _decodedFrames.Clear();
+                    context.Decoder.FlushAndCollect(_decodedFrames);
+                    if (_decodedFrames.Count == 0) {
+                        return false;
+                    }
+                    foreach (var pic in _decodedFrames) {
+                        _frameBuffer.Enqueue((pic, _ptsQueue.Dequeue()));
+                    }
+                    return true;
+                }
+
+                // Read next sample from MP4
+                var trackIdx = (uint)context!.VideoTrackIndex;
+                var sampleSize = (int)context.Demuxer.GetSampleSize(trackIdx, (uint)sampleIndex);
+                var sampleData = ArrayPool<byte>.Shared.Rent(sampleSize);
+                try {
+                    context.Demuxer.ReadSample(trackIdx, (uint)sampleIndex, sampleData, out var timestamp, out var duration);
+                    sampleIndex++;
+
+                    // Record sample PTS for display-order matching
+                    var pts = TimescaleToTimeSpan(timestamp);
+                    _ptsQueue.Enqueue(pts, pts);
+
+                    // Feed NAL units to decoder; assign PTS from min-heap to each output frame
+                    FeedSampleToDecoder(sampleData, sampleSize);
+                } finally {
+                    ArrayPool<byte>.Shared.Return(sampleData);
+                }
+            }
+            return true;
+        }
+
+        protected override DateTime GenerateNext(DateTime previous) {
+            if (!EnsureFrameBuffered()) {
+                return DateTime.MaxValue;
+            }
+
+            var (picture, frameTimestamp) = _frameBuffer.Dequeue();
+            var originatingTime = context!.StartTime + frameTimestamp;
+
+            if (!spsPosted) {
+                spsPosted = true;
+                SequenceParameterSetSnapshot = picture.Sps;
+            }
+
+            using var shared = Shared.Create(picture);
+            Out.Post(shared, originatingTime);
+
+            // Return next frame's timestamp, or DateTime.MaxValue if no more frames
+            if (!EnsureFrameBuffered()) {
+                return DateTime.MaxValue;
+            }
+            return context.StartTime + _frameBuffer.Peek().timestamp;
+        }
+        #endregion
+
+        #region Decoding
+
+        private DateTime ParseTimestampFromFilename() {
+            var baseName = Path.GetFileNameWithoutExtension(_filename);
+            var match = TimestampPattern.Match(baseName);
+            if (!match.Success) {
+                throw new InvalidOperationException($"StartTimeMode is ParseFromFilename but filename '{Path.GetFileName(_filename)}' does not contain a timestamp suffix in the expected format '_{TimestampFormat}'.");
+            }
+            return DateTime.ParseExact(match.Groups[1].Value, TimestampFormat, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
         }
 
         /// <summary>
         /// Parse length-prefixed NAL units from an MP4 sample and feed each to the decoder.
-        /// MP4 samples contain NAL units in 4-byte big-endian length prefix format.
+        /// Decoded pictures are enqueued in <see cref="_frameBuffer"/>.
         /// </summary>
-        private PicYuv[] FeedSampleToDecoder(byte[] sampleData) {
-            var allFrames = new List<PicYuv>();
-            int offset = 0;
-            while (offset + 4 <= sampleData.Length) {
-                int nalSize = (sampleData[offset] << 24) | (sampleData[offset + 1] << 16)
+        private void FeedSampleToDecoder(byte[] sampleData, int sampleSize) {
+            var offset = 0;
+            while (offset + 4 <= sampleSize) {
+                var nalSize = (sampleData[offset] << 24) | (sampleData[offset + 1] << 16)
                             | (sampleData[offset + 2] << 8) | sampleData[offset + 3];
                 offset += 4;
-                if (nalSize <= 0 || offset + nalSize > sampleData.Length) {
+                if (nalSize <= 0 || offset + nalSize > sampleSize) {
                     break;
                 }
 
-                var nalData = new byte[nalSize];
-                Buffer.BlockCopy(sampleData, offset, nalData, 0, nalSize);
-                offset += nalSize;
+                var nalData = ArrayPool<byte>.Shared.Rent(nalSize);
+                try {
+                    Buffer.BlockCopy(sampleData, offset, nalData, 0, nalSize);
+                    offset += nalSize;
 
-                var frames = _decoder!.FeedNal(nalData);
-                allFrames.AddRange(frames);
+                    _decodedFrames.Clear();
+                    context!.Decoder.FeedNal(nalData, nalSize, _decodedFrames);
+                    foreach (var pic in _decodedFrames) {
+                        _frameBuffer.Enqueue((pic, _ptsQueue.Dequeue()));
+                    }
+                } finally {
+                    ArrayPool<byte>.Shared.Return(nalData);
+                }
             }
-            return allFrames.ToArray();
         }
 
         /// <summary>
@@ -158,68 +256,8 @@ namespace OpenSense.Components.HM {
         private TimeSpan TimescaleToTimeSpan(uint timestampInTimescale) {
             // Convert to .NET Ticks: timestamp / timescale * 10_000_000
             // Use long arithmetic to avoid overflow
-            var ticks = (long)timestampInTimescale * TimeSpan.TicksPerSecond / _timescale;
+            var ticks = (long)timestampInTimescale * TimeSpan.TicksPerSecond / context!.Timescale;
             return TimeSpan.FromTicks(ticks);
-        }
-
-        #region Generator
-        protected override DateTime GenerateNext(DateTime previous) {
-            Debug.Assert(_frameBuffer is not null);
-            Debug.Assert(_decoder is not null);
-            Debug.Assert(_demuxer is not null);
-
-            // Pull frames from decoder until we have at least one
-            while (_frameBuffer.Count == 0) {
-                var sampleCount = _demuxer.GetSampleCount((uint)_videoTrackIndex);
-                if (_sampleIndex >= sampleCount) {
-                    // EOF: flush remaining B-frames from decoder
-                    var remaining = _decoder.FlushAndCollect();
-                    if (remaining.Length == 0) {
-                        return DateTime.MaxValue;
-                    }
-                    foreach (var pic in remaining) {
-                        // Flushed frames use the last known timestamp as approximation
-                        _frameBuffer.Enqueue((pic, previous - _startTime));
-                    }
-                    break;
-                }
-
-                // Read next sample from MP4
-                var sampleData = _demuxer.ReadSample(
-                    (uint)_videoTrackIndex,
-                    (uint)_sampleIndex,
-                    out var timestamp,
-                    out var duration
-                );
-                _sampleIndex++;
-
-                // Feed length-prefixed NAL units to decoder
-                var frames = FeedSampleToDecoder(sampleData);
-                var ts = TimescaleToTimeSpan(timestamp);
-                foreach (var pic in frames) {
-                    _frameBuffer.Enqueue((pic, ts));
-                }
-            }
-
-            var (picture, frameTimestamp) = _frameBuffer.Dequeue();
-            var originatingTime = _startTime + frameTimestamp;
-
-            // Post to Out if subscribed and format is Chroma400.
-            // Psi's PixelFormat has no multi-channel 16-bit format (only Gray_16bpp),
-            // so multi-channel YUV (420/422/444) cannot be represented as a Psi Image.
-            if (Out.HasSubscribers && picture.ChromaFormat == ChromaFormat.Chroma400) {
-                var pixelData = picture.GetYPlaneAs16Bit();
-                using var image = ImagePool.GetOrCreate(picture.Width, picture.Height, PixelFormat.Gray_16bpp);
-                Debug.Assert(image.Resource.UnmanagedBuffer.Size == pixelData.Length);
-                image.Resource.UnmanagedBuffer.CopyFrom(pixelData);
-                Out.Post(image, originatingTime);
-            }
-
-            // Post to PictureOut (Shared takes ownership of picture lifecycle)
-            using var sharedPicture = Shared.Create(picture);
-            PictureOut.Post(sharedPicture, originatingTime);
-
-            return originatingTime;
         }
         #endregion
 
@@ -232,21 +270,15 @@ namespace OpenSense.Components.HM {
             }
             disposed = true;
 
-            if (_frameBuffer is not null) {
-                while (_frameBuffer.Count > 0) {
-                    _frameBuffer.Dequeue().picture.Dispose();
-                }
-                _frameBuffer = null;
+            _cts.Cancel();
+            _cts.Dispose();
+
+            while (_frameBuffer.Count > 0) {
+                _frameBuffer.Dequeue().picture.Dispose();
             }
 
-            _decoder?.Dispose();
-            _decoder = null;
-
-            _demuxer?.Dispose();
-            _demuxer = null;
-
-            _fileStream?.Dispose();
-            _fileStream = null;
+            context?.Dispose();
+            context = null;
         }
         #endregion
 
