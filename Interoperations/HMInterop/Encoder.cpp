@@ -158,6 +158,7 @@ static int NativeEncode(
         if (it != ptsMap->end()) {
             framePts = it->second;
             found = true;
+            ptsMap->erase(it);
         }
 
         std::ostringstream stream;
@@ -211,9 +212,13 @@ namespace HMInterop {
         _encoder->init(false);  // not field coding
     }
 
-    cli::array<AccessUnitData^>^ Encoder::Encode([NotNull] PictureYuv^ inputPicture, long long pts) {
+    void Encoder::Encode(
+        [NotNull] PictureYuv^ inputPicture, long long pts,
+        [NotNull] System::Collections::Generic::IList<AccessUnitData^>^ output
+    ) {
         ThrowIfDisposed();
         ArgumentNullException::ThrowIfNull(inputPicture, "inputPicture");
+        ArgumentNullException::ThrowIfNull(output, "output");
 
         // Create internal TComPicYuv for the encoder
         auto picOrg = new TComPicYuv();
@@ -251,12 +256,11 @@ namespace HMInterop {
         );
 
         // Collect output
-        auto results = gcnew cli::array<AccessUnitData^>(count);
         for (auto i = 0; i < count; i++) {
             if (!outUnits[i].ptsFound) {
                 throw gcnew InvalidOperationException(System::String::Format("Could not find PTS for POC {0}", outUnits[i].poc));
             }
-            results[i] = gcnew AccessUnitData(outUnits[i].data, outUnits[i].length, outUnits[i].pts, outUnits[i].poc);
+            output->Add(gcnew AccessUnitData(outUnits[i].data, outUnits[i].length, outUnits[i].pts, outUnits[i].poc));
         }
         if (outUnits) {
             delete[] outUnits;
@@ -265,16 +269,12 @@ namespace HMInterop {
         // Clean up the input buffer
         picOrg->destroy();
         delete picOrg;
-
-        return results;
     }
 
-    cli::array<AccessUnitData^>^ Encoder::Flush() {
+    void Encoder::Flush([NotNull] System::Collections::Generic::IList<AccessUnitData^>^ output) {
         ThrowIfDisposed();
+        ArgumentNullException::ThrowIfNull(output, "output");
 
-        // HM flushes all remaining frames in a single encode(flush=true) call.
-        // Do NOT loop — after flush, HM resets m_iPOCLast and m_iNumPicRcvd to 0,
-        // and a second call would crash in xGetBuffer.
         NativeEncodedUnit* outUnits = nullptr;
         auto count = NativeEncode(
             _encoder,
@@ -286,18 +286,15 @@ namespace HMInterop {
             &outUnits
         );
 
-        auto results = gcnew cli::array<AccessUnitData^>(count);
         for (auto i = 0; i < count; i++) {
             if (!outUnits[i].ptsFound) {
                 throw gcnew InvalidOperationException(System::String::Format("Could not find PTS for POC {0}", outUnits[i].poc));
             }
-            results[i] = gcnew AccessUnitData(outUnits[i].data, outUnits[i].length, outUnits[i].pts, outUnits[i].poc);
+            output->Add(gcnew AccessUnitData(outUnits[i].data, outUnits[i].length, outUnits[i].pts, outUnits[i].poc));
         }
         if (outUnits) {
             delete[] outUnits;
         }
-
-        return results;
     }
 
 #pragma region IDisposable

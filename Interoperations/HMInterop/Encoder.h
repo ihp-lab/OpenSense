@@ -32,21 +32,16 @@ namespace HMInterop {
         Encoder([NotNull] EncoderConfig^ config);
 
         /// <summary>
-        /// Encode one frame. May return 0 or more encoded access units.
-        /// Returns 0 when the encoder is buffering for GOP reordering.
+        /// Encode one frame. Encoded access units (0 or more) are appended to output.
+        /// Output is empty when the encoder is buffering for GOP reordering.
         /// </summary>
-        /// <param name="inputPicture">Input picture to encode</param>
-        /// <param name="pts">Presentation timestamp for this frame</param>
-        /// <returns>Array of encoded access units</returns>
-        [returnvalue: NotNull]
-        cli::array<AccessUnitData^>^ Encode([NotNull] PictureYuv^ inputPicture, long long pts);
+        void Encode([NotNull] PictureYuv^ inputPicture, long long pts, [NotNull] System::Collections::Generic::IList<AccessUnitData^>^ output);
 
         /// <summary>
         /// Flush remaining frames. Call after all input is done.
-        /// Returns remaining encoded access units.
+        /// Encoded access units are appended to output.
         /// </summary>
-        [returnvalue: NotNull]
-        cli::array<AccessUnitData^>^ Flush();
+        void Flush([NotNull] System::Collections::Generic::IList<AccessUnitData^>^ output);
 
 #pragma region IDisposable
     private:

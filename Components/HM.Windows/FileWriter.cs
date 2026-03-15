@@ -20,6 +20,8 @@ namespace OpenSense.Components.HM {
 
         private readonly Queue<(byte[] Data, long PtsTicks)> _pendingNals = new();
 
+        private readonly List<AccessUnitData> _encodedUnits = new();
+
         #region Ports
         public Receiver<Shared<PictureSnapshot>> In { get; }
 
@@ -87,10 +89,12 @@ namespace OpenSense.Components.HM {
                     return;
                 }
 
-                FlushPendingNals(); // write buffered NALs with computed durations
-                BufferEncoderResults(context.Encoder.Flush()); // flush encoder
-                FlushPendingNals(); // write any NALs that now have computable durations
-                FlushRemainingNals(); // write remaining NALs with minimal duration
+                FlushPendingNals();
+                _encodedUnits.Clear();
+                context.Encoder.Flush(_encodedUnits);
+                BufferEncoderResults(_encodedUnits);
+                FlushPendingNals();
+                FlushRemainingNals();
 
                 context.Dispose();
                 context = null;
@@ -118,10 +122,12 @@ namespace OpenSense.Components.HM {
 
         private void EncodeAndWrite(PictureYuv picture, long ptsInTicks) {
             FlushPendingNals();
-            BufferEncoderResults(context!.Encoder.Encode(picture, ptsInTicks));
+            _encodedUnits.Clear();
+            context!.Encoder.Encode(picture, ptsInTicks, _encodedUnits);
+            BufferEncoderResults(_encodedUnits);
         }
 
-        private void BufferEncoderResults(AccessUnitData[] results) {
+        private void BufferEncoderResults(IList<AccessUnitData> results) {
             foreach (var result in results) {
                 var data = new byte[result.Length];
                 Marshal.Copy(result.Data, data, 0, result.Length);
