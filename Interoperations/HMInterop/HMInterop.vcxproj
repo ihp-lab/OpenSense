@@ -73,6 +73,7 @@
     <ClInclude Include="Decoder.h" />
     <ClInclude Include="Encoder.h" />
     <ClInclude Include="EncoderConfig.h" />
+    <ClInclude Include="GOPEntryConfig.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="HMNativeHelpers.h" />
     <ClInclude Include="pch.h" />

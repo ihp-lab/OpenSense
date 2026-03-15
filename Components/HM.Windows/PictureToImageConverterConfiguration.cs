@@ -6,6 +6,15 @@ namespace OpenSense.Components.HM {
     [Serializable]
     public sealed class PictureToImageConverterConfiguration : ConventionalComponentConfiguration {
 
+        #region Input
+        private int? inputBitDepth;
+
+        public int? InputBitDepth {
+            get => inputBitDepth;
+            set => SetProperty(ref inputBitDepth, value);
+        }
+        #endregion
+
         #region Output
         private PixelFormat outputPixelFormat = PixelFormat.Gray_16bpp;
 
@@ -52,25 +61,18 @@ namespace OpenSense.Components.HM {
             get => bitDepthMappingWindow;
             set => SetProperty(ref bitDepthMappingWindow, value);
         }
-
-        private int sourceBitDepth;
-
-        public int SourceBitDepth {
-            get => sourceBitDepth;
-            set => SetProperty(ref sourceBitDepth, value);
-        }
         #endregion
 
         public override IComponentMetadata GetMetadata() => new PictureToImageConverterMetadata();
 
         protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new PictureToImageConverter(pipeline) {
+            InputBitDepth = InputBitDepth,
             OutputPixelFormat = OutputPixelFormat,
             ChromaConvertEnabled = ChromaConvertEnabled,
             ChromaUpsampleMethod = ChromaUpsampleMethod,
             BitDepthMappingEnabled = BitDepthMappingEnabled,
             BitDepthMappingScaleShift = BitDepthMappingScaleShift,
             BitDepthMappingWindow = BitDepthMappingWindow,
-            SourceBitDepth = SourceBitDepth,
         };
     }
 }

@@ -25,7 +25,7 @@ namespace OpenSense.WPF.Components.HM {
 
         private void OnConfigPropertyChanged(object? sender, PropertyChangedEventArgs e) {
             switch (e.PropertyName) {
-                case nameof(ImageToPictureConverterConfiguration.SourceBitDepth):
+                case nameof(ImageToPictureConverterConfiguration.InputBitDepth):
                 case nameof(ImageToPictureConverterConfiguration.OutputBitDepth):
                 case nameof(ImageToPictureConverterConfiguration.BitDepthMappingScaleShift):
                     UpdateSliderRanges();
@@ -38,7 +38,7 @@ namespace OpenSense.WPF.Components.HM {
                 return;
             }
 
-            var sourceBits = config.SourceBitDepth > 0 ? config.SourceBitDepth : 16;
+            var sourceBits = config.InputBitDepth ?? 16;
             var targetBits = config.OutputBitDepth;
             var scaleShift = config.BitDepthMappingScaleShift;
 

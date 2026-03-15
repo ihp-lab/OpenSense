@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -26,27 +26,11 @@ namespace OpenSense.Components.HM {
             set => SetProperty(ref inputPixelFormat, value);
         }
 
-        private int sourceBitDepth;
+        private int? inputBitDepth;
 
-        public int SourceBitDepth {
-            get => sourceBitDepth;
-            set => SetProperty(ref sourceBitDepth, value);
-        }
-        #endregion
-
-        #region Bit Depth Mapping
-        private int bitDepthMappingScaleShift;
-
-        public int BitDepthMappingScaleShift {
-            get => bitDepthMappingScaleShift;
-            set => SetProperty(ref bitDepthMappingScaleShift, value);
-        }
-
-        private int bitDepthMappingWindow;
-
-        public int BitDepthMappingWindow {
-            get => bitDepthMappingWindow;
-            set => SetProperty(ref bitDepthMappingWindow, value);
+        public int? InputBitDepth {
+            get => inputBitDepth;
+            set => SetProperty(ref inputBitDepth, value);
         }
         #endregion
 
@@ -63,6 +47,22 @@ namespace OpenSense.Components.HM {
         public ChromaFormat OutputChromaFormat {
             get => outputChromaFormat;
             set => SetProperty(ref outputChromaFormat, value);
+        }
+        #endregion
+
+        #region Bit Depth Mapping
+        private int bitDepthMappingScaleShift;
+
+        public int BitDepthMappingScaleShift {
+            get => bitDepthMappingScaleShift;
+            set => SetProperty(ref bitDepthMappingScaleShift, value);
+        }
+
+        private int bitDepthMappingWindow;
+
+        public int BitDepthMappingWindow {
+            get => bitDepthMappingWindow;
+            set => SetProperty(ref bitDepthMappingWindow, value);
         }
         #endregion
 
@@ -103,8 +103,8 @@ namespace OpenSense.Components.HM {
                 PixelFormat.Gray_16bpp => 16,
                 _ => 8,
             };
-            if (SourceBitDepth > 0 && detectedBits != SourceBitDepth) {
-                throw new InvalidOperationException($"SourceBitDepth is set to {SourceBitDepth} but input pixel format {resource.PixelFormat} implies {detectedBits}-bit.");
+            if (InputBitDepth.HasValue && detectedBits != InputBitDepth.Value) {
+                throw new InvalidOperationException($"InputBitDepth is set to {InputBitDepth.Value} but input pixel format {resource.PixelFormat} implies {detectedBits}-bit.");
             }
 
             var chromaFmt = OutputChromaFormat;

@@ -30,19 +30,19 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <!-- 0: Output Pixel Format -->
+            <!-- 0: Input Bit Depth -->
             <RowDefinition
                 Height="auto" />
-            <!-- 1: Chroma Conversion: Enable -->
+            <!-- 1: Output Pixel Format -->
             <RowDefinition
                 Height="auto" />
-            <!-- 2: Chroma Conversion: Upsample Method -->
+            <!-- 2: Chroma Conversion: Enable -->
             <RowDefinition
                 Height="auto" />
-            <!-- 3: Bit Depth Mapping: Enable -->
+            <!-- 3: Chroma Conversion: Upsample Method -->
             <RowDefinition
                 Height="auto" />
-            <!-- 4: Bit Depth Mapping: Source Bit Depth -->
+            <!-- 4: Bit Depth Mapping: Enable -->
             <RowDefinition
                 Height="auto" />
             <!-- 5: Bit Depth Mapping: Scale Shift -->
@@ -56,72 +56,19 @@
                 Height="auto" />
         </Grid.RowDefinitions>
 
-        <!-- Row 0: Output Pixel Format -->
+        <!-- Row 0: Input Bit Depth -->
         <TextBlock
             Grid.Row="0"
-            Grid.Column="0">Output Pixel Format</TextBlock>
+            Grid.Column="0">Input Bit Depth</TextBlock>
         <ComboBox
             Grid.Row="0"
             Grid.Column="1"
-            SelectedItem="{Binding OutputPixelFormat}"
-            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type imaging:PixelFormat}}, Mode=OneTime}"
-            ToolTip="Pixel format for the Out port. Supported: Gray_8bpp, Gray_16bpp, BGR_24bpp, RGB_24bpp, RGBA_64bpp." />
-
-        <!-- Row 1: Chroma Conversion Enable -->
-        <TextBlock
-            Grid.Row="1"
-            Grid.Column="0">Chroma Conversion</TextBlock>
-        <CheckBox
-            Grid.Row="1"
-            Grid.Column="1"
-            IsChecked="{Binding ChromaConvertEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            ToolTip="Enable chroma format conversion. Required when source chroma does not match output pixel format requirements." />
-
-        <!-- Row 2: Upsample Method (visible when enabled) -->
-        <TextBlock
-            Grid.Row="2"
-            Grid.Column="0"
-            Visibility="{Binding ChromaConvertEnabled, Converter={StaticResource BoolToVis}}">
-            Upsample Method
-        </TextBlock>
-        <ComboBox
-            Grid.Row="2"
-            Grid.Column="1"
-            Visibility="{Binding ChromaConvertEnabled, Converter={StaticResource BoolToVis}}"
-            SelectedItem="{Binding ChromaUpsampleMethod}"
-            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type comp:ChromaUpsampleMethod}}, Mode=OneTime}"
-            ToolTip="Algorithm for chroma upsampling. NearestNeighbor is fastest. Bilinear gives smoother results." />
-
-        <!-- Row 3: Bit Depth Mapping Enable -->
-        <TextBlock
-            Grid.Row="3"
-            Grid.Column="0">Bit Depth Mapping</TextBlock>
-        <CheckBox
-            Grid.Row="3"
-            Grid.Column="1"
-            IsChecked="{Binding BitDepthMappingEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            ToolTip="Enable bit depth mapping. Required when source bit depth does not match output pixel format requirements." />
-
-        <!-- Row 4: Source Bit Depth (visible when enabled) -->
-        <TextBlock
-            Grid.Row="4"
-            Grid.Column="0"
-            Visibility="{Binding BitDepthMappingEnabled, Converter={StaticResource BoolToVis}}">
-            Source Bit Depth
-        </TextBlock>
-        <ComboBox
-            Grid.Row="4"
-            Grid.Column="1"
-            Visibility="{Binding BitDepthMappingEnabled, Converter={StaticResource BoolToVis}}"
-            SelectedValue="{Binding SourceBitDepth}"
+            SelectedValue="{Binding InputBitDepth}"
             SelectedValuePath="Tag"
-            ToolTip="Expected source bit depth. Auto (0) = detect at runtime. Set to validate input.">
+            ToolTip="Expected input bit depth. Auto = detect at runtime. Set to validate input.">
             <ComboBoxItem
-                Content="Auto">
-                <ComboBoxItem.Tag>
-                    <sys:Int32>0</sys:Int32>
-                </ComboBoxItem.Tag>
-            </ComboBoxItem>
+                Content="Auto"
+                Tag="{x:Null}" />
             <ComboBoxItem
                 Content="8">
                 <ComboBoxItem.Tag>
@@ -177,6 +124,52 @@
                 </ComboBoxItem.Tag>
             </ComboBoxItem>
         </ComboBox>
+
+        <!-- Row 1: Output Pixel Format -->
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0">Output Pixel Format</TextBlock>
+        <ComboBox
+            Grid.Row="1"
+            Grid.Column="1"
+            SelectedItem="{Binding OutputPixelFormat}"
+            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type imaging:PixelFormat}}, Mode=OneTime}"
+            ToolTip="Pixel format for the Out port. Supported: Gray_8bpp, Gray_16bpp, BGR_24bpp, RGB_24bpp, RGBA_64bpp." />
+
+        <!-- Row 2: Chroma Conversion Enable -->
+        <TextBlock
+            Grid.Row="2"
+            Grid.Column="0">Chroma Conversion</TextBlock>
+        <CheckBox
+            Grid.Row="2"
+            Grid.Column="1"
+            IsChecked="{Binding ChromaConvertEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Enable chroma format conversion. Required when source chroma does not match output pixel format requirements." />
+
+        <!-- Row 3: Upsample Method (visible when enabled) -->
+        <TextBlock
+            Grid.Row="3"
+            Grid.Column="0"
+            Visibility="{Binding ChromaConvertEnabled, Converter={StaticResource BoolToVis}}">
+            Upsample Method
+        </TextBlock>
+        <ComboBox
+            Grid.Row="3"
+            Grid.Column="1"
+            Visibility="{Binding ChromaConvertEnabled, Converter={StaticResource BoolToVis}}"
+            SelectedItem="{Binding ChromaUpsampleMethod}"
+            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type comp:ChromaUpsampleMethod}}, Mode=OneTime}"
+            ToolTip="Algorithm for chroma upsampling. NearestNeighbor is fastest. Bilinear gives smoother results." />
+
+        <!-- Row 4: Bit Depth Mapping Enable -->
+        <TextBlock
+            Grid.Row="4"
+            Grid.Column="0">Bit Depth Mapping</TextBlock>
+        <CheckBox
+            Grid.Row="4"
+            Grid.Column="1"
+            IsChecked="{Binding BitDepthMappingEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Enable bit depth mapping. Required when source bit depth does not match output pixel format requirements." />
 
         <!-- Row 5: Scale Shift (visible when enabled) -->
         <TextBlock
@@ -250,6 +243,6 @@
             Visibility="{Binding BitDepthMappingEnabled, Converter={StaticResource BoolToVis}}"
             ScaleShift="{Binding BitDepthMappingScaleShift}"
             WindowStart="{Binding BitDepthMappingWindow}"
-            SourceBitDepth="{Binding SourceBitDepth}" />
+            SourceBitDepth="{Binding InputBitDepth}" />
     </Grid>
 </UserControl>

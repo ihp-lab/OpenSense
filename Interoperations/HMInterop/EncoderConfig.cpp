@@ -148,11 +148,10 @@ namespace HMInterop {
         SourceWidth = 0;
         SourceHeight = 0;
         FrameRate = 30;
-        ChromaFormatIdc = ChromaFormat::Chroma400;
+        ChromaFormatIdc = ChromaFormat::Chroma420;
 
-        // Bit Depth (0 = auto-detect from input at runtime)
-        InputBitDepth = 0;
-        InternalBitDepth = 0;
+        InputBitDepth = 8;
+        InternalBitDepth = 8;
 
         // Coding Structure
         IntraPeriod = 32;
@@ -329,7 +328,7 @@ namespace HMInterop {
             }
         }
 
-        auto internalBitDepth = InternalBitDepth > 0 ? InternalBitDepth : InputBitDepth;
+        auto internalBitDepth = InternalBitDepth;
 
         // Compute maxTLayers and maxRefDist from GOP entries
         auto maxTLayers = 1;

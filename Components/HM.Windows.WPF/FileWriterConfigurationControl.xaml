@@ -47,70 +47,76 @@
             <!-- 1: Timestamp -->
             <RowDefinition
                 Height="auto" />
-            <!-- 2: Internal Bit Depth -->
+            <!-- 2: Input Bit Depth -->
             <RowDefinition
                 Height="auto" />
-            <!-- 3: Lossless -->
+            <!-- 3: Input Chroma Format -->
             <RowDefinition
                 Height="auto" />
-            <!-- 4: QP (collapse when Lossless) -->
+            <!-- 4: Internal Bit Depth -->
             <RowDefinition
                 Height="auto" />
-            <!-- 5: Intra Period -->
+            <!-- 5: Lossless -->
             <RowDefinition
                 Height="auto" />
-            <!-- 6: Decoding Refresh Type -->
+            <!-- 6: QP -->
             <RowDefinition
                 Height="auto" />
-            <!-- 7: Profile -->
+            <!-- 7: Intra Period -->
             <RowDefinition
                 Height="auto" />
-            <!-- 8: Bit Depth Constraint -->
+            <!-- 8: Decoding Refresh Type -->
             <RowDefinition
                 Height="auto" />
-            <!-- 9: Max CU Width -->
+            <!-- 9: Profile -->
             <RowDefinition
                 Height="auto" />
-            <!-- 10: Max CU Height -->
+            <!-- 10: Bit Depth Constraint -->
             <RowDefinition
                 Height="auto" />
-            <!-- 11: Max Total CU Depth -->
+            <!-- 11: Max CU Width -->
             <RowDefinition
                 Height="auto" />
-            <!-- 12: Disable Loop Filter -->
+            <!-- 12: Max CU Height -->
             <RowDefinition
                 Height="auto" />
-            <!-- 13: Use SAO -->
+            <!-- 13: Max Total CU Depth -->
             <RowDefinition
                 Height="auto" />
-            <!-- 14: Extended Precision -->
+            <!-- 14: Disable Loop Filter -->
             <RowDefinition
                 Height="auto" />
-            <!-- 15: High Precision Offsets -->
+            <!-- 15: Use SAO -->
             <RowDefinition
                 Height="auto" />
-            <!-- 16: Search Range -->
+            <!-- 16: Extended Precision -->
             <RowDefinition
                 Height="auto" />
-            <!-- 17: Bipred Search Range -->
+            <!-- 17: High Precision Offsets -->
             <RowDefinition
                 Height="auto" />
-            <!-- 18: ME Search Method -->
+            <!-- 18: Search Range -->
             <RowDefinition
                 Height="auto" />
-            <!-- 19: Rate Control -->
+            <!-- 19: Bipred Search Range -->
             <RowDefinition
                 Height="auto" />
-            <!-- 20: Frame Rate (collapse when !RateCtrl) -->
+            <!-- 20: ME Search Method -->
             <RowDefinition
                 Height="auto" />
-            <!-- 21: Target Bitrate (collapse when !RateCtrl) -->
+            <!-- 21: Rate Control -->
             <RowDefinition
                 Height="auto" />
-            <!-- 22: Decoded Picture Hash -->
+            <!-- 22: Frame Rate -->
             <RowDefinition
                 Height="auto" />
-            <!-- 23: GOP Structure -->
+            <!-- 23: Target Bitrate -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 24: Decoded Picture Hash -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 25: GOP Structure -->
             <RowDefinition
                 Height="auto" />
         </Grid.RowDefinitions>
@@ -155,39 +161,204 @@
             IsChecked="{Binding TimestampFilename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             ToolTip="Append a timestamp suffix to the base filename to preserve the originating timestamp of the first frame." />
 
-        <!-- 2: Internal Bit Depth -->
+        <!-- 2: Input Bit Depth -->
         <TextBlock
             Grid.Row="2"
-            Grid.Column="0">
-            Internal Bit Depth
-        </TextBlock>
-        <TextBox
+            Grid.Column="0">Input Bit Depth</TextBlock>
+        <ComboBox
             Grid.Row="2"
             Grid.Column="1"
-            Text="{Binding Raw.InternalBitDepth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            ToolTip="Internal bit depth for encoding (0 = auto, defaults to input bit depth)." />
+            SelectedValue="{Binding InputBitDepth}"
+            SelectedValuePath="Tag"
+            ToolTip="Expected input bit depth. Auto = detect at runtime. Set to validate input.">
+            <ComboBoxItem
+                Content="Auto"
+                Tag="{x:Null}" />
+            <ComboBoxItem
+                Content="8">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>8</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="9">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>9</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="10">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>10</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="11">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>11</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="12">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>12</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="13">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>13</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="14">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>14</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="15">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>15</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="16">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>16</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+        </ComboBox>
+
+        <!-- 3: Input Chroma Format -->
+        <TextBlock
+            Grid.Row="3"
+            Grid.Column="0">Input Chroma Format</TextBlock>
+        <ComboBox
+            Grid.Row="3"
+            Grid.Column="1"
+            SelectedValue="{Binding InputChromaFormat}"
+            SelectedValuePath="Tag"
+            ToolTip="Expected input chroma format. Auto = detect at runtime. Set to validate input.">
+            <ComboBoxItem
+                Content="Auto"
+                Tag="{x:Null}" />
+            <ComboBoxItem
+                Content="Chroma400">
+                <ComboBoxItem.Tag>
+                    <interop:ChromaFormat>Chroma400</interop:ChromaFormat>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="Chroma420">
+                <ComboBoxItem.Tag>
+                    <interop:ChromaFormat>Chroma420</interop:ChromaFormat>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="Chroma422">
+                <ComboBoxItem.Tag>
+                    <interop:ChromaFormat>Chroma422</interop:ChromaFormat>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="Chroma444">
+                <ComboBoxItem.Tag>
+                    <interop:ChromaFormat>Chroma444</interop:ChromaFormat>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+        </ComboBox>
+
+        <!-- 4: Internal Bit Depth -->
+        <TextBlock
+            Grid.Row="4"
+            Grid.Column="0">Internal Bit Depth</TextBlock>
+        <ComboBox
+            Grid.Row="4"
+            Grid.Column="1"
+            SelectedValue="{Binding InternalBitDepth}"
+            SelectedValuePath="Tag"
+            ToolTip="Internal bit depth for encoding. Same as Input = use input bit depth.">
+            <ComboBoxItem
+                Content="Same as Input"
+                Tag="{x:Null}" />
+            <ComboBoxItem
+                Content="8">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>8</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="9">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>9</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="10">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>10</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="11">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>11</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="12">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>12</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="13">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>13</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="14">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>14</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="15">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>15</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="16">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>16</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+        </ComboBox>
 
         <!-- 4: Lossless -->
         <TextBlock
-            Grid.Row="3"
+            Grid.Row="5"
             Grid.Column="0">
             Lossless
         </TextBlock>
         <CheckBox
-            Grid.Row="3"
+            Grid.Row="5"
             Grid.Column="1"
             IsChecked="{Binding Raw.Lossless, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             ToolTip="Enable lossless encoding mode. Overrides QP setting." />
 
         <!-- 5: QP (collapse when Lossless) -->
         <TextBlock
-            Grid.Row="4"
+            Grid.Row="6"
             Grid.Column="0"
             Visibility="{Binding Raw.Lossless, Converter={StaticResource InverseBoolToVis}}">
             QP
         </TextBlock>
         <TextBox
-            Grid.Row="4"
+            Grid.Row="6"
             Grid.Column="1"
             Visibility="{Binding Raw.Lossless, Converter={StaticResource InverseBoolToVis}}"
             Text="{Binding Raw.QP, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -195,24 +366,20 @@
 
         <!-- 6: Intra Period -->
         <TextBlock
-            Grid.Row="5"
-            Grid.Column="0">
-            Intra Period
-        </TextBlock>
+            Grid.Row="7"
+            Grid.Column="0">Intra Period</TextBlock>
         <TextBox
-            Grid.Row="5"
+            Grid.Row="7"
             Grid.Column="1"
             Text="{Binding Raw.IntraPeriod, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             ToolTip="Intra period (I-frame interval). Use 1 for all-intra encoding. Must be a multiple of GOP size for hierarchical B structures." />
 
         <!-- 7: Decoding Refresh Type -->
         <TextBlock
-            Grid.Row="6"
-            Grid.Column="0">
-            Decoding Refresh Type
-        </TextBlock>
+            Grid.Row="8"
+            Grid.Column="0">Decoding Refresh Type</TextBlock>
         <ComboBox
-            Grid.Row="6"
+            Grid.Row="8"
             Grid.Column="1"
             ItemsSource="{Binding Source={util:EnumBindingSource {x:Type interop:DecodingRefreshType}}, Mode=OneTime}"
             SelectedItem="{Binding Raw.DecodingRefreshType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -220,12 +387,10 @@
 
         <!-- 8: Profile -->
         <TextBlock
-            Grid.Row="7"
-            Grid.Column="0">
-            Profile
-        </TextBlock>
+            Grid.Row="9"
+            Grid.Column="0">Profile</TextBlock>
         <ComboBox
-            Grid.Row="7"
+            Grid.Row="9"
             Grid.Column="1"
             ItemsSource="{Binding Source={util:EnumBindingSource {x:Type interop:ProfileName}}, Mode=OneTime}"
             SelectedItem="{Binding Raw.Profile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -233,132 +398,110 @@
 
         <!-- 9: Bit Depth Constraint -->
         <TextBlock
-            Grid.Row="8"
-            Grid.Column="0">
-            Bit Depth Constraint
-        </TextBlock>
+            Grid.Row="10"
+            Grid.Column="0">Bit Depth Constraint</TextBlock>
         <TextBox
-            Grid.Row="8"
+            Grid.Row="10"
             Grid.Column="1"
             Text="{Binding Raw.BitDepthConstraintValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             ToolTip="Profile bit depth constraint value." />
 
         <!-- 10: Max CU Width -->
         <TextBlock
-            Grid.Row="9"
-            Grid.Column="0">
-            Max CU Width
-        </TextBlock>
+            Grid.Row="11"
+            Grid.Column="0">Max CU Width</TextBlock>
         <TextBox
-            Grid.Row="9"
+            Grid.Row="11"
             Grid.Column="1"
             Text="{Binding Raw.MaxCUWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             ToolTip="Maximum coding unit width. Must be a power of 2 (e.g. 64)." />
 
         <!-- 11: Max CU Height -->
         <TextBlock
-            Grid.Row="10"
-            Grid.Column="0">
-            Max CU Height
-        </TextBlock>
+            Grid.Row="12"
+            Grid.Column="0">Max CU Height</TextBlock>
         <TextBox
-            Grid.Row="10"
+            Grid.Row="12"
             Grid.Column="1"
             Text="{Binding Raw.MaxCUHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             ToolTip="Maximum coding unit height. Must be a power of 2 (e.g. 64)." />
 
         <!-- 12: Max Total CU Depth -->
         <TextBlock
-            Grid.Row="11"
-            Grid.Column="0">
-            Max Total CU Depth
-        </TextBlock>
+            Grid.Row="13"
+            Grid.Column="0">Max Total CU Depth</TextBlock>
         <TextBox
-            Grid.Row="11"
+            Grid.Row="13"
             Grid.Column="1"
             Text="{Binding Raw.MaxTotalCUDepth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             ToolTip="Maximum total CU depth (partition depth)." />
 
         <!-- 13: Disable Loop Filter -->
         <TextBlock
-            Grid.Row="12"
-            Grid.Column="0">
-            Disable Loop Filter
-        </TextBlock>
+            Grid.Row="14"
+            Grid.Column="0">Disable Loop Filter</TextBlock>
         <CheckBox
-            Grid.Row="12"
+            Grid.Row="14"
             Grid.Column="1"
             IsChecked="{Binding Raw.LoopFilterDisable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             ToolTip="Disable deblocking loop filter." />
 
         <!-- 14: Use SAO -->
         <TextBlock
-            Grid.Row="13"
-            Grid.Column="0">
-            Use SAO
-        </TextBlock>
+            Grid.Row="15"
+            Grid.Column="0">Use SAO</TextBlock>
         <CheckBox
-            Grid.Row="13"
+            Grid.Row="15"
             Grid.Column="1"
             IsChecked="{Binding Raw.UseSAO, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             ToolTip="Enable Sample Adaptive Offset filter." />
 
         <!-- 15: Extended Precision -->
         <TextBlock
-            Grid.Row="14"
-            Grid.Column="0">
-            Extended Precision
-        </TextBlock>
+            Grid.Row="16"
+            Grid.Column="0">Extended Precision</TextBlock>
         <CheckBox
-            Grid.Row="14"
+            Grid.Row="16"
             Grid.Column="1"
             IsChecked="{Binding Raw.ExtendedPrecision, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             ToolTip="Enable extended precision processing for high bit depth (RExt)." />
 
         <!-- 16: High Precision Offsets -->
         <TextBlock
-            Grid.Row="15"
-            Grid.Column="0">
-            High Precision Offsets
-        </TextBlock>
+            Grid.Row="17"
+            Grid.Column="0">High Precision Offsets</TextBlock>
         <CheckBox
-            Grid.Row="15"
+            Grid.Row="17"
             Grid.Column="1"
             IsChecked="{Binding Raw.HighPrecisionOffsets, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             ToolTip="Enable high precision offsets (RExt)." />
 
         <!-- 17: Search Range -->
         <TextBlock
-            Grid.Row="16"
-            Grid.Column="0">
-            Search Range
-        </TextBlock>
+            Grid.Row="18"
+            Grid.Column="0">Search Range</TextBlock>
         <TextBox
-            Grid.Row="16"
+            Grid.Row="18"
             Grid.Column="1"
             Text="{Binding Raw.SearchRange, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             ToolTip="Motion estimation search range in pixels. Only used for inter prediction (GOPSize > 1)." />
 
         <!-- 18: Bipred Search Range -->
         <TextBlock
-            Grid.Row="17"
-            Grid.Column="0">
-            Bipred Search Range
-        </TextBlock>
+            Grid.Row="19"
+            Grid.Column="0">Bipred Search Range</TextBlock>
         <TextBox
-            Grid.Row="17"
+            Grid.Row="19"
             Grid.Column="1"
             Text="{Binding Raw.BipredSearchRange, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             ToolTip="Bi-prediction search range in pixels. Only used for inter prediction (GOPSize > 1)." />
 
         <!-- 19: ME Search Method -->
         <TextBlock
-            Grid.Row="18"
-            Grid.Column="0">
-            ME Search Method
-        </TextBlock>
+            Grid.Row="20"
+            Grid.Column="0">ME Search Method</TextBlock>
         <ComboBox
-            Grid.Row="18"
+            Grid.Row="20"
             Grid.Column="1"
             ItemsSource="{Binding Source={util:EnumBindingSource {x:Type interop:MotionSearchMethod}}, Mode=OneTime}"
             SelectedItem="{Binding Raw.MotionEstimationSearchMethod, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -366,25 +509,21 @@
 
         <!-- 20: Rate Control -->
         <TextBlock
-            Grid.Row="19"
-            Grid.Column="0">
-            Rate Control
-        </TextBlock>
+            Grid.Row="21"
+            Grid.Column="0">Rate Control</TextBlock>
         <CheckBox
-            Grid.Row="19"
+            Grid.Row="21"
             Grid.Column="1"
             IsChecked="{Binding Raw.UseRateCtrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             ToolTip="Enable rate control. Conflicts with VFR streaming (assumes fixed timing)." />
 
         <!-- 21: Frame Rate (collapse when !RateCtrl) -->
         <TextBlock
-            Grid.Row="20"
+            Grid.Row="22"
             Grid.Column="0"
-            Visibility="{Binding Raw.UseRateCtrl, Converter={StaticResource BoolToVis}}">
-            Frame Rate
-        </TextBlock>
+            Visibility="{Binding Raw.UseRateCtrl, Converter={StaticResource BoolToVis}}">Frame Rate</TextBlock>
         <TextBox
-            Grid.Row="20"
+            Grid.Row="22"
             Grid.Column="1"
             Visibility="{Binding Raw.UseRateCtrl, Converter={StaticResource BoolToVis}}"
             Text="{Binding Raw.FrameRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -392,13 +531,11 @@
 
         <!-- 22: Target Bitrate (collapse when !RateCtrl) -->
         <TextBlock
-            Grid.Row="21"
+            Grid.Row="23"
             Grid.Column="0"
-            Visibility="{Binding Raw.UseRateCtrl, Converter={StaticResource BoolToVis}}">
-            Target Bitrate
-        </TextBlock>
+            Visibility="{Binding Raw.UseRateCtrl, Converter={StaticResource BoolToVis}}">Target Bitrate</TextBlock>
         <TextBox
-            Grid.Row="21"
+            Grid.Row="23"
             Grid.Column="1"
             Visibility="{Binding Raw.UseRateCtrl, Converter={StaticResource BoolToVis}}"
             Text="{Binding Raw.TargetBitrate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -406,12 +543,10 @@
 
         <!-- 23: Decoded Picture Hash -->
         <TextBlock
-            Grid.Row="22"
-            Grid.Column="0">
-            Decoded Picture Hash
-        </TextBlock>
+            Grid.Row="24"
+            Grid.Column="0">Decoded Picture Hash</TextBlock>
         <ComboBox
-            Grid.Row="22"
+            Grid.Row="24"
             Grid.Column="1"
             ItemsSource="{Binding Source={util:EnumBindingSource {x:Type interop:HashType}}, Mode=OneTime}"
             SelectedItem="{Binding Raw.DecodedPictureHashSEIType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -419,7 +554,7 @@
 
         <!-- 24: GOP Structure -->
         <Expander
-            Grid.Row="23"
+            Grid.Row="25"
             Grid.Column="0"
             Grid.ColumnSpan="2"
             Header="GOP Structure"
@@ -554,30 +689,30 @@
                             ToolTip="Comma-separated flags (0 or 1) indicating which reference pics are used by current picture." />
 
                         <TextBlock
-                            Grid.Row="2"
+                            Grid.Row="1"
                             Grid.Column="0">
                             Beta Offset / 2
                         </TextBlock>
                         <TextBox
-                            Grid.Row="2"
+                            Grid.Row="1"
                             Grid.Column="1"
                             Text="{Binding BetaOffsetDiv2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             ToolTip="Deblocking filter beta offset divided by 2." />
 
                         <TextBlock
-                            Grid.Row="3"
+                            Grid.Row="1"
                             Grid.Column="0">
                             Tc Offset / 2
                         </TextBlock>
                         <TextBox
-                            Grid.Row="3"
+                            Grid.Row="1"
                             Grid.Column="1"
                             Text="{Binding TcOffsetDiv2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             ToolTip="Deblocking filter tc offset divided by 2." />
 
                         <!-- QP Model -->
                         <Expander
-                            Grid.Row="3"
+                            Grid.Row="1"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             Header="QP Adaptation Model"
@@ -621,22 +756,22 @@
                                     Text="{Binding QPOffsetModelScale, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                                 <TextBlock
-                                    Grid.Row="2"
+                                    Grid.Row="1"
                                     Grid.Column="0">
                                     Cb QP Offset
                                 </TextBlock>
                                 <TextBox
-                                    Grid.Row="2"
+                                    Grid.Row="1"
                                     Grid.Column="1"
                                     Text="{Binding CbQPOffset, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                                 <TextBlock
-                                    Grid.Row="3"
+                                    Grid.Row="1"
                                     Grid.Column="0">
                                     Cr QP Offset
                                 </TextBlock>
                                 <TextBox
-                                    Grid.Row="3"
+                                    Grid.Row="1"
                                     Grid.Column="1"
                                     Text="{Binding CrQPOffset, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </Grid>
@@ -644,7 +779,7 @@
 
                         <!-- RPS Prediction -->
                         <Expander
-                            Grid.Row="4"
+                            Grid.Row="1"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             Header="Reference Picture Set Prediction"
@@ -687,12 +822,12 @@
                                     Text="{Binding DeltaRPS, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                                 <TextBlock
-                                    Grid.Row="2"
+                                    Grid.Row="1"
                                     Grid.Column="0">
                                     Ref IDC
                                 </TextBlock>
                                 <TextBox
-                                    Grid.Row="2"
+                                    Grid.Row="1"
                                     Grid.Column="1"
                                     Text="{Binding RefIdcText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                     ToolTip="Comma-separated reference IDC values." />

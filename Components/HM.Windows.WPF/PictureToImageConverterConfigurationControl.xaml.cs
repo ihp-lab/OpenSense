@@ -26,7 +26,7 @@ namespace OpenSense.WPF.Components.HM {
         private void OnConfigPropertyChanged(object? sender, PropertyChangedEventArgs e) {
             switch (e.PropertyName) {
                 case nameof(PictureToImageConverterConfiguration.OutputPixelFormat):
-                case nameof(PictureToImageConverterConfiguration.SourceBitDepth):
+                case nameof(PictureToImageConverterConfiguration.InputBitDepth):
                 case nameof(PictureToImageConverterConfiguration.BitDepthMappingScaleShift):
                     UpdateDerivedValues();
                     break;
@@ -39,7 +39,7 @@ namespace OpenSense.WPF.Components.HM {
             }
 
             var targetBitDepth = PixelFormatInfo.GetBitDepth(config.OutputPixelFormat);
-            var sourceBits = config.SourceBitDepth > 0 ? config.SourceBitDepth : 16;
+            var sourceBits = config.InputBitDepth ?? 16;
             var scaleShift = config.BitDepthMappingScaleShift;
 
             // Update preview

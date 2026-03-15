@@ -40,6 +40,21 @@ namespace OpenSense.Components.HM {
             set => SetProperty(ref timestampFilename, value);
         }
 
+        /// <summary>
+        /// Expected input bit depth. Null = auto (detect from input at runtime). Set to validate input.
+        /// </summary>
+        public int? InputBitDepth { get; set; }
+
+        /// <summary>
+        /// Expected input chroma format. Null = auto (detect from input at runtime). Set to validate input.
+        /// </summary>
+        public ChromaFormat? InputChromaFormat { get; set; }
+
+        /// <summary>
+        /// Internal bit depth for encoding. Null = same as input bit depth.
+        /// </summary>
+        public int? InternalBitDepth { get; set; }
+
         private EncoderConfig encoderConfiguration = new EncoderConfig();
 
         public EncoderConfig EncoderConfiguration {
@@ -183,18 +198,21 @@ namespace OpenSense.Components.HM {
                 ActualFilename = Path.Combine(directory ?? string.Empty, newFilename);
             }
 
-            /* HM and Minimp4 */
-            var config = EncoderConfiguration;
-            if (config.InputBitDepth > 0 && config.InputBitDepth != bitDepth) {
-                throw new InvalidOperationException($"InputBitDepth mismatch: configured {config.InputBitDepth}, but input PictureSnapshot has {bitDepth}-bit data.");
+            /* Validate input against expected values (if configured) */
+            if (InputBitDepth.HasValue && InputBitDepth.Value != bitDepth) {
+                throw new InvalidOperationException($"InputBitDepth mismatch: configured {InputBitDepth.Value}, but input PictureSnapshot has {bitDepth}-bit data.");
             }
+            if (InputChromaFormat.HasValue && InputChromaFormat.Value != chromaFmt) {
+                throw new InvalidOperationException($"InputChromaFormat mismatch: configured {InputChromaFormat.Value}, but input PictureSnapshot has {chromaFmt}.");
+            }
+
+            /* Set concrete values on EncoderConfig (non-nullable, required for encoder) */
+            var config = EncoderConfiguration;
             config.SourceWidth = width;
             config.SourceHeight = height;
-            config.ChromaFormatIdc = chromaFmt;
             config.InputBitDepth = bitDepth;
-            if (config.InternalBitDepth <= 0) {
-                config.InternalBitDepth = bitDepth;
-            }
+            config.InternalBitDepth = InternalBitDepth ?? bitDepth;
+            config.ChromaFormatIdc = chromaFmt;
             var encoder = new Encoder(config);
             var stream = new FileStream(ActualFilename, FileMode.Create, FileAccess.Write, FileShare.Read);
             var muxer = new Muxer(stream, MuxMode.Default);

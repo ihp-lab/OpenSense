@@ -18,6 +18,15 @@ namespace OpenSense.Components.HM {
 
         #region Options
 
+        #region Input
+        private int? inputBitDepth;
+
+        public int? InputBitDepth {
+            get => inputBitDepth;
+            set => SetProperty(ref inputBitDepth, value);
+        }
+        #endregion
+
         #region Output
         private PixelFormat outputPixelFormat = PixelFormat.Gray_16bpp;
 
@@ -64,13 +73,6 @@ namespace OpenSense.Components.HM {
             get => bitDepthMappingWindow;
             set => SetProperty(ref bitDepthMappingWindow, value);
         }
-
-        private int sourceBitDepth;
-
-        public int SourceBitDepth {
-            get => sourceBitDepth;
-            set => SetProperty(ref sourceBitDepth, value);
-        }
         #endregion
 
         #endregion
@@ -87,8 +89,8 @@ namespace OpenSense.Components.HM {
         }
 
         private void ValidateFirstFrame(PictureYuv picYuv, int actualBitDepth) {
-            if (SourceBitDepth > 0 && actualBitDepth != SourceBitDepth) {
-                throw new InvalidOperationException($"SourceBitDepth is set to {SourceBitDepth} but actual bit depth is {actualBitDepth}.");
+            if (InputBitDepth.HasValue && actualBitDepth != InputBitDepth.Value) {
+                throw new InvalidOperationException($"InputBitDepth is set to {InputBitDepth.Value} but actual bit depth is {actualBitDepth}.");
             }
 
             var targetBitDepth = PixelFormatInfo.GetBitDepth(OutputPixelFormat);

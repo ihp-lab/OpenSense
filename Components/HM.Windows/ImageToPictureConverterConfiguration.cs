@@ -15,27 +15,11 @@ namespace OpenSense.Components.HM {
             set => SetProperty(ref inputPixelFormat, value);
         }
 
-        private int sourceBitDepth;
+        private int? inputBitDepth;
 
-        public int SourceBitDepth {
-            get => sourceBitDepth;
-            set => SetProperty(ref sourceBitDepth, value);
-        }
-        #endregion
-
-        #region Bit Depth Mapping
-        private int bitDepthMappingScaleShift;
-
-        public int BitDepthMappingScaleShift {
-            get => bitDepthMappingScaleShift;
-            set => SetProperty(ref bitDepthMappingScaleShift, value);
-        }
-
-        private int bitDepthMappingWindow;
-
-        public int BitDepthMappingWindow {
-            get => bitDepthMappingWindow;
-            set => SetProperty(ref bitDepthMappingWindow, value);
+        public int? InputBitDepth {
+            get => inputBitDepth;
+            set => SetProperty(ref inputBitDepth, value);
         }
         #endregion
 
@@ -55,15 +39,31 @@ namespace OpenSense.Components.HM {
         }
         #endregion
 
+        #region Bit Depth Mapping
+        private int bitDepthMappingScaleShift;
+
+        public int BitDepthMappingScaleShift {
+            get => bitDepthMappingScaleShift;
+            set => SetProperty(ref bitDepthMappingScaleShift, value);
+        }
+
+        private int bitDepthMappingWindow;
+
+        public int BitDepthMappingWindow {
+            get => bitDepthMappingWindow;
+            set => SetProperty(ref bitDepthMappingWindow, value);
+        }
+        #endregion
+
         public override IComponentMetadata GetMetadata() => new ImageToPictureConverterMetadata();
 
         protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new ImageToPictureConverter(pipeline) {
             InputPixelFormat = InputPixelFormat,
-            SourceBitDepth = SourceBitDepth,
-            BitDepthMappingScaleShift = BitDepthMappingScaleShift,
-            BitDepthMappingWindow = BitDepthMappingWindow,
+            InputBitDepth = InputBitDepth,
             OutputBitDepth = OutputBitDepth,
             OutputChromaFormat = OutputChromaFormat,
+            BitDepthMappingScaleShift = BitDepthMappingScaleShift,
+            BitDepthMappingWindow = BitDepthMappingWindow,
         };
     }
 }
