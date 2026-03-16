@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PictureSnapshot.h"
+#include "Picture.h"
 #include <vector>
 
 using namespace System;
@@ -19,6 +19,9 @@ namespace HMInterop {
         TDecTop* _decoder;
         int _pocLastDisplay;
 
+        // SPS cache: reuse the same managed object when the native SPS pointer hasn't changed.
+        SequenceParameterSet^ _lastSps;
+
     public:
         Decoder();
 
@@ -29,20 +32,20 @@ namespace HMInterop {
         /// </summary>
         /// <param name="nalData">Memory containing NAL unit data</param>
         /// <param name="output">List to append decoded pictures to</param>
-        void FeedNal(ReadOnlyMemory<Byte> nalData, [NotNull] System::Collections::Generic::IList<PictureSnapshot^>^ output);
+        void FeedNal(ReadOnlyMemory<Byte> nalData, [NotNull] System::Collections::Generic::IList<Picture^>^ output);
 
         /// <summary>
         /// Signal end of stream, flush remaining B-frames.
         /// Decoded pictures are appended to output.
         /// </summary>
-        void FlushAndCollect([NotNull] System::Collections::Generic::IList<PictureSnapshot^>^ output);
+        void FlushAndCollect([NotNull] System::Collections::Generic::IList<Picture^>^ output);
 
     private:
         /// <summary>
-        /// Create PictureSnapshot objects from native decoded pictures and append to output.
+        /// Create Picture objects from native decoded pictures and append to output.
         /// Rents PictureYuv from pool and copies pixel data.
         /// </summary>
-        static void AppendDecodedPics(const std::vector<NativeDecodedPic>& pics, System::Collections::Generic::IList<PictureSnapshot^>^ output);
+        void AppendDecodedPics(const std::vector<NativeDecodedPic>& pics, System::Collections::Generic::IList<Picture^>^ output);
 
 #pragma region IDisposable
     private:

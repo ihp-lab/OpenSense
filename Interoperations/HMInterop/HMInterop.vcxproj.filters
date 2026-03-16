@@ -39,22 +39,22 @@
     <ClInclude Include="BitDepths.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PictureSnapshot.h">
+    <ClInclude Include="Picture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PictureYuv.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ProfileTierLevelSnapshot.h">
+    <ClInclude Include="ProfileTierLevel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SequenceParameterSetSnapshot.h">
+    <ClInclude Include="SequenceParameterSet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VideoUsabilityInfoSnapshot.h">
+    <ClInclude Include="VideoUsabilityInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GOPEntryConfig.h">
@@ -83,19 +83,19 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PictureSnapshot.cpp">
+    <ClCompile Include="Picture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PictureYuv.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ProfileTierLevelSnapshot.cpp">
+    <ClCompile Include="ProfileTierLevel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SequenceParameterSetSnapshot.cpp">
+    <ClCompile Include="SequenceParameterSet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="VideoUsabilityInfoSnapshot.cpp">
+    <ClCompile Include="VideoUsabilityInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PictureYuvPool.cpp">

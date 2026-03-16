@@ -1,9 +1,9 @@
 #include "pch.h"
-#include "PictureSnapshot.h"
+#include "Picture.h"
 #include "PictureYuvPool.h"
 
 namespace HMInterop {
-    PictureSnapshot::PictureSnapshot(PictureYuv^ picYuv, int poc, SequenceParameterSetSnapshot^ sps, PictureYuvOwnership ownership)
+    Picture::Picture(PictureYuv^ picYuv, int poc, SequenceParameterSet^ sps, PictureYuvOwnership ownership)
         : _picYuv(picYuv)
         , _poc(poc)
         , _sps(sps)
@@ -15,28 +15,28 @@ namespace HMInterop {
         }
     }
 
-    PictureYuv^ PictureSnapshot::PicYuv::get() {
+    PictureYuv^ Picture::PicYuv::get() {
         ThrowIfDisposed();
         return _picYuv;
     }
 
 #pragma region IDisposable
-    void PictureSnapshot::ThrowIfDisposed() {
+    void Picture::ThrowIfDisposed() {
         if (_disposed) {
             throw gcnew System::ObjectDisposedException(this->GetType()->FullName);
         }
     }
 
-    PictureSnapshot::~PictureSnapshot() {
+    Picture::~Picture() {
         if (_disposed) {
             return;
         }
 
-        this->!PictureSnapshot();
+        this->!Picture();
         _disposed = true;
     }
 
-    PictureSnapshot::!PictureSnapshot() {
+    Picture::!Picture() {
         if (_picYuv == nullptr) {
             return;
         }

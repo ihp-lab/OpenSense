@@ -8,12 +8,12 @@ using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
 
 namespace OpenSense.Components.HM {
-    public sealed class ImageToPictureConverter : IConsumer<Shared<Image>>, IProducer<Shared<PictureSnapshot>>, INotifyPropertyChanged, IDisposable {
+    public sealed class ImageToPictureConverter : IConsumer<Shared<Image>>, IProducer<Shared<Picture>>, INotifyPropertyChanged, IDisposable {
 
         #region Ports
         public Receiver<Shared<Image>> In { get; }
 
-        public Emitter<Shared<PictureSnapshot>> Out { get; }
+        public Emitter<Shared<Picture>> Out { get; }
         #endregion
 
         #region Options
@@ -75,7 +75,7 @@ namespace OpenSense.Components.HM {
 
         public ImageToPictureConverter(Pipeline pipeline) {
             In = pipeline.CreateReceiver<Shared<Image>>(this, Process, nameof(In));
-            Out = pipeline.CreateEmitter<Shared<PictureSnapshot>>(this, nameof(Out));
+            Out = pipeline.CreateEmitter<Shared<Picture>>(this, nameof(Out));
         }
 
         private void Process(Shared<Image> image, Envelope envelope) {
@@ -135,10 +135,10 @@ namespace OpenSense.Components.HM {
                     throw new NotSupportedException($"Pixel format {resource.PixelFormat} is not supported.");
             }
 
-            var sps = new SequenceParameterSetSnapshot(
+            var sps = new SequenceParameterSet(
                 new BitDepths { Luma = bitDepth, Chroma = bitDepth },
                 chromaFmt, width, height);
-            var snapshot = new PictureSnapshot(picture, pocCounter++, sps, PictureYuvOwnership.Pooled);
+            var snapshot = new Picture(picture, pocCounter++, sps, PictureYuvOwnership.Pooled);
             using var shared = Shared.Create(snapshot);
             Out.Post(shared, envelope.OriginatingTime);
         }

@@ -25,13 +25,13 @@ namespace OpenSense.Components.HM {
         private static readonly Regex TimestampPattern = new Regex(@"_(\d{21})$", RegexOptions.Compiled);
 
         private readonly string _filename;
-        private readonly Queue<(PictureSnapshot picture, TimeSpan timestamp)> _frameBuffer = new();
+        private readonly Queue<(Picture picture, TimeSpan timestamp)> _frameBuffer = new();
         private readonly PriorityQueue<TimeSpan, TimeSpan> _ptsQueue = new();
         private readonly CancellationTokenSource _cts = new();
-        private readonly List<PictureSnapshot> _decodedFrames = new();
+        private readonly List<Picture> _decodedFrames = new();
 
         #region Ports
-        public Emitter<Shared<PictureSnapshot>> Out { get; }
+        public Emitter<Shared<Picture>> Out { get; }
         #endregion
 
         #region Options
@@ -67,7 +67,7 @@ namespace OpenSense.Components.HM {
         }
         #endregion
 
-        public SequenceParameterSetSnapshot? SequenceParameterSetSnapshot { get; private set; }
+        public SequenceParameterSet? SequenceParameterSet { get; private set; }
 
         private FileReaderContext? context;
         private int sampleIndex;
@@ -79,7 +79,7 @@ namespace OpenSense.Components.HM {
             }
             _filename = filename;
 
-            Out = pipeline.CreateEmitter<Shared<PictureSnapshot>>(this, nameof(Out));
+            Out = pipeline.CreateEmitter<Shared<Picture>>(this, nameof(Out));
 
             pipeline.PipelineRun += OnPipelineRun;
         }
@@ -115,7 +115,7 @@ namespace OpenSense.Components.HM {
 
             // Create decoder and feed VPS/SPS/PPS from MP4 container
             var decoder = new Decoder();
-            var initFrames = new List<PictureSnapshot>();
+            var initFrames = new List<Picture>();
             for (var i = 0; ; i++) {
                 var parameterSet = demuxer.ReadParameterSet((uint)videoTrackIndex, i);
                 if (parameterSet is null) {
@@ -204,7 +204,7 @@ namespace OpenSense.Components.HM {
 
             if (!spsPosted) {
                 spsPosted = true;
-                SequenceParameterSetSnapshot = picture.Sps;
+                SequenceParameterSet = picture.Sps;
             }
 
             using var shared = Shared.Create(picture);

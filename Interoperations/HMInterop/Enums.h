@@ -103,7 +103,7 @@ namespace HMInterop {
     };
 
     /// <summary>
-    /// Determines how a PictureSnapshot disposes its PictureYuv.
+    /// Determines how a Picture disposes its PictureYuv.
     /// </summary>
     public enum class PictureYuvOwnership : int {
         Owned = 0,    // Dispose (destroy the PictureYuv)

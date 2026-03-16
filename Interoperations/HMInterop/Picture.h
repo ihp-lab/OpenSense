@@ -1,33 +1,33 @@
 #pragma once
 
 #include "PictureYuv.h"
-#include "SequenceParameterSetSnapshot.h"
+#include "SequenceParameterSet.h"
 
 using namespace System;
 
 namespace HMInterop {
     /// <summary>
     /// Immutable snapshot of a decoded HEVC picture.
-    /// Contains pixel data (PictureYuv) and stream metadata (SequenceParameterSetSnapshot, POC).
+    /// Contains pixel data (PictureYuv) and stream metadata (SequenceParameterSet, POC).
     /// Dispose behavior for PictureYuv is determined by the ownership parameter.
     /// </summary>
-    public ref class PictureSnapshot sealed : IDisposable {
+    public ref class Picture sealed : IDisposable {
     private:
         PictureYuv^ _picYuv;
         int _poc;
-        SequenceParameterSetSnapshot^ _sps;
+        SequenceParameterSet^ _sps;
         PictureYuvOwnership _ownership;
 
     public:
         /// <summary>
-        /// Create a PictureSnapshot wrapping the provided PictureYuv.
+        /// Create a Picture wrapping the provided PictureYuv.
         /// </summary>
         /// <param name="picYuv">Pixel data</param>
         /// <param name="poc">Picture order count</param>
         /// <param name="sps">Sequence parameter set metadata</param>
         /// <param name="ownership">Determines dispose behavior for picYuv:
         /// None = do not dispose, Owned = destroy, Pooled = return to PictureYuvPool</param>
-        PictureSnapshot(PictureYuv^ picYuv, int poc, SequenceParameterSetSnapshot^ sps, PictureYuvOwnership ownership);
+        Picture(PictureYuv^ picYuv, int poc, SequenceParameterSet^ sps, PictureYuvOwnership ownership);
 
         property PictureYuv^ PicYuv {
             PictureYuv^ get();
@@ -37,8 +37,8 @@ namespace HMInterop {
             int get() { return _poc; }
         }
 
-        property SequenceParameterSetSnapshot^ Sps {
-            SequenceParameterSetSnapshot^ get() { return _sps; }
+        property SequenceParameterSet^ Sps {
+            SequenceParameterSet^ get() { return _sps; }
         }
 
 #pragma region IDisposable
@@ -48,8 +48,8 @@ namespace HMInterop {
         void ThrowIfDisposed();
 
     public:
-        ~PictureSnapshot();
-        !PictureSnapshot();
+        ~Picture();
+        !Picture();
 #pragma endregion
     };
 }

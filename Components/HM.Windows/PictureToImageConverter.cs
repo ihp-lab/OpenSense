@@ -9,10 +9,10 @@ using Microsoft.Psi;
 using Microsoft.Psi.Imaging;
 
 namespace OpenSense.Components.HM {
-    public sealed class PictureToImageConverter : IConsumer<Shared<PictureSnapshot>>, IProducer<Shared<Image>>, INotifyPropertyChanged, IDisposable {
+    public sealed class PictureToImageConverter : IConsumer<Shared<Picture>>, IProducer<Shared<Image>>, INotifyPropertyChanged, IDisposable {
 
         #region Ports
-        public Receiver<Shared<PictureSnapshot>> In { get; }
+        public Receiver<Shared<Picture>> In { get; }
 
         public Emitter<Shared<Image>> Out { get; }
         #endregion
@@ -81,7 +81,7 @@ namespace OpenSense.Components.HM {
         private bool validated;
 
         public PictureToImageConverter(Pipeline pipeline) {
-            In = pipeline.CreateReceiver<Shared<PictureSnapshot>>(this, Process, nameof(In));
+            In = pipeline.CreateReceiver<Shared<Picture>>(this, Process, nameof(In));
             Out = pipeline.CreateEmitter<Shared<Image>>(this, nameof(Out));
         }
 
@@ -111,7 +111,7 @@ namespace OpenSense.Components.HM {
             }
         }
 
-        private void Process(Shared<PictureSnapshot> picture, Envelope envelope) {
+        private void Process(Shared<Picture> picture, Envelope envelope) {
             var picYuv = picture.Resource.PicYuv;
             var actualBitDepth = picture.Resource.Sps.BitDepths.Luma;
 

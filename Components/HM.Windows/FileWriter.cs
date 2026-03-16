@@ -13,7 +13,7 @@ using Microsoft.Psi.Components;
 using Minimp4Interop;
 
 namespace OpenSense.Components.HM {
-    public sealed class FileWriter : IConsumer<Shared<PictureSnapshot>>, ISourceComponent, INotifyPropertyChanged, IDisposable {
+    public sealed class FileWriter : IConsumer<Shared<Picture>>, ISourceComponent, INotifyPropertyChanged, IDisposable {
 
         private readonly CancellationTokenSource _cts = new();
 
@@ -24,7 +24,7 @@ namespace OpenSense.Components.HM {
         private readonly List<AccessUnitData> _encodedUnits = new();
 
         #region Ports
-        public Receiver<Shared<PictureSnapshot>> In { get; }
+        public Receiver<Shared<Picture>> In { get; }
 
         #endregion
 
@@ -85,7 +85,7 @@ namespace OpenSense.Components.HM {
         private FileWriterContext? context;
 
         public FileWriter(Pipeline pipeline) {
-            In = pipeline.CreateReceiver<Shared<PictureSnapshot>>(this, Process, nameof(In));
+            In = pipeline.CreateReceiver<Shared<Picture>>(this, Process, nameof(In));
 
             pipeline.PipelineCompleted += OnPipelineCompleted;
         }
@@ -121,7 +121,7 @@ namespace OpenSense.Components.HM {
         }
         #endregion
 
-        private void Process(Shared<PictureSnapshot> picture, Envelope envelope) {
+        private void Process(Shared<Picture> picture, Envelope envelope) {
             if (_cts.IsCancellationRequested) {
                 return;
             }
@@ -214,10 +214,10 @@ namespace OpenSense.Components.HM {
 
             /* Validate input against expected values (if configured) */
             if (InputBitDepth.HasValue && InputBitDepth.Value != bitDepth) {
-                throw new InvalidOperationException($"InputBitDepth mismatch: configured {InputBitDepth.Value}, but input PictureSnapshot has {bitDepth}-bit data.");
+                throw new InvalidOperationException($"InputBitDepth mismatch: configured {InputBitDepth.Value}, but input Picture has {bitDepth}-bit data.");
             }
             if (InputChromaFormat.HasValue && InputChromaFormat.Value != chromaFmt) {
-                throw new InvalidOperationException($"InputChromaFormat mismatch: configured {InputChromaFormat.Value}, but input PictureSnapshot has {chromaFmt}.");
+                throw new InvalidOperationException($"InputChromaFormat mismatch: configured {InputChromaFormat.Value}, but input Picture has {chromaFmt}.");
             }
 
             /* Set concrete values on EncoderConfig (non-nullable, required for encoder) */

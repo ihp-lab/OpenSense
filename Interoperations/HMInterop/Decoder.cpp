@@ -205,7 +205,8 @@ namespace HMInterop {
     Decoder::Decoder()
         : _decoder(nullptr)
         , _disposed(false)
-        , _pocLastDisplay(-MAX_INT) {
+        , _pocLastDisplay(-MAX_INT)
+        , _lastSps(nullptr) {
 
         _decoder = new TDecTop();
         _decoder->create();
@@ -215,7 +216,7 @@ namespace HMInterop {
 
     void Decoder::FeedNal(
         ReadOnlyMemory<Byte> nalData,
-        [NotNull] System::Collections::Generic::IList<PictureSnapshot^>^ output
+        [NotNull] System::Collections::Generic::IList<Picture^>^ output
     ) {
         ThrowIfDisposed();
         ArgumentNullException::ThrowIfNull(output, "output");
@@ -248,7 +249,7 @@ namespace HMInterop {
     }
 
     void Decoder::FlushAndCollect(
-        [NotNull] System::Collections::Generic::IList<PictureSnapshot^>^ output
+        [NotNull] System::Collections::Generic::IList<Picture^>^ output
     ) {
         ThrowIfDisposed();
         ArgumentNullException::ThrowIfNull(output, "output");
@@ -269,7 +270,7 @@ namespace HMInterop {
 
     void Decoder::AppendDecodedPics(
         const std::vector<NativeDecodedPic>& pics,
-        System::Collections::Generic::IList<PictureSnapshot^>^ output
+        System::Collections::Generic::IList<Picture^>^ output
     ) {
         for (auto i = 0; i < static_cast<int>(pics.size()); i++) {
             auto comPic = pics[i].comPic;
@@ -282,8 +283,12 @@ namespace HMInterop {
             CopyPicYuvData(srcYuv, picYuv->InternalPicYuv);
 
             auto poc = comPic->getPOC();
-            auto sps = gcnew SequenceParameterSetSnapshot(comPic->getSlice(0)->getSPS());
-            output->Add(gcnew PictureSnapshot(picYuv, poc, sps, PictureYuvOwnership::Pooled));
+            auto spsPtr = comPic->getSlice(0)->getSPS();
+            if (_lastSps == nullptr || spsPtr != _lastSps->SourcePtr) {
+                _lastSps = gcnew SequenceParameterSet(spsPtr);
+            }
+            auto sps = _lastSps;
+            output->Add(gcnew Picture(picYuv, poc, sps, PictureYuvOwnership::Pooled));
         }
     }
 

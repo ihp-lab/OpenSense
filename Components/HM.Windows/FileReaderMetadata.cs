@@ -13,7 +13,7 @@ namespace OpenSense.Components.HM {
 
         protected override string? GetPortDescription(string portName) {
             return portName switch {
-                nameof(FileReader.Out) => "The decoded PictureSnapshot stream containing raw pixel data and metadata (SPS, POC). No conversion or mapping is applied.",
+                nameof(FileReader.Out) => "The decoded Picture stream containing raw pixel data and metadata (SPS, POC). No conversion or mapping is applied.",
                 _ => null,
             };
         }
