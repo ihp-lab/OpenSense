@@ -30,7 +30,7 @@
             <!-- 2: Manual Start Time -->
             <RowDefinition
                 Height="auto" />
-            <!-- 3: Abort On Stop -->
+            <!-- 3: Process Remaining Before Stop -->
             <RowDefinition
                 Height="auto" />
         </Grid.RowDefinitions>
@@ -116,14 +116,14 @@
             </TextBox.Style>
         </TextBox>
 
-        <!-- Row 3: Abort On Stop -->
+        <!-- Row 3: Process Remaining Before Stop -->
         <TextBlock
             Grid.Row="3"
-            Grid.Column="0">Abort On Stop</TextBlock>
+            Grid.Column="0">Process Remaining Before Stop</TextBlock>
         <CheckBox
             Grid.Row="3"
             Grid.Column="1"
-            IsChecked="{Binding AbortOnStop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            ToolTip="When enabled, immediately stop decoding on pipeline stop instead of processing remaining samples." />
+            IsChecked="{Binding ProcessRemainingBeforeStop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="When enabled, continue processing remaining samples before stopping. When disabled, stop immediately." />
     </Grid>
 </UserControl>

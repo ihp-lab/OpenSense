@@ -29,11 +29,11 @@ namespace OpenSense.Components.HM {
             get => manualStartTime;
             set => SetProperty(ref manualStartTime, value);
         }
-        private bool abortOnStop;
+        private bool processRemainingBeforeStop;
 
-        public bool AbortOnStop {
-            get => abortOnStop;
-            set => SetProperty(ref abortOnStop, value);
+        public bool ProcessRemainingBeforeStop {
+            get => processRemainingBeforeStop;
+            set => SetProperty(ref processRemainingBeforeStop, value);
         }
         #endregion
 
@@ -42,7 +42,7 @@ namespace OpenSense.Components.HM {
         protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new FileReader(pipeline, Filename) {
             StartTimeMode = StartTimeMode,
             ManualStartTime = ManualStartTime,
-            AbortOnStop = AbortOnStop,
+            ProcessRemainingBeforeStop = ProcessRemainingBeforeStop,
             Logger = (serviceProvider?.GetService(typeof(ILoggerFactory)) as ILoggerFactory)?.CreateLogger(Name),
         };
     }

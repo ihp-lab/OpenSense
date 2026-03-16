@@ -13,8 +13,8 @@
             Text="{Binding ActualFilename, StringFormat='File: {0}', FallbackValue='File: (not started)'}"
             Margin="0,0,0,4" />
         <ToggleButton
-            IsChecked="{Binding AbortOnStop, Mode=TwoWay}"
-            Content="Abort On Stop"
-            ToolTip="When checked, immediately stop encoding on pipeline stop instead of processing remaining queued frames." />
+            IsChecked="{Binding ProcessRemainingBeforeStop, Mode=TwoWay}"
+            Content="Process Remaining Before Stop"
+            ToolTip="When checked, continue processing remaining queued frames before stopping. When unchecked, stop immediately." />
     </StackPanel>
 </UserControl>

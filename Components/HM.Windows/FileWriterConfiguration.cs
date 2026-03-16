@@ -21,11 +21,11 @@ namespace OpenSense.Components.HM {
             get => timestampFilename;
             set => SetProperty(ref timestampFilename, value);
         }
-        private bool abortOnStop;
+        private bool processRemainingBeforeStop;
 
-        public bool AbortOnStop {
-            get => abortOnStop;
-            set => SetProperty(ref abortOnStop, value);
+        public bool ProcessRemainingBeforeStop {
+            get => processRemainingBeforeStop;
+            set => SetProperty(ref processRemainingBeforeStop, value);
         }
         #endregion
 
@@ -75,7 +75,7 @@ namespace OpenSense.Components.HM {
         protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new FileWriter(pipeline) {
             Filename = Filename,
             TimestampFilename = TimestampFilename,
-            AbortOnStop = AbortOnStop,
+            ProcessRemainingBeforeStop = ProcessRemainingBeforeStop,
             InputBitDepth = InputBitDepth,
             InputChromaFormat = InputChromaFormat,
             InternalBitDepth = InternalBitDepth,

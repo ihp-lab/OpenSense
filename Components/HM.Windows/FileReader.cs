@@ -54,11 +54,11 @@ namespace OpenSense.Components.HM {
         }
         #endregion
 
-        private bool abortOnStop;
+        private bool processRemainingBeforeStop;
 
-        public bool AbortOnStop {
-            get => abortOnStop;
-            set => SetProperty(ref abortOnStop, value);
+        public bool ProcessRemainingBeforeStop {
+            get => processRemainingBeforeStop;
+            set => SetProperty(ref processRemainingBeforeStop, value);
         }
 
         private ILogger? logger;
@@ -142,7 +142,7 @@ namespace OpenSense.Components.HM {
         /// blocked in EnsureFrameBuffered, preventing the pipeline from completing.
         /// </summary>
         void ISourceComponent.Stop(DateTime finalOriginatingTime, Action notifyCompleted) {
-            if (AbortOnStop) {
+            if (!ProcessRemainingBeforeStop) {
                 _cts.Cancel();
             }
             Stop(finalOriginatingTime, notifyCompleted);

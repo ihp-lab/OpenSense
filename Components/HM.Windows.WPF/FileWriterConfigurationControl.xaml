@@ -47,7 +47,7 @@
             <!-- 1: Timestamp -->
             <RowDefinition
                 Height="auto" />
-            <!-- 2: Abort On Stop -->
+            <!-- 2: Process Remaining Before Stop -->
             <RowDefinition
                 Height="auto" />
             <!-- 3: Input Bit Depth -->
@@ -164,15 +164,15 @@
             IsChecked="{Binding TimestampFilename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             ToolTip="Append a timestamp suffix to the base filename to preserve the originating timestamp of the first frame." />
 
-        <!-- 2: Abort On Stop -->
+        <!-- 2: Process Remaining Before Stop -->
         <TextBlock
             Grid.Row="2"
-            Grid.Column="0">Abort On Stop</TextBlock>
+            Grid.Column="0">Process Remaining Before Stop</TextBlock>
         <CheckBox
             Grid.Row="2"
             Grid.Column="1"
-            IsChecked="{Binding AbortOnStop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            ToolTip="When enabled, immediately discard remaining queued frames on pipeline stop instead of processing them all." />
+            IsChecked="{Binding ProcessRemainingBeforeStop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="When enabled, continue processing remaining queued frames before stopping. When disabled, stop immediately." />
 
         <!-- 3: Input Bit Depth -->
         <TextBlock
