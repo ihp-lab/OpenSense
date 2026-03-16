@@ -45,16 +45,16 @@ namespace OpenSense.WPF.Components.HM {
             // ScaleShift slider
             if (targetBits > 0) {
                 ScaleShiftSlider.Minimum = BitDepthMappingInfo.GetMinScaleShift(targetBits);
-                ScaleShiftSlider.Maximum = BitDepthMappingInfo.GetMaxScaleShift(sourceBits, targetBits);
+                ScaleShiftSlider.Maximum = BitDepthMappingInfo.GetMaxScaleShift(sourceBits);
             }
 
-            // WindowStart slider
-            var step = BitDepthMappingInfo.GetWindowStartStep(scaleShift);
-            WindowStartSlider.Minimum = 0;
-            WindowStartSlider.Maximum = BitDepthMappingInfo.GetMaxWindowStart(sourceBits, targetBits, scaleShift);
-            WindowStartSlider.TickFrequency = step;
-            WindowStartSlider.SmallChange = step;
-            WindowStartSlider.LargeChange = step;
+            // InputStart slider
+            InputStartSlider.Minimum = 0;
+            InputStartSlider.Maximum = BitDepthMappingInfo.GetMaxInputStart(sourceBits);
+
+            // OutputStart slider
+            OutputStartSlider.Minimum = 0;
+            OutputStartSlider.Maximum = BitDepthMappingInfo.GetMaxOutputStart(targetBits);
         }
     }
 }

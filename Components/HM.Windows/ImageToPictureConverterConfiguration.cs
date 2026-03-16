@@ -47,11 +47,18 @@ namespace OpenSense.Components.HM {
             set => SetProperty(ref bitDepthMappingScaleShift, value);
         }
 
-        private int bitDepthMappingWindow;
+        private int bitDepthMappingInputStart;
 
-        public int BitDepthMappingWindow {
-            get => bitDepthMappingWindow;
-            set => SetProperty(ref bitDepthMappingWindow, value);
+        public int BitDepthMappingInputStart {
+            get => bitDepthMappingInputStart;
+            set => SetProperty(ref bitDepthMappingInputStart, value);
+        }
+
+        private int bitDepthMappingOutputStart;
+
+        public int BitDepthMappingOutputStart {
+            get => bitDepthMappingOutputStart;
+            set => SetProperty(ref bitDepthMappingOutputStart, value);
         }
         #endregion
 
@@ -63,7 +70,8 @@ namespace OpenSense.Components.HM {
             OutputBitDepth = OutputBitDepth,
             OutputChromaFormat = OutputChromaFormat,
             BitDepthMappingScaleShift = BitDepthMappingScaleShift,
-            BitDepthMappingWindow = BitDepthMappingWindow,
+            BitDepthMappingInputStart = BitDepthMappingInputStart,
+            BitDepthMappingOutputStart = BitDepthMappingOutputStart,
         };
     }
 }

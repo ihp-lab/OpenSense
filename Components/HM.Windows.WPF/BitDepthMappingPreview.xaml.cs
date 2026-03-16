@@ -10,19 +10,20 @@ using OpenSense.Components.HM;
 namespace OpenSense.WPF.Components.HM {
     /// <summary>
     /// Reusable control that visualizes bit depth mapping.
-    /// All rows in a single Grid for guaranteed column alignment.
+    /// Shows paired input/output bars for each possible source bit depth.
     /// </summary>
     public sealed partial class BitDepthMappingPreview : UserControl {
 
         private static readonly int[] DefaultSourceBitDepths = { 8, 10, 12, 14, 16 };
 
-        private const double BarHeight = 14;
+        private const double BarHeight = 18;
 
         #region Dependency Properties
 
         public static readonly DependencyProperty TargetBitDepthProperty = DependencyProperty.Register(nameof(TargetBitDepth), typeof(int), typeof(BitDepthMappingPreview), new PropertyMetadata(8, OnParameterChanged));
         public static readonly DependencyProperty ScaleShiftProperty = DependencyProperty.Register(nameof(ScaleShift), typeof(int), typeof(BitDepthMappingPreview), new PropertyMetadata(0, OnParameterChanged));
-        public static readonly DependencyProperty WindowStartProperty = DependencyProperty.Register(nameof(WindowStart), typeof(int), typeof(BitDepthMappingPreview), new PropertyMetadata(0, OnParameterChanged));
+        public static readonly DependencyProperty InputStartProperty = DependencyProperty.Register(nameof(InputStart), typeof(int), typeof(BitDepthMappingPreview), new PropertyMetadata(0, OnParameterChanged));
+        public static readonly DependencyProperty OutputStartProperty = DependencyProperty.Register(nameof(OutputStart), typeof(int), typeof(BitDepthMappingPreview), new PropertyMetadata(0, OnParameterChanged));
         public static readonly DependencyProperty SourceBitDepthProperty = DependencyProperty.Register(nameof(SourceBitDepth), typeof(int), typeof(BitDepthMappingPreview), new PropertyMetadata(0, OnParameterChanged));
 
         public int TargetBitDepth {
@@ -35,9 +36,14 @@ namespace OpenSense.WPF.Components.HM {
             set => SetValue(ScaleShiftProperty, value);
         }
 
-        public int WindowStart {
-            get => (int)GetValue(WindowStartProperty);
-            set => SetValue(WindowStartProperty, value);
+        public int InputStart {
+            get => (int)GetValue(InputStartProperty);
+            set => SetValue(InputStartProperty, value);
+        }
+
+        public int OutputStart {
+            get => (int)GetValue(OutputStartProperty);
+            set => SetValue(OutputStartProperty, value);
         }
 
         public int SourceBitDepth {
@@ -63,117 +69,101 @@ namespace OpenSense.WPF.Components.HM {
 
             var targetBits = TargetBitDepth;
             var scaleShift = ScaleShift;
-            var windowStart = WindowStart;
-            var windowSize = BitDepthMappingInfo.GetWindowSize(targetBits, scaleShift);
-            var windowEnd = windowStart + windowSize;
+            var inputStart = InputStart;
+            var outputStart = OutputStart;
 
-            // Build a single Grid for all rows
-            var grid = new Grid();
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-
-            var row = 0;
-
-            // Source rows
             var srcBits = SourceBitDepth > 0 ? new[] { SourceBitDepth } : DefaultSourceBitDepths;
-            foreach (var bits in srcBits) {
-                grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-                AddSourceRow(grid, row, bits, windowStart, windowEnd, windowSize);
-                row++;
+
+            for (var i = 0; i < srcBits.Length; i++) {
+                if (i > 0) {
+                    PreviewPanel.Children.Add(new Separator { Margin = new Thickness(0, 4, 0, 4) });
+                }
+                AddPair(srcBits[i], targetBits, scaleShift, inputStart, outputStart);
             }
-
-            // Arrow row
-            grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-            var arrow = new TextBlock {
-                Text = "↓",
-                FontSize = 11,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                Margin = new Thickness(0, 2, 0, 2),
-            };
-            Grid.SetRow(arrow, row);
-            Grid.SetColumn(arrow, 2);
-            grid.Children.Add(arrow);
-            row++;
-
-            // Target row
-            grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-            AddTargetRow(grid, row, targetBits, scaleShift, windowSize);
-
-            PreviewPanel.Children.Add(grid);
         }
 
-        private static void AddSourceRow(Grid grid, int row, int srcBits, int windowStart, long windowEnd, int windowSize) {
+        private void AddPair(int srcBits, int targetBits, int scaleShift, int inputStart, int outputStart) {
             var srcMax = 1L << srcBits;
-
-            AddCell(grid, row, 0, CreateLabel($"{srcBits}-bit"));
-
-            if (windowSize <= 0) {
-                AddCell(grid, row, 1, CreateRangeLabel("–", Brushes.Red));
-                AddBarWithError(grid, row, "invalid window");
-            } else if (windowStart < 0 || windowEnd > srcMax) {
-                AddCell(grid, row, 1, CreateRangeLabel($"{windowStart}–{windowEnd - 1}", Brushes.Red));
-                AddBarWithError(grid, row, "window > source");
-            } else {
-                AddCell(grid, row, 1, CreateRangeLabel($"{windowStart}–{windowEnd - 1}", Brushes.Gray));
-                var winStartFrac = (double)windowStart / srcMax;
-                var winEndFrac = (double)windowEnd / srcMax;
-                AddBar(grid, row, Brushes.CornflowerBlue, winStartFrac, winEndFrac);
-            }
-        }
-
-        private static void AddTargetRow(Grid grid, int row, int targetBits, int scaleShift, int windowSize) {
             var targetMax = 1L << targetBits;
 
-            AddCell(grid, row, 0, CreateLabel($"{targetBits}-bit"));
+            // Input bar
+            var inputGrid = new Grid();
+            inputGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(55) });
+            inputGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
-            if (windowSize <= 0) {
-                AddCell(grid, row, 1, CreateRangeLabel("–", Brushes.Gray));
-                AddBarWithError(grid, row, "");
+            var inputLabel = new TextBlock {
+                Text = $"{srcBits}-bit in",
+                FontSize = 11,
+                VerticalAlignment = VerticalAlignment.Center,
+                FontFamily = new FontFamily("Consolas"),
+            };
+            Grid.SetColumn(inputLabel, 0);
+            inputGrid.Children.Add(inputLabel);
+
+            var inputValid = inputStart >= 0 && inputStart < srcMax;
+
+            if (!inputValid) {
+                var errorBar = CreateErrorBar("out of range");
+                Grid.SetColumn(errorBar, 1);
+                inputGrid.Children.Add(errorBar);
             } else {
-                long maxOutput;
-                if (scaleShift >= 0) {
-                    maxOutput = Math.Min((windowSize - 1) >> scaleShift, targetMax - 1);
-                } else {
-                    maxOutput = Math.Min(((long)windowSize - 1) << (-scaleShift), targetMax - 1);
-                }
-                var outEndFrac = (double)(maxOutput + 1) / targetMax;
-
-                AddCell(grid, row, 1, CreateRangeLabel($"0–{maxOutput}", Brushes.Gray));
-                AddBar(grid, row, Brushes.MediumSeaGreen, 0, outEndFrac);
+                // Show mapped portion of source range: [inputStart, srcMax-1]
+                var startFrac = (double)inputStart / srcMax;
+                var bar = CreateBar(Brushes.CornflowerBlue, startFrac, 1.0, $"{inputStart}", $"{srcMax - 1}");
+                Grid.SetColumn(bar, 1);
+                inputGrid.Children.Add(bar);
             }
+
+            PreviewPanel.Children.Add(inputGrid);
+
+            // Output bar
+            var outputGrid = new Grid();
+            outputGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(55) });
+            outputGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+            var outputLabel = new TextBlock {
+                Text = $"{targetBits}-bit out",
+                FontSize = 11,
+                VerticalAlignment = VerticalAlignment.Center,
+                FontFamily = new FontFamily("Consolas"),
+            };
+            Grid.SetColumn(outputLabel, 0);
+            outputGrid.Children.Add(outputLabel);
+
+            if (!inputValid) {
+                var errorBar = CreateErrorBar("");
+                Grid.SetColumn(errorBar, 1);
+                outputGrid.Children.Add(errorBar);
+            } else {
+                // Compute actual output range from full source range
+                var sourceSpan = srcMax - 1 - inputStart;
+                long rawMax;
+                if (scaleShift >= 0) {
+                    rawMax = (sourceSpan >> scaleShift) + outputStart;
+                } else {
+                    rawMax = (sourceSpan << (-scaleShift)) + outputStart;
+                }
+                var outStart = (long)outputStart;
+                var clamped = rawMax > targetMax - 1;
+                var outEnd = Math.Min(rawMax, targetMax - 1);
+                var outStartFrac = (double)outStart / targetMax;
+                var outEndFrac = (double)(outEnd + 1) / targetMax;
+
+                var endText = clamped ? $"{outEnd}!" : $"{outEnd}";
+                var endBrush = clamped ? Brushes.Red : Brushes.White;
+                var bar = CreateBar(Brushes.MediumSeaGreen, outStartFrac, outEndFrac, $"{outStart}", endText, endBrush);
+                Grid.SetColumn(bar, 1);
+                outputGrid.Children.Add(bar);
+            }
+
+            PreviewPanel.Children.Add(outputGrid);
         }
 
         #endregion
 
         #region UI Helpers
 
-        private static TextBlock CreateLabel(string text) {
-            return new TextBlock {
-                Text = text,
-                FontSize = 11,
-                VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(0, 0, 4, 0),
-            };
-        }
-
-        private static TextBlock CreateRangeLabel(string text, Brush foreground) {
-            return new TextBlock {
-                Text = text,
-                Foreground = foreground,
-                FontSize = 11,
-                VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(0, 0, 4, 0),
-            };
-        }
-
-        private static void AddCell(Grid grid, int row, int col, UIElement element) {
-            Grid.SetRow(element, row);
-            Grid.SetColumn(element, col);
-            grid.Children.Add(element);
-        }
-
-        private static void AddBar(Grid grid, int row, Brush highlightBrush, double startFrac, double endFrac) {
+        private static Border CreateBar(Brush highlightBrush, double startFrac, double endFrac, string startText, string endText, Brush? endTextBrush = null) {
             var innerGrid = new Grid {
                 Height = BarHeight,
                 Background = Brushes.LightGray,
@@ -185,25 +175,50 @@ namespace OpenSense.WPF.Components.HM {
             };
             innerGrid.Children.Add(rect);
 
+            var textPanel = new DockPanel {
+                HorizontalAlignment = HorizontalAlignment.Left,
+            };
+            var leftText = new TextBlock {
+                Text = startText,
+                FontSize = 10,
+                FontFamily = new FontFamily("Consolas"),
+                Foreground = Brushes.White,
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(2, 0, 4, 0),
+            };
+            var rightText = new TextBlock {
+                Text = endText,
+                FontSize = 10,
+                FontFamily = new FontFamily("Consolas"),
+                Foreground = endTextBrush ?? Brushes.White,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Margin = new Thickness(4, 0, 2, 0),
+            };
+            DockPanel.SetDock(leftText, Dock.Left);
+            DockPanel.SetDock(rightText, Dock.Right);
+            textPanel.Children.Add(leftText);
+            textPanel.Children.Add(rightText);
+            innerGrid.Children.Add(textPanel);
+
             innerGrid.SizeChanged += (_, args) => {
                 var totalWidth = args.NewSize.Width;
-                rect.Width = Math.Max((endFrac - startFrac) * totalWidth, 0);
+                var highlightWidth = Math.Max((endFrac - startFrac) * totalWidth, 0);
+                rect.Width = highlightWidth;
                 rect.Margin = new Thickness(startFrac * totalWidth, 0, 0, 0);
+                textPanel.Width = highlightWidth;
+                textPanel.Margin = new Thickness(startFrac * totalWidth, 0, 0, 0);
             };
 
-            var bar = new Border {
+            return new Border {
                 BorderBrush = Brushes.DarkGray,
                 BorderThickness = new Thickness(1),
                 VerticalAlignment = VerticalAlignment.Center,
                 Child = innerGrid,
             };
-
-            Grid.SetRow(bar, row);
-            Grid.SetColumn(bar, 2);
-            grid.Children.Add(bar);
         }
 
-        private static void AddBarWithError(Grid grid, int row, string reason) {
+        private static Border CreateErrorBar(string reason) {
             var innerGrid = new Grid {
                 Height = BarHeight,
                 Background = Brushes.LightGray,
@@ -219,16 +234,12 @@ namespace OpenSense.WPF.Components.HM {
                 });
             }
 
-            var bar = new Border {
+            return new Border {
                 BorderBrush = Brushes.DarkGray,
                 BorderThickness = new Thickness(1),
                 VerticalAlignment = VerticalAlignment.Center,
                 Child = innerGrid,
             };
-
-            Grid.SetRow(bar, row);
-            Grid.SetColumn(bar, 2);
-            grid.Children.Add(bar);
         }
 
         #endregion

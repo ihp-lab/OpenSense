@@ -40,10 +40,13 @@
             <!-- 4: Scale Shift -->
             <RowDefinition
                 Height="auto" />
-            <!-- 5: Window Start -->
+            <!-- 5: Input Start -->
             <RowDefinition
                 Height="auto" />
-            <!-- 6: Mapping Preview -->
+            <!-- 6: Output Start -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 7: Mapping Preview -->
             <RowDefinition
                 Height="auto" />
         </Grid.RowDefinitions>
@@ -235,10 +238,10 @@
                 Margin="4,0,0,0" />
         </Grid>
 
-        <!-- Row 5: Window Start (Slider + TextBox) -->
+        <!-- Row 5: Input Start (Slider + TextBox) -->
         <TextBlock
             Grid.Row="5"
-            Grid.Column="0">Window Start</TextBlock>
+            Grid.Column="0">Input Start</TextBlock>
         <Grid
             Grid.Row="5"
             Grid.Column="1">
@@ -249,27 +252,56 @@
                     Width="50" />
             </Grid.ColumnDefinitions>
             <Slider
-                x:Name="WindowStartSlider"
+                x:Name="InputStartSlider"
                 Grid.Column="0"
                 VerticalAlignment="Center"
                 IsSnapToTickEnabled="True"
-                Value="{Binding BitDepthMappingWindow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                Value="{Binding BitDepthMappingInputStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 ToolTip="Starting position of the mapping window in the source value range." />
             <TextBox
                 Grid.Column="1"
-                Text="{Binding BitDepthMappingWindow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                Text="{Binding BitDepthMappingInputStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 VerticalAlignment="Center"
                 Margin="4,0,0,0" />
         </Grid>
 
-        <!-- Row 6: Mapping Preview -->
-        <local:BitDepthMappingPreview
+        <!-- Row 6: Output Start (Slider + TextBox) -->
+        <TextBlock
             Grid.Row="6"
+            Grid.Column="0">Output Start</TextBlock>
+        <Grid
+            Grid.Row="6"
+            Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="*" />
+                <ColumnDefinition
+                    Width="50" />
+            </Grid.ColumnDefinitions>
+            <Slider
+                x:Name="OutputStartSlider"
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                IsSnapToTickEnabled="True"
+                TickFrequency="1"
+                Value="{Binding BitDepthMappingOutputStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                ToolTip="Starting position of the mapped values in the target value range." />
+            <TextBox
+                Grid.Column="1"
+                Text="{Binding BitDepthMappingOutputStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                VerticalAlignment="Center"
+                Margin="4,0,0,0" />
+        </Grid>
+
+        <!-- Row 7: Mapping Preview -->
+        <local:BitDepthMappingPreview
+            Grid.Row="7"
             Grid.Column="0"
             Grid.ColumnSpan="2"
             TargetBitDepth="{Binding OutputBitDepth}"
             ScaleShift="{Binding BitDepthMappingScaleShift}"
-            WindowStart="{Binding BitDepthMappingWindow}"
+            InputStart="{Binding BitDepthMappingInputStart}"
+            OutputStart="{Binding BitDepthMappingOutputStart}"
             SourceBitDepth="{Binding InputBitDepth}" />
     </Grid>
 </UserControl>

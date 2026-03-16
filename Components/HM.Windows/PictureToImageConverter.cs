@@ -68,11 +68,18 @@ namespace OpenSense.Components.HM {
             set => SetProperty(ref bitDepthMappingScaleShift, value);
         }
 
-        private int bitDepthMappingWindow;
+        private int bitDepthMappingInputStart;
 
-        public int BitDepthMappingWindow {
-            get => bitDepthMappingWindow;
-            set => SetProperty(ref bitDepthMappingWindow, value);
+        public int BitDepthMappingInputStart {
+            get => bitDepthMappingInputStart;
+            set => SetProperty(ref bitDepthMappingInputStart, value);
+        }
+
+        private int bitDepthMappingOutputStart;
+
+        public int BitDepthMappingOutputStart {
+            get => bitDepthMappingOutputStart;
+            set => SetProperty(ref bitDepthMappingOutputStart, value);
         }
         #endregion
 
@@ -96,7 +103,7 @@ namespace OpenSense.Components.HM {
 
             var targetBitDepth = PixelFormatInfo.GetBitDepth(OutputPixelFormat);
             if (BitDepthMappingEnabled) {
-                BitDepthMappingInfo.ValidateParameters(actualBitDepth, targetBitDepth, BitDepthMappingScaleShift, BitDepthMappingWindow);
+                BitDepthMappingInfo.ValidateParameters(actualBitDepth, targetBitDepth, BitDepthMappingScaleShift, BitDepthMappingInputStart, BitDepthMappingOutputStart);
             } else if (actualBitDepth != targetBitDepth) {
                 throw new InvalidOperationException($"Source bit depth is {actualBitDepth} but output pixel format {OutputPixelFormat} requires {targetBitDepth}-bit. Enable bit depth mapping to convert.");
             }
@@ -150,7 +157,7 @@ namespace OpenSense.Components.HM {
                     if (BitDepthMappingEnabled) {
                         var (yPtr, yW, yH, yStride) = source.GetPlaneAccess(ComponentId.Y);
                         var yPels = new ReadOnlySpan<int>(yPtr.ToPointer(), yStride * yH);
-                        BitDepthMapper.MapPlaneToBytes(yPels, yW, yH, yStride, imageData, targetBitDepth, BitDepthMappingScaleShift, BitDepthMappingWindow);
+                        BitDepthMapper.MapPlaneToBytes(yPels, yW, yH, yStride, imageData, targetBitDepth, BitDepthMappingScaleShift, BitDepthMappingInputStart, BitDepthMappingOutputStart);
                     } else {
                         source.WritePlaneToBytes(ComponentId.Y, imageData);
                     }
@@ -162,7 +169,7 @@ namespace OpenSense.Components.HM {
                     if (BitDepthMappingEnabled) {
                         var (yPtr, yW, yH, yStride) = source.GetPlaneAccess(ComponentId.Y);
                         var yPels = new ReadOnlySpan<int>(yPtr.ToPointer(), yStride * yH);
-                        BitDepthMapper.MapPlaneToUshorts(yPels, yW, yH, yStride, imageU16, targetBitDepth, BitDepthMappingScaleShift, BitDepthMappingWindow);
+                        BitDepthMapper.MapPlaneToUshorts(yPels, yW, yH, yStride, imageU16, targetBitDepth, BitDepthMappingScaleShift, BitDepthMappingInputStart, BitDepthMappingOutputStart);
                     } else {
                         source.WritePlaneToUshorts(ComponentId.Y, imageU16);
                     }
@@ -222,7 +229,7 @@ namespace OpenSense.Components.HM {
             var (ptr, w, h, stride) = source.GetPlaneAccess(componentId);
             var pels = new ReadOnlySpan<int>(ptr.ToPointer(), stride * h);
             var owner = MemoryPool<ushort>.Shared.Rent(pixelCount);
-            BitDepthMapper.MapPlaneToUshorts(pels, w, h, stride, owner.Memory.Span[..pixelCount], targetBitDepth, BitDepthMappingScaleShift, BitDepthMappingWindow);
+            BitDepthMapper.MapPlaneToUshorts(pels, w, h, stride, owner.Memory.Span[..pixelCount], targetBitDepth, BitDepthMappingScaleShift, BitDepthMappingInputStart, BitDepthMappingOutputStart);
             return owner;
         }
         #endregion

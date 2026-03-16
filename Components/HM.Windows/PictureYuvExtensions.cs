@@ -28,11 +28,11 @@ namespace OpenSense.Components.HM {
         /// <summary>
         /// Copy a plane to another PictureYuv then apply bit depth mapping in-place on the destination.
         /// </summary>
-        public static unsafe void CopyAndMapPlaneTo(this PictureYuv source, ComponentId srcComp, PictureYuv dest, ComponentId dstComp, int targetBits, int scaleShift, int windowStart) {
+        public static unsafe void CopyAndMapPlaneTo(this PictureYuv source, ComponentId srcComp, PictureYuv dest, ComponentId dstComp, int targetBits, int scaleShift, int inputStart, int outputStart) {
             source.CopyPlaneTo(srcComp, dest, dstComp);
             var (dstPtr, dstW, dstH, dstStride) = dest.GetPlaneAccess(dstComp);
             var dstPels = new Span<int>(dstPtr.ToPointer(), dstStride * dstH);
-            BitDepthMapper.MapPlane(dstPels, dstW, dstH, dstStride, targetBits, scaleShift, windowStart);
+            BitDepthMapper.MapPlane(dstPels, dstW, dstH, dstStride, targetBits, scaleShift, inputStart, outputStart);
         }
 
         #endregion

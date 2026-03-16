@@ -58,11 +58,18 @@ namespace OpenSense.Components.HM {
             set => SetProperty(ref bitDepthMappingScaleShift, value);
         }
 
-        private int bitDepthMappingWindow;
+        private int bitDepthMappingInputStart;
 
-        public int BitDepthMappingWindow {
-            get => bitDepthMappingWindow;
-            set => SetProperty(ref bitDepthMappingWindow, value);
+        public int BitDepthMappingInputStart {
+            get => bitDepthMappingInputStart;
+            set => SetProperty(ref bitDepthMappingInputStart, value);
+        }
+
+        private int bitDepthMappingOutputStart;
+
+        public int BitDepthMappingOutputStart {
+            get => bitDepthMappingOutputStart;
+            set => SetProperty(ref bitDepthMappingOutputStart, value);
         }
         #endregion
 
@@ -182,8 +189,8 @@ namespace OpenSense.Components.HM {
             }
 
             // Apply bit depth mapping only when actual transformation is needed
-            if (BitDepthMappingScaleShift != 0 || BitDepthMappingWindow != 0 || bitDepth != 16) {
-                BitDepthMapper.MapPlane(yPels, yW, yH, yStride, bitDepth, BitDepthMappingScaleShift, BitDepthMappingWindow);
+            if (BitDepthMappingScaleShift != 0 || BitDepthMappingInputStart != 0 || bitDepth != 16) {
+                BitDepthMapper.MapPlane(yPels, yW, yH, yStride, bitDepth, BitDepthMappingScaleShift, BitDepthMappingInputStart, BitDepthMappingOutputStart);
             }
 
             if (chromaFmt != ChromaFormat.Chroma400) {

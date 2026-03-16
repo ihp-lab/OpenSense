@@ -3,19 +3,16 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace OpenSense.Components.HM {
-    // TODO: When upgrading .NET version, check for newer SIMD/Intrinsics APIs that may offer better performance.
-
     /// <summary>
     /// Bidirectional integer bit depth mapping.
-    /// Maps a window of the source value range to the target range using shift (no floating point).
+    /// Maps a window of the source value range to the target range using shift and offset.
     /// </summary>
     /// <remarks>
-    /// Unified model:
-    ///   scaleShift &gt; 0: result = clamp((source - windowStart) >> scaleShift, 0, maxTarget)   [downscale]
-    ///   scaleShift &lt; 0: result = clamp((source - windowStart) &lt;&lt; -scaleShift, 0, maxTarget) [upscale]
-    ///   scaleShift = 0: result = clamp(source - windowStart, 0, maxTarget)                     [1:1 + clamp]
-    ///
-    /// Window size = 2^(targetBits + scaleShift).
+    /// Model:
+    ///   scaleShift &gt; 0: mapped = (source - inputStart) >> scaleShift   [downscale]
+    ///   scaleShift &lt; 0: mapped = (source - inputStart) &lt;&lt; -scaleShift [upscale]
+    ///   scaleShift = 0: mapped = source - inputStart                     [1:1]
+    ///   result = clamp(mapped + outputStart, 0, maxTarget)
     /// </remarks>
     internal static class BitDepthMapper {
 
@@ -24,20 +21,20 @@ namespace OpenSense.Components.HM {
         /// <summary>
         /// In-place mapping on Pel (int) buffer with stride.
         /// </summary>
-        public static void MapPlane(Span<int> pels, int width, int height, int stride, int targetBits, int scaleShift, int windowStart) {
+        public static void MapPlane(Span<int> pels, int width, int height, int stride, int targetBits, int scaleShift, int inputStart, int outputStart) {
             var maxVal = (1 << targetBits) - 1;
 
             if (scaleShift >= 0) {
-                MapPlaneDown(pels, width, height, stride, scaleShift, windowStart, maxVal);
+                MapPlaneDown(pels, width, height, stride, scaleShift, inputStart, outputStart, maxVal);
             } else {
-                MapPlaneUp(pels, width, height, stride, -scaleShift, windowStart, maxVal);
+                MapPlaneUp(pels, width, height, stride, -scaleShift, inputStart, outputStart, maxVal);
             }
         }
 
         /// <summary>
         /// Fused mapping from Pel (int) buffer to byte destination.
         /// </summary>
-        public static void MapPlaneToBytes(ReadOnlySpan<int> pels, int width, int height, int stride, Span<byte> dest, int targetBits, int scaleShift, int windowStart) {
+        public static void MapPlaneToBytes(ReadOnlySpan<int> pels, int width, int height, int stride, Span<byte> dest, int targetBits, int scaleShift, int inputStart, int outputStart) {
             var maxVal = (1 << targetBits) - 1;
             var maxByte = (byte)Math.Min(maxVal, 255);
 
@@ -46,7 +43,7 @@ namespace OpenSense.Components.HM {
                 for (var y = 0; y < height; y++) {
                     var row = pels.Slice(y * stride, width);
                     for (var x = 0; x < width; x++) {
-                        dest[destOffset++] = MapValueDownToByte(row[x], windowStart, scaleShift, maxByte);
+                        dest[destOffset++] = MapValueDownToByte(row[x], inputStart, scaleShift, outputStart, maxByte);
                     }
                 }
             } else {
@@ -54,7 +51,7 @@ namespace OpenSense.Components.HM {
                 for (var y = 0; y < height; y++) {
                     var row = pels.Slice(y * stride, width);
                     for (var x = 0; x < width; x++) {
-                        dest[destOffset++] = MapValueUpToByte(row[x], windowStart, leftShift, maxByte);
+                        dest[destOffset++] = MapValueUpToByte(row[x], inputStart, leftShift, outputStart, maxByte);
                     }
                 }
             }
@@ -63,7 +60,7 @@ namespace OpenSense.Components.HM {
         /// <summary>
         /// Fused mapping from Pel (int) buffer to ushort destination.
         /// </summary>
-        public static void MapPlaneToUshorts(ReadOnlySpan<int> pels, int width, int height, int stride, Span<ushort> dest, int targetBits, int scaleShift, int windowStart) {
+        public static void MapPlaneToUshorts(ReadOnlySpan<int> pels, int width, int height, int stride, Span<ushort> dest, int targetBits, int scaleShift, int inputStart, int outputStart) {
             var maxVal = (1 << targetBits) - 1;
 
             var destOffset = 0;
@@ -71,7 +68,7 @@ namespace OpenSense.Components.HM {
                 for (var y = 0; y < height; y++) {
                     var row = pels.Slice(y * stride, width);
                     for (var x = 0; x < width; x++) {
-                        dest[destOffset++] = (ushort)MapValueDown(row[x], windowStart, scaleShift, maxVal);
+                        dest[destOffset++] = (ushort)MapValueDown(row[x], inputStart, scaleShift, outputStart, maxVal);
                     }
                 }
             } else {
@@ -79,7 +76,7 @@ namespace OpenSense.Components.HM {
                 for (var y = 0; y < height; y++) {
                     var row = pels.Slice(y * stride, width);
                     for (var x = 0; x < width; x++) {
-                        dest[destOffset++] = (ushort)MapValueUp(row[x], windowStart, leftShift, maxVal);
+                        dest[destOffset++] = (ushort)MapValueUp(row[x], inputStart, leftShift, outputStart, maxVal);
                     }
                 }
             }
@@ -89,16 +86,17 @@ namespace OpenSense.Components.HM {
 
         #region Downscale (scaleShift >= 0, right-shift)
 
-        private static void MapPlaneDown(Span<int> pels, int width, int height, int stride, int shift, int windowStart, int maxVal) {
+        private static void MapPlaneDown(Span<int> pels, int width, int height, int stride, int shift, int inputStart, int outputStart, int maxVal) {
             var vecSize = Vector<int>.Count;
             for (var y = 0; y < height; y++) {
                 var row = pels.Slice(y * stride, width);
                 if (row.Length < vecSize) {
                     for (var x = 0; x < row.Length; x++) {
-                        row[x] = MapValueDown(row[x], windowStart, shift, maxVal);
+                        row[x] = MapValueDown(row[x], inputStart, shift, outputStart, maxVal);
                     }
                 } else {
-                    var vecWinStart = new Vector<int>(windowStart);
+                    var vecInputStart = new Vector<int>(inputStart);
+                    var vecOutputStart = new Vector<int>(outputStart);
                     var vecMax = new Vector<int>(maxVal);
                     var vecZero = Vector<int>.Zero;
 
@@ -107,54 +105,57 @@ namespace OpenSense.Components.HM {
                     for (; x < alignedLen; x += vecSize) {
                         var slice = row.Slice(x, vecSize);
                         var vec = new Vector<int>(slice);
-                        var sub = Vector.Subtract(vec, vecWinStart);
-                        var underflow = Vector.LessThan(vec, vecWinStart);
+                        var sub = Vector.Subtract(vec, vecInputStart);
+                        var underflow = Vector.LessThan(vec, vecInputStart);
                         sub = Vector.ConditionalSelect(underflow, vecZero, sub);
                         if (shift > 0) {
                             sub = Vector.ShiftRightLogical(sub, shift);
                         }
+                        sub = Vector.Add(sub, vecOutputStart);
+                        sub = Vector.Max(sub, vecZero);
                         sub = Vector.Min(sub, vecMax);
                         sub.CopyTo(slice);
                     }
                     for (; x < row.Length; x++) {
-                        row[x] = MapValueDown(row[x], windowStart, shift, maxVal);
+                        row[x] = MapValueDown(row[x], inputStart, shift, outputStart, maxVal);
                     }
                 }
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static int MapValueDown(int value, int windowStart, int shift, int maxVal) {
-            if (value < windowStart) {
-                return 0;
+        private static int MapValueDown(int value, int inputStart, int shift, int outputStart, int maxVal) {
+            if (value < inputStart) {
+                return Math.Clamp(outputStart, 0, maxVal);
             }
-            var mapped = (value - windowStart) >> shift;
-            return mapped > maxVal ? maxVal : mapped;
+            var mapped = ((value - inputStart) >> shift) + outputStart;
+            return Math.Clamp(mapped, 0, maxVal);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static byte MapValueDownToByte(int value, int windowStart, int shift, byte maxVal) {
-            if (value < windowStart) {
-                return 0;
+        private static byte MapValueDownToByte(int value, int inputStart, int shift, int outputStart, byte maxVal) {
+            if (value < inputStart) {
+                return (byte)Math.Clamp(outputStart, 0, maxVal);
             }
-            var mapped = (value - windowStart) >> shift;
-            return mapped > maxVal ? maxVal : (byte)mapped;
+            var mapped = ((value - inputStart) >> shift) + outputStart;
+            return (byte)Math.Clamp(mapped, 0, maxVal);
         }
 
         #endregion
 
         #region Upscale (scaleShift < 0, left-shift)
 
-        private static void MapPlaneUp(Span<int> pels, int width, int height, int stride, int leftShift, int windowStart, int maxVal) {
+        private static void MapPlaneUp(Span<int> pels, int width, int height, int stride, int leftShift, int inputStart, int outputStart, int maxVal) {
             var vecSize = Vector<int>.Count;
             for (var y = 0; y < height; y++) {
                 var row = pels.Slice(y * stride, width);
                 if (row.Length < vecSize) {
                     for (var x = 0; x < row.Length; x++) {
-                        row[x] = MapValueUp(row[x], windowStart, leftShift, maxVal);
+                        row[x] = MapValueUp(row[x], inputStart, leftShift, outputStart, maxVal);
                     }
                 } else {
-                    var vecWinStart = new Vector<int>(windowStart);
+                    var vecInputStart = new Vector<int>(inputStart);
+                    var vecOutputStart = new Vector<int>(outputStart);
                     var vecMax = new Vector<int>(maxVal);
                     var vecZero = Vector<int>.Zero;
 
@@ -163,36 +164,38 @@ namespace OpenSense.Components.HM {
                     for (; x < alignedLen; x += vecSize) {
                         var slice = row.Slice(x, vecSize);
                         var vec = new Vector<int>(slice);
-                        var sub = Vector.Subtract(vec, vecWinStart);
-                        var underflow = Vector.LessThan(vec, vecWinStart);
+                        var sub = Vector.Subtract(vec, vecInputStart);
+                        var underflow = Vector.LessThan(vec, vecInputStart);
                         sub = Vector.ConditionalSelect(underflow, vecZero, sub);
                         sub = Vector.ShiftLeft(sub, leftShift);
+                        sub = Vector.Add(sub, vecOutputStart);
+                        sub = Vector.Max(sub, vecZero);
                         sub = Vector.Min(sub, vecMax);
                         sub.CopyTo(slice);
                     }
                     for (; x < row.Length; x++) {
-                        row[x] = MapValueUp(row[x], windowStart, leftShift, maxVal);
+                        row[x] = MapValueUp(row[x], inputStart, leftShift, outputStart, maxVal);
                     }
                 }
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static int MapValueUp(int value, int windowStart, int leftShift, int maxVal) {
-            if (value < windowStart) {
-                return 0;
+        private static int MapValueUp(int value, int inputStart, int leftShift, int outputStart, int maxVal) {
+            if (value < inputStart) {
+                return Math.Clamp(outputStart, 0, maxVal);
             }
-            var mapped = (value - windowStart) << leftShift;
-            return mapped > maxVal ? maxVal : mapped;
+            var mapped = ((value - inputStart) << leftShift) + outputStart;
+            return Math.Clamp(mapped, 0, maxVal);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static byte MapValueUpToByte(int value, int windowStart, int leftShift, byte maxVal) {
-            if (value < windowStart) {
-                return 0;
+        private static byte MapValueUpToByte(int value, int inputStart, int leftShift, int outputStart, byte maxVal) {
+            if (value < inputStart) {
+                return (byte)Math.Clamp(outputStart, 0, maxVal);
             }
-            var mapped = (value - windowStart) << leftShift;
-            return mapped > maxVal ? maxVal : (byte)mapped;
+            var mapped = ((value - inputStart) << leftShift) + outputStart;
+            return (byte)Math.Clamp(mapped, 0, maxVal);
         }
 
         #endregion
