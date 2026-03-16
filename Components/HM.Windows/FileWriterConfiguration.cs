@@ -21,6 +21,12 @@ namespace OpenSense.Components.HM {
             get => timestampFilename;
             set => SetProperty(ref timestampFilename, value);
         }
+        private bool abortOnStop;
+
+        public bool AbortOnStop {
+            get => abortOnStop;
+            set => SetProperty(ref abortOnStop, value);
+        }
         #endregion
 
         #region Input Validation
@@ -69,6 +75,7 @@ namespace OpenSense.Components.HM {
         protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new FileWriter(pipeline) {
             Filename = Filename,
             TimestampFilename = TimestampFilename,
+            AbortOnStop = AbortOnStop,
             InputBitDepth = InputBitDepth,
             InputChromaFormat = InputChromaFormat,
             InternalBitDepth = InternalBitDepth,

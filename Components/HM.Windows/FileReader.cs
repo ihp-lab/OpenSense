@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -51,6 +51,13 @@ namespace OpenSense.Components.HM {
             set => SetProperty(ref manualStartTime, value);
         }
         #endregion
+
+        private bool abortOnStop;
+
+        public bool AbortOnStop {
+            get => abortOnStop;
+            set => SetProperty(ref abortOnStop, value);
+        }
 
         private ILogger? logger;
 
@@ -133,7 +140,9 @@ namespace OpenSense.Components.HM {
         /// blocked in EnsureFrameBuffered, preventing the pipeline from completing.
         /// </summary>
         void ISourceComponent.Stop(DateTime finalOriginatingTime, Action notifyCompleted) {
-            _cts.Cancel();
+            if (AbortOnStop) {
+                _cts.Cancel();
+            }
             Stop(finalOriginatingTime, notifyCompleted);
         }
 
@@ -270,7 +279,6 @@ namespace OpenSense.Components.HM {
             }
             disposed = true;
 
-            _cts.Cancel();
             _cts.Dispose();
 
             while (_frameBuffer.Count > 0) {

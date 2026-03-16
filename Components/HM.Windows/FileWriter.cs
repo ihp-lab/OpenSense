@@ -6,15 +6,17 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Threading;
 using HMInterop;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
+using Microsoft.Psi.Components;
 using Minimp4Interop;
 
 namespace OpenSense.Components.HM {
-    public sealed class FileWriter : IConsumer<Shared<PictureSnapshot>>, INotifyPropertyChanged, IDisposable {
+    public sealed class FileWriter : IConsumer<Shared<PictureSnapshot>>, ISourceComponent, INotifyPropertyChanged, IDisposable {
 
-        private readonly object _lock = new();
+        private readonly CancellationTokenSource _cts = new();
 
         private readonly Queue<DateTime> _originatingTimeQueue = new();
 
@@ -40,6 +42,13 @@ namespace OpenSense.Components.HM {
         public bool TimestampFilename {
             get => timestampFilename;
             set => SetProperty(ref timestampFilename, value);
+        }
+
+        private bool abortOnStop;
+
+        public bool AbortOnStop {
+            get => abortOnStop;
+            set => SetProperty(ref abortOnStop, value);
         }
 
         /// <summary>
@@ -84,40 +93,43 @@ namespace OpenSense.Components.HM {
 
         #region Pipeline Event Handlers
         private void OnPipelineCompleted(object? sender, PipelineCompletedEventArgs args) {
-            lock (_lock) {
-                if (context is null) {
-                    return;
-                }
-
-                FlushPendingNals();
-                _encodedUnits.Clear();
-                context.Encoder.Flush(_encodedUnits);
-                BufferEncoderResults(_encodedUnits);
-                FlushPendingNals();
-                FlushRemainingNals();
-
-                context.Dispose();
-                context = null;
+            if (context is null) {
+                return;
             }
+
+            FlushPendingNals();
+            _encodedUnits.Clear();
+            context.Encoder.Flush(_encodedUnits);
+            BufferEncoderResults(_encodedUnits);
+            FlushPendingNals();
+            FlushRemainingNals();
+
+            context.Dispose();
+            context = null;
+        }
+        #endregion
+
+        #region ISourceComponent
+        void ISourceComponent.Start(Action<DateTime> notifyCompletionTime) {
+            notifyCompletionTime(DateTime.MaxValue);
+        }
+
+        void ISourceComponent.Stop(DateTime finalOriginatingTime, Action notifyCompleted) {
+            if (AbortOnStop) {
+                _cts.Cancel();
+            }
+            notifyCompleted();
         }
         #endregion
 
         private void Process(Shared<PictureSnapshot> picture, Envelope envelope) {
-            var picYuv = picture.Resource.PicYuv;
-            var chromaFmt = picYuv.ChromaFormat;
-            var width = picYuv.Width;
-            var height = picYuv.Height;
-            var actualBitDepth = picture.Resource.Sps.BitDepths.Luma;
-            lock (_lock) {
-                if (disposed) {
-                    return;
-                }
-                EnsureContext(width, height, chromaFmt, actualBitDepth, envelope.OriginatingTime);
-                _originatingTimeQueue.Enqueue(envelope.OriginatingTime);
-
-                var ptsInTicks = (envelope.OriginatingTime - context.StartTime).Ticks;
-                EncodeAndWrite(picYuv, ptsInTicks);
+            if (_cts.IsCancellationRequested) {
+                return;
             }
+            var picYuv = picture.Resource.PicYuv;
+            EnsureContext(picYuv.Width, picYuv.Height, picYuv.ChromaFormat, picture.Resource.Sps.BitDepths.Luma, envelope.OriginatingTime);
+            _originatingTimeQueue.Enqueue(envelope.OriginatingTime);
+            EncodeAndWrite(picYuv, (envelope.OriginatingTime - context.StartTime).Ticks);
         }
 
         private void EncodeAndWrite(PictureYuv picture, long ptsInTicks) {
@@ -230,15 +242,15 @@ namespace OpenSense.Components.HM {
         private bool disposed;
 
         public void Dispose() {
-            lock (_lock) {
-                if (disposed) {
-                    return;
-                }
-                disposed = true;
-
-                context?.Dispose();
-                context = null;
+            if (disposed) {
+                return;
             }
+            disposed = true;
+
+            _cts.Dispose();
+
+            context?.Dispose();
+            context = null;
         }
         #endregion
 

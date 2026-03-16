@@ -30,6 +30,9 @@
             <!-- 2: Manual Start Time -->
             <RowDefinition
                 Height="auto" />
+            <!-- 3: Abort On Stop -->
+            <RowDefinition
+                Height="auto" />
         </Grid.RowDefinitions>
 
         <!-- Row 0: Filename -->
@@ -112,5 +115,15 @@
                 </Style>
             </TextBox.Style>
         </TextBox>
+
+        <!-- Row 3: Abort On Stop -->
+        <TextBlock
+            Grid.Row="3"
+            Grid.Column="0">Abort On Stop</TextBlock>
+        <CheckBox
+            Grid.Row="3"
+            Grid.Column="1"
+            IsChecked="{Binding AbortOnStop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="When enabled, immediately stop decoding on pipeline stop instead of processing remaining samples." />
     </Grid>
 </UserControl>
