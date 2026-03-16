@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using System.Buffers;
 using HMInterop;
 
 namespace OpenSense.Components.HM {
@@ -69,19 +70,22 @@ namespace OpenSense.Components.HM {
         }
 
         /// <summary>
-        /// Read a single plane as a packed ushort array (strip stride, narrow Pel to ushort).
+        /// Read a single plane as a pooled ushort buffer (strip stride, narrow Pel to ushort).
+        /// The caller is responsible for disposing the returned IMemoryOwner to return the buffer to the pool.
+        /// Note: the returned Memory may be longer than w * h; use only the first w * h elements.
         /// </summary>
-        public static ushort[] ReadPlanePacked(this PictureYuv source, ComponentId componentId) {
+        public static IMemoryOwner<ushort> ReadPlanePacked(this PictureYuv source, ComponentId componentId) {
             var (_, w, h, _) = source.GetPlaneAccess(componentId);
-            var result = new ushort[w * h];
-            source.WritePlaneToUshorts(componentId, result);
-            return result;
+            var owner = MemoryPool<ushort>.Shared.Rent(w * h);
+            source.WritePlaneToUshorts(componentId, owner.Memory.Span[..(w * h)]);
+            return owner;
         }
 
         /// <summary>
-        /// Read Y/U/V planes as packed ushort arrays.
+        /// Read Y/U/V planes as pooled ushort buffers.
+        /// The caller is responsible for disposing the returned IMemoryOwner instances.
         /// </summary>
-        public static void ReadAllPlanesPacked(this PictureYuv source, out ushort[] y, out ushort[] u, out ushort[] v) {
+        public static void ReadAllPlanesPacked(this PictureYuv source, out IMemoryOwner<ushort> y, out IMemoryOwner<ushort> u, out IMemoryOwner<ushort> v) {
             y = source.ReadPlanePacked(ComponentId.Y);
             u = source.ReadPlanePacked(ComponentId.Cb);
             v = source.ReadPlanePacked(ComponentId.Cr);

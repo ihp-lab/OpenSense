@@ -27,10 +27,9 @@ namespace HMInterop {
         /// Decoded pictures (0 or more due to B-frame reordering) are appended to output.
         /// PictureYuv buffers are obtained from PictureYuvPool.
         /// </summary>
-        /// <param name="nalData">Buffer containing NAL unit data</param>
-        /// <param name="length">Number of valid bytes in nalData (use -1 for nalData.Length)</param>
+        /// <param name="nalData">Memory containing NAL unit data</param>
         /// <param name="output">List to append decoded pictures to</param>
-        void FeedNal([NotNull] cli::array<Byte>^ nalData, int length, [NotNull] System::Collections::Generic::IList<PictureSnapshot^>^ output);
+        void FeedNal(ReadOnlyMemory<Byte> nalData, [NotNull] System::Collections::Generic::IList<PictureSnapshot^>^ output);
 
         /// <summary>
         /// Signal end of stream, flush remaining B-frames.

@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Threading;
 using HMInterop;
 using Microsoft.Extensions.Logging;
@@ -20,7 +19,7 @@ namespace OpenSense.Components.HM {
 
         private readonly Queue<DateTime> _originatingTimeQueue = new();
 
-        private readonly Queue<(byte[] Data, long PtsTicks)> _pendingNals = new();
+        private readonly Queue<AccessUnitData> _pendingNals = new();
 
         private readonly List<AccessUnitData> _encodedUnits = new();
 
@@ -141,16 +140,13 @@ namespace OpenSense.Components.HM {
 
         private void BufferEncoderResults(IList<AccessUnitData> results) {
             foreach (var result in results) {
-                var data = new byte[result.Length];
-                Marshal.Copy(result.Data, data, 0, result.Length);
-                _pendingNals.Enqueue((data, result.PTS));
-                result.Dispose();
+                _pendingNals.Enqueue(result);
             }
         }
 
         private void FlushPendingNals() {
             while (_pendingNals.Count > 0 && _originatingTimeQueue.Count >= 2) {
-                var (nalData, ptsTicks) = _pendingNals.Dequeue();
+                var nal = _pendingNals.Dequeue();
                 var dequeuedTime = _originatingTimeQueue.Dequeue();
                 var nextTime = _originatingTimeQueue.Peek();
 
@@ -158,32 +154,32 @@ namespace OpenSense.Components.HM {
                 var duration90kHz = durationTicks > 0 ? (uint)(durationTicks * 9 / 1000) : 1u;
 
                 var dtsTicks = (dequeuedTime - context!.StartTime).Ticks;
-                var ctsOffset90kHz = (int)((ptsTicks - dtsTicks) * 9 / 1000);
+                var ctsOffset90kHz = (int)((nal.PTS - dtsTicks) * 9 / 1000);
 
+                using var handle = nal.Data.Pin();
                 unsafe {
-                    fixed (byte* ptr = nalData) {
-                        context.Writer.WriteNal(new IntPtr(ptr), nalData.Length, duration90kHz, ctsOffset90kHz);
-                    }
+                    context.Writer.WriteNal(new IntPtr(handle.Pointer), nal.Length, duration90kHz, ctsOffset90kHz);
                 }
+                nal.Dispose();
             }
         }
 
         private void FlushRemainingNals() {
             while (_pendingNals.Count > 0) {
-                var (nalData, ptsTicks) = _pendingNals.Dequeue();
+                var nal = _pendingNals.Dequeue();
                 long dtsTicks;
                 if (_originatingTimeQueue.Count > 0) {
                     dtsTicks = (_originatingTimeQueue.Dequeue() - context!.StartTime).Ticks;
                 } else {
-                    dtsTicks = ptsTicks;
+                    dtsTicks = nal.PTS;
                 }
-                var ctsOffset90kHz = (int)((ptsTicks - dtsTicks) * 9 / 1000);
+                var ctsOffset90kHz = (int)((nal.PTS - dtsTicks) * 9 / 1000);
 
+                using var handle = nal.Data.Pin();
                 unsafe {
-                    fixed (byte* ptr = nalData) {
-                        context!.Writer.WriteNal(new IntPtr(ptr), nalData.Length, 1, ctsOffset90kHz);
-                    }
+                    context!.Writer.WriteNal(new IntPtr(handle.Pointer), nal.Length, 1, ctsOffset90kHz);
                 }
+                nal.Dispose();
             }
         }
 
@@ -248,6 +244,10 @@ namespace OpenSense.Components.HM {
             disposed = true;
 
             _cts.Dispose();
+
+            while (_pendingNals.Count > 0) {
+                _pendingNals.Dequeue().Dispose();
+            }
 
             context?.Dispose();
             context = null;

@@ -214,23 +214,20 @@ namespace HMInterop {
     }
 
     void Decoder::FeedNal(
-        [NotNull] cli::array<Byte>^ nalData, int length,
+        ReadOnlyMemory<Byte> nalData,
         [NotNull] System::Collections::Generic::IList<PictureSnapshot^>^ output
     ) {
         ThrowIfDisposed();
-        ArgumentNullException::ThrowIfNull(nalData, "nalData");
         ArgumentNullException::ThrowIfNull(output, "output");
 
-        if (length < 0) {
-            length = nalData->Length;
-        }
+        auto length = nalData.Length;
         if (length == 0) {
             return;
         }
 
-        // Pin managed array and feed to native decoder
-        pin_ptr<Byte> pinnedData = &nalData[0];
-        auto nativeData = static_cast<const uint8_t*>(pinnedData);
+        // Pin managed memory and feed to native decoder
+        auto handle = nalData.Pin();
+        auto nativeData = static_cast<const uint8_t*>(handle.Pointer);
 
         auto pocLastDisplay = _pocLastDisplay;
 
@@ -246,6 +243,7 @@ namespace HMInterop {
             NativeReFeedNal(_decoder, nativeData, length, pocLastDisplay);
         }
 
+        delete safe_cast<IDisposable^>(handle);
         _pocLastDisplay = pocLastDisplay;
     }
 

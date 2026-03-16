@@ -121,7 +121,7 @@ namespace OpenSense.Components.HM {
                 if (parameterSet is null) {
                     break;
                 }
-                decoder.FeedNal(parameterSet, -1, initFrames);
+                decoder.FeedNal(parameterSet, initFrames);
             }
             foreach (var pic in initFrames) {
                 pic.Dispose();
@@ -243,18 +243,12 @@ namespace OpenSense.Components.HM {
                     break;
                 }
 
-                var nalData = ArrayPool<byte>.Shared.Rent(nalSize);
-                try {
-                    Buffer.BlockCopy(sampleData, offset, nalData, 0, nalSize);
-                    offset += nalSize;
+                _decodedFrames.Clear();
+                context!.Decoder.FeedNal(new ReadOnlyMemory<byte>(sampleData, offset, nalSize), _decodedFrames);
+                offset += nalSize;
 
-                    _decodedFrames.Clear();
-                    context!.Decoder.FeedNal(nalData, nalSize, _decodedFrames);
-                    foreach (var pic in _decodedFrames) {
-                        _frameBuffer.Enqueue((pic, _ptsQueue.Dequeue()));
-                    }
-                } finally {
-                    ArrayPool<byte>.Shared.Return(nalData);
+                foreach (var pic in _decodedFrames) {
+                    _frameBuffer.Enqueue((pic, _ptsQueue.Dequeue()));
                 }
             }
         }

@@ -1,36 +1,35 @@
 #pragma once
 
-#include <cstdint>
-
 using namespace System;
+using namespace System::Buffers;
 
 namespace HMInterop {
     /// <summary>
     /// Holds encoded NAL data from an access unit in Annex B format.
-    /// Owns native memory that is freed on disposal.
+    /// Backed by pooled memory from MemoryPool. Disposing returns the buffer to the pool.
     /// </summary>
     public ref class AccessUnitData : IDisposable {
     private:
-        uint8_t* _data;
+        IMemoryOwner<Byte>^ _owner;
         int _length;
         long long _pts;
         int _poc;
 
     internal:
         /// <summary>
-        /// Creates an AccessUnitData from a native buffer.
-        /// Takes ownership of the data pointer.
+        /// Creates an AccessUnitData from a pooled memory owner.
+        /// Takes ownership of the IMemoryOwner.
         /// </summary>
-        AccessUnitData(uint8_t* data, int length, long long pts, int poc);
+        AccessUnitData(IMemoryOwner<Byte>^ owner, int length, long long pts, int poc);
 
     public:
         /// <summary>
-        /// Gets the pointer to the Annex B encoded data
+        /// Gets the encoded data as a read-only memory slice of the exact length
         /// </summary>
-        property IntPtr Data {
-            IntPtr get() {
+        property ReadOnlyMemory<Byte> Data {
+            ReadOnlyMemory<Byte> get() {
                 ThrowIfDisposed();
-                return IntPtr(_data);
+                return _owner->Memory.Slice(0, _length);
             }
         }
 

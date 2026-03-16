@@ -2,18 +2,17 @@
 #include "AccessUnitData.h"
 
 using namespace System;
+using namespace System::Buffers;
 
 namespace HMInterop {
-    AccessUnitData::AccessUnitData(uint8_t* data, int length, long long pts, int poc)
-        : _data(data)
+    AccessUnitData::AccessUnitData(IMemoryOwner<Byte>^ owner, int length, long long pts, int poc)
+        : _owner(owner)
         , _length(length)
         , _pts(pts)
         , _poc(poc)
         , _disposed(false) {
 
-        if (!data) {
-            throw gcnew ArgumentNullException("data");
-        }
+        ArgumentNullException::ThrowIfNull(owner, "owner");
         if (length <= 0) {
             throw gcnew ArgumentOutOfRangeException("length", "Length must be positive");
         }
@@ -36,9 +35,9 @@ namespace HMInterop {
     }
 
     AccessUnitData::!AccessUnitData() {
-        if (_data) {
-            delete[] _data;
-            _data = nullptr;
+        if (_owner != nullptr) {
+            delete _owner;
+            _owner = nullptr;
         }
     }
 #pragma endregion

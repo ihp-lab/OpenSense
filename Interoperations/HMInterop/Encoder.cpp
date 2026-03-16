@@ -14,8 +14,7 @@
 
 // Native helper struct for encoded output
 struct NativeEncodedUnit {
-    uint8_t* data;
-    int length;
+    std::string data;
     int poc;
     long long pts;
     bool ptsFound;
@@ -164,13 +163,9 @@ static int NativeEncode(
         std::ostringstream stream;
         writeAnnexB(stream, *auIt);
         auto str = stream.str();
-        auto length = static_cast<int>(str.size());
 
-        if (length > 0) {
-            auto data = new uint8_t[length];
-            memcpy(data, str.data(), length);
-            units[count].data = data;
-            units[count].length = length;
+        if (!str.empty()) {
+            units[count].data = std::move(str);
             units[count].poc = poc;
             units[count].pts = framePts;
             units[count].ptsFound = found;
@@ -187,6 +182,7 @@ static int NativeEncode(
 #include "Encoder.h"
 
 using namespace System;
+using namespace System::Buffers;
 using namespace System::Collections::Generic;
 
 namespace HMInterop {
@@ -255,12 +251,19 @@ namespace HMInterop {
             &outUnits
         );
 
-        // Collect output
+        // Collect output: copy native data to pooled managed buffers
         for (auto i = 0; i < count; i++) {
             if (!outUnits[i].ptsFound) {
                 throw gcnew InvalidOperationException(System::String::Format("Could not find PTS for POC {0}", outUnits[i].poc));
             }
-            output->Add(gcnew AccessUnitData(outUnits[i].data, outUnits[i].length, outUnits[i].pts, outUnits[i].poc));
+            auto length = static_cast<int>(outUnits[i].data.size());
+            auto owner = MemoryPool<Byte>::Shared->Rent(length);
+            {
+                auto handle = owner->Memory.Pin();
+                memcpy(handle.Pointer, outUnits[i].data.data(), length);
+                delete safe_cast<IDisposable^>(handle);
+            }
+            output->Add(gcnew AccessUnitData(owner, length, outUnits[i].pts, outUnits[i].poc));
         }
         if (outUnits) {
             delete[] outUnits;
@@ -290,7 +293,14 @@ namespace HMInterop {
             if (!outUnits[i].ptsFound) {
                 throw gcnew InvalidOperationException(System::String::Format("Could not find PTS for POC {0}", outUnits[i].poc));
             }
-            output->Add(gcnew AccessUnitData(outUnits[i].data, outUnits[i].length, outUnits[i].pts, outUnits[i].poc));
+            auto length = static_cast<int>(outUnits[i].data.size());
+            auto owner = MemoryPool<Byte>::Shared->Rent(length);
+            {
+                auto handle = owner->Memory.Pin();
+                memcpy(handle.Pointer, outUnits[i].data.data(), length);
+                delete safe_cast<IDisposable^>(handle);
+            }
+            output->Add(gcnew AccessUnitData(owner, length, outUnits[i].pts, outUnits[i].poc));
         }
         if (outUnits) {
             delete[] outUnits;

@@ -4,7 +4,6 @@
 // Encoder.cpp, Decoder.cpp), bare "array" becomes ambiguous with std::array.
 #pragma once
 
-#include <cstdint>
 #include "Enums.h"
 
 using namespace System;
