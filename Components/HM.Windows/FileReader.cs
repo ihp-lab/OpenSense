@@ -30,6 +30,8 @@ namespace OpenSense.Components.HM {
         private readonly CancellationTokenSource _cts = new();
         private readonly List<Picture> _decodedFrames = new();
 
+        private bool eof;
+
         #region Ports
         public Emitter<Shared<Picture>> Out { get; }
         #endregion
@@ -161,6 +163,10 @@ namespace OpenSense.Components.HM {
                 }
                 var sampleCount = context!.Demuxer.GetSampleCount((uint)context!.VideoTrackIndex);
                 if (sampleIndex >= sampleCount) {
+                    if (eof) {
+                        return false;
+                    }
+                    eof = true;
                     // EOF: flush remaining B-frames
                     _decodedFrames.Clear();
                     context.Decoder.FlushAndCollect(_decodedFrames);

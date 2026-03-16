@@ -256,14 +256,9 @@ namespace HMInterop {
 
         auto pocLastDisplay = _pocLastDisplay;
 
-        while (true) {
-            std::vector<NativeDecodedPic> nativeOutput;
-            NativeFlushDecoder(_decoder, pocLastDisplay, nativeOutput);
-            if (nativeOutput.empty()) {
-                break;
-            }
-            AppendDecodedPics(nativeOutput, output);
-        }
+        std::vector<NativeDecodedPic> nativeOutput;
+        NativeFlushDecoder(_decoder, pocLastDisplay, nativeOutput);
+        AppendDecodedPics(nativeOutput, output);
 
         _pocLastDisplay = pocLastDisplay;
     }
