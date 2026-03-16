@@ -3,7 +3,7 @@
  * and contributor rights, including patent rights, and no such rights are
  * granted under this license.
  *
- * Copyright (c) 2010-2025, ITU/ISO/IEC
+ * Copyright (c) 2010-2026, ITU/ISO/IEC
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -487,6 +487,36 @@ protected:
   UInt                    m_siiSEITimeScale;
   std::vector<UInt>       m_siiSEISubLayerNumUnitsInSI;
 #endif
+
+#if JVET_AL0061_ENCODER_OPTIMIZATION_INFORMATION_SEI
+  // Encoder Optimization Information SEI
+  Bool  m_eoiSEIEnabled;
+  Bool  m_eoiSEICancelFlag;
+  Bool  m_eoiSEIPersistenceFlag;
+  uint32_t  m_eoiSEIForHumanViewingIdc;
+  uint32_t  m_eoiSEIForMachineAnalysisIdc;
+  uint32_t m_eoiSEIType;
+  uint32_t m_eoiSEIObjectBasedIdc;
+  uint32_t m_eoiSEIQuantThresholdDelta;
+  Bool     m_eoiSEIPicQuantObjectFlag;
+  Bool m_eoiSEITemporalResamplingTypeFlag;
+  uint32_t m_eoiSEINumIntPics;
+  Bool     m_eoiSEISrcPicFlag; ;
+  Bool     m_eoiSEIOrigPicDimensionsFlag;
+  uint32_t m_eoiSEIOrigPicWidth;
+  uint32_t m_eoiSEIOrigPicHeight;
+  Bool m_eoiSEISpatialResamplingTypeFlag;
+  uint32_t m_eoiSEIPrivacyProtectionTypeIdc;
+  uint32_t m_eoiSEIPrivacyProtectedInfoType;
+#endif
+#if JVET_AK2006_SPTI_SEI_MESSAGE
+  bool m_sptiSEIEnabled;
+  bool m_sptiSourceTimingEqualsOutputTimingFlag;
+  uint32_t m_sptiSourceType;
+  uint32_t m_sptiTimeScale;
+  uint32_t m_sptiNumUnitsInElementalInterval;
+  bool m_sptiDirectionFlag;
+#endif
 #if SEI_ENCODER_CONTROL
   // film grain characterstics sei
   Bool      m_fgcSEIEnabled;
@@ -497,6 +527,10 @@ protected:
   UChar     m_fgcSEIBlendingModeID;
   UChar     m_fgcSEILog2ScaleFactor;
   Bool      m_fgcSEICompModelPresent[MAX_NUM_COMPONENT];
+#if JVET_AL0339_SPATIAL_RESOLUTION_FOR_FGC_SEI
+  UInt      m_fgcSEIPicWidthInLumaSamples;
+  UInt      m_fgcSEIPicHeightInLumaSamples;
+#endif
 #if JVET_X0048_X0103_FILM_GRAIN
   Bool      m_fgcSEIAnalysisEnabled;
   std::string m_fgcSEIExternalMask;
@@ -594,7 +628,102 @@ protected:
 #if JCTVC_AD0021_SEI_PREFIX_INDICATION
   Bool        m_SEIPrefixIndicationSEIEnabled;
 #endif
-
+#if JVET_AJ0207_GFV
+  bool                                 m_generativeFaceVideoEnabled;
+  uint32_t                             m_generativeFaceVideoSEINumber;
+  bool                                 m_generativeFaceVideoSEIBasePicFlag;
+  bool                                 m_generativeFaceVideoSEINNPresentFlag;
+  uint32_t                             m_generativeFaceVideoSEINNModeIdc;
+  std::string                          m_generativeFaceVideoSEINNTagURI;
+  std::string                          m_generativeFaceVideoSEINNURI;
+  bool                                 m_generativeFaceVideoSEIChromaKeyInfoPresentFlag;
+  std::vector<bool>                    m_generativeFaceVideoSEIChromaKeyValuePresentFlag;
+  std::vector<uint32_t>                m_generativeFaceVideoSEIChromaKeyValue;
+  std::vector<bool>                    m_generativeFaceVideoSEIChromaKeyThrPresentFlag;
+  std::vector<uint32_t>                m_generativeFaceVideoSEIChromaKeyThrValue;
+  std::vector<bool>                    m_generativeFaceVideoSEIDrivePicFusionFlag;
+  std::vector<uint32_t>                m_generativeFaceVideoSEIId;
+  std::vector<uint32_t>                m_generativeFaceVideoSEICnt;
+  std::vector<bool>                    m_generativeFaceVideoSEILowConfidenceFaceParameterFlag;
+  std::vector<bool>                    m_generativeFaceVideoSEICoordinatePresentFlag;
+  std::vector<uint32_t>                m_generativeFaceVideoSEICoordinateQuantizationFactor;
+  std::vector<bool>                    m_generativeFaceVideoSEICoordinatePredFlag;
+  std::vector<bool>                    m_generativeFaceVideoSEI3DCoordinateFlag;
+  std::vector<uint32_t>                m_generativeFaceVideoSEICoordinatePointNum;
+  std::vector<std::vector<double>>     m_generativeFaceVideoSEICoordinateXTesonr;
+  std::vector<std::vector<double>>     m_generativeFaceVideoSEICoordinateYTesonr;
+  std::vector<std::vector<uint32_t>>   m_generativeFaceVideoSEIZCoordinateMaxValue;
+  std::vector<std::vector<double>>     m_generativeFaceVideoSEICoordinateZTesonr;
+  std::vector<bool>                    m_generativeFaceVideoSEIMatrixPresentFlag;
+  std::vector<uint32_t>                m_generativeFaceVideoSEIMatrixElementPrecisionFactor;
+  std::vector<bool>                    m_generativeFaceVideoSEIMatrixPredFlag;
+  std::vector<uint32_t>                m_generativeFaceVideoSEINumMatrixType;
+  std::vector<std::vector<uint32_t>>   m_generativeFaceVideoSEIMatrixTypeIdx;
+  std::vector<std::vector<uint32_t>>   m_generativeFaceVideoSEIMatrix3DSpaceFlag;
+  std::vector<std::vector<uint32_t>>   m_generativeFaceVideoSEINumMatricestoNumKpsFlag;
+  std::vector<std::vector<uint32_t>>   m_generativeFaceVideoSEINumMatricesInfo;
+  std::vector<std::vector<uint32_t>>   m_generativeFaceVideoSEINumMatrices;
+  std::vector<std::vector<uint32_t>>   m_generativeFaceVideoSEIMatrixWidth;
+  std::vector<std::vector<uint32_t>>   m_generativeFaceVideoSEIMatrixHeight;
+  std::vector<std::vector<std::vector<std::vector<std::vector<double>>>>>   m_generativeFaceVideoSEIMatrixElement;
+  std::string                          m_generativeFaceVideoSEIPayloadFilename;
+#endif
+#if JVET_AK0239_GEFV
+  bool                                 m_generativeFaceVideoEnhancementEnabled;
+  uint32_t                             m_generativeFaceVideoEnhancementSEINumber;
+  bool                                 m_generativeFaceVideoEnhancementSEIBasePicFlag;
+  bool                                 m_generativeFaceVideoEnhancementSEINNPresentFlag;
+  uint32_t                             m_generativeFaceVideoEnhancementSEINNModeIdc;
+  std::string                          m_generativeFaceVideoEnhancementSEINNTagURI;
+  std::string                          m_generativeFaceVideoEnhancementSEINNURI;
+  std::vector<uint32_t>                m_generativeFaceVideoEnhancementSEIId;
+  std::vector<uint32_t>                m_generativeFaceVideoEnhancementSEIGFVId;
+  std::vector<uint32_t>                m_generativeFaceVideoEnhancementSEIGFVCnt;
+  std::vector<uint32_t>                m_generativeFaceVideoEnhancementSEIMatrixElementPrecisionFactor;
+  std::vector<bool>                    m_generativeFaceVideoEnhancementSEIMatrixPresentFlag;
+  std::vector<bool>                    m_generativeFaceVideoEnhancementSEIMatrixPredFlag;
+  std::vector<uint32_t>                m_generativeFaceVideoEnhancementSEINumMatrices;
+  std::vector<std::vector<uint32_t>>   m_generativeFaceVideoEnhancementSEIMatrixWidth;
+  std::vector<std::vector<uint32_t>>   m_generativeFaceVideoEnhancementSEIMatrixHeight;
+  std::vector<std::vector<std::vector<std::vector<double>>>>   m_generativeFaceVideoEnhancementSEIMatrixElement;
+  std::vector<uint32_t>                m_generativeFaceVideoEnhancementSEIPupilPresentIdx;
+  std::vector<uint32_t>                m_generativeFaceVideoEnhancementSEIPupilCoordinatePrecisionFactor;
+  std::vector<double>                  m_generativeFaceVideoEnhancementSEIPupilLeftEyeCoordinateX;
+  std::vector<double>                  m_generativeFaceVideoEnhancementSEIPupilLeftEyeCoordinateY;
+  std::vector<double>                  m_generativeFaceVideoEnhancementSEIPupilRightEyeCoordinateX;
+  std::vector<double>                  m_generativeFaceVideoEnhancementSEIPupilRightEyeCoordinateY;
+  std::string                          m_generativeFaceVideoEnhancementSEIPayloadFilename;
+#endif
+#if JVET_AK0140_PACKED_REGIONS_INFORMATION_SEI
+  bool     m_priSEIEnabled;
+  bool     m_priSEICancelFlag;
+  bool     m_priSEIPersistenceFlag;
+  uint32_t m_priSEINumRegionsMinus1;
+  bool     m_priSEIMultilayerFlag;
+  bool     m_priSEIUseMaxDimensionsFlag;
+  uint32_t m_priSEILog2UnitSize;
+  uint32_t m_priSEIRegionSizeLenMinus1;
+  bool     m_priSEIRegionIdPresentFlag;
+  bool     m_priSEITargetPicParamsPresentFlag;
+  uint32_t m_priSEITargetPicWidthMinus1;
+  uint32_t m_priSEITargetPicHeightMinus1;
+  uint32_t m_priSEINumResamplingRatiosMinus1;
+  std::vector<uint32_t> m_priSEIResamplingWidthNumMinus1;
+  std::vector<uint32_t> m_priSEIResamplingWidthDenomMinus1;
+  std::vector<bool>     m_priSEIFixedAspectRatioFlag;
+  std::vector<uint32_t> m_priSEIResamplingHeightNumMinus1;
+  std::vector<uint32_t> m_priSEIResamplingHeightDenomMinus1;
+  std::vector<uint32_t> m_priSEIRegionId;
+  std::vector<uint32_t> m_priSEIRegionLayerId;
+  std::vector<bool>     m_priSEIRegionIsALayerFlag;
+  std::vector<uint32_t> m_priSEIRegionTopLeftInUnitsX;
+  std::vector<uint32_t> m_priSEIRegionTopLeftInUnitsY;
+  std::vector<uint32_t> m_priSEIRegionWidthInUnitsMinus1;
+  std::vector<uint32_t> m_priSEIRegionHeightInUnitsMinus1;
+  std::vector<uint32_t> m_priSEIResamplingRatioIdx;
+  std::vector<uint32_t> m_priSEITargetRegionTopLeftInUnitsX;
+  std::vector<uint32_t> m_priSEITargetRegionTopLeftInUnitsY;
+#endif
 
 public:
   TEncCfg()
@@ -1127,7 +1256,44 @@ public:
   Double   getCcvSEIMaxLuminanceValue  ()                            { return m_ccvSEIMaxLuminanceValue;  }
   Void     setCcvSEIAvgLuminanceValue  (Double dValue)               { m_ccvSEIAvgLuminanceValue = dValue; }
   Double   getCcvSEIAvgLuminanceValue  ()                            { return m_ccvSEIAvgLuminanceValue;  }
-
+#if JVET_AL0061_ENCODER_OPTIMIZATION_INFORMATION_SEI
+  Void     setEOISEIEnabled(bool enabledFlag) { m_eoiSEIEnabled = enabledFlag; }
+  Bool     getEOISEIEnabled() const { return m_eoiSEIEnabled; }
+  Void     setEOISEICancelFlag(bool cancelFlag) { m_eoiSEICancelFlag = cancelFlag; }
+  Bool     getEOISEICancelFlag() const { return m_eoiSEICancelFlag; }
+  Void     setEOISEIPersistenceFlag(bool persistenceFlag) { m_eoiSEIPersistenceFlag = persistenceFlag; }
+  Bool     getEOISEIPersistenceFlag() const { return m_eoiSEIPersistenceFlag; }
+  Void     setEOISEIForHumanViewingIdc(uint32_t forHumanViewingIdc) { m_eoiSEIForHumanViewingIdc = forHumanViewingIdc; }
+  uint32_t getEOISEIForHumanViewingIdc() const { return m_eoiSEIForHumanViewingIdc; }
+  Void     setEOISEIForMachineAnalysisIdc(uint32_t forMachineAnalysisIdc) { m_eoiSEIForMachineAnalysisIdc = forMachineAnalysisIdc; }
+  uint32_t getEOISEIForMachineAnalysisIdc() const { return m_eoiSEIForMachineAnalysisIdc; }
+  Void     setEOISEIType(uint32_t eoiType) { m_eoiSEIType = eoiType; }
+  uint32_t getEOISEIType() const { return m_eoiSEIType; }
+  Void     setEOISEIObjectBasedIdc(uint32_t objectBasedIdc) { m_eoiSEIObjectBasedIdc = objectBasedIdc; }
+  uint32_t getEOISEIObjectBasedIdc() const { return m_eoiSEIObjectBasedIdc; }
+  Void     setEOISEIQuantThresholdDelta(uint32_t quantThresholdDelta) { m_eoiSEIQuantThresholdDelta = quantThresholdDelta; }
+  uint32_t getEOISEIQuantThresholdDelta() const { return m_eoiSEIQuantThresholdDelta; }
+  Void     setEOISEIPicQuantObjectFlag(bool picQuantObjectFlag) { m_eoiSEIPicQuantObjectFlag = picQuantObjectFlag; }
+  Bool     getEOISEIPicQuantObjectFlag() const { return m_eoiSEIPicQuantObjectFlag; }
+  Void     setEOISEITemporalResamplingTypeFlag(bool temporalResamplingTypeFlag) { m_eoiSEITemporalResamplingTypeFlag = temporalResamplingTypeFlag; }
+  Bool     getEOISEITemporalResamplingTypeFlag() const { return m_eoiSEITemporalResamplingTypeFlag; }
+  Void     setEOISEISrcPicFlag(bool srcPicFlag) { m_eoiSEISrcPicFlag = srcPicFlag; }
+  Bool     getEOISEISrcPicFlag() const { return m_eoiSEISrcPicFlag; }
+  Void     setEOISEINumIntPics(uint32_t numIntPics) { m_eoiSEINumIntPics = numIntPics; }
+  uint32_t getEOISEINumIntPics() const { return m_eoiSEINumIntPics; }
+  Void     setEOISEIOrigPicDimensionsFlag(bool origPicDimensionsFlag) { m_eoiSEIOrigPicDimensionsFlag = origPicDimensionsFlag; }
+  Bool     getEOISEIOrigPicDimensionsFlag() { return m_eoiSEIOrigPicDimensionsFlag; }
+  Void     setEOISEIOrigPicWidth(uint32_t origPicWidth) { m_eoiSEIOrigPicWidth = origPicWidth; }
+  uint32_t getEOISEIOrigPicWidth() { return m_eoiSEIOrigPicWidth; }
+  Void     setEOISEIOrigPicHeight(uint32_t origPicHeight) { m_eoiSEIOrigPicHeight = origPicHeight; }
+  uint32_t getEOISEIOrigPicHeight() { return m_eoiSEIOrigPicHeight; }
+  Void     setEOISEISpatialResamplingTypeFlag(bool spatialResamplingTypeFlag) { m_eoiSEISpatialResamplingTypeFlag = spatialResamplingTypeFlag; }
+  Bool     getEOISEISpatialResamplingTypeFlag() const { return m_eoiSEISpatialResamplingTypeFlag; }
+  Void     setEOISEIPrivacyProtectionTypeIdc(uint32_t privacyProtectionTypeIdc) { m_eoiSEIPrivacyProtectionTypeIdc = privacyProtectionTypeIdc; }
+  uint32_t getEOISEIPrivacyProtectionTypeIdc() const { return m_eoiSEIPrivacyProtectionTypeIdc; }
+  Void     setEOISEIPrivacyProtectedInfoType(uint32_t privacyProtectedInfoType) { m_eoiSEIPrivacyProtectedInfoType = privacyProtectedInfoType; }
+  uint32_t getEOISEIPrivacyProtectedInfoType() const { return m_eoiSEIPrivacyProtectedInfoType; }
+#endif
   #if SHUTTER_INTERVAL_SEI_MESSAGE
   Void     setSiiSEIEnabled(Bool b)                                  { m_siiSEIEnabled = b; }
   Bool     getSiiSEIEnabled()                                        { return m_siiSEIEnabled; }
@@ -1158,6 +1324,12 @@ public:
   UChar getFilmGrainCharactersticsSEILog2ScaleFactor()               { return m_fgcSEILog2ScaleFactor; }
   Void  setFGCSEICompModelPresent(Bool b, Int index)                 { m_fgcSEICompModelPresent[index] = b; }
   Bool  getFGCSEICompModelPresent(Int index)                         { return m_fgcSEICompModelPresent[index]; }
+#if JVET_AL0339_SPATIAL_RESOLUTION_FOR_FGC_SEI
+  Void  setFilmGrainCharactersticsSEIPicWidthInLumaSamples(UInt v )  { m_fgcSEIPicWidthInLumaSamples = v; }
+  UInt  getFilmGrainCharactersticsSEIPicWidthInLumaSamples()         { return m_fgcSEIPicWidthInLumaSamples; }
+  Void  setFilmGrainCharactersticsSEIPicHeightInLumaSamples(UInt v)  { m_fgcSEIPicHeightInLumaSamples = v; }
+  UInt  getFilmGrainCharactersticsSEIPicHeightInLumaSamples()        { return m_fgcSEIPicHeightInLumaSamples; }
+#endif
 #if JVET_X0048_X0103_FILM_GRAIN
   bool*   getFGCSEICompModelPresent                 ()               { return m_fgcSEICompModelPresent; }
   void    setFilmGrainAnalysisEnabled               (bool b)         { m_fgcSEIAnalysisEnabled = b; }
@@ -1506,6 +1678,208 @@ public:
   Void     setSEIPrefixIndicationSEIEnabled(Bool b) { m_SEIPrefixIndicationSEIEnabled = b; }
   Bool     getSEIPrefixIndicationSEIEnabled() { return m_SEIPrefixIndicationSEIEnabled; }
 #endif
+#if JVET_AJ0207_GFV
+  void              setGenerativeFaceVideoSEIEnabled(bool enabledFlag) { m_generativeFaceVideoEnabled = enabledFlag; }
+  bool              getGenerativeFaceVideoSEIEnabled()                              const { return m_generativeFaceVideoEnabled; }
+  void              setGenerativeFaceVideoSEINumber(uint32_t number) { m_generativeFaceVideoSEINumber = number; }
+  uint32_t          getGenerativeFaceVideoSEINumber()                               const { return m_generativeFaceVideoSEINumber; }
+  void              setGenerativeFaceVideoSEIBasePicFlag(bool BasePicFlag) { m_generativeFaceVideoSEIBasePicFlag = BasePicFlag; }
+  bool              getGenerativeFaceVideoSEIBasePicFlag()                          const { return m_generativeFaceVideoSEIBasePicFlag; }
+  void              setGenerativeFaceVideoSEINNPresentFlag(bool NNPresentFlag) { m_generativeFaceVideoSEINNPresentFlag = NNPresentFlag; }
+  bool              getGenerativeFaceVideoSEINNPresentFlag()                        const { return m_generativeFaceVideoSEINNPresentFlag; }
+  void              setGenerativeFaceVideoSEINNModeIdc(uint32_t NNModeIdc) { m_generativeFaceVideoSEINNModeIdc = NNModeIdc; }
+  uint32_t          getGenerativeFaceVideoSEINNModeIdc()                            const { return m_generativeFaceVideoSEINNModeIdc; }
+  void              setGenerativeFaceVideoSEINNTagURI(const std::string &NNTagURI) { m_generativeFaceVideoSEINNTagURI = NNTagURI; }
+  const std::string getGenerativeFaceVideoSEINNTagURI()                             const { return m_generativeFaceVideoSEINNTagURI; }
+  void              setGenerativeFaceVideoSEINNURI(const std::string &NNURI) { m_generativeFaceVideoSEINNURI = NNURI; }
+  const std::string getGenerativeFaceVideoSEINNURI()                                const { return m_generativeFaceVideoSEINNURI; }
+  void              setGenerativeFaceVideoSEIChromaKeyInfoPresentFlag(bool ChromaKeyInfoPresentFlag) { m_generativeFaceVideoSEIChromaKeyInfoPresentFlag = ChromaKeyInfoPresentFlag; }
+  bool              getGenerativeFaceVideoSEIChromaKeyInfoPresentFlag()                                               const { return m_generativeFaceVideoSEIChromaKeyInfoPresentFlag; }
+  void              setGenerativeFaceVideoSEIChromaKeyValuePresentFlag(const std::vector<bool>& ChromaKeyValuePresentFlag) { m_generativeFaceVideoSEIChromaKeyValuePresentFlag = ChromaKeyValuePresentFlag; }
+  bool              getGenerativeFaceVideoSEIChromaKeyValuePresentFlag(int c)                                         const { return m_generativeFaceVideoSEIChromaKeyValuePresentFlag[c]; }
+  void              setGenerativeFaceVideoSEIChromaKeyValue(const std::vector<uint32_t>& ChromaKeyValue) { m_generativeFaceVideoSEIChromaKeyValue = ChromaKeyValue; }
+  uint32_t          getGenerativeFaceVideoSEIChromaKeyValue(uint32_t c)                                               const { return m_generativeFaceVideoSEIChromaKeyValue[c]; }
+  void              setGenerativeFaceVideoSEIChromaKeyThrPresentFlag(const std::vector<bool>& ChromaKeyThrPresentFlag) { m_generativeFaceVideoSEIChromaKeyThrPresentFlag = ChromaKeyThrPresentFlag; }
+  bool              getGenerativeFaceVideoSEIChromaKeyThrPresentFlag(int i)                                           const { return m_generativeFaceVideoSEIChromaKeyThrPresentFlag[i]; }
+  void              setGenerativeFaceVideoSEIChromaKeyThrValue(const std::vector<uint32_t>& ChromaKeyThrValue) { m_generativeFaceVideoSEIChromaKeyThrValue = ChromaKeyThrValue; }
+  uint32_t          getGenerativeFaceVideoSEIChromaKeyThrValue(uint32_t i)                                            const { return m_generativeFaceVideoSEIChromaKeyThrValue[i]; }
+  void              setGenerativeFaceVideoSEIDrivePicFusionFlag(const std::vector<bool>& DrivePicFusionFlag) { m_generativeFaceVideoSEIDrivePicFusionFlag = DrivePicFusionFlag; }
+  bool              getGenerativeFaceVideoSEIDrivePicFusionFlag(int idx)            const { return m_generativeFaceVideoSEIDrivePicFusionFlag[idx]; }
+  void              setGenerativeFaceVideoSEIId(const std::vector<uint32_t>& id) { m_generativeFaceVideoSEIId = id; }
+  uint32_t          getGenerativeFaceVideoSEIId(int idx)                            const { return m_generativeFaceVideoSEIId[idx]; }
+  void              setGenerativeFaceVideoSEICnt(const std::vector<uint32_t>& cnt) { m_generativeFaceVideoSEICnt = cnt; }
+  uint32_t          getGenerativeFaceVideoSEICnt(int idx)                           const { return m_generativeFaceVideoSEICnt[idx]; }
+  void              setGenerativeFaceVideoSEILowConfidenceFaceParameterFlag(const std::vector<bool>& lowconfidence) { m_generativeFaceVideoSEILowConfidenceFaceParameterFlag = lowconfidence; }
+  bool              getGenerativeFaceVideoSEILowConfidenceFaceParameterFlag(int idx)                                      const { return m_generativeFaceVideoSEILowConfidenceFaceParameterFlag[idx]; }
+  void              setGenerativeFaceVideoSEICoordinatePresentFlag(const std::vector<bool>& coordinatepresentFlag) { m_generativeFaceVideoSEICoordinatePresentFlag = coordinatepresentFlag; }
+  bool              getGenerativeFaceVideoSEICoordinatePresentFlag(int idx)                                               const { return m_generativeFaceVideoSEICoordinatePresentFlag[idx]; }
+  void              setGenerativeFaceVideoSEICoordinateQuantizationFactor(const std::vector<uint32_t>& cqf) { m_generativeFaceVideoSEICoordinateQuantizationFactor = cqf; }
+  uint32_t          getGenerativeFaceVideoSEICoordinateQuantizationFactor(int idx)                                        const { return m_generativeFaceVideoSEICoordinateQuantizationFactor[idx]; }
+  void              setGenerativeFaceVideoSEICoordinatePredFlag(const std::vector<bool>& CoordinatePredFlag) { m_generativeFaceVideoSEICoordinatePredFlag = CoordinatePredFlag; }
+  bool              getGenerativeFaceVideoSEICoordinatePredFlag(int idx)                                                  const { return m_generativeFaceVideoSEICoordinatePredFlag[idx]; }
+  void              setGenerativeFaceVideoSEI3DCoordinateFlag(const std::vector<bool>& Coordinate3dFlag) { m_generativeFaceVideoSEI3DCoordinateFlag = Coordinate3dFlag; }
+  bool              getGenerativeFaceVideoSEI3DCoordinateFlag(int idx)                                                    const { return m_generativeFaceVideoSEI3DCoordinateFlag[idx]; }
+  void              setGenerativeFaceVideoSEICoordinatePointNum(const std::vector<uint32_t>& CoordinatePointNum) { m_generativeFaceVideoSEICoordinatePointNum = CoordinatePointNum; }
+  uint32_t          getGenerativeFaceVideoSEICoordinatePointNum(int idx)                                                  const { return m_generativeFaceVideoSEICoordinatePointNum[idx]; }
+  void              setGenerativeFaceVideoSEICoordinateXTesonr(const std::vector<std::vector<double>>& Xcoordinate) { m_generativeFaceVideoSEICoordinateXTesonr = Xcoordinate; }
+  double            getGenerativeFaceVideoSEICoordinateXTesonr(int i, int j)                                              const { return m_generativeFaceVideoSEICoordinateXTesonr[i][j]; }
+  void              setGenerativeFaceVideoSEICoordinateYTesonr(const std::vector<std::vector<double>>& Ycoordinate) { m_generativeFaceVideoSEICoordinateYTesonr = Ycoordinate; }
+  double            getGenerativeFaceVideoSEICoordinateYTesonr(int i, int j)                                              const { return m_generativeFaceVideoSEICoordinateYTesonr[i][j]; }
+  void              setGenerativeFaceVideoSEIZCoordinateMaxValue(const std::vector<std::vector<uint32_t>>& coordinateZMaxValue) { m_generativeFaceVideoSEIZCoordinateMaxValue = coordinateZMaxValue; }
+  uint32_t          getGenerativeFaceVideoSEIZCoordinateMaxValue(int i, int j)                                            const { return m_generativeFaceVideoSEIZCoordinateMaxValue[i][j]; }
+  void              setGenerativeFaceVideoSEICoordinateZTesonr(const std::vector<std::vector<double>>& Zcoordinate) { m_generativeFaceVideoSEICoordinateZTesonr = Zcoordinate; }
+  double            getGenerativeFaceVideoSEICoordinateZTesonr(int i, int j)                                              const { return m_generativeFaceVideoSEICoordinateZTesonr[i][j]; }
+  void              setGenerativeFaceVideoSEIMatrixPresentFlag(const std::vector<bool>& matrixpresentFlag) { m_generativeFaceVideoSEIMatrixPresentFlag = matrixpresentFlag; }
+  bool              getGenerativeFaceVideoSEIMatrixPresentFlag(int idx)                                                                            const { return m_generativeFaceVideoSEIMatrixPresentFlag[idx]; }
+  void              setGenerativeFaceVideoSEIMatrixElementPrecisionFactor(const std::vector<uint32_t>& mpf) { m_generativeFaceVideoSEIMatrixElementPrecisionFactor = mpf; }
+  uint32_t          getGenerativeFaceVideoSEIMatrixElementPrecisionFactor(int idx)                                                                 const { return m_generativeFaceVideoSEIMatrixElementPrecisionFactor[idx]; }
+  void              setGenerativeFaceVideoSEINumMatrixType(const std::vector<uint32_t>& nummatrixtype) { m_generativeFaceVideoSEINumMatrixType = nummatrixtype; }
+  uint32_t          getGenerativeFaceVideoSEINumMatrixType(int idx)                                                                                const { return m_generativeFaceVideoSEINumMatrixType[idx]; }
+  void              setGenerativeFaceVideoSEIMatrixTypeIdx(const std::vector<std::vector<uint32_t>>& matrixTypeIdx) { m_generativeFaceVideoSEIMatrixTypeIdx = matrixTypeIdx; }
+  uint32_t          getGenerativeFaceVideoSEIMatrixTypeIdx(int idx, int idy)                                                                        const { return m_generativeFaceVideoSEIMatrixTypeIdx[idx][idy]; }
+  void              setGenerativeFaceVideoSEIMatrix3DSpaceFlag(const std::vector<std::vector<uint32_t>>& matrix3DSpaceFlag) { m_generativeFaceVideoSEIMatrix3DSpaceFlag = matrix3DSpaceFlag; }
+  uint32_t          getGenerativeFaceVideoSEIMatrix3DSpaceFlag(int idx, int idy)                                                                   const { return m_generativeFaceVideoSEIMatrix3DSpaceFlag[idx][idy]; }
+  void              setGenerativeFaceVideoSEINumMatrices(const std::vector<std::vector<uint32_t>>& numMatrices) { m_generativeFaceVideoSEINumMatrices = numMatrices; }
+  uint32_t          getGenerativeFaceVideoSEINumMatrices(int idx, int idy)                                                                         const { return m_generativeFaceVideoSEINumMatrices[idx][idy]; }
+  void              setGenerativeFaceVideoSEIMatrixWidth(const std::vector<std::vector<uint32_t>>& matrixWidth) { m_generativeFaceVideoSEIMatrixWidth = matrixWidth; }
+  uint32_t          getGenerativeFaceVideoSEIMatrixWidth(int idx, int idy)                                                                         const { return m_generativeFaceVideoSEIMatrixWidth[idx][idy]; }
+  void              setGenerativeFaceVideoSEIMatrixHeight(const std::vector<std::vector<uint32_t>>& matrixHeight) { m_generativeFaceVideoSEIMatrixHeight = matrixHeight; }
+  uint32_t          getGenerativeFaceVideoSEIMatrixHeight(int idx, int idy)                                                                        const { return m_generativeFaceVideoSEIMatrixHeight[idx][idy]; }
+  void              setGenerativeFaceVideoSEIMatrixElement(const std::vector<std::vector<std::vector<std::vector<std::vector<double>>>>>& matrixElement) { m_generativeFaceVideoSEIMatrixElement = matrixElement; }
+  double            getGenerativeFaceVideoSEIMatrixElement(int i, int j, int k, int l, int m)                                                      const { return m_generativeFaceVideoSEIMatrixElement[i][j][k][l][m]; }
+  void              setGenerativeFaceVideoSEIMatrixPredFlag(const std::vector<bool>& matrixpredFlag) { m_generativeFaceVideoSEIMatrixPredFlag = matrixpredFlag; }
+  bool              getGenerativeFaceVideoSEIMatrixPredFlag(int idx)                                                                                const { return m_generativeFaceVideoSEIMatrixPredFlag[idx]; }
+  void              setGenerativeFaceVideoSEINumMatricestoNumKpsFlag(const std::vector<std::vector<uint32_t>>& numflag) { m_generativeFaceVideoSEINumMatricestoNumKpsFlag = numflag; }
+  uint32_t          getGenerativeFaceVideoSEINumMatricestoNumKpsFlag(int idx, int idy)                                                               const { return m_generativeFaceVideoSEINumMatricestoNumKpsFlag[idx][idy]; }
+  void              setGenerativeFaceVideoSEINumMatricesInfo(const std::vector<std::vector<uint32_t>>& nummatricesinfo) { m_generativeFaceVideoSEINumMatricesInfo = nummatricesinfo; }
+  uint32_t          getGenerativeFaceVideoSEINumMatricesInfo(int idx, int idy)                                                                       const { return m_generativeFaceVideoSEINumMatricesInfo[idx][idy]; }
+  void              setGenerativeFaceVideoSEIPayloadFilename(const std::string &payloadFilename) { m_generativeFaceVideoSEIPayloadFilename = payloadFilename; }
+  const std::string getGenerativeFaceVideoSEIPayloadFilename()                                                                                      const { return m_generativeFaceVideoSEIPayloadFilename; }
+#endif
+#if JVET_AK0239_GEFV
+  void              setGenerativeFaceVideoEnhancementSEIEnabled(bool enabledFlag) { m_generativeFaceVideoEnhancementEnabled = enabledFlag; }
+  bool              getGenerativeFaceVideoEnhancementSEIEnabled()                                    const { return m_generativeFaceVideoEnhancementEnabled; }
+  void              setGenerativeFaceVideoEnhancementSEINumber(uint32_t number) { m_generativeFaceVideoEnhancementSEINumber = number; }
+  uint32_t          getGenerativeFaceVideoEnhancementSEINumber()                                     const { return m_generativeFaceVideoEnhancementSEINumber; }
+  void              setGenerativeFaceVideoEnhancementSEIBasePicFlag(bool BasePicFlag) { m_generativeFaceVideoEnhancementSEIBasePicFlag = BasePicFlag; }
+  bool              getGenerativeFaceVideoEnhancementSEIBasePicFlag()                                const { return m_generativeFaceVideoEnhancementSEIBasePicFlag; }
+  void              setGenerativeFaceVideoEnhancementSEINNPresentFlag(bool NNPresentFlag) { m_generativeFaceVideoEnhancementSEINNPresentFlag = NNPresentFlag; }
+  bool              getGenerativeFaceVideoEnhancementSEINNPresentFlag()                              const { return m_generativeFaceVideoEnhancementSEINNPresentFlag; }
+  void              setGenerativeFaceVideoEnhancementSEINNModeIdc(uint32_t NNModeIdc) { m_generativeFaceVideoEnhancementSEINNModeIdc = NNModeIdc; }
+  uint32_t          getGenerativeFaceVideoEnhancementSEINNModeIdc()                                  const { return m_generativeFaceVideoEnhancementSEINNModeIdc; }
+  void              setGenerativeFaceVideoEnhancementSEINNTagURI(const std::string &NNTagURI) { m_generativeFaceVideoEnhancementSEINNTagURI = NNTagURI; }
+  const std::string getGenerativeFaceVideoEnhancementSEINNTagURI()                                   const { return m_generativeFaceVideoEnhancementSEINNTagURI; }
+  void              setGenerativeFaceVideoEnhancementSEINNURI(const std::string &NNURI) { m_generativeFaceVideoEnhancementSEINNURI = NNURI; }
+  const std::string getGenerativeFaceVideoEnhancementSEINNURI()                                      const { return m_generativeFaceVideoEnhancementSEINNURI; }
+  void              setGenerativeFaceVideoEnhancementSEIId(const std::vector<uint32_t>& id) { m_generativeFaceVideoEnhancementSEIId = id; }
+  uint32_t          getGenerativeFaceVideoEnhancementSEIId(int idx)                                  const { return m_generativeFaceVideoEnhancementSEIId[idx]; }
+  void              setGenerativeFaceVideoEnhancementSEIGFVId(const std::vector<uint32_t>& gfvid) { m_generativeFaceVideoEnhancementSEIGFVId = gfvid; }
+  uint32_t          getGenerativeFaceVideoEnhancementSEIGFVId(int idx)                               const { return m_generativeFaceVideoEnhancementSEIGFVId[idx]; }
+  void              setGenerativeFaceVideoEnhancementSEIGFVCnt(const std::vector<uint32_t>& cnt) { m_generativeFaceVideoEnhancementSEIGFVCnt = cnt; }
+  uint32_t          getGenerativeFaceVideoEnhancementSEIGFVCnt(int idx)                              const { return m_generativeFaceVideoEnhancementSEIGFVCnt[idx]; }
+  void              setGenerativeFaceVideoEnhancementSEIMatrixElementPrecisionFactor(const std::vector<uint32_t>& mpf) { m_generativeFaceVideoEnhancementSEIMatrixElementPrecisionFactor = mpf; }
+  uint32_t          getGenerativeFaceVideoEnhancementSEIMatrixElementPrecisionFactor(int idx)                                                                 const { return m_generativeFaceVideoEnhancementSEIMatrixElementPrecisionFactor[idx]; }
+  void              setGenerativeFaceVideoEnhancementSEIMatrixPresentFlag(const std::vector<bool>& mpf) { m_generativeFaceVideoEnhancementSEIMatrixPresentFlag = mpf; }
+  bool              getGenerativeFaceVideoEnhancementSEIMatrixPresentFlag(int idx)                                                                            const { return m_generativeFaceVideoEnhancementSEIMatrixPresentFlag[idx]; }
+  void              setGenerativeFaceVideoEnhancementSEIMatrixPredFlag(const std::vector<bool>& mpf) { m_generativeFaceVideoEnhancementSEIMatrixPredFlag = mpf; }
+  bool              getGenerativeFaceVideoEnhancementSEIMatrixPredFlag(int idx)                                                                               const { return m_generativeFaceVideoEnhancementSEIMatrixPredFlag[idx]; }
+  void              setGenerativeFaceVideoEnhancementSEINumMatrices(const std::vector<uint32_t>& numMatrices) { m_generativeFaceVideoEnhancementSEINumMatrices = numMatrices; }
+  uint32_t          getGenerativeFaceVideoEnhancementSEINumMatrices(int idx)                                                                                  const { return m_generativeFaceVideoEnhancementSEINumMatrices[idx]; }
+  void              setGenerativeFaceVideoEnhancementSEIMatrixWidth(const std::vector<std::vector<uint32_t>>& matrixWidth) { m_generativeFaceVideoEnhancementSEIMatrixWidth = matrixWidth; }
+  uint32_t          getGenerativeFaceVideoEnhancementSEIMatrixWidth(int idx, int idj)                                                                         const { return m_generativeFaceVideoEnhancementSEIMatrixWidth[idx][idj]; }
+  void              setGenerativeFaceVideoEnhancementSEIMatrixHeight(const std::vector<std::vector<uint32_t>>& matrixHeight) { m_generativeFaceVideoEnhancementSEIMatrixHeight = matrixHeight; }
+  uint32_t          getGenerativeFaceVideoEnhancementSEIMatrixHeight(int idx, int idj)                                                                        const { return m_generativeFaceVideoEnhancementSEIMatrixHeight[idx][idj]; }
+  void              setGenerativeFaceVideoEnhancementSEIMatrixElement(const std::vector<std::vector<std::vector<std::vector<double>>>>& matrixElement) { m_generativeFaceVideoEnhancementSEIMatrixElement = matrixElement; }
+  double            getGenerativeFaceVideoEnhancementSEIMatrixElement(int i, int j, int k, int l)                                                             const { return m_generativeFaceVideoEnhancementSEIMatrixElement[i][j][k][l]; }
+  void              setGenerativeFaceVideoEnhancementSEIPayloadFilename(const std::string &payloadFilename) { m_generativeFaceVideoEnhancementSEIPayloadFilename = payloadFilename; }
+  const std::string getGenerativeFaceVideoEnhancementSEIPayloadFilename()                                                                                     const { return m_generativeFaceVideoEnhancementSEIPayloadFilename; }
+  void              setGenerativeFaceVideoEnhancementSEIPupilPresentIdx(const std::vector<uint32_t>& pupilPresentIdx) { m_generativeFaceVideoEnhancementSEIPupilPresentIdx = pupilPresentIdx; }
+  uint32_t          getGenerativeFaceVideoEnhancementSEIPupilPresentIdx(int idx)                                                                              const { return m_generativeFaceVideoEnhancementSEIPupilPresentIdx[idx]; }
+  void              setGenerativeFaceVideoEnhancementSEIPupilCoordinatePrecisionFactor(const std::vector<uint32_t>& pupilCoordinatePrecisionFactor) { m_generativeFaceVideoEnhancementSEIPupilCoordinatePrecisionFactor = pupilCoordinatePrecisionFactor; }
+  uint32_t          getGenerativeFaceVideoEnhancementSEIPupilCoordinatePrecisionFactor(int idx)                                                               const { return m_generativeFaceVideoEnhancementSEIPupilCoordinatePrecisionFactor[idx]; }
+  void              setGenerativeFaceVideoEnhancementSEIPupilLeftEyeCoordinateX(const std::vector<double>& pupilLeftEyeCoordinateX) { m_generativeFaceVideoEnhancementSEIPupilLeftEyeCoordinateX = pupilLeftEyeCoordinateX; }
+  double            getGenerativeFaceVideoEnhancementSEIPupilLeftEyeCoordinateX(int idx)                                                                      const { return m_generativeFaceVideoEnhancementSEIPupilLeftEyeCoordinateX[idx]; }
+  void              setGenerativeFaceVideoEnhancementSEIPupilLeftEyeCoordinateY(const std::vector<double>& pupilLeftEyeCoordinateY) { m_generativeFaceVideoEnhancementSEIPupilLeftEyeCoordinateY = pupilLeftEyeCoordinateY; }
+  double            getGenerativeFaceVideoEnhancementSEIPupilLeftEyeCoordinateY(int idx)                                                                      const { return m_generativeFaceVideoEnhancementSEIPupilLeftEyeCoordinateY[idx]; }
+  void              setGenerativeFaceVideoEnhancementSEIPupilRightEyeCoordinateX(const std::vector<double>& pupilRightEyeCoordinateX) { m_generativeFaceVideoEnhancementSEIPupilRightEyeCoordinateX = pupilRightEyeCoordinateX; }
+  double            getGenerativeFaceVideoEnhancementSEIPupilRightEyeCoordinateX(int idx)                                                                     const { return m_generativeFaceVideoEnhancementSEIPupilRightEyeCoordinateX[idx]; }
+  void              setGenerativeFaceVideoEnhancementSEIPupilRightEyeCoordinateY(const std::vector<double>& pupilRightEyeCoordinateY) { m_generativeFaceVideoEnhancementSEIPupilRightEyeCoordinateY = pupilRightEyeCoordinateY; }
+  double            getGenerativeFaceVideoEnhancementSEIPupilRightEyeCoordinateY(int idx)                                                                     const { return m_generativeFaceVideoEnhancementSEIPupilRightEyeCoordinateY[idx]; }
+#endif
+#if JVET_AK0140_PACKED_REGIONS_INFORMATION_SEI
+  void     setPriSEIEnabled(bool b)                                       { m_priSEIEnabled = b; }
+  bool     getPriSEIEnabled()                                             { return m_priSEIEnabled; }
+  void     setPriSEICancelFlag(bool b)                                    { m_priSEICancelFlag = b; }
+  bool     getPriSEICancelFlag()                                          { return m_priSEICancelFlag; }
+  void     setPriSEIPersistenceFlag(bool b)                               { m_priSEIPersistenceFlag = b; }
+  bool     getPriSEIPersistenceFlag()                                     { return m_priSEIPersistenceFlag; }
+  void     setPriSEINumRegionsMinus1(uint32_t i)                          { m_priSEINumRegionsMinus1 = i; }
+  uint32_t getPriSEINumRegionsMinus1()                                    { return m_priSEINumRegionsMinus1; }
+  void     setPriSEIMultilayerFlag(bool b)                                { m_priSEIMultilayerFlag = b; }
+  bool     getPriSEIMultilayerFlag()                                      { return m_priSEIMultilayerFlag; }
+  void     setPriSEIUseMaxDimensionsFlag(bool b)                          { m_priSEIUseMaxDimensionsFlag = b; }
+  bool     getPriSEIUseMaxDimensionsFlag()                                { return m_priSEIUseMaxDimensionsFlag; }
+  void     setPriSEILog2UnitSize(uint32_t i)                              { m_priSEILog2UnitSize = i; }
+  uint32_t getPriSEILog2UnitSize()                                        { return m_priSEILog2UnitSize; }
+  void     setPriSEIRegionSizeLenMinus1(uint32_t i)                       { m_priSEIRegionSizeLenMinus1 = i; }
+  uint32_t getPriSEIRegionSizeLenMinus1()                                 { return m_priSEIRegionSizeLenMinus1; }
+  void     setPriSEIRegionIdPresentFlag(bool b)                           { m_priSEIRegionIdPresentFlag = b; }
+  bool     getPriSEIRegionIdPresentFlag()                                 { return m_priSEIRegionIdPresentFlag; }
+  void     setPriSEITargetPicParamsPresentFlag(bool b)                    { m_priSEITargetPicParamsPresentFlag = b; }
+  bool     getPriSEITargetPicParamsPresentFlag()                          { return m_priSEITargetPicParamsPresentFlag; }
+  void     setPriSEITargetPicWidthMinus1(uint32_t i)                      { m_priSEITargetPicWidthMinus1 = i; }
+  uint32_t getPriSEITargetPicWidthMinus1()                                { return m_priSEITargetPicWidthMinus1; }
+  void     setPriSEITargetPicHeightMinus1(uint32_t i)                     { m_priSEITargetPicHeightMinus1 = i; }
+  uint32_t getPriSEITargetPicHeightMinus1()                               { return m_priSEITargetPicHeightMinus1; }
+  void     setPriSEINumResamplingRatiosMinus1(uint32_t i)                 { m_priSEINumResamplingRatiosMinus1 = i; }
+  uint32_t getPriSEINumResamplingRatiosMinus1()                           { return m_priSEINumResamplingRatiosMinus1; }
+  void     setPriSEIResamplingWidthNumMinus1(std::vector<uint32_t>& b)    { m_priSEIResamplingWidthNumMinus1 = b; }
+  uint32_t getPriSEIResamplingWidthNumMinus1(int i)                       { return m_priSEIResamplingWidthNumMinus1[i]; }
+  void     setPriSEIResamplingWidthDenomMinus1(std::vector<uint32_t>& b)  { m_priSEIResamplingWidthDenomMinus1 = b; }
+  uint32_t getPriSEIResamplingWidthDenomMinus1(int i)                     { return m_priSEIResamplingWidthDenomMinus1[i]; }
+  void     setPriSEIFixedAspectRatioFlag(std::vector<bool>& b)            { m_priSEIFixedAspectRatioFlag = b; }
+  bool     getPriSEIFixedAspectRatioFlag(int i)                           { return m_priSEIFixedAspectRatioFlag[i]; }
+  void     setPriSEIResamplingHeightNumMinus1(std::vector<uint32_t>& b)   { m_priSEIResamplingHeightNumMinus1 = b; }
+  uint32_t getPriSEIResamplingHeightNumMinus1(int i)                      { return m_priSEIResamplingHeightNumMinus1[i]; }
+  void     setPriSEIResamplingHeightDenomMinus1(std::vector<uint32_t>& b) { m_priSEIResamplingHeightDenomMinus1 = b; }
+  uint32_t getPriSEIResamplingHeightDenomMinus1(int i)                    { return m_priSEIResamplingHeightDenomMinus1[i]; }
+  void     setPriSEIRegionId(std::vector<uint32_t>& b)                    { m_priSEIRegionId = b; }
+  uint32_t getPriSEIRegionId(int i)                                       { return m_priSEIRegionId[i]; }
+  void     setPriSEIRegionLayerId(std::vector<uint32_t>& b)               { m_priSEIRegionLayerId = b; }
+  uint32_t getPriSEIRegionLayerId(int i)                                  { return m_priSEIRegionLayerId[i]; }
+  void     setPriSEIRegionIsALayerFlag(std::vector<bool>& b)              { m_priSEIRegionIsALayerFlag = b; }
+  uint32_t getPriSEIRegionIsALayerFlag(int i)                             { return m_priSEIRegionIsALayerFlag[i]; }
+  void     setPriSEIRegionTopLeftInUnitsX(std::vector<uint32_t>& b)       { m_priSEIRegionTopLeftInUnitsX = b; }
+  uint32_t getPriSEIRegionTopLeftInUnitsX(int i)                          { return m_priSEIRegionTopLeftInUnitsX[i]; }
+  void     setPriSEIRegionTopLeftInUnitsY(std::vector<uint32_t>& b)       { m_priSEIRegionTopLeftInUnitsY = b; }
+  uint32_t getPriSEIRegionTopLeftInUnitsY(int i)                          { return m_priSEIRegionTopLeftInUnitsY[i]; }
+  void     setPriSEIRegionWidthInUnitsMinus1(std::vector<uint32_t>& b)    { m_priSEIRegionWidthInUnitsMinus1 = b; }
+  uint32_t getPriSEIRegionWidthInUnitsMinus1(int i)                       { return m_priSEIRegionWidthInUnitsMinus1[i]; }
+  void     setPriSEIRegionHeightInUnitsMinus1(std::vector<uint32_t>& b)   { m_priSEIRegionHeightInUnitsMinus1 = b; }
+  uint32_t getPriSEIRegionHeightInUnitsMinus1(int i)                      { return m_priSEIRegionHeightInUnitsMinus1[i]; }
+  void     setPriSEIResamplingRatioIdx(std::vector<uint32_t>& b)          { m_priSEIResamplingRatioIdx = b; }
+  uint32_t getPriSEIResamplingRatioIdx(int i)                             { return m_priSEIResamplingRatioIdx[i]; }
+  void     setPriSEITargetRegionTopLeftInUnitsX(std::vector<uint32_t>& b) { m_priSEITargetRegionTopLeftInUnitsX = b; }
+  uint32_t getPriSEITargetRegionTopLeftInUnitsX(int i) { return m_priSEITargetRegionTopLeftInUnitsX[i]; }
+  void     setPriSEITargetRegionTopLeftInUnitsY(std::vector<uint32_t>& b) { m_priSEITargetRegionTopLeftInUnitsY = b; }
+  uint32_t getPriSEITargetRegionTopLeftInUnitsY(int i) { return m_priSEITargetRegionTopLeftInUnitsY[i]; }
+#endif
+
+#if JVET_AK2006_SPTI_SEI_MESSAGE
+  void setSptiSEIEnabled(bool b) { m_sptiSEIEnabled = b; }
+  bool getSptiSEIEnabled() { return m_sptiSEIEnabled; }
+  void setmSptiSEISourceTimingEqualsOutputTimingFlag(bool b) { m_sptiSourceTimingEqualsOutputTimingFlag = b; }
+  bool getmSptiSEISourceTimingEqualsOutputTimingFlag() { return m_sptiSourceTimingEqualsOutputTimingFlag; }
+  void setmSptiSEISourceType(uint32_t b) { m_sptiSourceType = b; }
+  uint32_t getmSptiSEISourceType() { return m_sptiSourceType; }
+  void setmSptiSEITimeScale(uint32_t b) { m_sptiTimeScale = b; }
+  uint32_t getmSptiSEITimeScale() { return m_sptiTimeScale; }
+  void setmSptiSEINumUnitsInElementalInterval(uint32_t b) { m_sptiNumUnitsInElementalInterval = b; }
+  uint32_t getmSptiSEINumUnitsInElementalInterval() { return m_sptiNumUnitsInElementalInterval; }
+  void setmSptiSEIDirectionFlag(bool b) { m_sptiDirectionFlag = b; }
+  uint32_t getmSptiSEIDirectionFlag() { return m_sptiDirectionFlag; }
+#endif
+
 
 };
 

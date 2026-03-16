@@ -1,40 +1,15 @@
+HM HEVC Reference Software.
+We're using a modified version of HM (https://github.com/KanaLab/HM) to fix high bit depth issues.
+
 # Version
 
-- **Repo**: `https://vcgit.hhi.fraunhofer.de/jvet/HM`
-- **Commit**: `ae4c8d6d67572e929610a205eb574bd8dc00c043` after HM 18.0.
+- **Upstream**: `https://vcgit.hhi.fraunhofer.de/jvet/HM` commit `dbe8d28d` (after HM 18.0)
+- **Fork**: `https://github.com/KanaLab/HM` commit `5a9cfb2b`
 
-# Changes
+# Fork Changes
 
-To resolve build errors (warnings treated as errors), the source code was modified.
-
-File: `source/Lib/TLibCommon/TComTrQuant.cpp`
-
-```cpp
-// Line 1364 before
-const Intermediate_Int iAdd = 1 << (rightShift - 1);
-// Line 1364 after
-const Intermediate_Int iAdd = Intermediate_Int(1) << (rightShift - 1);
-
-// Line 1401 before
-const Intermediate_Int iAdd = 1 << (rightShift - 1);
-// Line 1401 after
-const Intermediate_Int iAdd = Intermediate_Int(1) << (rightShift - 1);
-
-// Line 2041 before
-const TCoeff offset = 1 << (iTransformShift - 1);
-// Line 2041 after
-const TCoeff offset = TCoeff(1) << (iTransformShift - 1);
-
-// Line 3417 before
-const Intermediate_Int iAdd      = 1 << (rightShift - 1);
-// Line 3417 after
-const Intermediate_Int iAdd      = Intermediate_Int(1) << (rightShift - 1);
-
-// Line 3443 before
-const Intermediate_Int iAdd      = 1 << (rightShift - 1);
-// Line 3443 after
-const Intermediate_Int iAdd      = Intermediate_Int(1) << (rightShift - 1);
-```
+- `0269a7d4` Fix integer overflow in dequantization shift for high bit depth
+- `5a9cfb2b` Fix non-conforming delta weight range for high bit depth WP
 
 # CMake Options
 
@@ -46,7 +21,7 @@ const Intermediate_Int iAdd      = Intermediate_Int(1) << (rightShift - 1);
 |ENABLE_TRACING|OFF|Avoid extra runtime cost|
 |EXTENSION_360_VIDEO|OFF|Latest version not compatible with HM|
 |HIGH_BITDEPTH|ON|16-bit support is required|
-|SET_ENABLE_TRACING|OFF|Don't know what is this|
+|SET_ENABLE_TRACING|OFF|Not needed|
 
 # Artifacts
 

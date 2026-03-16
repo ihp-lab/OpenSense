@@ -3,7 +3,7 @@
  * and contributor rights, including patent rights, and no such rights are
  * granted under this license.
  *
- * Copyright (c) 2010-2025, ITU/ISO/IEC
+ * Copyright (c) 2010-2026, ITU/ISO/IEC
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,6 +51,8 @@
 //! \ingroup TLibCommon
 //! \{
 
+#define JVET_AN0237_FILM_GRAIN_ANALYSIS                   1 // film grain analysis improvements
+
 #define JCTVC_AD0021_SEI_MANIFEST                         1  // JCTVC_AD0021(JVET-T0056): SEI manifest SEI message
 #define JCTVC_AD0021_SEI_PREFIX_INDICATION                1  // JCTVC_AD0021(JVET-T0056): SEI prefix indication SEI message
 #define JVET_X0079_MODIFIED_BITRATES                      1 // JVET-X0079: Addition of level 6.3
@@ -67,6 +69,8 @@
 #ifndef JVET_AK0194_DSC_SEI
 #define JVET_AK0194_DSC_SEI   1                      // Digitally signed content signing and verification (requires OpenSSL v3)
 #endif
+
+#define JVET_AK0140_PACKED_REGIONS_INFORMATION_SEI        1
 
 // ====================================================================================================================
 // Debugging
@@ -114,13 +118,20 @@
 #define SEI_ENCODER_CONTROL                               1  ///< add encoder control for the following SEI: film grain characteristics, content light level, ambient viewing environment
 #define DPB_ENCODER_USAGE_CHECK                           1 ///< Adds DPB encoder usage check.
 #define JVET_X0048_X0103_FILM_GRAIN                       1 ///< JVET-X0048-X0103: SMPTE RDD-5 based film grain analysis and synthesis model for film grain characterstics (FGC) SEI
+#define JVET_AL0339_SPATIAL_RESOLUTION_FOR_FGC_SEI        1 ///< JVET-AL0339: Spatial resolution for film grain characteristics SEI message.
 
 #define JVET_T0050_ANNOTATED_REGIONS_SEI                  1 ///< Detect static objects and use it in Annotated Regions SEI message
+
+#define JVET_AL0061_ENCODER_OPTIMIZATION_INFORMATION_SEI   1 ///< Support for encoder optimization information SEI message
 
 #if SHUTTER_INTERVAL_SEI_MESSAGE
 #define SHUTTER_INTERVAL_SEI_PROCESSING                   1 ///< JCTVC-AM0024: pre-/post-processing to use shutter interval SEI
 #endif
 #define JVET_AK0107_MODALITY_INFORMATION                  1 // Implementation of Modality Information SEI message
+#define JVET_AJ0207_GFV                                   1 //generative face video (GFV) SEI
+#define JVET_AK0239_GEFV                                  1 //generative enhancement face video (GEFV) SEI
+#define JVET_AK2006_SPTI_SEI_MESSAGE                      1 // Implementation of Source Picture Timing Information SEI message
+
 // ====================================================================================================================
 // Tool Switches
 // ====================================================================================================================
@@ -594,7 +605,38 @@ enum SAOEOClasses
   SAO_CLASS_EO_FULL_PEAK   = 4,
   NUM_SAO_EO_CLASSES,
 };
+#if JVET_AL0061_ENCODER_OPTIMIZATION_INFORMATION_SEI
 
+enum EOI_OptimizationType
+{
+  UNDEFINED = 0,
+  OBJECT_BASED_OPTIMIZATION = 1,
+  TEMPORAL_RESAMPLING = 2,
+  SPATIAL_RESAMPLING = 4,
+  TEMPORAL_QUALITY_OPTIMIZATION = 8,
+  SPATIAL_QUALITY_OPTIMIZATION = 16,
+  PRIVACY_PROTECTION_OPTIMIZATION = 32,
+};
+
+enum EOI_PRIVACY_PROTECTION
+{
+  BLURRING = 1,
+  REPLACING = 2,
+  MASKING = 4,
+  PIXELATION = 8
+};
+
+enum EOI_OBJECT_BASED
+{
+  BLURRED = 1,
+  COARSER_QUANTIZATION = 2,
+  OVERWRITTEN_CONSTANT = 4,
+  OVERWRITTEN_NONCONSTANT = 8,
+  SIZE_BASED = 16
+};
+
+
+#endif
 #define NUM_SAO_BO_CLASSES_LOG2  5
 #define NUM_SAO_BO_CLASSES       (1<<NUM_SAO_BO_CLASSES_LOG2)
 

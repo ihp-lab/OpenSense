@@ -3,7 +3,7 @@
  * and contributor rights, including patent rights, and no such rights are
  * granted under this license.
  *
- * Copyright (c) 2010-2025, ITU/ISO/IEC
+ * Copyright (c) 2010-2026, ITU/ISO/IEC
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -49,7 +49,11 @@ class TComBitIf;
 class SEIWriter:public SyntaxElementWriter
 {
 public:
-  SEIWriter() {};
+  SEIWriter()
+#if JVET_AL0339_SPATIAL_RESOLUTION_FOR_FGC_SEI
+    : m_SeiExtensionBitsPresentFlag(false)
+#endif
+  {};
   virtual ~SEIWriter() {};
 
   Void writeSEImessages(TComBitIf& bs, const SEIMessages &seiList, const TComSPS *sps, Bool isNested);
@@ -149,11 +153,56 @@ protected:
     return 2 * n + 1;
   }
 #endif 
+
+#if JVET_AL0061_ENCODER_OPTIMIZATION_INFORMATION_SEI
+  void xWriteSEIEncoderOptimizationInfo           (const SEIEncoderOptimizationInfo &sei);
+#endif
 #if JVET_AK0194_DSC_SEI
   void xWriteSEIDigitallySignedContentInitialization(const SEIDigitallySignedContentInitialization &sei);
   void xWriteSEIDigitallySignedContentSelection(const SEIDigitallySignedContentSelection &sei);
   void xWriteSEIDigitallySignedContentVerification(const SEIDigitallySignedContentVerification &sei);
 #endif
+#if JVET_AJ0207_GFV
+  void xWriteSEIGenerativeFaceVideo(const SEIGenerativeFaceVideo& sei);
+  std::vector<double>  prevcoordinateXRec;
+  std::vector<double>  prevcoordinateYRec;
+  std::vector<double>  prevcoordinateZRec;
+  std::vector<double>  baseCoordinateXRec;
+  std::vector<double>  baseCoordinateYRec;
+  std::vector<double>  baseCoordinateZRec;
+  std::vector<std::vector<std::vector<std::vector<double>>>> prevMatrixRec;
+  std::vector<std::vector<std::vector<std::vector<double>>>> baseMatrixRec;
+  std::vector<uint32_t> baseMatrixWidthVec;
+  std::vector<uint32_t> baseMatrixHeightVec;
+  std::vector<uint32_t> baseNumMatricesVec;
+  bool doUpdateGFVcoordinate = false;
+  bool doUpdateGFVmatrix = false;
+#endif
+#if JVET_AK0239_GEFV
+  Void xWriteSEIGenerativeFaceVideoEnhancement(const SEIGenerativeFaceVideoEnhancement& sei);
+  double xWriteSEIPupilCoordinate(double coordinate, double refCoordinate, int precisionFactor, const char* eye, const char* axis);
+  std::vector<std::vector<std::vector<double>>> prevGfveMatrixRec;
+  std::vector<std::vector<std::vector<double>>> baseGfveMatrixRec;
+  std::vector<uint32_t> baseGfveMatrixWidthVec;
+  std::vector<uint32_t> baseGfveMatrixHeightVec;
+  uint32_t baseGfveNumMatrices;
+  uint32_t baseMatrixElementPrecisionFactor;
+  bool   doUpdateGFVEmatrix = false;
+  double prevgfveLeftPupilCoordinateX;
+  double prevgfveLeftPupilCoordinateY;
+  double prevgfveRightPupilCoordinateX;
+  double prevgfveRightPupilCoordinateY;
+  double basegfveLeftPupilCoordinateX;
+  double basegfveLeftPupilCoordinateY;
+  double basegfveRightPupilCoordinateX;
+  double basegfveRightPupilCoordinateY;
+  bool   checkBasePicPupilPresentIdx = false;
+  bool   doUpdateGFVPupilCoordinate = false;
+#endif
+#if JVET_AK0140_PACKED_REGIONS_INFORMATION_SEI
+  void xWriteSEIPackedRegionsInfo(const SEIPackedRegionsInfo& sei);
+#endif
+
 
 #if SHUTTER_INTERVAL_SEI_MESSAGE
   Void xWriteSEIShutterInterval                   (const SEIShutterIntervalInfo& sei);
@@ -173,6 +222,13 @@ protected:
   Void  xTraceSEIHeader();
   Void  xTraceSEIMessageType(SEI::PayloadType payloadType);
   Void xWriteByteAlign();
+
+#if JVET_AL0339_SPATIAL_RESOLUTION_FOR_FGC_SEI
+  Bool m_SeiExtensionBitsPresentFlag;
+#endif
+#if JVET_AK2006_SPTI_SEI_MESSAGE
+  void xWriteSEISourcePictureTimingInfo(const SEISourcePictureTimingInfo &sei);
+#endif
 };
 
 //! \}

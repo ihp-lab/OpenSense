@@ -3,7 +3,7 @@
  * and contributor rights, including patent rights, and no such rights are
  * granted under this license.
  *
- * Copyright (c) 2010-2025, ITU/ISO/IEC
+ * Copyright (c) 2010-2026, ITU/ISO/IEC
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -117,6 +117,9 @@ protected:
 #if SHUTTER_INTERVAL_SEI_MESSAGE
   Void xParseSEIShutterInterval               (SEIShutterIntervalInfo& sei,           UInt payloadSize,                     std::ostream *pDecodedMessageOutputStream);
 #endif
+#if JVET_AL0061_ENCODER_OPTIMIZATION_INFORMATION_SEI
+  void xParseSEIEncoderOptimizationInfo(SEIEncoderOptimizationInfo& sei, uint32_t payloadSize, std::ostream* pDecodedMessageOutputStream);
+#endif
 #if JVET_AE0101_PHASE_INDICATION_SEI_MESSAGE
   void xParseSEIPhaseIndication(SEIPhaseIndication& sei, uint32_t payloadSize, std::ostream* pDecodedMessageOutputStream);
 #endif
@@ -134,6 +137,52 @@ protected:
   void xParseSEIDigitallySignedContentSelection     (SEIDigitallySignedContentSelection &sei, uint32_t payloadSize, std::ostream *pDecodedMessageOutputStream);
   void xParseSEIDigitallySignedContentVerification  (SEIDigitallySignedContentVerification &sei, uint32_t payloadSize, std::ostream *pDecodedMessageOutputStream);
 #endif
+#if JVET_AJ0207_GFV
+  void xParseSEIGenerativeFaceVideo(SEIGenerativeFaceVideo& sei, uint32_t payloadSize, std::ostream* pDecodedMessageOutputStream);
+  uint32_t                         baseCoordinateQuantizationFactor;
+  uint32_t                                                   basdCoordinatePointNum;
+  bool                                                       base3DCoordinateFlag;
+  uint32_t                                                   baseCoordinateZMaxValue;
+  std::vector<double>                                        prevCoordinateX;
+  std::vector<double>                                        prevCoordinateY;
+  std::vector<double>                                        prevCoordinateZ;
+  std::vector<double>                                        baseCoordinateX;
+  std::vector<double>                                        baseCoordinateY;
+  std::vector<double>                                        baseCoordinateZ;
+  uint32_t                                                   baseMatrixElementPrecisionFactor;
+  uint32_t                                                   baseNumMatrixType;
+  std::vector<uint32_t>                                      baseNumMatrices;
+  std::vector<uint32_t>                                      baseMatrixWidth;
+  std::vector<uint32_t>                                      baseMatrixHeight;
+  std::vector<std::vector<std::vector<std::vector<double>>>> baseMatrix;
+  std::vector<std::vector<std::vector<std::vector<double>>>> prevMatrix;
+#endif
+#if JVET_AK0239_GEFV
+  void xParseSEIGenerativeFaceVideoEnhancement(SEIGenerativeFaceVideoEnhancement &sei, uint32_t payloadSize, std::ostream* pDecodedMessageOutputStream);
+  double xParseSEIPupilCoordinate(std::ostream *pOS, double refCoordinate, int precisionFactor, const char* eye, const char* axis);
+  uint32_t                                                   gfveBaseMatrixElementPrecisionFactor;
+  uint32_t                                                   gfveBaseNumMatrices;
+  std::vector<uint32_t>                                      gfveBaseMatrixWidth;
+  std::vector<uint32_t>                                      gfveBaseMatrixHeight;
+  std::vector<std::vector<std::vector<double>>>              gfveBaseMatrix;
+  std::vector<std::vector<std::vector<double>>>              gfvePrevMatrix;
+  uint32_t                                                   gfveBasePupilCoordinatePrecisionFactor;
+  double                                                     prevGfveLeftPupilCoordinateX;
+  double                                                     prevGfveLeftPupilCoordinateY;
+  double                                                     prevGfveRightPupilCoordinateX;
+  double                                                     prevGfveRightPupilCoordinateY;
+  double                                                     baseGfveLeftPupilCoordinateX;
+  double                                                     baseGfveLeftPupilCoordinateY;
+  double                                                     baseGfveRightPupilCoordinateX;
+  double                                                     baseGfveRightPupilCoordinateY;
+  bool                                                       checkBasePicPupilPresentIdx = false;
+#endif
+#if JVET_AK0140_PACKED_REGIONS_INFORMATION_SEI
+  void xParsePackedRegionsInfo(SEIPackedRegionsInfo &sei, uint32_t payLoadSize, std::ostream *pDecodedMessageOutputStream);
+#endif
+#if JVET_AK2006_SPTI_SEI_MESSAGE
+  void xParseSEISourcePictureTimingInfo(SEISourcePictureTimingInfo &sei, uint32_t payloadSize, std::ostream *pDecodedMessageOutputStream);
+#endif
 
   Void xTraceSEIHeader();
   Void xTraceSEIMessageType(SEI::PayloadType payloadType);
@@ -144,6 +193,7 @@ protected:
   Void sei_read_svlc(std::ostream *pOS,                Int&  ruiCode, const TChar *pSymbolName);
   Void sei_read_flag(std::ostream *pOS,                UInt& ruiCode, const TChar *pSymbolName);
   void sei_read_string(std::ostream* os,           std::string& code, const TChar* symbolName);
+  bool xPayloadExtensionPresent();
 
 };
 

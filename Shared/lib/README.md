@@ -14,5 +14,5 @@ tbb|18.5.0
 xmlrpc-c|1.54.1
 ffmpeg|8.0
 kvazaar|4b8a5e0
-minimp4|4575afb
-hm|ae4c8d6d
+minimp4|upstream 4575afb, fork 3f59604
+hm|upstream dbe8d28d, fork 5a9cfb2b

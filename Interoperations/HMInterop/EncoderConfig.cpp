@@ -806,6 +806,9 @@ namespace HMInterop {
         encoder->setTimeCodeSEIEnabled(false);
         encoder->setNumberOfTimeSets(0);
 
+        // Source Picture Timing Info (disabled)
+        encoder->setSptiSEIEnabled(false);
+
         // Knee Function (disabled)
         encoder->setKneeSEIEnabled(false);
         {
@@ -871,6 +874,9 @@ namespace HMInterop {
         encoder->setCmpSEIEnabled(false);
         encoder->setCmpSEICmpCancelFlag(true);
         encoder->setCmpSEICmpPersistenceFlag(false);
+
+        // Packed Regions Info (disabled)
+        encoder->setPriSEIEnabled(false);
 
         // RWP (disabled)
         encoder->setRwpSEIEnabled(false);
@@ -944,6 +950,10 @@ namespace HMInterop {
         // Fisheye Video Info (disabled)
         encoder->setFviSEIDisabled();
 
+        // Generative Face Video (disabled)
+        encoder->setGenerativeFaceVideoSEIEnabled(false);
+        encoder->setGenerativeFaceVideoEnhancementSEIEnabled(false);
+
         // Colour Remap (disabled)
         {
             std::string empty;
@@ -964,6 +974,9 @@ namespace HMInterop {
         encoder->setSEIGreenMetadataInfoSEIEnable(false);
         encoder->setSEIGreenMetadataType(0);
         encoder->setSEIXSDMetricType(0);
+
+        // Encoder Optimization Info (disabled)
+        encoder->setEOISEIEnabled(false);
 
         // Regional Nesting (disabled)
         {
