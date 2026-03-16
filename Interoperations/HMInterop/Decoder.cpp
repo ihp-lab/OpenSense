@@ -197,6 +197,7 @@ static void NativeFlushDecoder(TDecTop* decoder, Int& pocLastDisplay, std::vecto
 #pragma managed(pop)
 
 #include "Decoder.h"
+#include "HMContext.h"
 #include "PictureYuvPool.h"
 
 using namespace System;
@@ -206,12 +207,23 @@ namespace HMInterop {
         : _decoder(nullptr)
         , _disposed(false)
         , _pocLastDisplay(-MAX_INT)
-        , _lastSps(nullptr) {
+        , _lastSps(nullptr)
+        , _maxWidth(64)   // defaults before SPS is known; harmless because
+        , _maxHeight(64)  // HM's TDecCu::create() will overwrite scan tables
+        , _maxDepth(4) {  // with the actual SPS values during decode()
 
-        _decoder = new TDecTop();
-        _decoder->create();
-        _decoder->init();
-        _decoder->setDecodedPictureHashSEIEnabled(0);
+        HMContext::Acquire(_maxWidth, _maxHeight, _maxDepth);
+        try {
+            HMContext::PrepareForInitialization();
+            _decoder = new TDecTop();
+            _decoder->create();
+            _decoder->init();
+            _decoder->setDecodedPictureHashSEIEnabled(0);
+            HMContext::NotifyInitializationComplete();
+        }
+        finally {
+            HMContext::Release();
+        }
     }
 
     void Decoder::FeedNal(
@@ -226,26 +238,44 @@ namespace HMInterop {
             return;
         }
 
-        // Pin managed memory and feed to native decoder
-        auto handle = nalData.Pin();
-        auto nativeData = static_cast<const uint8_t*>(handle.Pointer);
+        HMContext::Acquire(_maxWidth, _maxHeight, _maxDepth);
+        try {
+            // Pin managed memory and feed to native decoder
+            auto handle = nalData.Pin();
+            auto nativeData = static_cast<const uint8_t*>(handle.Pointer);
 
-        auto pocLastDisplay = _pocLastDisplay;
+            auto pocLastDisplay = _pocLastDisplay;
 
-        std::vector<NativeDecodedPic> nativeOutput;
-        auto needsReFeed = false;
-        NativeFeedNal(_decoder, nativeData, length, pocLastDisplay, nativeOutput, needsReFeed);
+            std::vector<NativeDecodedPic> nativeOutput;
+            auto needsReFeed = false;
+            NativeFeedNal(_decoder, nativeData, length, pocLastDisplay, nativeOutput, needsReFeed);
 
-        // Create snapshots BEFORE re-feed, because re-feed may reuse TComPic buffers
-        AppendDecodedPics(nativeOutput, output);
+            // Create snapshots BEFORE re-feed, because re-feed may reuse TComPic buffers
+            AppendDecodedPics(nativeOutput, output);
 
-        // Now re-feed the NAL that was peeked but not decoded
-        if (needsReFeed) {
-            NativeReFeedNal(_decoder, nativeData, length, pocLastDisplay);
+            // Now re-feed the NAL that was peeked but not decoded
+            if (needsReFeed) {
+                NativeReFeedNal(_decoder, nativeData, length, pocLastDisplay);
+            }
+
+            delete safe_cast<IDisposable^>(handle);
+            _pocLastDisplay = pocLastDisplay;
+
+            // Update CTU parameters from SPS if available
+            if (_lastSps != nullptr) {
+                auto spsWidth = _lastSps->MaxCUWidth;
+                auto spsHeight = _lastSps->MaxCUHeight;
+                auto spsDepth = _lastSps->MaxTotalCUDepth;
+                if (spsWidth > 0 && spsHeight > 0 && spsDepth > 0) {
+                    _maxWidth = spsWidth;
+                    _maxHeight = spsHeight;
+                    _maxDepth = spsDepth;
+                }
+            }
         }
-
-        delete safe_cast<IDisposable^>(handle);
-        _pocLastDisplay = pocLastDisplay;
+        finally {
+            HMContext::Release();
+        }
     }
 
     void Decoder::FlushAndCollect(
@@ -254,13 +284,19 @@ namespace HMInterop {
         ThrowIfDisposed();
         ArgumentNullException::ThrowIfNull(output, "output");
 
-        auto pocLastDisplay = _pocLastDisplay;
+        HMContext::Acquire(_maxWidth, _maxHeight, _maxDepth);
+        try {
+            auto pocLastDisplay = _pocLastDisplay;
 
-        std::vector<NativeDecodedPic> nativeOutput;
-        NativeFlushDecoder(_decoder, pocLastDisplay, nativeOutput);
-        AppendDecodedPics(nativeOutput, output);
+            std::vector<NativeDecodedPic> nativeOutput;
+            NativeFlushDecoder(_decoder, pocLastDisplay, nativeOutput);
+            AppendDecodedPics(nativeOutput, output);
 
-        _pocLastDisplay = pocLastDisplay;
+            _pocLastDisplay = pocLastDisplay;
+        }
+        finally {
+            HMContext::Release();
+        }
     }
 
     void Decoder::AppendDecodedPics(
@@ -304,10 +340,18 @@ namespace HMInterop {
     }
 
     Decoder::!Decoder() {
-        if (_decoder) {
-            _decoder->destroy();
-            delete _decoder;
-            _decoder = nullptr;
+        HMContext::Acquire(_maxWidth, _maxHeight, _maxDepth);
+        try {
+            if (_decoder) {
+                _decoder->deletePicBuffer(); // frees pictures + calls destroyROM()
+                _decoder->destroy();
+                delete _decoder;
+                _decoder = nullptr;
+            }
+            HMContext::NotifyDestructionComplete();
+        }
+        finally {
+            HMContext::Release();
         }
     }
 #pragma endregion

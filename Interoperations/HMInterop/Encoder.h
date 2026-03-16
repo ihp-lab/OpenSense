@@ -25,6 +25,11 @@ namespace HMInterop {
         // Reconstructed picture list (TComList<TComPicYuv*>*)
         void* _recPicList;
 
+        // CTU parameters for HMContext
+        int _maxWidth;
+        int _maxHeight;
+        int _maxDepth;
+
     public:
         /// <summary>
         /// Creates an encoder with the specified configuration

@@ -67,6 +67,10 @@ namespace HMInterop {
             int get();
         }
 
+        property int MaxTotalCUDepth {
+            int get();
+        }
+
         property int MaxTLayers {
             int get();
         }

@@ -24,6 +24,9 @@
     <ClInclude Include="Encoder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HMContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="EncoderConfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -75,6 +78,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Encoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HMContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EncoderConfig.cpp">

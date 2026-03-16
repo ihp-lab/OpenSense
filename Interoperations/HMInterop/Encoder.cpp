@@ -177,9 +177,24 @@ static int NativeEncode(
     return count;
 }
 
+// Accessor for TEncCfg protected members
+class TEncTopAccessor : public TEncTop {
+public:
+    static UInt GetMaxCUWidth(TEncTop* enc) {
+        return static_cast<TEncTopAccessor*>(enc)->m_maxCUWidth;
+    }
+    static UInt GetMaxCUHeight(TEncTop* enc) {
+        return static_cast<TEncTopAccessor*>(enc)->m_maxCUHeight;
+    }
+    static UInt GetMaxTotalCUDepth(TEncTop* enc) {
+        return static_cast<TEncTopAccessor*>(enc)->m_maxTotalCUDepth;
+    }
+};
+
 #pragma managed(pop)
 
 #include "Encoder.h"
+#include "HMContext.h"
 
 using namespace System;
 using namespace System::Buffers;
@@ -192,6 +207,9 @@ namespace HMInterop {
         , _ptsMap(nullptr)
         , _inputFrameCount(0)
         , _recPicList(nullptr)
+        , _maxWidth(0)
+        , _maxHeight(0)
+        , _maxDepth(0)
         , _disposed(false) {
 
         ArgumentNullException::ThrowIfNull(config, "config");
@@ -203,9 +221,27 @@ namespace HMInterop {
         // Apply configuration
         config->ApplyTo(_encoder);
 
-        // Initialize encoder
-        _encoder->create();
-        _encoder->init(false);  // not field coding
+        // Use config values for initial Acquire (approximate; corrected after create)
+        _maxWidth = config->MaxCUWidth;
+        _maxHeight = config->MaxCUHeight;
+        _maxDepth = config->MaxTotalCUDepth;
+
+        // Initialize encoder under HMContext lock
+        HMContext::Acquire(_maxWidth, _maxHeight, _maxDepth);
+        try {
+            HMContext::PrepareForInitialization();
+            _encoder->create();
+            _encoder->init(false);
+            HMContext::NotifyInitializationComplete();
+
+            // Read actual CTU parameters from encoder (may differ from config after internal derivation)
+            _maxWidth = TEncTopAccessor::GetMaxCUWidth(_encoder);
+            _maxHeight = TEncTopAccessor::GetMaxCUHeight(_encoder);
+            _maxDepth = TEncTopAccessor::GetMaxTotalCUDepth(_encoder);
+        }
+        finally {
+            HMContext::Release();
+        }
     }
 
     void Encoder::Encode(
@@ -216,94 +252,106 @@ namespace HMInterop {
         ArgumentNullException::ThrowIfNull(inputPicture, "inputPicture");
         ArgumentNullException::ThrowIfNull(output, "output");
 
-        // Create internal TComPicYuv for the encoder
-        auto picOrg = new TComPicYuv();
-        picOrg->createWithoutCUInfo(_encoder->getSourceWidth(), _encoder->getSourceHeight(), _encoder->getChromaFormatIdc(), false);
+        HMContext::Acquire(_maxWidth, _maxHeight, _maxDepth);
+        try {
+            // Create internal TComPicYuv for the encoder
+            auto picOrg = new TComPicYuv();
+            picOrg->createWithoutCUInfo(_encoder->getSourceWidth(), _encoder->getSourceHeight(), _encoder->getChromaFormatIdc(), false);
 
-        // Copy pixel data from input picture to internal buffer
-        CopyPicYuvData(inputPicture->InternalPicYuv, picOrg);
+            // Copy pixel data from input picture to internal buffer
+            CopyPicYuvData(inputPicture->InternalPicYuv, picOrg);
 
-        // Record PTS mapping
-        RecordPts(_ptsMap, _inputFrameCount, pts);
-        _inputFrameCount++;
+            // Record PTS mapping
+            RecordPts(_ptsMap, _inputFrameCount, pts);
+            _inputFrameCount++;
 
-        // Push reconstruction buffer (required by TEncGOP::xGetBuffer)
-        PrepareRecBuffer(
-            static_cast<TComList<TComPicYuv*>*>(_recPicList),
-            _config->GOPEntries->Length,
-            _config->SourceWidth,
-            _config->SourceHeight,
-            static_cast<::ChromaFormat>(_config->ChromaFormatIdc),
-            _config->MaxCUWidth,
-            _config->MaxCUHeight,
-            _config->MaxTotalCUDepth
-        );
+            // Push reconstruction buffer (required by TEncGOP::xGetBuffer)
+            PrepareRecBuffer(
+                static_cast<TComList<TComPicYuv*>*>(_recPicList),
+                _config->GOPEntries->Length,
+                _config->SourceWidth,
+                _config->SourceHeight,
+                static_cast<::ChromaFormat>(_config->ChromaFormatIdc),
+                _maxWidth,
+                _maxHeight,
+                _maxDepth
+            );
 
-        // Encode
-        NativeEncodedUnit* outUnits = nullptr;
-        auto count = NativeEncode(
-            _encoder,
-            false,
-            picOrg,
-            _recPicList,
-            _ptsMap,
-            _inputFrameCount,
-            &outUnits
-        );
+            // Encode
+            NativeEncodedUnit* outUnits = nullptr;
+            auto count = NativeEncode(
+                _encoder,
+                false,
+                picOrg,
+                _recPicList,
+                _ptsMap,
+                _inputFrameCount,
+                &outUnits
+            );
 
-        // Collect output: copy native data to pooled managed buffers
-        for (auto i = 0; i < count; i++) {
-            if (!outUnits[i].ptsFound) {
-                throw gcnew InvalidOperationException(System::String::Format("Could not find PTS for POC {0}", outUnits[i].poc));
+            // Collect output: copy native data to pooled managed buffers
+            for (auto i = 0; i < count; i++) {
+                if (!outUnits[i].ptsFound) {
+                    throw gcnew InvalidOperationException(System::String::Format("Could not find PTS for POC {0}", outUnits[i].poc));
+                }
+                auto length = static_cast<int>(outUnits[i].data.size());
+                auto owner = MemoryPool<Byte>::Shared->Rent(length);
+                {
+                    auto handle = owner->Memory.Pin();
+                    memcpy(handle.Pointer, outUnits[i].data.data(), length);
+                    delete safe_cast<IDisposable^>(handle);
+                }
+                output->Add(gcnew AccessUnitData(owner, length, outUnits[i].pts, outUnits[i].poc));
             }
-            auto length = static_cast<int>(outUnits[i].data.size());
-            auto owner = MemoryPool<Byte>::Shared->Rent(length);
-            {
-                auto handle = owner->Memory.Pin();
-                memcpy(handle.Pointer, outUnits[i].data.data(), length);
-                delete safe_cast<IDisposable^>(handle);
+            if (outUnits) {
+                delete[] outUnits;
             }
-            output->Add(gcnew AccessUnitData(owner, length, outUnits[i].pts, outUnits[i].poc));
-        }
-        if (outUnits) {
-            delete[] outUnits;
-        }
 
-        // Clean up the input buffer
-        picOrg->destroy();
-        delete picOrg;
+            // Clean up the input buffer
+            picOrg->destroy();
+            delete picOrg;
+        }
+        finally {
+            HMContext::Release();
+        }
     }
 
     void Encoder::Flush([NotNull] System::Collections::Generic::IList<AccessUnitData^>^ output) {
         ThrowIfDisposed();
         ArgumentNullException::ThrowIfNull(output, "output");
 
-        NativeEncodedUnit* outUnits = nullptr;
-        auto count = NativeEncode(
-            _encoder,
-            true,
-            nullptr,
-            _recPicList,
-            _ptsMap,
-            _inputFrameCount,
-            &outUnits
-        );
+        HMContext::Acquire(_maxWidth, _maxHeight, _maxDepth);
+        try {
+            NativeEncodedUnit* outUnits = nullptr;
+            auto count = NativeEncode(
+                _encoder,
+                true,
+                nullptr,
+                _recPicList,
+                _ptsMap,
+                _inputFrameCount,
+                &outUnits
+            );
 
-        for (auto i = 0; i < count; i++) {
-            if (!outUnits[i].ptsFound) {
-                throw gcnew InvalidOperationException(System::String::Format("Could not find PTS for POC {0}", outUnits[i].poc));
+            for (auto i = 0; i < count; i++) {
+                if (!outUnits[i].ptsFound) {
+                    throw gcnew InvalidOperationException(System::String::Format("Could not find PTS for POC {0}", outUnits[i].poc));
+                }
+                auto length = static_cast<int>(outUnits[i].data.size());
+                auto owner = MemoryPool<Byte>::Shared->Rent(length);
+                {
+                    auto handle = owner->Memory.Pin();
+                    memcpy(handle.Pointer, outUnits[i].data.data(), length);
+                    delete safe_cast<IDisposable^>(handle);
+                }
+                output->Add(gcnew AccessUnitData(owner, length, outUnits[i].pts, outUnits[i].poc));
             }
-            auto length = static_cast<int>(outUnits[i].data.size());
-            auto owner = MemoryPool<Byte>::Shared->Rent(length);
-            {
-                auto handle = owner->Memory.Pin();
-                memcpy(handle.Pointer, outUnits[i].data.data(), length);
-                delete safe_cast<IDisposable^>(handle);
+            if (outUnits) {
+                delete[] outUnits;
             }
-            output->Add(gcnew AccessUnitData(owner, length, outUnits[i].pts, outUnits[i].poc));
         }
-        if (outUnits) {
-            delete[] outUnits;
+        finally {
+            HMContext::Release();
         }
     }
 
@@ -324,10 +372,17 @@ namespace HMInterop {
     }
 
     Encoder::!Encoder() {
-        if (_encoder) {
-            _encoder->destroy();
-            delete _encoder;
-            _encoder = nullptr;
+        HMContext::Acquire(_maxWidth, _maxHeight, _maxDepth);
+        try {
+            if (_encoder) {
+                _encoder->destroy();
+                delete _encoder;
+                _encoder = nullptr;
+            }
+            HMContext::NotifyDestructionComplete();
+        }
+        finally {
+            HMContext::Release();
         }
 
         DestroyPtsMap(_ptsMap);

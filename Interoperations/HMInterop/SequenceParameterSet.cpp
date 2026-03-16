@@ -98,6 +98,11 @@ namespace HMInterop {
         return _sps->getMaxCUHeight();
     }
 
+    int SequenceParameterSet::MaxTotalCUDepth::get() {
+        ThrowIfDisposed();
+        return _sps->getMaxTotalCUDepth();
+    }
+
     int SequenceParameterSet::MaxTLayers::get() {
         ThrowIfDisposed();
         return _sps->getMaxTLayers();

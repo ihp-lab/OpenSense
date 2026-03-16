@@ -7,7 +7,7 @@ namespace OpenSense.Components.HM {
 
         public override string Name => "HM MP4 File Writer";
 
-        public override string Description => "[Experimental] Write video to an MP4 file using HM (HEVC Model) encoder. Input is a Picture stream containing YUV data and metadata.";
+        public override string Description => "[Experimental] Write video to an MP4 file using HM (HEVC Model) encoder. Input is a Picture stream containing YUV data and metadata. Due to HM limitations, all HM components are serialized at runtime.";
 
         protected override Type ComponentType => typeof(FileWriter);
 

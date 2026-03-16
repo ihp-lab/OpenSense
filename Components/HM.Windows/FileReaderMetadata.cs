@@ -7,7 +7,7 @@ namespace OpenSense.Components.HM {
 
         public override string Name => "HM MP4 File Reader";
 
-        public override string Description => "[Experimental] Read frames from an MP4 file containing HEVC video using HM (HEVC Model) decoder.";
+        public override string Description => "[Experimental] Read frames from an MP4 file containing HEVC video using HM (HEVC Model) decoder. Due to HM limitations, all HM components are serialized at runtime.";
 
         protected override Type ComponentType => typeof(FileReader);
 

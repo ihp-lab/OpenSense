@@ -22,6 +22,11 @@ namespace HMInterop {
         // SPS cache: reuse the same managed object when the native SPS pointer hasn't changed.
         SequenceParameterSet^ _lastSps;
 
+        // CTU parameters for HMContext (updated from SPS after first decode)
+        int _maxWidth;
+        int _maxHeight;
+        int _maxDepth;
+
     public:
         Decoder();
 
