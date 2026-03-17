@@ -5,15 +5,15 @@ using System.Windows.Controls;
 using OpenSense.Components.HM;
 
 namespace OpenSense.WPF.Components.HM {
-    public sealed partial class FileReaderConfigurationControl : UserControl {
+    public sealed partial class Mp4DemuxerConfigurationControl : UserControl {
 
-        public FileReaderConfigurationControl() {
+        public Mp4DemuxerConfigurationControl() {
             InitializeComponent();
         }
 
         #region Control Event Handlers
         private void ButtonOpenFile_Click(object sender, RoutedEventArgs e) {
-            if (DataContext is not FileReaderConfiguration config) {
+            if (DataContext is not Mp4DemuxerConfiguration config) {
                 return;
             }
             var openFileDialog = new Microsoft.Win32.OpenFileDialog {

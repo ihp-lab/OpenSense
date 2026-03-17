@@ -1,22 +1,15 @@
-using System;
+﻿using System;
 using System.IO;
-using HMInterop;
 using Minimp4Interop;
 
 namespace OpenSense.Components.HM {
-    internal sealed class FileWriterContext : IDisposable {
+    internal sealed class Mp4MuxerContext : IDisposable {
 
-        public DateTime StartTime { get; }
-        public EncoderConfig Config { get; }
-        public Encoder Encoder { get; }
         public FileStream Stream { get; }
         public Muxer Muxer { get; }
         public H26xWriter Writer { get; }
 
-        public FileWriterContext(DateTime startTime, EncoderConfig config, Encoder encoder, FileStream stream, Muxer muxer, H26xWriter writer) {
-            StartTime = startTime;
-            Config = config;
-            Encoder = encoder;
+        public Mp4MuxerContext(FileStream stream, Muxer muxer, H26xWriter writer) {
             Stream = stream;
             Muxer = muxer;
             Writer = writer;
@@ -30,8 +23,6 @@ namespace OpenSense.Components.HM {
                 return;
             }
             disposed = true;
-
-            Encoder.Dispose();
 
             Writer.Dispose();
             Muxer.Dispose();

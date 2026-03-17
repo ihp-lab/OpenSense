@@ -14,7 +14,7 @@ namespace OpenSense.Components.HM {
         protected override string? GetPortDescription(string portName) {
             switch (portName) {
                 case nameof(ImageToPictureConverter.In):
-                    return "The input \\psi Image stream.";
+                    return "[Required] The input \\psi Image stream.";
                 case nameof(ImageToPictureConverter.Out):
                     return "The converted HM Picture stream containing pixel data and metadata (bit depth, chroma format).";
                 default:

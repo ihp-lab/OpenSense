@@ -15,7 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AccessUnitData.h">
+    <ClInclude Include="AccessUnit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BitDepths.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Decoder.h">
@@ -24,28 +27,37 @@
     <ClInclude Include="Encoder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HMContext.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="EncoderConfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Enums.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GOPEntryConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HMContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="HMNativeHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="pch.h">
+    <ClInclude Include="NalIndex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BitDepths.h">
+    <ClInclude Include="NativeNalInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Picture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PictureYuv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PictureYuvPool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ProfileTierLevel.h">
@@ -60,15 +72,9 @@
     <ClInclude Include="VideoUsabilityInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GOPEntryConfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PictureYuvPool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AccessUnitData.cpp">
+    <ClCompile Include="AccessUnit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AssemblyInfo.cpp">
@@ -80,10 +86,10 @@
     <ClCompile Include="Encoder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HMContext.cpp">
+    <ClCompile Include="EncoderConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EncoderConfig.cpp">
+    <ClCompile Include="HMContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
@@ -95,6 +101,9 @@
     <ClCompile Include="PictureYuv.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PictureYuvPool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="ProfileTierLevel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -102,9 +111,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="VideoUsabilityInfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PictureYuvPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

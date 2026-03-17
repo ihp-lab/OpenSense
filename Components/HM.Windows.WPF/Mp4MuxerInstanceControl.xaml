@@ -1,5 +1,5 @@
 <UserControl
-    x:Class="OpenSense.WPF.Components.HM.FileWriterInstanceControl"
+    x:Class="OpenSense.WPF.Components.HM.Mp4MuxerInstanceControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -15,6 +15,6 @@
         <ToggleButton
             IsChecked="{Binding ProcessRemainingBeforeStop, Mode=TwoWay}"
             Content="Process Remaining Before Stop"
-            ToolTip="When checked, continue processing remaining queued frames before stopping. When unchecked, stop immediately." />
+            ToolTip="When checked, continue writing remaining queued frames before stopping. When unchecked, stop immediately." />
     </StackPanel>
 </UserControl>

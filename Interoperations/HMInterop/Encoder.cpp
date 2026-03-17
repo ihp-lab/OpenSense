@@ -6,15 +6,16 @@
 #include "TLibCommon/TComPicYuv.h"
 #include "TLibCommon/AccessUnit.h"
 #include "TLibEncoder/TEncTop.h"
-#include "TLibEncoder/AnnexBwrite.h"
 #include "HMNativeHelpers.h"
-#include <sstream>
 #include <map>
 #include <vector>
 
-// Native helper struct for encoded output
+#include "NativeNalInfo.h"
+
+// Native output per Access Unit from encoder
 struct NativeEncodedUnit {
-    std::string data;
+    std::vector<NativeNalInfo> nals; // points into ostringstream buffers (valid until AU is destroyed)
+    std::vector<std::string> nalStrings; // owns the NAL data (from .str())
     int poc;
     long long pts;
     bool ptsFound;
@@ -160,17 +161,34 @@ static int NativeEncode(
             ptsMap->erase(it);
         }
 
-        std::ostringstream stream;
-        writeAnnexB(stream, *auIt);
-        auto str = stream.str();
-
-        if (!str.empty()) {
-            units[count].data = std::move(str);
-            units[count].poc = poc;
-            units[count].pts = framePts;
-            units[count].ptsFound = found;
-            count++;
+        // Collect NAL data from HM's AccessUnit (avoids writeAnnexB intermediate copy)
+        auto& au = *auIt;
+        if (au.empty()) {
+            continue;
         }
+        // First pass: collect NAL strings (vector may reallocate during push_back)
+        for (auto nalIt = au.begin(); nalIt != au.end(); ++nalIt) {
+            auto nalStr = (**nalIt).m_nalUnitData.str();
+            if (!nalStr.empty()) {
+                units[count].nalStrings.push_back(std::move(nalStr));
+            }
+        }
+        // Second pass: build NalInfo from stable pointers (vector is final, no more reallocation)
+        auto isFirst = true;
+        for (auto& str : units[count].nalStrings) {
+            auto ptr = reinterpret_cast<const unsigned char*>(str.data());
+            units[count].nals.push_back({
+                ptr,
+                static_cast<int32_t>(str.size()),
+                HevcNeedsLongStartCode(ptr, isFirst)
+            });
+            isFirst = false;
+        }
+
+        units[count].poc = poc;
+        units[count].pts = framePts;
+        units[count].ptsFound = found;
+        count++;
     }
 
     *outUnits = units;
@@ -194,6 +212,7 @@ public:
 #pragma managed(pop)
 
 #include "Encoder.h"
+#include "AccessUnit.h"
 #include "HMContext.h"
 
 using namespace System;
@@ -246,7 +265,7 @@ namespace HMInterop {
 
     void Encoder::Encode(
         [NotNull] PictureYuv^ inputPicture, long long pts,
-        [NotNull] System::Collections::Generic::IList<AccessUnitData^>^ output
+        [NotNull] System::Collections::Generic::IList<AccessUnit^>^ output
     ) {
         ThrowIfDisposed();
         ArgumentNullException::ThrowIfNull(inputPicture, "inputPicture");
@@ -289,19 +308,17 @@ namespace HMInterop {
                 &outUnits
             );
 
-            // Collect output: copy native data to pooled managed buffers
+            // Collect output: create AccessUnit directly from native NAL pointers
             for (auto i = 0; i < count; i++) {
                 if (!outUnits[i].ptsFound) {
                     throw gcnew InvalidOperationException(System::String::Format("Could not find PTS for POC {0}", outUnits[i].poc));
                 }
-                auto length = static_cast<int>(outUnits[i].data.size());
-                auto owner = MemoryPool<Byte>::Shared->Rent(length);
-                {
-                    auto handle = owner->Memory.Pin();
-                    memcpy(handle.Pointer, outUnits[i].data.data(), length);
-                    delete safe_cast<IDisposable^>(handle);
-                }
-                output->Add(gcnew AccessUnitData(owner, length, outUnits[i].pts, outUnits[i].poc));
+                output->Add(AccessUnit::CreateFromNativeNals(
+                    outUnits[i].nals.data(),
+                    static_cast<int>(outUnits[i].nals.size()),
+                    outUnits[i].pts,
+                    outUnits[i].pts // DTS = PTS for now; updated by caller when split into components
+                ));
             }
             if (outUnits) {
                 delete[] outUnits;
@@ -316,7 +333,7 @@ namespace HMInterop {
         }
     }
 
-    void Encoder::Flush([NotNull] System::Collections::Generic::IList<AccessUnitData^>^ output) {
+    void Encoder::Flush([NotNull] System::Collections::Generic::IList<AccessUnit^>^ output) {
         ThrowIfDisposed();
         ArgumentNullException::ThrowIfNull(output, "output");
 
@@ -337,14 +354,12 @@ namespace HMInterop {
                 if (!outUnits[i].ptsFound) {
                     throw gcnew InvalidOperationException(System::String::Format("Could not find PTS for POC {0}", outUnits[i].poc));
                 }
-                auto length = static_cast<int>(outUnits[i].data.size());
-                auto owner = MemoryPool<Byte>::Shared->Rent(length);
-                {
-                    auto handle = owner->Memory.Pin();
-                    memcpy(handle.Pointer, outUnits[i].data.data(), length);
-                    delete safe_cast<IDisposable^>(handle);
-                }
-                output->Add(gcnew AccessUnitData(owner, length, outUnits[i].pts, outUnits[i].poc));
+                output->Add(AccessUnit::CreateFromNativeNals(
+                    outUnits[i].nals.data(),
+                    static_cast<int>(outUnits[i].nals.size()),
+                    outUnits[i].pts,
+                    outUnits[i].pts
+                ));
             }
             if (outUnits) {
                 delete[] outUnits;

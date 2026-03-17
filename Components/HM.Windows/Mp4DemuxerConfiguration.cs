@@ -1,11 +1,12 @@
-using System;
+﻿using System;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
 
 namespace OpenSense.Components.HM {
     [Serializable]
-    public sealed class FileReaderConfiguration : ConventionalComponentConfiguration {
+    public sealed class Mp4DemuxerConfiguration : ConventionalComponentConfiguration {
 
+        #region Options
         #region File Settings
         private string filename = string.Empty;
 
@@ -29,17 +30,20 @@ namespace OpenSense.Components.HM {
             get => manualStartTime;
             set => SetProperty(ref manualStartTime, value);
         }
+        #endregion
+
         private bool processRemainingBeforeStop;
 
         public bool ProcessRemainingBeforeStop {
             get => processRemainingBeforeStop;
             set => SetProperty(ref processRemainingBeforeStop, value);
-        }
+        } 
         #endregion
 
-        public override IComponentMetadata GetMetadata() => new FileReaderMetadata();
+        public override IComponentMetadata GetMetadata() => new Mp4DemuxerMetadata();
 
-        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new FileReader(pipeline, Filename) {
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new Mp4Demuxer(pipeline) {
+            Filename = Filename,
             StartTimeMode = StartTimeMode,
             ManualStartTime = ManualStartTime,
             ProcessRemainingBeforeStop = ProcessRemainingBeforeStop,

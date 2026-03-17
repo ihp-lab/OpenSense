@@ -1,0 +1,20 @@
+<UserControl
+    x:Class="OpenSense.WPF.Components.HM.Mp4DemuxerInstanceControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    mc:Ignorable="d"
+    d:DesignHeight="60"
+    d:DesignWidth="300">
+    <StackPanel
+        Margin="4">
+        <TextBlock
+            Text="{Binding Filename, StringFormat='File: {0}', FallbackValue='File: (not set)'}"
+            Margin="0,0,0,4" />
+        <ToggleButton
+            IsChecked="{Binding ProcessRemainingBeforeStop, Mode=TwoWay}"
+            Content="Process Remaining Before Stop"
+            ToolTip="When checked, continue reading remaining samples before stopping. When unchecked, stop immediately." />
+    </StackPanel>
+</UserControl>

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Picture.h"
+#include "AccessUnit.h"
 #include <vector>
 
 using namespace System;
@@ -31,13 +32,11 @@ namespace HMInterop {
         Decoder();
 
         /// <summary>
-        /// Feed one NAL unit (without start code or length prefix) to the decoder.
+        /// Feed all NAL units from an AccessUnit to the decoder in a single pin.
         /// Decoded pictures (0 or more due to B-frame reordering) are appended to output.
         /// PictureYuv buffers are obtained from PictureYuvPool.
         /// </summary>
-        /// <param name="nalData">Memory containing NAL unit data</param>
-        /// <param name="output">List to append decoded pictures to</param>
-        void FeedNal(ReadOnlyMemory<Byte> nalData, [NotNull] System::Collections::Generic::IList<Picture^>^ output);
+        void FeedAccessUnit([NotNull] AccessUnit^ accessUnit, [NotNull] System::Collections::Generic::IList<Picture^>^ output);
 
         /// <summary>
         /// Signal end of stream, flush remaining B-frames.

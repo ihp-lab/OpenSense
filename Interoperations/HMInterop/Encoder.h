@@ -2,7 +2,7 @@
 
 #include "EncoderConfig.h"
 #include "PictureYuv.h"
-#include "AccessUnitData.h"
+#include "AccessUnit.h"
 
 using namespace System;
 using namespace System::Diagnostics::CodeAnalysis;
@@ -40,13 +40,13 @@ namespace HMInterop {
         /// Encode one frame. Encoded access units (0 or more) are appended to output.
         /// Output is empty when the encoder is buffering for GOP reordering.
         /// </summary>
-        void Encode([NotNull] PictureYuv^ inputPicture, long long pts, [NotNull] System::Collections::Generic::IList<AccessUnitData^>^ output);
+        void Encode([NotNull] PictureYuv^ inputPicture, long long pts, [NotNull] System::Collections::Generic::IList<AccessUnit^>^ output);
 
         /// <summary>
         /// Flush remaining frames. Call after all input is done.
         /// Encoded access units are appended to output.
         /// </summary>
-        void Flush([NotNull] System::Collections::Generic::IList<AccessUnitData^>^ output);
+        void Flush([NotNull] System::Collections::Generic::IList<AccessUnit^>^ output);
 
 #pragma region IDisposable
     private:

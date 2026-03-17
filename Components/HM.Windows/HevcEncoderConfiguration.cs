@@ -5,30 +5,9 @@ using Microsoft.Psi;
 
 namespace OpenSense.Components.HM {
     [Serializable]
-    public sealed class FileWriterConfiguration : ConventionalComponentConfiguration {
+    public sealed class HevcEncoderConfiguration : ConventionalComponentConfiguration {
 
         #region Options
-        private string filename = "video.mp4";
-
-        public string Filename {
-            get => filename;
-            set => SetProperty(ref filename, value);
-        }
-
-        private bool timestampFilename;
-
-        public bool TimestampFilename {
-            get => timestampFilename;
-            set => SetProperty(ref timestampFilename, value);
-        }
-        private bool processRemainingBeforeStop;
-
-        public bool ProcessRemainingBeforeStop {
-            get => processRemainingBeforeStop;
-            set => SetProperty(ref processRemainingBeforeStop, value);
-        }
-        #endregion
-
         #region Input Validation
         private int? inputBitDepth;
 
@@ -70,16 +49,22 @@ namespace OpenSense.Components.HM {
         }
         #endregion
 
-        public override IComponentMetadata GetMetadata() => new FileWriterMetadata();
+        private bool processRemainingBeforeStop;
 
-        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new FileWriter(pipeline) {
-            Filename = Filename,
-            TimestampFilename = TimestampFilename,
-            ProcessRemainingBeforeStop = ProcessRemainingBeforeStop,
+        public bool ProcessRemainingBeforeStop {
+            get => processRemainingBeforeStop;
+            set => SetProperty(ref processRemainingBeforeStop, value);
+        } 
+        #endregion
+
+        public override IComponentMetadata GetMetadata() => new HevcEncoderMetadata();
+
+        protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new HevcEncoder(pipeline) {
             InputBitDepth = InputBitDepth,
             InputChromaFormat = InputChromaFormat,
             InternalBitDepth = InternalBitDepth,
             EncoderConfiguration = Raw.Clone(),
+            ProcessRemainingBeforeStop = ProcessRemainingBeforeStop,
             Logger = (serviceProvider?.GetService(typeof(ILoggerFactory)) as ILoggerFactory)?.CreateLogger(Name),
         };
     }

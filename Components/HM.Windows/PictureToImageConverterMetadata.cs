@@ -13,7 +13,7 @@ namespace OpenSense.Components.HM {
 
         protected override string? GetPortDescription(string portName) {
             return portName switch {
-                nameof(PictureToImageConverter.In) => "The input Picture stream.",
+                nameof(PictureToImageConverter.In) => "[Required] The input Picture stream.",
                 nameof(PictureToImageConverter.Out) => "The converted \\psi Image stream. Supports Gray_8bpp, Gray_16bpp, BGR_24bpp, RGB_24bpp, and RGBA_64bpp via OutputPixelFormat setting.",
                 _ => null,
             };

@@ -226,39 +226,45 @@ namespace HMInterop {
         }
     }
 
-    void Decoder::FeedNal(
-        ReadOnlyMemory<Byte> nalData,
+    void Decoder::FeedAccessUnit(
+        [NotNull] AccessUnit^ accessUnit,
         [NotNull] System::Collections::Generic::IList<Picture^>^ output
     ) {
         ThrowIfDisposed();
+        ArgumentNullException::ThrowIfNull(accessUnit, "accessUnit");
         ArgumentNullException::ThrowIfNull(output, "output");
 
-        auto length = nalData.Length;
-        if (length == 0) {
+        auto nalCount = accessUnit->Count;
+        if (nalCount == 0) {
             return;
         }
 
         HMContext::Acquire(_maxWidth, _maxHeight, _maxDepth);
         try {
-            // Pin managed memory and feed to native decoder
-            auto handle = nalData.Pin();
-            auto nativeData = static_cast<const uint8_t*>(handle.Pointer);
-
             auto pocLastDisplay = _pocLastDisplay;
 
-            std::vector<NativeDecodedPic> nativeOutput;
-            auto needsReFeed = false;
-            NativeFeedNal(_decoder, nativeData, length, pocLastDisplay, nativeOutput, needsReFeed);
+            // Pin the entire buffer once for all NALs
+            auto buffer = accessUnit->PinBuffer();
+            try {
+                for (auto i = 0; i < nalCount; i++) {
+                    const unsigned char* nativeData;
+                    auto length = 0;
+                    AccessUnit::GetNalFromPinnedBuffer(buffer, i, nativeData, length);
 
-            // Create snapshots BEFORE re-feed, because re-feed may reuse TComPic buffers
-            AppendDecodedPics(nativeOutput, output);
+                    std::vector<NativeDecodedPic> nativeOutput;
+                    auto needsReFeed = false;
+                    NativeFeedNal(_decoder, nativeData, length, pocLastDisplay, nativeOutput, needsReFeed);
 
-            // Now re-feed the NAL that was peeked but not decoded
-            if (needsReFeed) {
-                NativeReFeedNal(_decoder, nativeData, length, pocLastDisplay);
+                    AppendDecodedPics(nativeOutput, output);
+
+                    if (needsReFeed) {
+                        NativeReFeedNal(_decoder, nativeData, length, pocLastDisplay);
+                    }
+                }
             }
-
-            delete safe_cast<IDisposable^>(handle);
+            finally {
+                accessUnit->UnpinBuffer();
+            }
             _pocLastDisplay = pocLastDisplay;
 
             // Update CTU parameters from SPS if available
