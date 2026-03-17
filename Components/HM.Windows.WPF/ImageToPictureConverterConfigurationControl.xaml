@@ -299,6 +299,6 @@
             ScaleShift="{Binding BitDepthMappingScaleShift}"
             InputStart="{Binding BitDepthMappingInputStart}"
             OutputStart="{Binding BitDepthMappingOutputStart}"
-            SourceBitDepth="{Binding InputBitDepth}" />
+            SourceBitDepth="{Binding InputBitDepth, FallbackValue=0, TargetNullValue=0}" />
     </Grid>
 </UserControl>

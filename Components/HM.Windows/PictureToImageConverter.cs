@@ -96,47 +96,40 @@ namespace OpenSense.Components.HM {
             return BitDepthMappingEnabled ? PixelFormatInfo.GetBitDepth(OutputPixelFormat) : actualBitDepth;
         }
 
-        private void ValidateFirstFrame(PictureYuv picYuv, int actualBitDepth) {
-            if (InputBitDepth.HasValue && actualBitDepth != InputBitDepth.Value) {
-                throw new InvalidOperationException($"InputBitDepth is set to {InputBitDepth.Value} but actual bit depth is {actualBitDepth}.");
-            }
-
-            var targetBitDepth = PixelFormatInfo.GetBitDepth(OutputPixelFormat);
-            if (BitDepthMappingEnabled) {
-                BitDepthMappingInfo.ValidateParameters(actualBitDepth, targetBitDepth, BitDepthMappingScaleShift, BitDepthMappingInputStart, BitDepthMappingOutputStart);
-            } else if (actualBitDepth != targetBitDepth) {
-                throw new InvalidOperationException($"Source bit depth is {actualBitDepth} but output pixel format {OutputPixelFormat} requires {targetBitDepth}-bit. Enable bit depth mapping to convert.");
-            }
-
-            var requiredChroma = PixelFormatInfo.GetRequiredChromaFormat(OutputPixelFormat);
-            if (requiredChroma != ChromaFormat.Chroma400) {
-                if (ChromaConvertEnabled) {
-                    // Conversion will handle it
-                } else if (picYuv.ChromaFormat != requiredChroma) {
-                    throw new InvalidOperationException($"Output pixel format {OutputPixelFormat} requires {requiredChroma}, but source is {picYuv.ChromaFormat}. Enable chroma conversion.");
-                }
-            }
-        }
-
         private void Process(Shared<Picture> picture, Envelope envelope) {
             var picYuv = picture.Resource.PicYuv;
             var actualBitDepth = picture.Resource.Sps.BitDepths.Luma;
 
-            if (!validated) {
-                validated = true;
-                ValidateFirstFrame(picYuv, actualBitDepth);
+            // Per-frame validation
+            if (InputBitDepth.HasValue && actualBitDepth != InputBitDepth.Value) {
+                throw new InvalidOperationException($"InputBitDepth is set to {InputBitDepth.Value} but actual bit depth is {actualBitDepth}.");
+            }
+            var targetBitDepth = PixelFormatInfo.GetBitDepth(OutputPixelFormat);
+            if (!BitDepthMappingEnabled && actualBitDepth != targetBitDepth) {
+                throw new InvalidOperationException($"Source bit depth is {actualBitDepth} but output pixel format {OutputPixelFormat} requires {targetBitDepth}-bit. Enable bit depth mapping to convert.");
+            }
+            var requiredChroma = PixelFormatInfo.GetRequiredChromaFormat(OutputPixelFormat);
+            if (!ChromaConvertEnabled && requiredChroma != ChromaFormat.Chroma400 && picYuv.ChromaFormat != requiredChroma) {
+                throw new InvalidOperationException($"Output pixel format {OutputPixelFormat} requires {requiredChroma}, but source is {picYuv.ChromaFormat}. Enable chroma conversion.");
             }
 
-            var requiredChroma = PixelFormatInfo.GetRequiredChromaFormat(OutputPixelFormat);
+            // One-time validation
+            if (!validated) {
+                validated = true;
+                if (BitDepthMappingEnabled) {
+                    BitDepthMappingInfo.ValidateParameters(actualBitDepth, targetBitDepth, BitDepthMappingScaleShift, BitDepthMappingInputStart, BitDepthMappingOutputStart);
+                }
+            }
+
             if (!ChromaConvertEnabled || picYuv.ChromaFormat == requiredChroma) {
                 OutputToImagePort(picYuv, actualBitDepth, envelope.OriginatingTime);
-            } else {
-                var converted = ChromaConverter.Convert(picYuv, requiredChroma, ChromaUpsampleMethod, actualBitDepth);
-                try {
-                    OutputToImagePort(converted, actualBitDepth, envelope.OriginatingTime);
-                } finally {
-                    converted.Dispose();
-                }
+                return;
+            }
+            var converted = ChromaConverter.Convert(picYuv, requiredChroma, ChromaUpsampleMethod, actualBitDepth);
+            try {
+                OutputToImagePort(converted, actualBitDepth, envelope.OriginatingTime);
+            } finally {
+                converted.Dispose();
             }
         }
 

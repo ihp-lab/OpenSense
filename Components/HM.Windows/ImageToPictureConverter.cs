@@ -2,6 +2,7 @@
 using System.Buffers;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using HMInterop;
 using Microsoft.Psi;
@@ -91,9 +92,7 @@ namespace OpenSense.Components.HM {
 
         #endregion
 
-        private int initializedWidth;
-        private int initializedHeight;
-        private bool initialized;
+        private bool validated;
         private int pocCounter;
 
         public ImageToPictureConverter(Pipeline pipeline) {
@@ -106,22 +105,10 @@ namespace OpenSense.Components.HM {
             var width = resource.Width;
             var height = resource.Height;
 
-            if (!initialized) {
-                initializedWidth = width;
-                initializedHeight = height;
-                initialized = true;
-
-                // Validate input pixel format
-                if (InputPixelFormat is { } expected && resource.PixelFormat != expected) {
-                    throw new InvalidOperationException($"Expected pixel format {expected} but got {resource.PixelFormat}.");
-                }
-            } else {
-                if (width != initializedWidth || height != initializedHeight) {
-                    throw new InvalidOperationException($"Image size changed: expected {initializedWidth}x{initializedHeight}, got {width}x{height}.");
-                }
+            // Per-frame validation
+            if (InputPixelFormat is { } expectedFmt && resource.PixelFormat != expectedFmt) {
+                throw new InvalidOperationException($"Expected pixel format {expectedFmt} but got {resource.PixelFormat}.");
             }
-
-            // Detect source bit depth from pixel format
             var detectedBits = resource.PixelFormat switch {
                 PixelFormat.Gray_16bpp => 16,
                 _ => 8,
@@ -132,23 +119,26 @@ namespace OpenSense.Components.HM {
 
             var chromaFmt = OutputChromaFormat;
             var bitDepth = OutputBitDepth;
-            if (bitDepth < 8 || bitDepth > 16) {
-                throw new InvalidOperationException($"Output bit depth must be between 8 and 16 (HEVC supported range), but was {bitDepth}.");
-            }
-
-            // Validate bit depth mapping
             var isGray = resource.PixelFormat is PixelFormat.Gray_8bpp or PixelFormat.Gray_16bpp;
+
             if (!BitDepthMappingEnabled && detectedBits != bitDepth) {
                 throw new InvalidOperationException($"Source bit depth is {detectedBits} but output bit depth is {bitDepth}. Enable bit depth mapping to convert.");
             }
-
-            // Validate chroma conversion
             if (!ChromaConvertEnabled) {
                 if (isGray && chromaFmt != ChromaFormat.Chroma400) {
                     throw new InvalidOperationException($"Output chroma format is {chromaFmt} but input is grayscale. Enable chroma conversion to produce non-monochrome output.");
                 }
                 if (!isGray && chromaFmt != ChromaFormat.Chroma444) {
                     throw new InvalidOperationException($"Output chroma format is {chromaFmt} but color input requires chroma subsampling. Enable chroma conversion.");
+                }
+            }
+
+            // One-time validation
+            if (!validated) {
+                validated = true;
+
+                if (bitDepth < 8 || bitDepth > 16) {
+                    throw new InvalidOperationException($"Output bit depth must be between 8 and 16 (HEVC supported range), but was {bitDepth}.");
                 }
             }
 
@@ -213,10 +203,18 @@ namespace OpenSense.Components.HM {
             var (yPtr, yW, yH, yStride) = picture.GetPlaneAccess(ComponentId.Y);
             var yPels = new Span<int>(yPtr.ToPointer(), yStride * yH);
 
+            var vecSize = Vector<ushort>.Count;
             for (var y = 0; y < height; y++) {
                 var srcRow = new ReadOnlySpan<ushort>((byte*)image.ImageData.ToPointer() + y * imgStride, width);
                 var dstRow = yPels.Slice(y * yStride, width);
-                for (var x = 0; x < width; x++) {
+                var x = 0;
+                for (; x + vecSize <= width; x += vecSize) {
+                    var srcVec = new Vector<ushort>(srcRow.Slice(x, vecSize));
+                    Vector.Widen(srcVec, out var lo, out var hi);
+                    Vector.AsVectorInt32(lo).CopyTo(dstRow.Slice(x));
+                    Vector.AsVectorInt32(hi).CopyTo(dstRow.Slice(x + Vector<int>.Count));
+                }
+                for (; x < width; x++) {
                     dstRow[x] = srcRow[x];
                 }
             }
