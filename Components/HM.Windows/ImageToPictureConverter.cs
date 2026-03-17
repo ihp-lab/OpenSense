@@ -50,7 +50,23 @@ namespace OpenSense.Components.HM {
         }
         #endregion
 
+        #region Chroma Conversion
+        private bool chromaConvertEnabled;
+
+        public bool ChromaConvertEnabled {
+            get => chromaConvertEnabled;
+            set => SetProperty(ref chromaConvertEnabled, value);
+        }
+        #endregion
+
         #region Bit Depth Mapping
+        private bool bitDepthMappingEnabled;
+
+        public bool BitDepthMappingEnabled {
+            get => bitDepthMappingEnabled;
+            set => SetProperty(ref bitDepthMappingEnabled, value);
+        }
+
         private int bitDepthMappingScaleShift;
 
         public int BitDepthMappingScaleShift {
@@ -119,6 +135,23 @@ namespace OpenSense.Components.HM {
             if (bitDepth < 8 || bitDepth > 16) {
                 throw new InvalidOperationException($"Output bit depth must be between 8 and 16 (HEVC supported range), but was {bitDepth}.");
             }
+
+            // Validate bit depth mapping
+            var isGray = resource.PixelFormat is PixelFormat.Gray_8bpp or PixelFormat.Gray_16bpp;
+            if (!BitDepthMappingEnabled && detectedBits != bitDepth) {
+                throw new InvalidOperationException($"Source bit depth is {detectedBits} but output bit depth is {bitDepth}. Enable bit depth mapping to convert.");
+            }
+
+            // Validate chroma conversion
+            if (!ChromaConvertEnabled) {
+                if (isGray && chromaFmt != ChromaFormat.Chroma400) {
+                    throw new InvalidOperationException($"Output chroma format is {chromaFmt} but input is grayscale. Enable chroma conversion to produce non-monochrome output.");
+                }
+                if (!isGray && chromaFmt != ChromaFormat.Chroma444) {
+                    throw new InvalidOperationException($"Output chroma format is {chromaFmt} but color input requires chroma subsampling. Enable chroma conversion.");
+                }
+            }
+
             var picture = PictureYuvPool.Rent(chromaFmt, width, height);
 
             switch (resource.PixelFormat) {
@@ -188,8 +221,7 @@ namespace OpenSense.Components.HM {
                 }
             }
 
-            // Apply bit depth mapping only when actual transformation is needed
-            if (BitDepthMappingScaleShift != 0 || BitDepthMappingInputStart != 0 || bitDepth != 16) {
+            if (BitDepthMappingEnabled) {
                 BitDepthMapper.MapPlane(yPels, yW, yH, yStride, bitDepth, BitDepthMappingScaleShift, BitDepthMappingInputStart, BitDepthMappingOutputStart);
             }
 

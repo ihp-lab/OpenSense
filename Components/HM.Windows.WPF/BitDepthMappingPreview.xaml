@@ -11,7 +11,38 @@
         BorderBrush="Gray"
         BorderThickness="1"
         Padding="4">
-        <StackPanel
-            x:Name="PreviewPanel" />
+        <StackPanel>
+            <TextBlock
+                Text="Bit Depth Mapping Preview"
+                FontWeight="Bold"
+                FontSize="11"
+                Margin="0,0,0,4" />
+            <DockPanel
+                Margin="0,0,0,4">
+                <TextBlock
+                    Text="Effective Source Bit Depth:"
+                    VerticalAlignment="Center"
+                    DockPanel.Dock="Left"
+                    Margin="0,0,4,0"
+                    FontSize="11" />
+                <TextBox
+                    Text="{Binding ElementName=EffectiveSlider, Path=Value, StringFormat={}{0:0}}"
+                    Width="30"
+                    VerticalAlignment="Center"
+                    DockPanel.Dock="Right"
+                    Margin="4,0,0,0"
+                    FontSize="11" />
+                <Slider
+                    x:Name="EffectiveSlider"
+                    Minimum="0"
+                    Maximum="16"
+                    Value="{Binding EffectiveSourceBitDepth, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    IsSnapToTickEnabled="True"
+                    TickFrequency="1"
+                    VerticalAlignment="Center" />
+            </DockPanel>
+            <StackPanel
+                x:Name="PreviewPanel" />
+        </StackPanel>
     </Border>
 </UserControl>

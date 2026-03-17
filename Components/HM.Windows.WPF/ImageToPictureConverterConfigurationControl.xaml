@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:OpenSense.WPF.Components.HM"
     xmlns:util="clr-namespace:OpenSense.WPF.Components.Utilities;assembly=OpenSense.WPF.Components.Contracts"
+    xmlns:conv="clr-namespace:OpenSense.WPF.Components.Converters;assembly=OpenSense.WPF.Components.Contracts"
     xmlns:interop="clr-namespace:HMInterop;assembly=HMInterop"
     xmlns:comp="clr-namespace:OpenSense.Components.HM;assembly=OpenSense.Components.HM.Windows"
     xmlns:imaging="clr-namespace:Microsoft.Psi.Imaging;assembly=Microsoft.Psi.Imaging"
@@ -16,6 +17,11 @@
     <d:UserControl.DataContext>
         <comp:ImageToPictureConverterConfiguration />
     </d:UserControl.DataContext>
+
+    <UserControl.Resources>
+        <conv:BooleanToCollapsedVisibilityConverter
+            x:Key="BoolToVis" />
+    </UserControl.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -37,16 +43,22 @@
             <!-- 3: Output Bit Depth -->
             <RowDefinition
                 Height="auto" />
-            <!-- 4: Scale Shift -->
+            <!-- 4: Chroma Convert Enabled -->
             <RowDefinition
                 Height="auto" />
-            <!-- 5: Input Start -->
+            <!-- 5: Bit Depth Mapping Enabled -->
             <RowDefinition
                 Height="auto" />
-            <!-- 6: Output Start -->
+            <!-- 6: Scale Shift -->
             <RowDefinition
                 Height="auto" />
-            <!-- 7: Mapping Preview -->
+            <!-- 7: Input Start -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 8: Output Start -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 9: Mapping Preview -->
             <RowDefinition
                 Height="auto" />
         </Grid.RowDefinitions>
@@ -122,48 +134,6 @@
                 </ComboBoxItem.Tag>
             </ComboBoxItem>
             <ComboBoxItem
-                Content="9">
-                <ComboBoxItem.Tag>
-                    <sys:Int32>9</sys:Int32>
-                </ComboBoxItem.Tag>
-            </ComboBoxItem>
-            <ComboBoxItem
-                Content="10">
-                <ComboBoxItem.Tag>
-                    <sys:Int32>10</sys:Int32>
-                </ComboBoxItem.Tag>
-            </ComboBoxItem>
-            <ComboBoxItem
-                Content="11">
-                <ComboBoxItem.Tag>
-                    <sys:Int32>11</sys:Int32>
-                </ComboBoxItem.Tag>
-            </ComboBoxItem>
-            <ComboBoxItem
-                Content="12">
-                <ComboBoxItem.Tag>
-                    <sys:Int32>12</sys:Int32>
-                </ComboBoxItem.Tag>
-            </ComboBoxItem>
-            <ComboBoxItem
-                Content="13">
-                <ComboBoxItem.Tag>
-                    <sys:Int32>13</sys:Int32>
-                </ComboBoxItem.Tag>
-            </ComboBoxItem>
-            <ComboBoxItem
-                Content="14">
-                <ComboBoxItem.Tag>
-                    <sys:Int32>14</sys:Int32>
-                </ComboBoxItem.Tag>
-            </ComboBoxItem>
-            <ComboBoxItem
-                Content="15">
-                <ComboBoxItem.Tag>
-                    <sys:Int32>15</sys:Int32>
-                </ComboBoxItem.Tag>
-            </ComboBoxItem>
-            <ComboBoxItem
                 Content="16">
                 <ComboBoxItem.Tag>
                     <sys:Int32>16</sys:Int32>
@@ -210,13 +180,35 @@
                 Margin="4,0,0,0" />
         </Grid>
 
-        <!-- Row 4: Scale Shift (Slider + TextBox) -->
+        <!-- Row 4: Chroma Convert Enabled -->
         <TextBlock
             Grid.Row="4"
-            Grid.Column="0">Scale Shift</TextBlock>
-        <Grid
+            Grid.Column="0">Chroma Conversion</TextBlock>
+        <CheckBox
             Grid.Row="4"
-            Grid.Column="1">
+            Grid.Column="1"
+            IsChecked="{Binding ChromaConvertEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Enable chroma format conversion. Required when grayscale input produces non-monochrome output, or color input requires chroma subsampling." />
+
+        <!-- Row 5: Bit Depth Mapping Enabled -->
+        <TextBlock
+            Grid.Row="5"
+            Grid.Column="0">Bit Depth Mapping</TextBlock>
+        <CheckBox
+            Grid.Row="5"
+            Grid.Column="1"
+            IsChecked="{Binding BitDepthMappingEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Enable bit depth mapping. Required when source bit depth does not match output bit depth." />
+
+        <!-- Row 6: Scale Shift (Slider + TextBox) -->
+        <TextBlock
+            Grid.Row="6"
+            Grid.Column="0"
+            Visibility="{Binding BitDepthMappingEnabled, Converter={StaticResource BoolToVis}}">Scale Shift</TextBlock>
+        <Grid
+            Grid.Row="6"
+            Grid.Column="1"
+            Visibility="{Binding BitDepthMappingEnabled, Converter={StaticResource BoolToVis}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
                     Width="*" />
@@ -238,13 +230,15 @@
                 Margin="4,0,0,0" />
         </Grid>
 
-        <!-- Row 5: Input Start (Slider + TextBox) -->
+        <!-- Row 7: Input Start (Slider + TextBox) -->
         <TextBlock
-            Grid.Row="5"
-            Grid.Column="0">Input Start</TextBlock>
+            Grid.Row="7"
+            Grid.Column="0"
+            Visibility="{Binding BitDepthMappingEnabled, Converter={StaticResource BoolToVis}}">Input Start</TextBlock>
         <Grid
-            Grid.Row="5"
-            Grid.Column="1">
+            Grid.Row="7"
+            Grid.Column="1"
+            Visibility="{Binding BitDepthMappingEnabled, Converter={StaticResource BoolToVis}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
                     Width="*" />
@@ -265,13 +259,15 @@
                 Margin="4,0,0,0" />
         </Grid>
 
-        <!-- Row 6: Output Start (Slider + TextBox) -->
+        <!-- Row 8: Output Start (Slider + TextBox) -->
         <TextBlock
-            Grid.Row="6"
-            Grid.Column="0">Output Start</TextBlock>
+            Grid.Row="8"
+            Grid.Column="0"
+            Visibility="{Binding BitDepthMappingEnabled, Converter={StaticResource BoolToVis}}">Output Start</TextBlock>
         <Grid
-            Grid.Row="6"
-            Grid.Column="1">
+            Grid.Row="8"
+            Grid.Column="1"
+            Visibility="{Binding BitDepthMappingEnabled, Converter={StaticResource BoolToVis}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
                     Width="*" />
@@ -293,11 +289,12 @@
                 Margin="4,0,0,0" />
         </Grid>
 
-        <!-- Row 7: Mapping Preview -->
+        <!-- Row 9: Mapping Preview -->
         <local:BitDepthMappingPreview
-            Grid.Row="7"
+            Grid.Row="9"
             Grid.Column="0"
             Grid.ColumnSpan="2"
+            Visibility="{Binding BitDepthMappingEnabled, Converter={StaticResource BoolToVis}}"
             TargetBitDepth="{Binding OutputBitDepth}"
             ScaleShift="{Binding BitDepthMappingScaleShift}"
             InputStart="{Binding BitDepthMappingInputStart}"

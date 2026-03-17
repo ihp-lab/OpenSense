@@ -39,7 +39,23 @@ namespace OpenSense.Components.HM {
         }
         #endregion
 
+        #region Chroma Conversion
+        private bool chromaConvertEnabled;
+
+        public bool ChromaConvertEnabled {
+            get => chromaConvertEnabled;
+            set => SetProperty(ref chromaConvertEnabled, value);
+        }
+        #endregion
+
         #region Bit Depth Mapping
+        private bool bitDepthMappingEnabled;
+
+        public bool BitDepthMappingEnabled {
+            get => bitDepthMappingEnabled;
+            set => SetProperty(ref bitDepthMappingEnabled, value);
+        }
+
         private int bitDepthMappingScaleShift;
 
         public int BitDepthMappingScaleShift {
@@ -69,6 +85,8 @@ namespace OpenSense.Components.HM {
             InputBitDepth = InputBitDepth,
             OutputBitDepth = OutputBitDepth,
             OutputChromaFormat = OutputChromaFormat,
+            ChromaConvertEnabled = ChromaConvertEnabled,
+            BitDepthMappingEnabled = BitDepthMappingEnabled,
             BitDepthMappingScaleShift = BitDepthMappingScaleShift,
             BitDepthMappingInputStart = BitDepthMappingInputStart,
             BitDepthMappingOutputStart = BitDepthMappingOutputStart,

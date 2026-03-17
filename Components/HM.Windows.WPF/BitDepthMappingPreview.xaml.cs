@@ -14,7 +14,7 @@ namespace OpenSense.WPF.Components.HM {
     /// </summary>
     public sealed partial class BitDepthMappingPreview : UserControl {
 
-        private static readonly int[] DefaultSourceBitDepths = { 8, 10, 12, 14, 16 };
+        private static readonly int[] DefaultSourceBitDepths = { 8, 16 };
 
         private const double BarHeight = 18;
 
@@ -25,6 +25,7 @@ namespace OpenSense.WPF.Components.HM {
         public static readonly DependencyProperty InputStartProperty = DependencyProperty.Register(nameof(InputStart), typeof(int), typeof(BitDepthMappingPreview), new PropertyMetadata(0, OnParameterChanged));
         public static readonly DependencyProperty OutputStartProperty = DependencyProperty.Register(nameof(OutputStart), typeof(int), typeof(BitDepthMappingPreview), new PropertyMetadata(0, OnParameterChanged));
         public static readonly DependencyProperty SourceBitDepthProperty = DependencyProperty.Register(nameof(SourceBitDepth), typeof(int), typeof(BitDepthMappingPreview), new PropertyMetadata(0, OnParameterChanged));
+        public static readonly DependencyProperty EffectiveSourceBitDepthProperty = DependencyProperty.Register(nameof(EffectiveSourceBitDepth), typeof(int), typeof(BitDepthMappingPreview), new PropertyMetadata(16, OnParameterChanged));
 
         public int TargetBitDepth {
             get => (int)GetValue(TargetBitDepthProperty);
@@ -51,6 +52,11 @@ namespace OpenSense.WPF.Components.HM {
             set => SetValue(SourceBitDepthProperty, value);
         }
 
+        public int EffectiveSourceBitDepth {
+            get => (int)GetValue(EffectiveSourceBitDepthProperty);
+            set => SetValue(EffectiveSourceBitDepthProperty, value);
+        }
+
         #endregion
 
         public BitDepthMappingPreview() {
@@ -72,18 +78,21 @@ namespace OpenSense.WPF.Components.HM {
             var inputStart = InputStart;
             var outputStart = OutputStart;
 
+            var effectiveBits = EffectiveSourceBitDepth;
             var srcBits = SourceBitDepth > 0 ? new[] { SourceBitDepth } : DefaultSourceBitDepths;
 
             for (var i = 0; i < srcBits.Length; i++) {
                 if (i > 0) {
                     PreviewPanel.Children.Add(new Separator { Margin = new Thickness(0, 4, 0, 4) });
                 }
-                AddPair(srcBits[i], targetBits, scaleShift, inputStart, outputStart);
+                AddPair(srcBits[i], targetBits, scaleShift, inputStart, outputStart, effectiveBits);
             }
         }
 
-        private void AddPair(int srcBits, int targetBits, int scaleShift, int inputStart, int outputStart) {
-            var srcMax = 1L << srcBits;
+        private void AddPair(int srcBits, int targetBits, int scaleShift, int inputStart, int outputStart, int effectiveBits) {
+            var effectiveSrcBits = Math.Min(srcBits, effectiveBits);
+            var fullSrcMax = 1L << srcBits;
+            var effectiveSrcMax = 1L << effectiveSrcBits;
             var targetMax = 1L << targetBits;
 
             // Input bar
@@ -92,7 +101,7 @@ namespace OpenSense.WPF.Components.HM {
             inputGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
             var inputLabel = new TextBlock {
-                Text = $"{srcBits}-bit in",
+                Text = effectiveSrcBits < srcBits ? $"{srcBits}-bit in (eff. {effectiveSrcBits})" : $"{srcBits}-bit in",
                 FontSize = 11,
                 VerticalAlignment = VerticalAlignment.Center,
                 FontFamily = new FontFamily("Consolas"),
@@ -100,16 +109,18 @@ namespace OpenSense.WPF.Components.HM {
             Grid.SetColumn(inputLabel, 0);
             inputGrid.Children.Add(inputLabel);
 
-            var inputValid = inputStart >= 0 && inputStart < srcMax;
+            var inputValid = inputStart >= 0 && inputStart < fullSrcMax;
 
             if (!inputValid) {
                 var errorBar = CreateErrorBar("out of range");
                 Grid.SetColumn(errorBar, 1);
                 inputGrid.Children.Add(errorBar);
             } else {
-                // Show mapped portion of source range: [inputStart, srcMax-1]
-                var startFrac = (double)inputStart / srcMax;
-                var bar = CreateBar(Brushes.CornflowerBlue, startFrac, 1.0, $"{inputStart}", $"{srcMax - 1}");
+                // Blue region = sliding window [inputStart, inputStart + 2^esbd - 1]
+                var windowEnd = Math.Min(inputStart + effectiveSrcMax - 1, fullSrcMax - 1);
+                var startFrac = (double)inputStart / fullSrcMax;
+                var endFrac = (double)(windowEnd + 1) / fullSrcMax;
+                var bar = CreateBar(Brushes.CornflowerBlue, startFrac, endFrac, $"{inputStart}", $"{windowEnd}");
                 Grid.SetColumn(bar, 1);
                 inputGrid.Children.Add(bar);
             }
@@ -135,8 +146,8 @@ namespace OpenSense.WPF.Components.HM {
                 Grid.SetColumn(errorBar, 1);
                 outputGrid.Children.Add(errorBar);
             } else {
-                // Compute actual output range from full source range
-                var sourceSpan = srcMax - 1 - inputStart;
+                // Compute output range based on sliding window width
+                var sourceSpan = Math.Min(effectiveSrcMax - 1, fullSrcMax - 1 - inputStart);
                 long rawMax;
                 if (scaleShift >= 0) {
                     rawMax = (sourceSpan >> scaleShift) + outputStart;
