@@ -13,6 +13,6 @@ openface|2.0.4
 tbb|18.5.0
 xmlrpc-c|1.54.1
 ffmpeg|8.0
-kvazaar|4b8a5e0
+kvazaar|upstream 4b8a5e0b, fork 5a3c3412
 minimp4|upstream 4575afb, fork 3f59604
 hm|upstream dbe8d28d, fork 5a9cfb2b
