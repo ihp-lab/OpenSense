@@ -1,6 +1,6 @@
 using System;
 
-namespace OpenSense.Components.HM {
+namespace OpenSense.Components.Kvazaar {
     /// <summary>
     /// Public API for bit depth mapping parameter constraints and validation.
     /// Used by components for runtime validation and by WPF controls for slider ranges.

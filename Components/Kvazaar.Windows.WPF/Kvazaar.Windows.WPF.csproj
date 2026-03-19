@@ -9,6 +9,8 @@
         <AssemblyName>OpenSense.WPF.Components.Kvazaar.Windows</AssemblyName>
         <RootNamespace>OpenSense.WPF.Components.Kvazaar</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
+        <!-- Must match Kvazaar.Windows.csproj. See comment there for details. -->
+        <DefineConstants>$(DefineConstants);FIXED_BIT_DEPTH</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>

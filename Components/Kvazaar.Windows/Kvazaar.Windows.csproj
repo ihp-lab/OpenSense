@@ -12,6 +12,16 @@
         <EmbedAllSources>true</EmbedAllSources>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Nullable>enable</Nullable>
+        <!--
+            FIXED_BIT_DEPTH: Kvazaar's some APIs (e.g. encoder->bitdepth, SPS writing) use the
+            runtime bitdepth field, but many others (e.g. PIXEL_MAX, interpolation shifts, SATD cost
+            scaling, intra DC value) use the compile-time KVZ_BIT_DEPTH constant directly. As a result,
+            encoding at a bit depth different from KVZ_BIT_DEPTH produces incorrect output. When this
+            symbol is defined, OutputBitDepth and InputBitDepth settings become fixed read-only values
+            (= Picture.MaxBitDepth), and the corresponding UI controls are hidden. Remove this symbol
+            when Kvazaar fully supports runtime bit depth configuration in the future.
+        -->
+        <DefineConstants>$(DefineConstants);FIXED_BIT_DEPTH</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>

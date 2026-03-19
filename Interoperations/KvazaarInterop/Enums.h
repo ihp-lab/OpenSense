@@ -4,6 +4,15 @@ using namespace System;
 
 namespace KvazaarInterop {
     /// <summary>
+    /// YUV plane component identifier, used by Picture::GetPlaneAccess().
+    /// </summary>
+    public enum class ComponentId : int {
+        Y = 0,
+        U = 1,   // Cb
+        V = 2,   // Cr
+    };
+
+    /// <summary>
     /// Chroma subsampling format (from kvz_chroma_format in kvazaar.h)
     /// </summary>
     public enum class ChromaFormat : int {

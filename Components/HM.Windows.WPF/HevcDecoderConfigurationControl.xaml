@@ -20,19 +20,19 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <!-- 0: Process Remaining Before Stop -->
+            <!-- 0: Discard Remaining On Stop -->
             <RowDefinition
                 Height="auto" />
         </Grid.RowDefinitions>
 
-        <!-- Row 0: Process Remaining Before Stop -->
+        <!-- Row 0: Discard Remaining On Stop -->
         <TextBlock
             Grid.Row="0"
-            Grid.Column="0">Process Remaining Before Stop</TextBlock>
+            Grid.Column="0">Discard Remaining On Stop</TextBlock>
         <CheckBox
             Grid.Row="0"
             Grid.Column="1"
-            IsChecked="{Binding ProcessRemainingBeforeStop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            ToolTip="When enabled, continue decoding remaining frames before stopping. When disabled, stop immediately." />
+            IsChecked="{Binding DiscardRemainingOnStop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="When enabled, discard remaining queued frames on stop. When disabled, decode all remaining frames before closing." />
     </Grid>
 </UserControl>

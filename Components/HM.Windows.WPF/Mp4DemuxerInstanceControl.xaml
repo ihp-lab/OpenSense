@@ -15,6 +15,6 @@
         <ToggleButton
             IsChecked="{Binding ProcessRemainingBeforeStop, Mode=TwoWay}"
             Content="Process Remaining Before Stop"
-            ToolTip="When checked, continue reading remaining samples before stopping. When unchecked, stop immediately." />
+            ToolTip="When checked, continue reading samples up to the pipeline's final originating time. When unchecked, stop reading immediately. Note: samples with originating times past the pipeline's stop time are discarded by the scheduler regardless of this setting." />
     </StackPanel>
 </UserControl>

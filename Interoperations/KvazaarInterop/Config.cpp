@@ -3,6 +3,7 @@
 #include <msclr\marshal_cppstd.h>
 
 #include "Config.h"
+#include "Api.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -761,6 +762,22 @@ namespace KvazaarInterop {
         if (_disposed) {
             throw gcnew ObjectDisposedException(this->GetType()->FullName);
         }
+    }
+
+    Config^ Config::Clone() {
+        ThrowIfDisposed();
+
+        auto clone = gcnew Config();
+        // Copy all fields from the current config to the clone.
+        // kvz_config is a flat C struct; pointer fields (cqmfile, roi.file_path)
+        // are not exposed through the managed API and are expected to be NULL.
+        // WARNING: If future versions of Kvazaar add new pointer fields to kvz_config,
+        // they must be cleared here to avoid double-free on config_destroy.
+        memcpy(clone->_config, _config, sizeof(kvz_config));
+        // Clear pointer fields in the clone to avoid double-free on destroy.
+        clone->_config->cqmfile = nullptr;
+        clone->_config->roi.file_path = nullptr;
+        return clone;
     }
 
     Config::~Config() {

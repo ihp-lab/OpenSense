@@ -1,9 +1,10 @@
 using System;
+using System.Buffers;
 using System.Numerics;
 using System.Runtime.CompilerServices;
-using HMInterop;
+using KvazaarInterop;
 
-namespace OpenSense.Components.HM {
+namespace OpenSense.Components.Kvazaar {
     /// <summary>
     /// Bidirectional integer bit depth mapping.
     /// Maps a window of the source value range to the target range using shift and offset.
@@ -20,7 +21,7 @@ namespace OpenSense.Components.HM {
         #region APIs
 
         /// <summary>
-        /// In-place mapping on Pel (int) buffer with stride.
+        /// In-place mapping on int buffer with stride.
         /// </summary>
         public static void MapPlane(Span<int> pels, int width, int height, int stride, int targetBits, int scaleShift, int inputStart, int outputStart) {
             var maxVal = (1 << targetBits) - 1;
@@ -33,7 +34,7 @@ namespace OpenSense.Components.HM {
         }
 
         /// <summary>
-        /// Fused mapping from Pel (int) buffer to byte destination.
+        /// Fused mapping from int buffer to byte destination.
         /// </summary>
         public static void MapPlaneToBytes(ReadOnlySpan<int> pels, int width, int height, int stride, Span<byte> dest, int targetBits, int scaleShift, int inputStart, int outputStart) {
             var maxVal = (1 << targetBits) - 1;
@@ -59,7 +60,7 @@ namespace OpenSense.Components.HM {
         }
 
         /// <summary>
-        /// Fused mapping from Pel (int) buffer to ushort destination.
+        /// Fused mapping from int buffer to ushort destination.
         /// </summary>
         public static void MapPlaneToUshorts(ReadOnlySpan<int> pels, int width, int height, int stride, Span<ushort> dest, int targetBits, int scaleShift, int inputStart, int outputStart) {
             var maxVal = (1 << targetBits) - 1;
@@ -84,17 +85,45 @@ namespace OpenSense.Components.HM {
         }
 
         /// <summary>
-        /// Apply in-place mapping to all planes of a PictureYuv (Y, and Cb/Cr if present).
+        /// Apply mapping to all planes of a Picture (Y, and Cb/Cr if present).
+        /// Widens ushort → int, applies MapPlane in-place, writes back to ushort.
         /// </summary>
-        public static unsafe void MapAllPlanes(PictureYuv picture, ChromaFormat chromaFmt, int targetBits, int scaleShift, int inputStart, int outputStart) {
-            var components = chromaFmt == ChromaFormat.Chroma400
+        public static unsafe void MapAllPlanes(Picture picture, ChromaFormat chromaFmt, int targetBits, int scaleShift, int inputStart, int outputStart) {
+            var components = chromaFmt == ChromaFormat.Csp400
                 ? new[] { ComponentId.Y }
-                : new[] { ComponentId.Y, ComponentId.Cb, ComponentId.Cr };
+                : new[] { ComponentId.Y, ComponentId.U, ComponentId.V };
 
             foreach (var comp in components) {
                 var (ptr, w, h, stride) = picture.GetPlaneAccess(comp);
-                var pels = new Span<int>(ptr.ToPointer(), stride * h);
-                MapPlane(pels, w, h, stride, targetBits, scaleShift, inputStart, outputStart);
+                var pixels = new Span<ushort>(ptr.ToPointer(), stride * h);
+
+                using var intMem = MemoryPool<int>.Shared.Rent(stride * h);
+                var intSpan = intMem.Memory.Span.Slice(0, stride * h);
+
+                // Widen ushort → int
+                var vecSize = Vector<ushort>.Count;
+                for (var y = 0; y < h; y++) {
+                    var srcRow = pixels.Slice(y * stride, w);
+                    var dstRow = intSpan.Slice(y * stride, w);
+                    var x = 0;
+                    for (; x + vecSize <= w; x += vecSize) {
+                        var srcVec = new Vector<ushort>(srcRow.Slice(x, vecSize));
+                        Vector.Widen(srcVec, out var lo, out var hi);
+                        Vector.AsVectorInt32(lo).CopyTo(dstRow.Slice(x));
+                        Vector.AsVectorInt32(hi).CopyTo(dstRow.Slice(x + Vector<int>.Count));
+                    }
+                    for (; x < w; x++) {
+                        dstRow[x] = srcRow[x];
+                    }
+                }
+
+                // Map in-place
+                MapPlane(intSpan, w, h, stride, targetBits, scaleShift, inputStart, outputStart);
+
+                // Write back int → ushort
+                for (var i = 0; i < stride * h; i++) {
+                    pixels[i] = (ushort)Math.Clamp(intSpan[i], 0, ushort.MaxValue);
+                }
             }
         }
 

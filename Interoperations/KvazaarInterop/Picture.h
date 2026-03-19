@@ -14,11 +14,29 @@ using namespace System::Runtime::CompilerServices;
 
 namespace KvazaarInterop {
     /// <summary>
-    /// Managed wrapper for kvz_picture
+    /// Managed wrapper for kvz_picture.
+    ///
+    /// Memory management model:
+    /// - kvz_picture has an internal atomic reference count (kvz_image_copy_ref increments, kvz_image_free decrements).
+    ///   The pixel buffer is freed only when the refcount reaches zero.
+    /// - encoder_encode() internally calls kvz_image_copy_ref on the input picture, so the caller may safely
+    ///   release (dispose) its own reference after encode returns. The encoder releases its reference
+    ///   after GOP buffering completes.
+    /// - Pictures CANNOT be pooled. The native refcount is opaque to managed code (no API to query it),
+    ///   so there is no safe way to determine whether the encoder still holds a reference.
+    ///   Returning a Picture to a pool while the encoder retains a reference would allow new pixel data
+    ///   to overwrite a frame that is still being encoded. Always create a new Picture per frame and let
+    ///   Shared&lt;Picture&gt; / IDisposable handle lifetime.
+    /// - Unlike HM's PictureYuv (which CAN be pooled because HM copies pixel data into its own internal
+    ///   buffers and does not retain external references), Kvazaar's encoder directly references the
+    ///   input picture's pixel buffer via copy_ref.
+    /// - Pixel buffers are allocated by kvz_image_alloc (single SIMD-aligned malloc, Y+U+V contiguous).
+    ///   No public API exists to supply externally-allocated memory.
     /// </summary>
     public ref class Picture : IDisposable {
     private:
         kvz_picture* _picture;
+        int _bitDepth;
 
     internal:
         /// <summary>
@@ -37,9 +55,27 @@ namespace KvazaarInterop {
         literal int MaxBitDepth = sizeof(kvz_pixel) * 8;
 
         /// <summary>
-        /// Creates a new picture with specified chroma format and dimensions
+        /// Creates a new picture with specified chroma format, dimensions, and data bit depth
         /// </summary>
-        Picture(KvazaarInterop::ChromaFormat chromaFormat, int width, int height);
+        Picture(KvazaarInterop::ChromaFormat chromaFormat, int width, int height, int bitDepth);
+
+        /// <summary>
+        /// Gets or sets the actual data bit depth of the pixel values.
+        /// This is a managed-only field (not part of the native kvz_picture struct).
+        /// Kvazaar's native picture has no bit depth metadata, so this must be set
+        /// by the producer (e.g. ImageToPictureConverter sets it to OutputBitDepth).
+        /// Defaults to MaxBitDepth (compile-time KVZ_BIT_DEPTH).
+        /// </summary>
+        property int BitDepth {
+            int get() {
+                ThrowIfDisposed();
+                return _bitDepth;
+            }
+            void set(int value) {
+                ThrowIfDisposed();
+                _bitDepth = value;
+            }
+        }
 
         /// <summary>
         /// Gets the width of the picture
@@ -72,8 +108,14 @@ namespace KvazaarInterop {
         }
 
         /// <summary>
-        /// Gets or sets the presentation timestamp
+        /// Gets or sets the presentation timestamp.
         /// </summary>
+        /// <remarks>
+        /// Setter is used by FileWriter to set PTS before passing to encoder.
+        /// Mutating a Picture that is shared via Psi's Shared&lt;T&gt; is not safe if multiple
+        /// consumers receive the same instance. This is acceptable because in practice only one
+        /// encoder consumes each Picture, but be aware of this if the pipeline topology changes.
+        /// </remarks>
         property long long PTS {
             long long get() {
                 ThrowIfDisposed();
@@ -86,30 +128,22 @@ namespace KvazaarInterop {
         }
 
         /// <summary>
-        /// Gets or sets the decompression timestamp
+        /// Gets the decompression timestamp
         /// </summary>
         property long long DTS {
             long long get() {
                 ThrowIfDisposed();
                 return _picture->dts;
             }
-            void set(long long value) {
-                ThrowIfDisposed();
-                _picture->dts = value;
-            }
         }
 
         /// <summary>
-        /// Gets or sets the interlacing mode
+        /// Gets the interlacing mode
         /// </summary>
         property Interlacing Interlacing {
             KvazaarInterop::Interlacing get() {
                 ThrowIfDisposed();
                 return static_cast<KvazaarInterop::Interlacing>(_picture->interlacing);
-            }
-            void set(KvazaarInterop::Interlacing value) {
-                ThrowIfDisposed();
-                _picture->interlacing = static_cast<kvz_interlacing>(value);
             }
         }
 
@@ -124,49 +158,14 @@ namespace KvazaarInterop {
         }
 
         /// <summary>
-        /// Copy Y plane data from unmanaged memory
+        /// Get plane data pointer and dimensions for a given component.
+        /// Stride is in pixels (not bytes). Multiply by sizeof(kvz_pixel) for byte stride.
+        /// For Chroma400, requesting U or V throws InvalidOperationException.
         /// </summary>
-        void CopyYPlane(IntPtr data, int length);
-
-        /// <summary>
-        /// Copy U plane data from unmanaged memory
-        /// </summary>
-        void CopyUPlane(IntPtr data, int length);
-
-        /// <summary>
-        /// Copy V plane data from unmanaged memory
-        /// </summary>
-        void CopyVPlane(IntPtr data, int length);
-
-        /// <summary>
-        /// Get Y plane data pointer and length
-        /// </summary>
-        /// <returns>Tuple with Data pointer and Length in bytes</returns>
-        [returnvalue: TupleElementNames(gcnew array<String^>{"Data", "Length"})]
-        ValueTuple<IntPtr, int> GetYPlane();
-
-        /// <summary>
-        /// Get U plane data pointer and length
-        /// </summary>
-        /// <returns>Tuple with Data pointer and Length in bytes</returns>
-        [returnvalue:TupleElementNames(gcnew array<String^>{"Data", "Length"})]
-        ValueTuple<IntPtr, int> GetUPlane();
-
-        /// <summary>
-        /// Get V plane data pointer and length
-        /// </summary>
-        /// <returns>Tuple with Data pointer and Length in bytes</returns>
-        [returnvalue:TupleElementNames(gcnew array<String^>{"Data", "Length"})]
-        ValueTuple<IntPtr, int> GetVPlane();
-
-    private:
-        /// <summary>
-        /// Calculate the size of a chroma plane based on the chroma format
-        /// </summary>
-        /// <param name="yPlaneSize">Size of the Y plane in bytes</param>
-        /// <param name="chromaFormat">Chroma format</param>
-        /// <returns>Size of U or V plane in bytes</returns>
-        static int CalculateChromaPlaneSizeInBytes(int yPlaneSize, KvazaarInterop::ChromaFormat chromaFormat);
+        /// <param name="componentId">Which plane to access (Y, U, or V)</param>
+        /// <returns>Tuple with (DataPointer, Width, Height, StrideInPixels)</returns>
+        [returnvalue: TupleElementNames(gcnew array<String^>{"Data", "Width", "Height", "Stride"})]
+        ValueTuple<IntPtr, int, int, int> GetPlaneAccess(ComponentId componentId);
 
     internal:
         /// <summary>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Buffers;
+using System.Numerics;
 using HMInterop;
+using Microsoft.Psi.Imaging;
 
 namespace OpenSense.Components.HM {
     /// <summary>
@@ -91,6 +93,19 @@ namespace OpenSense.Components.HM {
             v = source.ReadPlanePacked(ComponentId.Cr);
         }
 
+        /// <summary>
+        /// Read a single plane as a pooled ushort buffer, applying bit depth mapping.
+        /// The caller is responsible for disposing the returned IMemoryOwner.
+        /// </summary>
+        public static unsafe IMemoryOwner<ushort> ReadPlaneMapped(this PictureYuv source, ComponentId componentId, int targetBitDepth, int scaleShift, int inputStart, int outputStart) {
+            var (ptr, w, h, stride) = source.GetPlaneAccess(componentId);
+            var pels = new ReadOnlySpan<int>(ptr.ToPointer(), stride * h);
+            var pixelCount = w * h;
+            var owner = MemoryPool<ushort>.Shared.Rent(pixelCount);
+            BitDepthMapper.MapPlaneToUshorts(pels, w, h, stride, owner.Memory.Span[..pixelCount], targetBitDepth, scaleShift, inputStart, outputStart);
+            return owner;
+        }
+
         #endregion
 
         #region External to Pel
@@ -115,6 +130,54 @@ namespace OpenSense.Components.HM {
         /// </summary>
         public static unsafe void ReadPlaneFromUshorts(this PictureYuv dest, ComponentId componentId, IntPtr data, int pixelCount) {
             dest.ReadPlaneFromUshorts(componentId, new ReadOnlySpan<ushort>(data.ToPointer(), pixelCount));
+        }
+
+        /// <summary>
+        /// Copy 8-bit grayscale pixels from an ImageBase into the Y plane (byte → Pel widening).
+        /// </summary>
+        public static unsafe void ReadYPlaneFromGray8(this PictureYuv dest, ImageBase image) {
+            var width = image.Width;
+            var height = image.Height;
+            var imgStride = image.Stride;
+            var src = new ReadOnlySpan<byte>(image.ImageData.ToPointer(), imgStride * height);
+
+            var (yPtr, yW, yH, yStride) = dest.GetPlaneAccess(ComponentId.Y);
+            var yPels = new Span<int>(yPtr.ToPointer(), yStride * yH);
+            for (var y = 0; y < height; y++) {
+                var srcRow = src.Slice(y * imgStride, width);
+                var dstRow = yPels.Slice(y * yStride, width);
+                for (var x = 0; x < width; x++) {
+                    dstRow[x] = srcRow[x];
+                }
+            }
+        }
+
+        /// <summary>
+        /// Copy 16-bit grayscale pixels from an ImageBase into the Y plane (ushort → Pel widening, SIMD-optimized).
+        /// </summary>
+        public static unsafe void ReadYPlaneFromGray16(this PictureYuv dest, ImageBase image) {
+            var width = image.Width;
+            var height = image.Height;
+            var imgStride = image.Stride;
+
+            var (yPtr, yW, yH, yStride) = dest.GetPlaneAccess(ComponentId.Y);
+            var yPels = new Span<int>(yPtr.ToPointer(), yStride * yH);
+
+            var vecSize = Vector<ushort>.Count;
+            for (var y = 0; y < height; y++) {
+                var srcRow = new ReadOnlySpan<ushort>((byte*)image.ImageData.ToPointer() + y * imgStride, width);
+                var dstRow = yPels.Slice(y * yStride, width);
+                var x = 0;
+                for (; x + vecSize <= width; x += vecSize) {
+                    var srcVec = new Vector<ushort>(srcRow.Slice(x, vecSize));
+                    Vector.Widen(srcVec, out var lo, out var hi);
+                    Vector.AsVectorInt32(lo).CopyTo(dstRow.Slice(x));
+                    Vector.AsVectorInt32(hi).CopyTo(dstRow.Slice(x + Vector<int>.Count));
+                }
+                for (; x < width; x++) {
+                    dstRow[x] = srcRow[x];
+                }
+            }
         }
 
         #endregion

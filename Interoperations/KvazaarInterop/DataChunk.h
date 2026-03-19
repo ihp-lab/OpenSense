@@ -4,9 +4,6 @@ extern "C" {
 #include <kvazaar.h>
 }
 
-#include "Api.h"
-#include "DataChunkEnumerator.h"
-
 using namespace System;
 using namespace System::Collections;
 using namespace System::Collections::Generic;
@@ -24,6 +21,8 @@ namespace KvazaarInterop {
         kvz_data_chunk* _chunk;
         int _totalLength;
         int _count;
+        long long _pts;
+        long long _dts;
 
     internal:
         /// <summary>
@@ -32,17 +31,45 @@ namespace KvazaarInterop {
         /// </summary>
         /// <param name="chunk">Native chunk pointer</param>
         /// <param name="totalLength">Total byte count of all chunks in the linked list</param>
-        DataChunk(kvz_data_chunk* chunk, int totalLength);
+        /// <param name="pts">Presentation time offset in .NET Ticks (from source picture's PTS)</param>
+        DataChunk(kvz_data_chunk* chunk, int totalLength, long long pts);
 
     public:
         /// <summary>
-        /// Gets the total count of valid data bytes across all chunks in the linked list
-        /// This value comes from kvazaar's len_out parameter and represents the actual encoded data size
+        /// Gets the total count of valid data bytes across all chunks in the linked list.
+        /// This value comes from kvazaar's len_out parameter and represents the actual encoded data size.
         /// </summary>
-        property int TotalLength{
+        property int TotalLength {
             int get() {
                 ThrowIfDisposed();
                 return _totalLength;
+            }
+        }
+
+        /// <summary>
+        /// Presentation (display) time offset relative to the first frame, in .NET Ticks.
+        /// Set at construction from the source picture's PTS.
+        /// </summary>
+        property long long PresentationTimeOffset {
+            long long get() {
+                ThrowIfDisposed();
+                return _pts;
+            }
+        }
+
+        /// <summary>
+        /// Decoding time offset relative to the first frame, in .NET Ticks.
+        /// Not set by the encoder (0 at construction); set by the downstream component
+        /// (e.g. FileWriter) from its input time FIFO queue after encoding.
+        /// </summary>
+        property long long DecodingTimeOffset {
+            long long get() {
+                ThrowIfDisposed();
+                return _dts;
+            }
+            void set(long long value) {
+                ThrowIfDisposed();
+                _dts = value;
             }
         }
 

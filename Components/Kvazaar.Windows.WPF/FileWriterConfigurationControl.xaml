@@ -1,17 +1,26 @@
-﻿<UserControl
+<UserControl
     x:Class="OpenSense.WPF.Components.Kvazaar.FileWriterConfigurationControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:OpenSense.WPF.Components.Kvazaar"
+    xmlns:conv="clr-namespace:OpenSense.WPF.Components.Converters;assembly=OpenSense.WPF.Components.Contracts"
+    xmlns:util="clr-namespace:OpenSense.WPF.Components.Utilities;assembly=OpenSense.WPF.Components.Contracts"
     xmlns:comp="clr-namespace:OpenSense.Components.Kvazaar;assembly=OpenSense.Components.Kvazaar.Windows"
+    xmlns:interop="clr-namespace:KvazaarInterop;assembly=KvazaarInterop"
+    xmlns:sys="clr-namespace:System;assembly=System.Runtime"
     mc:Ignorable="d"
-    d:DesignHeight="450"
+    d:DesignHeight="1200"
     d:DesignWidth="800">
     <d:UserControl.DataContext>
         <comp:FileWriterConfiguration />
     </d:UserControl.DataContext>
+
+    <UserControl.Resources>
+        <conv:InverseBooleanToCollapsedVisibilityConverter
+            x:Key="InverseBoolToVis" />
+    </UserControl.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -21,6 +30,85 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
+            <!-- 0-1: File Output -->
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <!-- 2: Runtime -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 3: Input -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 4-5: Core Quality -->
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <!-- 6-11: GOP Structure -->
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <!-- 12-13: Filter -->
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <!-- 14-20: Motion Estimation -->
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <!-- 21-22: Rate Control -->
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <!-- 23-29: Quantization Optimization -->
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <!-- 30-31: Parallelism -->
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <!-- 32-36: Profile & Compliance -->
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
             <RowDefinition
                 Height="auto" />
             <RowDefinition
@@ -29,11 +117,10 @@
                 Height="auto" />
         </Grid.RowDefinitions>
 
+        <!-- 0: Filename -->
         <TextBlock
             Grid.Row="0"
-            Grid.Column="0">
-            Filename
-        </TextBlock>
+            Grid.Column="0">Filename</TextBlock>
         <Grid
             Grid.Row="0"
             Grid.Column="1">
@@ -43,39 +130,467 @@
                 <ColumnDefinition
                     Width="auto" />
             </Grid.ColumnDefinitions>
-
             <TextBox
                 Grid.Column="0"
                 Text="{Binding Path=Filename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
             <Button
                 Grid.Column="1"
                 Name="ButtonSaveFile"
-                Click="ButtonSaveFile_Click">
-                Save
-            </Button>
+                Click="ButtonSaveFile_Click">Save</Button>
         </Grid>
 
+        <!-- 1: Timestamp -->
         <TextBlock
             Grid.Row="1"
-            Grid.Column="0">
-            Append Timestamp to Filename
-        </TextBlock>
+            Grid.Column="0">Append Timestamp to Filename</TextBlock>
         <CheckBox
             Grid.Row="1"
             Grid.Column="1"
             IsChecked="{Binding TimestampFilename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            ToolTip="Append a timestamp suffix to the base filename to preserve the originating timestamp of the first frame." />
+            ToolTip="Append a timestamp suffix to the base filename." />
 
+        <!-- 2: Process Remaining -->
         <TextBlock
             Grid.Row="2"
-            Grid.Column="0">
-            Input Bit Depth
-        </TextBlock>
-        <TextBox
+            Grid.Column="0">Process Remaining Before Stop</TextBlock>
+        <CheckBox
             Grid.Row="2"
             Grid.Column="1"
-            Text="{Binding InputBitDepth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            ToolTip="Bit depth of input samples (e.g. 16 for 16-bit depth/IR streams)." />
+            IsChecked="{Binding ProcessRemainingBeforeStop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="When enabled, continue encoding remaining queued frames before stopping." />
+
+        <!-- 3: Input Bit Depth. Hidden when FIXED_BIT_DEPTH. -->
+        <TextBlock
+            x:Name="InputBitDepthLabel"
+            Grid.Row="3"
+            Grid.Column="0">Input Bit Depth</TextBlock>
+        <ComboBox
+            x:Name="InputBitDepthControl"
+            Grid.Row="3"
+            Grid.Column="1"
+            SelectedValuePath="Tag"
+            ToolTip="Expected input bit depth. Auto = detect at runtime.">
+            <ComboBoxItem
+                Content="Auto"
+                Tag="{x:Null}" />
+            <ComboBoxItem
+                Content="8">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>8</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="9">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>9</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="10">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>10</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="11">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>11</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="12">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>12</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="13">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>13</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="14">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>14</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="15">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>15</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="16">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>16</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+        </ComboBox>
+
+        <!-- 4: Lossless -->
+        <TextBlock
+            Grid.Row="4"
+            Grid.Column="0">Lossless</TextBlock>
+        <CheckBox
+            Grid.Row="4"
+            Grid.Column="1"
+            IsChecked="{Binding Lossless, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Enable lossless encoding mode. Overrides QP setting." />
+
+        <!-- 5: QP -->
+        <TextBlock
+            Grid.Row="5"
+            Grid.Column="0"
+            Visibility="{Binding Lossless, Converter={StaticResource InverseBoolToVis}}">QP</TextBlock>
+        <TextBox
+            Grid.Row="5"
+            Grid.Column="1"
+            Visibility="{Binding Lossless, Converter={StaticResource InverseBoolToVis}}"
+            Text="{Binding QP, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Quantization parameter (0-51). Lower = higher quality." />
+
+        <!-- 6: Intra Period -->
+        <TextBlock
+            Grid.Row="6"
+            Grid.Column="0">Intra Period</TextBlock>
+        <TextBox
+            Grid.Row="6"
+            Grid.Column="1"
+            Text="{Binding IntraPeriod, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Intra frame period. 0 = only first frame. 1 = all intra." />
+
+        <!-- 7: VPS Period -->
+        <TextBlock
+            Grid.Row="7"
+            Grid.Column="0">VPS Period</TextBlock>
+        <TextBox
+            Grid.Row="7"
+            Grid.Column="1"
+            Text="{Binding VpsPeriod, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="VPS/SPS/PPS re-send period. 0 = first frame only. -1 = never." />
+
+        <!-- 8: GOP Length -->
+        <TextBlock
+            Grid.Row="8"
+            Grid.Column="0">GOP Length</TextBlock>
+        <TextBox
+            Grid.Row="8"
+            Grid.Column="1"
+            Text="{Binding GopLen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="GOP length. 0 = all-intra. 4 = default." />
+
+        <!-- 9: GOP Low Delay -->
+        <TextBlock
+            Grid.Row="9"
+            Grid.Column="0">GOP Low Delay</TextBlock>
+        <CheckBox
+            Grid.Row="9"
+            Grid.Column="1"
+            IsChecked="{Binding GopLowDelay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="GOP does not use future pictures (low-delay mode)." />
+
+        <!-- 10: Open GOP -->
+        <TextBlock
+            Grid.Row="10"
+            Grid.Column="0">Open GOP</TextBlock>
+        <CheckBox
+            Grid.Row="10"
+            Grid.Column="1"
+            IsChecked="{Binding OpenGop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        <!-- 11: Reference Frames -->
+        <TextBlock
+            Grid.Row="11"
+            Grid.Column="0">Reference Frames</TextBlock>
+        <TextBox
+            Grid.Row="11"
+            Grid.Column="1"
+            Text="{Binding RefFrames, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Number of reference frames (1-15)." />
+
+        <!-- 12: Deblock Enable -->
+        <TextBlock
+            Grid.Row="12"
+            Grid.Column="0">Deblocking Filter</TextBlock>
+        <CheckBox
+            Grid.Row="12"
+            Grid.Column="1"
+            IsChecked="{Binding DeblockEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        <!-- 13: SAO Type -->
+        <TextBlock
+            Grid.Row="13"
+            Grid.Column="0">SAO Type</TextBlock>
+        <ComboBox
+            Grid.Row="13"
+            Grid.Column="1"
+            SelectedItem="{Binding SaoType}"
+            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type interop:SampleAdaptiveOffset}}, Mode=OneTime}" />
+
+        <!-- 14: IME Algorithm -->
+        <TextBlock
+            Grid.Row="14"
+            Grid.Column="0">IME Algorithm</TextBlock>
+        <ComboBox
+            Grid.Row="14"
+            Grid.Column="1"
+            SelectedItem="{Binding ImeAlgorithm}"
+            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type interop:IntegerMotionEstimationAlgorithm}}, Mode=OneTime}" />
+
+        <!-- 15: FME Level -->
+        <TextBlock
+            Grid.Row="15"
+            Grid.Column="0">FME Level</TextBlock>
+        <Grid
+            Grid.Row="15"
+            Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="*" />
+                <ColumnDefinition
+                    Width="30" />
+            </Grid.ColumnDefinitions>
+            <Slider
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                Minimum="0"
+                Maximum="4"
+                IsSnapToTickEnabled="True"
+                TickFrequency="1"
+                Value="{Binding FmeLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                ToolTip="Fractional pixel ME level (0=off, 4=best)." />
+            <TextBox
+                Grid.Column="1"
+                Text="{Binding FmeLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                VerticalAlignment="Center"
+                Margin="4,0,0,0" />
+        </Grid>
+
+        <!-- 16: Bi-prediction -->
+        <TextBlock
+            Grid.Row="16"
+            Grid.Column="0">Bi-prediction</TextBlock>
+        <CheckBox
+            Grid.Row="16"
+            Grid.Column="1"
+            IsChecked="{Binding Bipred, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        <!-- 17: SMP Enable -->
+        <TextBlock
+            Grid.Row="17"
+            Grid.Column="0">SMP Enable</TextBlock>
+        <CheckBox
+            Grid.Row="17"
+            Grid.Column="1"
+            IsChecked="{Binding SmpEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Symmetric Motion Partition blocks." />
+
+        <!-- 18: AMP Enable -->
+        <TextBlock
+            Grid.Row="18"
+            Grid.Column="0">AMP Enable</TextBlock>
+        <CheckBox
+            Grid.Row="18"
+            Grid.Column="1"
+            IsChecked="{Binding AmpEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Asymmetric Motion Partition blocks." />
+
+        <!-- 19: Full Intra Search -->
+        <TextBlock
+            Grid.Row="19"
+            Grid.Column="0">Full Intra Search</TextBlock>
+        <CheckBox
+            Grid.Row="19"
+            Grid.Column="1"
+            IsChecked="{Binding FullIntraSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        <!-- 20: TMVP Enable -->
+        <TextBlock
+            Grid.Row="20"
+            Grid.Column="0">TMVP Enable</TextBlock>
+        <CheckBox
+            Grid.Row="20"
+            Grid.Column="1"
+            IsChecked="{Binding TmvpEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Temporal Motion Vector Predictors." />
+
+        <!-- 21: RC Algorithm -->
+        <TextBlock
+            Grid.Row="21"
+            Grid.Column="0">Rate Control</TextBlock>
+        <ComboBox
+            Grid.Row="21"
+            Grid.Column="1"
+            SelectedItem="{Binding RcAlgorithm}"
+            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type interop:RateControlAlgorithm}}, Mode=OneTime}" />
+
+        <!-- 22: Target Bitrate -->
+        <TextBlock
+            Grid.Row="22"
+            Grid.Column="0">Target Bitrate</TextBlock>
+        <TextBox
+            Grid.Row="22"
+            Grid.Column="1"
+            Text="{Binding TargetBitrate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Target bitrate in bps. 0 = disabled." />
+
+        <!-- 23: RDO Level -->
+        <TextBlock
+            Grid.Row="23"
+            Grid.Column="0">RDO Level</TextBlock>
+        <Grid
+            Grid.Row="23"
+            Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="*" />
+                <ColumnDefinition
+                    Width="30" />
+            </Grid.ColumnDefinitions>
+            <Slider
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                Minimum="0"
+                Maximum="2"
+                IsSnapToTickEnabled="True"
+                TickFrequency="1"
+                Value="{Binding Rdo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                ToolTip="RD-calculation level (0-2). Higher = slower but better." />
+            <TextBox
+                Grid.Column="1"
+                Text="{Binding Rdo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                VerticalAlignment="Center"
+                Margin="4,0,0,0" />
+        </Grid>
+
+        <!-- 24: RDOQ Enable -->
+        <TextBlock
+            Grid.Row="24"
+            Grid.Column="0">RDOQ Enable</TextBlock>
+        <CheckBox
+            Grid.Row="24"
+            Grid.Column="1"
+            IsChecked="{Binding RdoqEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Rate-Distortion Optimized Quantization." />
+
+        <!-- 25: Sign Hide -->
+        <TextBlock
+            Grid.Row="25"
+            Grid.Column="0">Sign Hide Enable</TextBlock>
+        <CheckBox
+            Grid.Row="25"
+            Grid.Column="1"
+            IsChecked="{Binding SignhideEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        <!-- 26: Transform Skip -->
+        <TextBlock
+            Grid.Row="26"
+            Grid.Column="0">Transform Skip Enable</TextBlock>
+        <CheckBox
+            Grid.Row="26"
+            Grid.Column="1"
+            IsChecked="{Binding TrskipEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Transform skip for 4x4 blocks." />
+
+        <!-- 27: Intra QP Offset -->
+        <TextBlock
+            Grid.Row="27"
+            Grid.Column="0">Intra QP Offset</TextBlock>
+        <TextBox
+            Grid.Row="27"
+            Grid.Column="1"
+            Text="{Binding IntraQpOffset, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        <!-- 28: Intra QP Offset Auto -->
+        <TextBlock
+            Grid.Row="28"
+            Grid.Column="0">Intra QP Offset Auto</TextBlock>
+        <CheckBox
+            Grid.Row="28"
+            Grid.Column="1"
+            IsChecked="{Binding IntraQpOffsetAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Auto intra QP offset based on GOP length." />
+
+        <!-- 29: VAQ -->
+        <TextBlock
+            Grid.Row="29"
+            Grid.Column="0">VAQ</TextBlock>
+        <TextBox
+            Grid.Row="29"
+            Grid.Column="1"
+            Text="{Binding Vaq, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Variance Adaptive Quantization. 0 = disabled." />
+
+        <!-- 30: Threads -->
+        <TextBlock
+            Grid.Row="30"
+            Grid.Column="0">Threads</TextBlock>
+        <TextBox
+            Grid.Row="30"
+            Grid.Column="1"
+            Text="{Binding Threads, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="-1 = auto." />
+
+        <!-- 31: WPP -->
+        <TextBlock
+            Grid.Row="31"
+            Grid.Column="0">WPP</TextBlock>
+        <CheckBox
+            Grid.Row="31"
+            Grid.Column="1"
+            IsChecked="{Binding Wpp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Wavefront Parallel Processing." />
+
+        <!-- 32: Level -->
+        <TextBlock
+            Grid.Row="32"
+            Grid.Column="0">Level</TextBlock>
+        <TextBox
+            Grid.Row="32"
+            Grid.Column="1"
+            Text="{Binding Level, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="HEVC level (e.g. 62 = level 6.2)." />
+
+        <!-- 33: High Tier -->
+        <TextBlock
+            Grid.Row="33"
+            Grid.Column="0">High Tier</TextBlock>
+        <CheckBox
+            Grid.Row="33"
+            Grid.Column="1"
+            IsChecked="{Binding HighTier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Requires level 4.0 or higher." />
+
+        <!-- 34: Scaling List -->
+        <TextBlock
+            Grid.Row="34"
+            Grid.Column="0">Scaling List</TextBlock>
+        <ComboBox
+            Grid.Row="34"
+            Grid.Column="1"
+            SelectedItem="{Binding ScalingList}"
+            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type interop:ScalingList}}, Mode=OneTime}" />
+
+        <!-- 35: Max Merge -->
+        <TextBlock
+            Grid.Row="35"
+            Grid.Column="0">Max Merge Candidates</TextBlock>
+        <TextBox
+            Grid.Row="35"
+            Grid.Column="1"
+            Text="{Binding MaxMerge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="1-5." />
+
+        <!-- 36: Early Skip -->
+        <TextBlock
+            Grid.Row="36"
+            Grid.Column="0">Early Skip</TextBlock>
+        <CheckBox
+            Grid.Row="36"
+            Grid.Column="1"
+            IsChecked="{Binding EarlySkip, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Early Skip Mode Decision." />
     </Grid>
 </UserControl>

@@ -17,10 +17,17 @@ using namespace System::Runtime::CompilerServices;
 
 namespace KvazaarInterop {
     /// <summary>
-    /// Managed wrapper for kvz_encoder
+    /// Managed wrapper for kvz_encoder.
+    ///
+    /// Thread safety: Kvazaar's kvz_strategyselector_init() modifies unprotected global state
+    /// (kvz_g_hardware_flags, kvz_g_strategies_in_use, kvz_g_strategies_available) during
+    /// encoder_open(). A process-wide lock serializes construction and destruction to prevent
+    /// data races. Once created, encoder instances are fully independent and may encode
+    /// concurrently without synchronization.
     /// </summary>
     public ref class Encoder : IDisposable {
     private:
+        static Object^ s_lock = gcnew Object();
         kvz_encoder* _encoder;
 
     public:

@@ -1,21 +1,114 @@
-﻿using System;
+using System;
+using System.Buffers;
+using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using HMInterop;
+using Microsoft.Psi.Imaging;
 
 namespace OpenSense.Components.HM {
     // TODO: When upgrading .NET version, check for newer SIMD/Intrinsics APIs that may offer better performance.
 
     /// <summary>
-    /// Integer YCbCr to RGB/BGR color space conversion using BT.601 coefficients.
+    /// Integer RGB/YCbCr color space conversion using BT.601 coefficients.
     /// All operations use integer arithmetic only.
     /// </summary>
     internal static class ColorSpaceConverter {
 
         #region APIs
 
+        #region Forward (Image → Picture)
+
+        /// <summary>
+        /// Convert an 8-bit grayscale image to Y Pel plane, filling chroma with neutral if needed.
+        /// </summary>
+        public static void ConvertGray8(Image image, PictureYuv picture, ChromaFormat chromaFmt) {
+            picture.ReadYPlaneFromGray8(image);
+            if (chromaFmt != ChromaFormat.Chroma400) {
+                picture.FillNeutralChroma(8);
+            }
+        }
+
+        /// <summary>
+        /// Convert a 16-bit grayscale image to Y Pel plane, filling chroma with neutral if needed.
+        /// </summary>
+        public static void ConvertGray16(Image image, PictureYuv picture, ChromaFormat chromaFmt) {
+            picture.ReadYPlaneFromGray16(image);
+            if (chromaFmt != ChromaFormat.Chroma400) {
+                picture.FillNeutralChroma(16);
+            }
+        }
+
+        /// <summary>
+        /// Convert an 8-bit RGB image to YCbCr Pel planes at the specified bit depth,
+        /// with optional chroma subsampling via ChromaConverter.
+        /// </summary>
+        public static unsafe void ConvertColor(
+            Image image, PictureYuv picture, ChromaFormat chromaFmt,
+            int rOffset, int gOffset, int bOffset, int bytesPerPixel, int bitDepth
+        ) {
+            var width = image.Width;
+            var height = image.Height;
+            var imgStride = image.Stride;
+            var src = new ReadOnlySpan<byte>(image.ImageData.ToPointer(), imgStride * height);
+
+            var (yPtr, yW, yH, yStride) = picture.GetPlaneAccess(ComponentId.Y);
+            var yPels = new Span<int>(yPtr.ToPointer(), yStride * yH);
+
+            if (chromaFmt == ChromaFormat.Chroma400) {
+                for (var y = 0; y < height; y++) {
+                    var srcRow = src.Slice(y * imgStride, width * bytesPerPixel);
+                    var yRow = yPels.Slice(y * yStride, width);
+                    RgbRowToY(srcRow, width, bytesPerPixel, rOffset, gOffset, bOffset, yRow, bitDepth);
+                }
+            } else {
+                var (cbPtr, cbW, cbH, cbStride) = picture.GetPlaneAccess(ComponentId.Cb);
+                var (crPtr, crW, crH, crStride) = picture.GetPlaneAccess(ComponentId.Cr);
+
+                if (chromaFmt == ChromaFormat.Chroma444) {
+                    var cbPels = new Span<int>(cbPtr.ToPointer(), cbStride * cbH);
+                    var crPels = new Span<int>(crPtr.ToPointer(), crStride * crH);
+
+                    for (var y = 0; y < height; y++) {
+                        var srcRow = src.Slice(y * imgStride, width * bytesPerPixel);
+                        var yRow = yPels.Slice(y * yStride, width);
+                        var cbRow = cbPels.Slice(y * cbStride, width);
+                        var crRow = crPels.Slice(y * crStride, width);
+                        RgbRowToYCbCr(srcRow, width, bytesPerPixel, rOffset, gOffset, bOffset, yRow, cbRow, crRow, bitDepth);
+                    }
+                } else {
+                    // 420/422: compute at 444 into packed int arrays, subsample to chroma Pel buffers
+                    var pixelCount = width * height;
+                    using var cbMem = MemoryPool<int>.Shared.Rent(pixelCount);
+                    using var crMem = MemoryPool<int>.Shared.Rent(pixelCount);
+                    var fullCb = cbMem.Memory.Span.Slice(0, pixelCount);
+                    var fullCr = crMem.Memory.Span.Slice(0, pixelCount);
+
+                    for (var y = 0; y < height; y++) {
+                        var srcRow = src.Slice(y * imgStride, width * bytesPerPixel);
+                        var yRow = yPels.Slice(y * yStride, width);
+                        var cbRow = fullCb.Slice(y * width, width);
+                        var crRow = fullCr.Slice(y * width, width);
+                        RgbRowToYCbCr(srcRow, width, bytesPerPixel, rOffset, gOffset, bOffset, yRow, cbRow, crRow, bitDepth);
+                    }
+
+                    var cbPels = new Span<int>(cbPtr.ToPointer(), cbStride * cbH);
+                    var crPels = new Span<int>(crPtr.ToPointer(), crStride * crH);
+                    ChromaConverter.SubsampleToPels(fullCb, width, height, cbPels, cbW, cbH, cbStride, chromaFmt);
+                    ChromaConverter.SubsampleToPels(fullCr, width, height, crPels, crW, crH, crStride, chromaFmt);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Inverse (YCbCr → RGB)
+
         /// <summary>
         /// Convert YCbCr 4:4:4 to BGR_24bpp (byte order: B, G, R).
         /// Input planes must be at the same resolution (width * height).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void YCbCrToBgr(
             ReadOnlySpan<ushort> y, ReadOnlySpan<ushort> cb, ReadOnlySpan<ushort> cr,
             Span<byte> bgrOut,
@@ -28,6 +121,7 @@ namespace OpenSense.Components.HM {
         /// Convert YCbCr 4:4:4 to RGB_24bpp (byte order: R, G, B).
         /// Input planes must be at the same resolution (width * height).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void YCbCrToRgb(
             ReadOnlySpan<ushort> y, ReadOnlySpan<ushort> cb, ReadOnlySpan<ushort> cr,
             Span<byte> rgbOut,
@@ -39,8 +133,9 @@ namespace OpenSense.Components.HM {
         /// <summary>
         /// Convert YCbCr 4:4:4 to RGBA_64bpp (16-bit per component, byte order: R, G, B, A).
         /// Input planes must be at the same resolution (width * height).
-        /// Alpha is set to maximum (2^bitDepth - 1, then scaled to 16-bit range).
+        /// Alpha is set to maximum (2^bitDepth - 1).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void YCbCrToRgba64(
             ReadOnlySpan<ushort> y, ReadOnlySpan<ushort> cb, ReadOnlySpan<ushort> cr,
             Span<byte> rgba64Out,
@@ -54,34 +149,17 @@ namespace OpenSense.Components.HM {
 
             var outU16 = MemoryMarshal.Cast<byte, ushort>(rgba64Out);
 
-            // BT.601 inverse coefficients scaled for integer math.
-            // From Y'CbCr to R'G'B':
-            //   R = 1.164*(Y-16) + 1.596*(Cr-128)
-            //   G = 1.164*(Y-16) - 0.813*(Cr-128) - 0.392*(Cb-128)
-            //   B = 1.164*(Y-16) + 2.017*(Cb-128)
-            // Scaled by 256 for integer:
-            //   R = (298*(Y-16) + 409*(Cr-128) + 128) >> 8
-            //   G = (298*(Y-16) - 208*(Cr-128) - 100*(Cb-128) + 128) >> 8
-            //   B = (298*(Y-16) + 516*(Cb-128) + 128) >> 8
-            // Scale neutral/offset values by (bitDepth - 8) shift.
-
             var shift = bitDepth - 8;
             var offset16 = 16 << shift;
             var offset128 = 128 << shift;
             var maxVal = (1 << bitDepth) - 1;
             var alpha = (ushort)maxVal;
 
-            // The BT.601 coefficients are for 8-bit range.
-            // For higher bit depths, the formula is the same but we keep values in the higher range.
-            // Result is clamped to [0, maxVal].
-
             for (var i = 0; i < pixelCount; i++) {
                 var yc = y[i] - offset16;
                 var cbc = cb[i] - offset128;
                 var crc = cr[i] - offset128;
 
-                // Scale coefficients: multiply by 298 then >> 8 for the Y term at source bit depth.
-                // For bit depth > 8, the coefficients still work because all values are proportionally scaled.
                 var r = (298 * yc + 409 * crc + 128) >> 8;
                 var g = (298 * yc - 208 * crc - 100 * cbc + 128) >> 8;
                 var b = (298 * yc + 516 * cbc + 128) >> 8;
@@ -95,6 +173,44 @@ namespace OpenSense.Components.HM {
 
         #endregion
 
+        #endregion
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void RgbRowToY(
+            ReadOnlySpan<byte> srcRow, int width, int bytesPerPixel,
+            int rOffset, int gOffset, int bOffset,
+            Span<int> yRow,
+            int bitDepth
+        ) {
+            var shift = bitDepth - 8;
+            for (var x = 0; x < width; x++) {
+                var px = x * bytesPerPixel;
+                var r = (int)srcRow[px + rOffset] << shift;
+                var g = (int)srcRow[px + gOffset] << shift;
+                var b = (int)srcRow[px + bOffset] << shift;
+                yRow[x] = Math.Clamp((66 * r + 129 * g + 25 * b + 128) >> 8, 0, 219 << shift) + (16 << shift);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void RgbRowToYCbCr(
+            ReadOnlySpan<byte> srcRow, int width, int bytesPerPixel,
+            int rOffset, int gOffset, int bOffset,
+            Span<int> yRow, Span<int> cbRow, Span<int> crRow,
+            int bitDepth
+        ) {
+            var shift = bitDepth - 8;
+            for (var x = 0; x < width; x++) {
+                var px = x * bytesPerPixel;
+                var r = (int)srcRow[px + rOffset] << shift;
+                var g = (int)srcRow[px + gOffset] << shift;
+                var b = (int)srcRow[px + bOffset] << shift;
+                yRow[x] = Math.Clamp((66 * r + 129 * g + 25 * b + 128) >> 8, 0, 219 << shift) + (16 << shift);
+                cbRow[x] = Math.Clamp((-38 * r - 74 * g + 112 * b + 128) >> 8, -(112 << shift), 112 << shift) + (128 << shift);
+                crRow[x] = Math.Clamp((112 * r - 94 * g - 18 * b + 128) >> 8, -(112 << shift), 112 << shift) + (128 << shift);
+            }
+        }
+
         private static void YCbCrToChannelOrder(
             ReadOnlySpan<ushort> y, ReadOnlySpan<ushort> cb, ReadOnlySpan<ushort> cr,
             Span<byte> output,
@@ -107,8 +223,6 @@ namespace OpenSense.Components.HM {
                 throw new ArgumentException($"Output buffer too small: {output.Length} < {requiredBytes}.");
             }
 
-            // BT.601 inverse, 8-bit range.
-            // For bitDepth > 8, we need to scale the offset values.
             var shift = bitDepth - 8;
             var offset16 = 16 << shift;
             var offset128 = 128 << shift;
@@ -118,10 +232,6 @@ namespace OpenSense.Components.HM {
                 var cbc = cb[i] - offset128;
                 var crc = cr[i] - offset128;
 
-                // For 8-bit output from higher bit depth, the formula produces 8-bit range values
-                // because the coefficients include an implicit normalization.
-                // The 298 coefficient compensates for the limited range [16,235].
-                // Result is naturally in ~[0, 255] range for valid input.
                 var r = (298 * yc + 409 * crc + 128) >> (8 + shift);
                 var g = (298 * yc - 208 * crc - 100 * cbc + 128) >> (8 + shift);
                 var b = (298 * yc + 516 * cbc + 128) >> (8 + shift);

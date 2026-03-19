@@ -6,14 +6,22 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:OpenSense.WPF.Components.Kvazaar"
     xmlns:util="clr-namespace:OpenSense.WPF.Components.Utilities;assembly=OpenSense.WPF.Components.Contracts"
+    xmlns:conv="clr-namespace:OpenSense.WPF.Components.Converters;assembly=OpenSense.WPF.Components.Contracts"
     xmlns:interop="clr-namespace:KvazaarInterop;assembly=KvazaarInterop"
     xmlns:comp="clr-namespace:OpenSense.Components.Kvazaar;assembly=OpenSense.Components.Kvazaar.Windows"
+    xmlns:imaging="clr-namespace:Microsoft.Psi.Imaging;assembly=Microsoft.Psi.Imaging"
+    xmlns:sys="clr-namespace:System;assembly=System.Runtime"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
     <d:UserControl.DataContext>
         <comp:ImageToPictureConverterConfiguration />
     </d:UserControl.DataContext>
+
+    <UserControl.Resources>
+        <conv:BooleanToCollapsedVisibilityConverter
+            x:Key="BoolToVis" />
+    </UserControl.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -23,32 +31,276 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
+            <!-- 0: Input Pixel Format -->
             <RowDefinition
                 Height="auto" />
+            <!-- 1: Input Bit Depth -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 2: Output Chroma Format -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 3: Output Bit Depth -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 4: Chroma Convert Enabled -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 5: Bit Depth Mapping Enabled -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 6: Scale Shift -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 7: Input Start -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 8: Output Start -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 9: Mapping Preview -->
             <RowDefinition
                 Height="auto" />
         </Grid.RowDefinitions>
 
+        <!-- Row 0: Input Pixel Format -->
         <TextBlock
             Grid.Row="0"
-            Grid.Column="0">
-            Chroma Format
-        </TextBlock>
+            Grid.Column="0">Input Pixel Format</TextBlock>
         <ComboBox
             Grid.Row="0"
             Grid.Column="1"
-            SelectedItem="{Binding ChromaFormat}"
-            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type interop:ChromaFormat}}, Mode=OneTime}" />
+            SelectedValue="{Binding InputPixelFormat}"
+            SelectedValuePath="Tag"
+            ToolTip="Expected input pixel format. Auto = accept any supported format. Set to validate input at runtime.">
+            <ComboBoxItem
+                Content="Auto"
+                Tag="{x:Null}" />
+            <ComboBoxItem
+                Content="Gray_8bpp">
+                <ComboBoxItem.Tag>
+                    <imaging:PixelFormat>Gray_8bpp</imaging:PixelFormat>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="Gray_16bpp">
+                <ComboBoxItem.Tag>
+                    <imaging:PixelFormat>Gray_16bpp</imaging:PixelFormat>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="BGR_24bpp">
+                <ComboBoxItem.Tag>
+                    <imaging:PixelFormat>BGR_24bpp</imaging:PixelFormat>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="RGB_24bpp">
+                <ComboBoxItem.Tag>
+                    <imaging:PixelFormat>RGB_24bpp</imaging:PixelFormat>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="BGRA_32bpp">
+                <ComboBoxItem.Tag>
+                    <imaging:PixelFormat>BGRA_32bpp</imaging:PixelFormat>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="BGRX_32bpp">
+                <ComboBoxItem.Tag>
+                    <imaging:PixelFormat>BGRX_32bpp</imaging:PixelFormat>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+        </ComboBox>
 
+        <!-- Row 1: Input Bit Depth -->
         <TextBlock
             Grid.Row="1"
-            Grid.Column="0">
-            Output Bit Depth
-        </TextBlock>
-        <TextBox
+            Grid.Column="0">Input Bit Depth</TextBlock>
+        <ComboBox
             Grid.Row="1"
             Grid.Column="1"
-            Text="{Binding OutputBitDepth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            ToolTip="Bit depth of output Picture samples (e.g. 8, 10, 16)." />
+            SelectedValue="{Binding InputBitDepth}"
+            SelectedValuePath="Tag"
+            ToolTip="Expected input bit depth. Auto = detect from pixel format at runtime (Gray_8bpp=8, Gray_16bpp=16). Set to validate input.">
+            <ComboBoxItem
+                Content="Auto"
+                Tag="{x:Null}" />
+            <ComboBoxItem
+                Content="8">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>8</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem
+                Content="16">
+                <ComboBoxItem.Tag>
+                    <sys:Int32>16</sys:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+        </ComboBox>
+
+        <!-- Row 2: Output Chroma Format -->
+        <TextBlock
+            Grid.Row="2"
+            Grid.Column="0">Output Chroma Format</TextBlock>
+        <ComboBox
+            Grid.Row="2"
+            Grid.Column="1"
+            SelectedItem="{Binding OutputChromaFormat}"
+            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type interop:ChromaFormat}}, Mode=OneTime}" />
+
+        <!-- Row 3: Output Bit Depth (Slider + TextBox). Hidden when FIXED_BIT_DEPTH. -->
+        <TextBlock
+            x:Name="OutputBitDepthLabel"
+            Grid.Row="3"
+            Grid.Column="0">Output Bit Depth</TextBlock>
+        <Grid
+            x:Name="OutputBitDepthControl"
+            Grid.Row="3"
+            Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="*" />
+                <ColumnDefinition
+                    Width="50" />
+            </Grid.ColumnDefinitions>
+            <Slider
+                x:Name="OutputBitDepthSlider"
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                Minimum="8"
+                Maximum="16"
+                IsSnapToTickEnabled="True"
+                TickFrequency="1"
+                ToolTip="Target bit depth for output Picture samples (8-16)." />
+            <TextBox
+                x:Name="OutputBitDepthTextBox"
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                Margin="4,0,0,0" />
+        </Grid>
+
+        <!-- Row 4: Chroma Convert Enabled -->
+        <TextBlock
+            Grid.Row="4"
+            Grid.Column="0">Chroma Conversion</TextBlock>
+        <CheckBox
+            Grid.Row="4"
+            Grid.Column="1"
+            IsChecked="{Binding ChromaConvertEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Enable chroma format conversion. Required when grayscale input produces non-monochrome output, or color input requires chroma subsampling." />
+
+        <!-- Row 5: Bit Depth Mapping Enabled -->
+        <TextBlock
+            Grid.Row="5"
+            Grid.Column="0">Bit Depth Mapping</TextBlock>
+        <CheckBox
+            Grid.Row="5"
+            Grid.Column="1"
+            IsChecked="{Binding BitDepthMappingEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Enable bit depth mapping. Required when source bit depth does not match output bit depth." />
+
+        <!-- Row 6: Scale Shift (Slider + TextBox) -->
+        <TextBlock
+            Grid.Row="6"
+            Grid.Column="0"
+            Visibility="{Binding BitDepthMappingEnabled, Converter={StaticResource BoolToVis}}">Scale Shift</TextBlock>
+        <Grid
+            Grid.Row="6"
+            Grid.Column="1"
+            Visibility="{Binding BitDepthMappingEnabled, Converter={StaticResource BoolToVis}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="*" />
+                <ColumnDefinition
+                    Width="50" />
+            </Grid.ColumnDefinitions>
+            <Slider
+                x:Name="ScaleShiftSlider"
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                IsSnapToTickEnabled="True"
+                TickFrequency="1"
+                Value="{Binding BitDepthMappingScaleShift, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                ToolTip="Positive = right-shift (downscale), negative = left-shift (upscale), 0 = no scaling." />
+            <TextBox
+                Grid.Column="1"
+                Text="{Binding BitDepthMappingScaleShift, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                VerticalAlignment="Center"
+                Margin="4,0,0,0" />
+        </Grid>
+
+        <!-- Row 7: Input Start (Slider + TextBox) -->
+        <TextBlock
+            Grid.Row="7"
+            Grid.Column="0"
+            Visibility="{Binding BitDepthMappingEnabled, Converter={StaticResource BoolToVis}}">Input Start</TextBlock>
+        <Grid
+            Grid.Row="7"
+            Grid.Column="1"
+            Visibility="{Binding BitDepthMappingEnabled, Converter={StaticResource BoolToVis}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="*" />
+                <ColumnDefinition
+                    Width="50" />
+            </Grid.ColumnDefinitions>
+            <Slider
+                x:Name="InputStartSlider"
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                IsSnapToTickEnabled="True"
+                Value="{Binding BitDepthMappingInputStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                ToolTip="Starting position of the mapping window in the source value range." />
+            <TextBox
+                Grid.Column="1"
+                Text="{Binding BitDepthMappingInputStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                VerticalAlignment="Center"
+                Margin="4,0,0,0" />
+        </Grid>
+
+        <!-- Row 8: Output Start (Slider + TextBox) -->
+        <TextBlock
+            Grid.Row="8"
+            Grid.Column="0"
+            Visibility="{Binding BitDepthMappingEnabled, Converter={StaticResource BoolToVis}}">Output Start</TextBlock>
+        <Grid
+            Grid.Row="8"
+            Grid.Column="1"
+            Visibility="{Binding BitDepthMappingEnabled, Converter={StaticResource BoolToVis}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="*" />
+                <ColumnDefinition
+                    Width="50" />
+            </Grid.ColumnDefinitions>
+            <Slider
+                x:Name="OutputStartSlider"
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                IsSnapToTickEnabled="True"
+                TickFrequency="1"
+                Value="{Binding BitDepthMappingOutputStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                ToolTip="Starting position of the mapped values in the target value range." />
+            <TextBox
+                Grid.Column="1"
+                Text="{Binding BitDepthMappingOutputStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                VerticalAlignment="Center"
+                Margin="4,0,0,0" />
+        </Grid>
+
+        <!-- Row 9: Mapping Preview -->
+        <local:BitDepthMappingPreview
+            Grid.Row="9"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Visibility="{Binding BitDepthMappingEnabled, Converter={StaticResource BoolToVis}}"
+            TargetBitDepth="{Binding OutputBitDepth}"
+            ScaleShift="{Binding BitDepthMappingScaleShift}"
+            InputStart="{Binding BitDepthMappingInputStart}"
+            OutputStart="{Binding BitDepthMappingOutputStart}"
+            SourceBitDepth="{Binding InputBitDepth, FallbackValue=0, TargetNullValue=0}" />
     </Grid>
 </UserControl>

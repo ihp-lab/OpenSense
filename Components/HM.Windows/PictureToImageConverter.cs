@@ -92,10 +92,6 @@ namespace OpenSense.Components.HM {
             Out = pipeline.CreateEmitter<Shared<Image>>(this, nameof(Out));
         }
 
-        private int GetEffectiveBitDepth(int actualBitDepth) {
-            return BitDepthMappingEnabled ? PixelFormatInfo.GetBitDepth(OutputPixelFormat) : actualBitDepth;
-        }
-
         private void Process(Shared<Picture> picture, Envelope envelope) {
             var picYuv = picture.Resource.PicYuv;
             var actualBitDepth = picture.Resource.Sps.BitDepths.Luma;
@@ -138,9 +134,19 @@ namespace OpenSense.Components.HM {
             var width = source.Width;
             var height = source.Height;
             var chroma = source.ChromaFormat;
-            var bitDepth = GetEffectiveBitDepth(actualBitDepth);
             var pixelFormat = OutputPixelFormat;
             var targetBitDepth = PixelFormatInfo.GetBitDepth(pixelFormat);
+
+            // When downscaling with a pure shift (no windowing), convert at actual bit depth
+            // for better precision — the formula's >> (8+shift) fuses both operations.
+            var convertAtActualBitDepth = BitDepthMappingEnabled
+                && actualBitDepth > targetBitDepth
+                && BitDepthMappingInputStart == 0
+                && BitDepthMappingOutputStart == 0
+                && BitDepthMappingScaleShift == actualBitDepth - targetBitDepth;
+            var colorConversionBitDepth = convertAtActualBitDepth ? actualBitDepth
+                : BitDepthMappingEnabled ? targetBitDepth
+                : actualBitDepth;
 
             using var image = ImagePool.GetOrCreate(width, height, pixelFormat);
             var imageData = new Span<byte>(image.Resource.ImageData.ToPointer(), image.Resource.UnmanagedBuffer.Size);
@@ -175,16 +181,16 @@ namespace OpenSense.Components.HM {
                         throw new InvalidOperationException($"Output pixel format {pixelFormat} requires Chroma444, but source is {chroma}. Enable chroma conversion.");
                     }
                     var pixelCount = width * height;
-                    using var yOwner = ReadPlane(source, ComponentId.Y, targetBitDepth, pixelCount);
-                    using var uOwner = ReadPlane(source, ComponentId.Cb, targetBitDepth, pixelCount);
-                    using var vOwner = ReadPlane(source, ComponentId.Cr, targetBitDepth, pixelCount);
+                    using var yOwner = ReadPlane(source, ComponentId.Y, skipMapping: !BitDepthMappingEnabled || convertAtActualBitDepth, colorConversionBitDepth);
+                    using var uOwner = ReadPlane(source, ComponentId.Cb, skipMapping: !BitDepthMappingEnabled || convertAtActualBitDepth, colorConversionBitDepth);
+                    using var vOwner = ReadPlane(source, ComponentId.Cr, skipMapping: !BitDepthMappingEnabled || convertAtActualBitDepth, colorConversionBitDepth);
                     var ySpan = yOwner.Memory.Span[..pixelCount];
                     var uSpan = uOwner.Memory.Span[..pixelCount];
                     var vSpan = vOwner.Memory.Span[..pixelCount];
                     if (pixelFormat == PixelFormat.BGR_24bpp) {
-                        ColorSpaceConverter.YCbCrToBgr(ySpan, uSpan, vSpan, imageData, width, height, bitDepth);
+                        ColorSpaceConverter.YCbCrToBgr(ySpan, uSpan, vSpan, imageData, width, height, colorConversionBitDepth);
                     } else {
-                        ColorSpaceConverter.YCbCrToRgb(ySpan, uSpan, vSpan, imageData, width, height, bitDepth);
+                        ColorSpaceConverter.YCbCrToRgb(ySpan, uSpan, vSpan, imageData, width, height, colorConversionBitDepth);
                     }
                     break;
                 }
@@ -194,13 +200,13 @@ namespace OpenSense.Components.HM {
                         throw new InvalidOperationException($"Output pixel format {pixelFormat} requires Chroma444, but source is {chroma}. Enable chroma conversion.");
                     }
                     var pixelCount = width * height;
-                    using var yOwner = ReadPlane(source, ComponentId.Y, targetBitDepth, pixelCount);
-                    using var uOwner = ReadPlane(source, ComponentId.Cb, targetBitDepth, pixelCount);
-                    using var vOwner = ReadPlane(source, ComponentId.Cr, targetBitDepth, pixelCount);
+                    using var yOwner = ReadPlane(source, ComponentId.Y, skipMapping: !BitDepthMappingEnabled || convertAtActualBitDepth, colorConversionBitDepth);
+                    using var uOwner = ReadPlane(source, ComponentId.Cb, skipMapping: !BitDepthMappingEnabled || convertAtActualBitDepth, colorConversionBitDepth);
+                    using var vOwner = ReadPlane(source, ComponentId.Cr, skipMapping: !BitDepthMappingEnabled || convertAtActualBitDepth, colorConversionBitDepth);
                     var ySpan = yOwner.Memory.Span[..pixelCount];
                     var uSpan = uOwner.Memory.Span[..pixelCount];
                     var vSpan = vOwner.Memory.Span[..pixelCount];
-                    ColorSpaceConverter.YCbCrToRgba64(ySpan, uSpan, vSpan, imageData, width, height, bitDepth);
+                    ColorSpaceConverter.YCbCrToRgba64(ySpan, uSpan, vSpan, imageData, width, height, colorConversionBitDepth);
                     break;
                 }
 
@@ -211,19 +217,11 @@ namespace OpenSense.Components.HM {
             Out.Post(image, originatingTime);
         }
 
-        /// <summary>
-        /// Read a plane as a pooled ushort buffer, applying bit depth mapping if enabled.
-        /// The caller is responsible for disposing the returned IMemoryOwner.
-        /// </summary>
-        private unsafe IMemoryOwner<ushort> ReadPlane(PictureYuv source, ComponentId componentId, int targetBitDepth, int pixelCount) {
-            if (!BitDepthMappingEnabled) {
+        private IMemoryOwner<ushort> ReadPlane(PictureYuv source, ComponentId componentId, bool skipMapping, int mappingTargetBitDepth) {
+            if (skipMapping) {
                 return source.ReadPlanePacked(componentId);
             }
-            var (ptr, w, h, stride) = source.GetPlaneAccess(componentId);
-            var pels = new ReadOnlySpan<int>(ptr.ToPointer(), stride * h);
-            var owner = MemoryPool<ushort>.Shared.Rent(pixelCount);
-            BitDepthMapper.MapPlaneToUshorts(pels, w, h, stride, owner.Memory.Span[..pixelCount], targetBitDepth, BitDepthMappingScaleShift, BitDepthMappingInputStart, BitDepthMappingOutputStart);
-            return owner;
+            return source.ReadPlaneMapped(componentId, mappingTargetBitDepth, BitDepthMappingScaleShift, BitDepthMappingInputStart, BitDepthMappingOutputStart);
         }
         #endregion
 

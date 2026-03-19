@@ -2,6 +2,7 @@
 #include "Encoder.h"
 
 using namespace System;
+using namespace System::Threading;
 
 namespace KvazaarInterop {
     Encoder::Encoder([NotNull] Config^ config)
@@ -10,8 +11,15 @@ namespace KvazaarInterop {
 
         ArgumentNullException::ThrowIfNull(config, "config");
 
-        auto api = Api::GetApi();
-        _encoder = api->encoder_open(config->InternalConfig);
+        // Serialize encoder_open: Kvazaar's kvz_strategyselector_init() modifies
+        // unprotected global state during encoder creation.
+        Monitor::Enter(s_lock);
+        try {
+            auto api = Api::GetApi();
+            _encoder = api->encoder_open(config->InternalConfig);
+        } finally {
+            Monitor::Exit(s_lock);
+        }
 
         if (!_encoder) {
             throw gcnew InvalidOperationException("Failed to create encoder");
@@ -35,7 +43,7 @@ namespace KvazaarInterop {
         }
 
         auto totalLength = static_cast<int>(lenOut);
-        return gcnew DataChunk(dataOut, totalLength);
+        return gcnew DataChunk(dataOut, totalLength, 0LL); // Headers have no PTS
     }
 
     ValueTuple<DataChunk^, FrameInfo^, Picture^, Picture^> Encoder::Encode(
@@ -55,13 +63,15 @@ namespace KvazaarInterop {
         auto picOutPtr = static_cast<kvz_picture*>(nullptr);
         auto srcOutPtr = static_cast<kvz_picture*>(nullptr);
 
+        // Always request srcOutPtr to extract PTS for DataChunk, regardless of noSourcePicture.
+        // noSourcePicture only controls whether the managed Picture wrapper is returned to the caller.
         auto result = api->encoder_encode(
             _encoder,
             picIn,
             noDataChunk ? nullptr : &dataOut,
             noDataChunk ? nullptr : &lenOut,
             noReconstructedPicture ? nullptr : &picOutPtr,
-            noSourcePicture ? nullptr : &srcOutPtr,
+            &srcOutPtr,
             noFrameInfo ? nullptr : &infoOutNative
         );
         if (!result) {
@@ -69,9 +79,17 @@ namespace KvazaarInterop {
         }
 
         auto totalLength = static_cast<int>(lenOut);
-        auto dataChunk = (!noDataChunk && dataOut) ? gcnew DataChunk(dataOut, totalLength) : nullptr;
+        auto pts = srcOutPtr ? srcOutPtr->pts : 0LL;
+        auto dataChunk = (!noDataChunk && dataOut) ? gcnew DataChunk(dataOut, totalLength, pts) : nullptr;
         auto frameInfo = (!noFrameInfo && lenOut > 0) ? gcnew FrameInfo(infoOutNative) : nullptr;
-        auto sourcePicture = (!noSourcePicture && srcOutPtr) ? gcnew Picture(srcOutPtr) : nullptr;
+        Picture^ sourcePicture = nullptr;
+        if (srcOutPtr) {
+            if (noSourcePicture) {
+                api->picture_free(srcOutPtr);
+            } else {
+                sourcePicture = gcnew Picture(srcOutPtr);
+            }
+        }
         auto reconstructedPicture = (!noReconstructedPicture && picOutPtr) ? gcnew Picture(picOutPtr) : nullptr;
 
         return ValueTuple<DataChunk^, FrameInfo^, Picture^, Picture^>(
@@ -92,7 +110,14 @@ namespace KvazaarInterop {
             return;
         }
 
-        this->!Encoder();
+        // Serialize encoder_close under the same lock as encoder_open,
+        // in case encoder_close touches global state in future Kvazaar versions.
+        Monitor::Enter(s_lock);
+        try {
+            this->!Encoder();
+        } finally {
+            Monitor::Exit(s_lock);
+        }
         _disposed = true;
     }
 

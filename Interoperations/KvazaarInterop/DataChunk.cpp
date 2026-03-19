@@ -1,16 +1,19 @@
 #include "pch.h"
 #include "DataChunk.h"
 #include "DataChunkEnumerator.h"
+#include "Api.h"
 
 using namespace System;
 using namespace System::Collections::Generic;
 
 namespace KvazaarInterop {
-    DataChunk::DataChunk(kvz_data_chunk* chunk, int totalLength)
+    DataChunk::DataChunk(kvz_data_chunk* chunk, int totalLength, long long pts)
         : _chunk(chunk)
         , _disposed(false)
         , _totalLength(totalLength)
-        , _count(0) {
+        , _count(0)
+        , _pts(pts)
+        , _dts(0) {
 
         if (!chunk) {
             throw gcnew ArgumentNullException("chunk");

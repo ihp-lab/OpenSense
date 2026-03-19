@@ -7,18 +7,18 @@ namespace OpenSense.Components.HM {
     public sealed class HevcDecoderConfiguration : ConventionalComponentConfiguration {
 
         #region Options
-        private bool processRemainingBeforeStop;
+        private bool discardRemainingOnStop;
 
-        public bool ProcessRemainingBeforeStop {
-            get => processRemainingBeforeStop;
-            set => SetProperty(ref processRemainingBeforeStop, value);
+        public bool DiscardRemainingOnStop {
+            get => discardRemainingOnStop;
+            set => SetProperty(ref discardRemainingOnStop, value);
         } 
         #endregion
 
         public override IComponentMetadata GetMetadata() => new HevcDecoderMetadata();
 
         protected override object Instantiate(Pipeline pipeline, IServiceProvider serviceProvider) => new HevcDecoder(pipeline) {
-            ProcessRemainingBeforeStop = ProcessRemainingBeforeStop,
+            DiscardRemainingOnStop = DiscardRemainingOnStop,
             Logger = (serviceProvider?.GetService(typeof(ILoggerFactory)) as ILoggerFactory)?.CreateLogger(Name),
         };
     }

@@ -124,6 +124,6 @@
             Grid.Row="3"
             Grid.Column="1"
             IsChecked="{Binding ProcessRemainingBeforeStop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            ToolTip="When enabled, continue reading remaining samples before stopping. When disabled, stop immediately." />
+            ToolTip="When enabled, continue reading samples up to the pipeline's final originating time. When disabled, stop reading immediately. Note: samples with originating times past the pipeline's stop time are discarded by the scheduler regardless of this setting." />
     </Grid>
 </UserControl>

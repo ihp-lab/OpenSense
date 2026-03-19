@@ -1,40 +1,28 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Composition;
-using System.Diagnostics;
-using Microsoft.Psi;
-using Microsoft.Psi.Imaging;
+using KvazaarInterop;
 
 namespace OpenSense.Components.Kvazaar {
     [Export(typeof(IComponentMetadata))]
-    public sealed class FileWriterMetadata : IComponentMetadata {
+    public sealed class FileWriterMetadata : ConventionalComponentMetadata {
 
-        private static readonly ConstrainedGenericPortMetadata InputPortMetadata = new(
-            typeof(FileWriter<>).GetProperty(nameof(FileWriter<ImageBase>.In))!,
-            typeof(Shared<>),
-            typeof(ImageBase),
-            PortDirection.Input,
-            "The input \\psi image stream. Only supports Gray_16bpp pixel format, because \\psi's PixelFormat has no multi-channel 16-bit format. Use either In or PictureIn, using both simultaneously is not supported."
-        );
-        private static readonly StaticPortMetadata PictureInputPortMetadata = new(
-            typeof(FileWriter<ImageBase>).GetProperty(nameof(FileWriter<ImageBase>.PictureIn))!,
-            "The input Kvazaar Picture stream. Supports any ChromaFormat and bit depth. Use either In or PictureIn, using both simultaneously is not supported."
-        );
+        public override string Name => "Kvazaar MP4 File Writer";
 
-        public string Name => "Kvazaar MP4 File Writer";
+        public override string Description => "[Experimental] Write video to an MP4 file using Kvazaar HEVC encoder."
+#if FIXED_BIT_DEPTH
+            + $" Due to Kvazaar limitations, this build only supports {Picture.MaxBitDepth}-bit encoding."
+#endif
+            ;
 
-        public string Description => "[Experimental] Write video to an MP4 file using Kvazaar HEVC encoder. Supports grayscale and YCbCr via the PictureIn port.";
+        protected override Type ComponentType => typeof(FileWriter);
 
-        public IReadOnlyList<IPortMetadata> Ports { get; } = [
-            InputPortMetadata,
-            PictureInputPortMetadata,
-        ];
-
-        public ComponentConfiguration CreateConfiguration() => new FileWriterConfiguration();
-
-        public IProducer<T> GetProducer<T>(object instance, PortConfiguration portConfiguration) {
-            // FileWriter has no output ports
-            Debug.Assert(false, "FileWriter has no output ports");
-            return null;
+        protected override string? GetPortDescription(string portName) {
+            return portName switch {
+                nameof(FileWriter.In) => "[Required] Kvazaar Picture stream. Supports any ChromaFormat and bit depth. Must use a non-dropping DeliveryPolicy; dropping frames causes file corruption.",
+                _ => null,
+            };
         }
+
+        public override ComponentConfiguration CreateConfiguration() => new FileWriterConfiguration();
     }
 }

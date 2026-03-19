@@ -5,12 +5,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using HMInterop;
 using Microsoft.Extensions.Logging;
 using Microsoft.Psi;
-using Microsoft.Psi.Components;
 using Minimp4Interop;
 
 namespace OpenSense.Components.HM {
@@ -18,9 +17,19 @@ namespace OpenSense.Components.HM {
     /// Writes HEVC AccessUnit messages to an MP4 file.
     /// Input must use a non-dropping DeliveryPolicy; dropping frames causes file corruption.
     /// </summary>
-    public sealed class Mp4Muxer : IConsumer<Shared<AccessUnit>>, ISourceComponent, INotifyPropertyChanged, IDisposable {
+    public sealed class Mp4Muxer : IConsumer<Shared<AccessUnit>>, INotifyPropertyChanged, IDisposable {
 
-        private readonly CancellationTokenSource _cts = new();
+        /// <summary>
+        /// Minimum duration in 90kHz units, used for the last frame(s) where no subsequent frame
+        /// is available to compute actual duration.
+        /// </summary>
+        private const uint MinDuration90kHz = 1;
+
+        private static readonly PropertyInfo IsStoppingProperty =
+            typeof(Pipeline).GetProperty("IsStopping", BindingFlags.Instance | BindingFlags.NonPublic)
+            ?? throw new MissingMemberException(nameof(Pipeline), "IsStopping");
+
+        private readonly Pipeline _pipeline;
         private readonly Queue<Shared<AccessUnit>> _pendingAccessUnits = new();
 
         #region Ports
@@ -42,11 +51,11 @@ namespace OpenSense.Components.HM {
             set => SetProperty(ref timestampFilename, value);
         }
 
-        private bool processRemainingBeforeStop;
+        private bool discardRemainingOnStop;
 
-        public bool ProcessRemainingBeforeStop {
-            get => processRemainingBeforeStop;
-            set => SetProperty(ref processRemainingBeforeStop, value);
+        public bool DiscardRemainingOnStop {
+            get => discardRemainingOnStop;
+            set => SetProperty(ref discardRemainingOnStop, value);
         }
 
         private ILogger? logger;
@@ -60,34 +69,24 @@ namespace OpenSense.Components.HM {
         public string? ActualFilename { get; private set; }
 
         private DateTime prevEnvelopeTime;
-        private DateTime? lastEnvelopeTime;
         private Mp4MuxerContext? context;
-        private DateTime? stopFinalTime;
-        private Action? stopNotifyCompleted;
 
         public Mp4Muxer(Pipeline pipeline) {
+            _pipeline = pipeline;
             In = pipeline.CreateReceiver<Shared<AccessUnit>>(this, Process, nameof(In));
+            pipeline.PipelineCompleted += OnPipelineCompleted;
         }
 
-        #region ISourceComponent
-        void ISourceComponent.Start(Action<DateTime> notifyCompletionTime) {
-            notifyCompletionTime(DateTime.MaxValue);
-        }
-
-        void ISourceComponent.Stop(DateTime finalOriginatingTime, Action notifyCompleted) {
-            stopFinalTime = finalOriginatingTime;
-            stopNotifyCompleted = notifyCompleted;
-            if (!ProcessRemainingBeforeStop) {
-                _cts.Cancel();
-            }
-            if (!ProcessRemainingBeforeStop || lastEnvelopeTime >= finalOriginatingTime) {
-                FinalizeAndComplete();
-            }
-        }
+        #region Pipeline Event Handlers
+        private void OnPipelineCompleted(object? sender, PipelineCompletedEventArgs args) {
+            WritePendingAccessUnits(currentEnvelopeTime: null);
+            context?.Dispose();
+            context = null;
+        } 
         #endregion
 
         private void Process(Shared<AccessUnit> accessUnit, Envelope envelope) {
-            if (_cts.IsCancellationRequested) {
+            if (DiscardRemainingOnStop && (bool)IsStoppingProperty.GetValue(_pipeline)!) {
                 return;
             }
 
@@ -100,12 +99,6 @@ namespace OpenSense.Components.HM {
             // Buffer current AU (AddRef to prevent disposal when Process returns)
             _pendingAccessUnits.Enqueue(accessUnit.AddRef());
             prevEnvelopeTime = envelope.OriginatingTime;
-            lastEnvelopeTime = envelope.OriginatingTime;
-
-            // Flush remaining when we've reached the final time
-            if (envelope.OriginatingTime >= stopFinalTime) {
-                FinalizeAndComplete();
-            }
         }
 
         [MemberNotNull(nameof(context))]
@@ -136,13 +129,23 @@ namespace OpenSense.Components.HM {
             context = new Mp4MuxerContext(stream, muxer, writer);
         }
 
-        private void WritePendingAccessUnits(DateTime currentEnvelopeTime) {
+        /// <summary>
+        /// Write all pending access units to the MP4 file.
+        /// When currentEnvelopeTime is provided, duration is computed from the time difference.
+        /// When null (pipeline completed), MinDuration is used for remaining frames.
+        /// </summary>
+        private void WritePendingAccessUnits(DateTime? currentEnvelopeTime) {
             while (_pendingAccessUnits.Count > 0) {
                 using var shared = _pendingAccessUnits.Dequeue();
                 var au = shared.Resource;
 
-                var durationTicks = (currentEnvelopeTime - prevEnvelopeTime).Ticks;
-                var duration90kHz = durationTicks > 0 ? (uint)(durationTicks * 9 / 1000) : 1u;
+                var duration90kHz = MinDuration90kHz;
+                if (currentEnvelopeTime is { } time) {
+                    var durationTicks = (time - prevEnvelopeTime).Ticks;
+                    if (durationTicks > 0) {
+                        duration90kHz = (uint)(durationTicks * 9 / 1000);
+                    }
+                }
 
                 var ctsOffsetTicks = au.PresentationTimeOffset - au.DecodingTimeOffset;
                 var ctsOffset90kHz = (int)(ctsOffsetTicks * 9 / 1000);
@@ -155,26 +158,6 @@ namespace OpenSense.Components.HM {
             }
         }
 
-        private void FinalizeAndComplete() {
-            while (_pendingAccessUnits.Count > 0) {
-                using var shared = _pendingAccessUnits.Dequeue();
-                var au = shared.Resource;
-
-                var ctsOffsetTicks = au.PresentationTimeOffset - au.DecodingTimeOffset;
-                var ctsOffset90kHz = (int)(ctsOffsetTicks * 9 / 1000);
-
-                var annexB = au.AnnexB;
-                using var handle = annexB.Pin();
-                unsafe {
-                    context!.Writer.WriteNal(new IntPtr(handle.Pointer), annexB.Length, 1, ctsOffset90kHz);
-                }
-            }
-            context?.Dispose();
-            context = null;
-            stopNotifyCompleted?.Invoke();
-            stopNotifyCompleted = null;
-        }
-
         #region IDisposable
         private bool disposed;
 
@@ -184,14 +167,9 @@ namespace OpenSense.Components.HM {
             }
             disposed = true;
 
-            _cts.Dispose();
-
             while (_pendingAccessUnits.Count > 0) {
                 _pendingAccessUnits.Dequeue().Dispose();
             }
-
-            context?.Dispose();
-            context = null;
         }
         #endregion
 

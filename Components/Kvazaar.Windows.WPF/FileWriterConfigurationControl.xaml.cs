@@ -11,6 +11,12 @@ namespace OpenSense.WPF.Components.Kvazaar {
 
         public FileWriterConfigurationControl() {
             InitializeComponent();
+#if FIXED_BIT_DEPTH
+            InputBitDepthLabel.Visibility = Visibility.Collapsed;
+            InputBitDepthControl.Visibility = Visibility.Collapsed;
+#else
+            InputBitDepthControl.SetBinding(System.Windows.Controls.Primitives.Selector.SelectedValueProperty, new System.Windows.Data.Binding(nameof(FileWriterConfiguration.InputBitDepth)));
+#endif
         }
 
         private void ButtonSaveFile_Click(object sender, RoutedEventArgs e) {

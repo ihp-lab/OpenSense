@@ -5,7 +5,6 @@ extern "C" {
 }
 
 #include "Enums.h"
-#include "Api.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -677,6 +676,13 @@ namespace KvazaarInterop {
             bool get();
             void set(bool value);
         }
+
+        /// <summary>
+        /// Creates a deep copy of this configuration.
+        /// The returned Config owns an independent native kvz_config.
+        /// </summary>
+        [returnvalue: NotNull]
+        Config^ Clone();
 
     internal:
         /// <summary>

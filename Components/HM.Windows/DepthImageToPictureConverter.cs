@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Numerics;
 using System.Runtime.CompilerServices;
 using HMInterop;
 using Microsoft.Psi;
@@ -85,7 +84,7 @@ namespace OpenSense.Components.HM {
             Out = pipeline.CreateEmitter<Shared<Picture>>(this, nameof(Out));
         }
 
-        private unsafe void Process(Shared<DepthImage> depthImage, Envelope envelope) {
+        private void Process(Shared<DepthImage> depthImage, Envelope envelope) {
             var resource = depthImage.Resource;
             var width = resource.Width;
             var height = resource.Height;
@@ -114,28 +113,10 @@ namespace OpenSense.Components.HM {
             var outputBits = OutputBitDepth;
             var picture = PictureYuvPool.Rent(ChromaFormat.Chroma400, width, height);
 
-            var (yPtr, yW, yH, yStride) = picture.GetPlaneAccess(ComponentId.Y);
-            var yPels = new Span<int>(yPtr.ToPointer(), yStride * yH);
-            var imgStride = resource.Stride;
-
-            var vecSize = Vector<ushort>.Count;
-            for (var y = 0; y < height; y++) {
-                var srcRow = new ReadOnlySpan<ushort>((byte*)resource.ImageData.ToPointer() + y * imgStride, width);
-                var dstRow = yPels.Slice(y * yStride, width);
-                var x = 0;
-                for (; x + vecSize <= width; x += vecSize) {
-                    var srcVec = new Vector<ushort>(srcRow.Slice(x, vecSize));
-                    Vector.Widen(srcVec, out var lo, out var hi);
-                    Vector.AsVectorInt32(lo).CopyTo(dstRow.Slice(x));
-                    Vector.AsVectorInt32(hi).CopyTo(dstRow.Slice(x + Vector<int>.Count));
-                }
-                for (; x < width; x++) {
-                    dstRow[x] = srcRow[x];
-                }
-            }
+            picture.ReadYPlaneFromGray16(resource);
 
             if (BitDepthMappingEnabled) {
-                BitDepthMapper.MapPlane(yPels, yW, yH, yStride, outputBits, BitDepthMappingScaleShift, BitDepthMappingInputStart, BitDepthMappingOutputStart);
+                BitDepthMapper.MapAllPlanes(picture, ChromaFormat.Chroma400, outputBits, BitDepthMappingScaleShift, BitDepthMappingInputStart, BitDepthMappingOutputStart);
             }
 
             var sps = new SequenceParameterSet(

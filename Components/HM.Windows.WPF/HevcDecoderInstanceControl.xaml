@@ -10,8 +10,8 @@
     <StackPanel
         Margin="4">
         <ToggleButton
-            IsChecked="{Binding ProcessRemainingBeforeStop, Mode=TwoWay}"
-            Content="Process Remaining Before Stop"
-            ToolTip="When checked, continue decoding remaining frames before stopping. When unchecked, stop immediately." />
+            IsChecked="{Binding DiscardRemainingOnStop, Mode=TwoWay}"
+            Content="Discard Remaining On Stop"
+            ToolTip="When checked, discard remaining queued frames on stop. When unchecked, decode all remaining frames before closing." />
     </StackPanel>
 </UserControl>

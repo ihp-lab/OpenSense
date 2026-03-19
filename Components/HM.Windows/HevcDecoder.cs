@@ -29,11 +29,11 @@ namespace OpenSense.Components.HM {
         #endregion
 
         #region Options
-        private bool processRemainingBeforeStop;
+        private bool discardRemainingOnStop;
 
-        public bool ProcessRemainingBeforeStop {
-            get => processRemainingBeforeStop;
-            set => SetProperty(ref processRemainingBeforeStop, value);
+        public bool DiscardRemainingOnStop {
+            get => discardRemainingOnStop;
+            set => SetProperty(ref discardRemainingOnStop, value);
         }
 
         private ILogger? logger;
@@ -64,10 +64,10 @@ namespace OpenSense.Components.HM {
         void ISourceComponent.Stop(DateTime finalOriginatingTime, Action notifyCompleted) {
             stopFinalTime = finalOriginatingTime;
             stopNotifyCompleted = notifyCompleted;
-            if (!ProcessRemainingBeforeStop) {
+            if (DiscardRemainingOnStop) {
                 _cts.Cancel();
             }
-            if (!ProcessRemainingBeforeStop || lastEnvelopeTime >= finalOriginatingTime) {
+            if (DiscardRemainingOnStop || lastEnvelopeTime >= finalOriginatingTime) {
                 FlushAndComplete();
             }
         }
@@ -115,6 +115,9 @@ namespace OpenSense.Components.HM {
             _decodedFrames.Clear();
             _decoder.FlushAndCollect(_decodedFrames);
             PostDecodedFrames();
+            if (_ptsQueue.Count > 0) {
+                Logger?.LogWarning("Decoder flushed with {Count} unmatched PTS entries. Some AccessUnits did not produce decoded frames, possibly due to incomplete B-frame reordering (missing reference frames).", _ptsQueue.Count);
+            }
             stopNotifyCompleted?.Invoke();
             stopNotifyCompleted = null;
         }
