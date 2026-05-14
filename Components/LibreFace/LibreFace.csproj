@@ -55,8 +55,8 @@
         -->
         <PackageReference Include="Mediapipe.Net" Version="1.0.0-alpha2" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
-        <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.20.1" Condition="'$(UseCUDA)' != 'true'" />
-        <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.20.1" Condition="'$(UseCUDA)' == 'true'" />
+        <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.26.0" Condition="'$(UseCUDA)' != 'true'" />
+        <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.26.0" Condition="'$(UseCUDA)' == 'true'" />
         <PackageReference Include="Microsoft.Psi.Imaging" Version="0.19.100.1-beta" />
         <PackageReference Include="OpenCvSharp4.Windows" Version="4.9.0.20240103" Condition="'$(UseOpenCV)' == 'true'" />
         <PackageReference Include="System.Composition" Version="8.0.0" />

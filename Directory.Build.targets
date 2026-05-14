@@ -1,0 +1,13 @@
+<Project>
+
+    <!--
+    This file exists solely to import the temporary CUDA 13 patch for
+    ONNX Runtime. See OnnxRuntimeCuda13Patch.targets for the full rationale,
+    behaviour, and removal instructions.
+
+    When the patch is removed, this file can be deleted entirely (unless it
+    has gained other uses by then).
+    -->
+    <Import Project="$(MSBuildThisFileDirectory)OnnxRuntimeCuda13Patch.targets" />
+
+</Project>

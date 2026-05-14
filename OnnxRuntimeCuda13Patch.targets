@@ -1,0 +1,171 @@
+<Project>
+
+    <!--
+    ============================================================================
+    TEMPORARY PATCH: ONNX Runtime CUDA 13 override
+    ============================================================================
+
+    WHY THIS EXISTS
+      The Microsoft.ML.OnnxRuntime.Gpu NuGet package (1.26.0) ships native
+      binaries linked against CUDA 12: onnxruntime_providers_cuda.dll imports
+      cudart64_12.dll, cublas64_12.dll, cufft64_11.dll, etc. Machines with only
+      CUDA 13 installed cannot satisfy these imports and the runtime throws:
+        OrtSessionOptionsAppendExecutionProvider_Cuda:
+        Failed to load shared library
+      on session creation.
+
+      Microsoft publishes the CUDA 13 build of the same ORT version as a
+      separate zip on GitHub Releases (no NuGet variant as of 1.26.0):
+        https://github.com/microsoft/onnxruntime/releases/tag/v1.26.0
+        Asset: onnxruntime-win-x64-gpu_cuda13-1.26.0.zip (~294 MB)
+
+    WHAT IT DOES
+      For each executable project whose output already contains onnxruntime.dll
+      (i.e. transitively references Microsoft.ML.OnnxRuntime.Gpu), after Build
+      and after Publish:
+        1. Lazily downloads the CUDA 13 zip into a per-user cache under
+           the system temp directory.
+        2. Extracts it once.
+        3. Overwrites the NuGet-deployed CUDA 12 onnxruntime*.dll files in the
+           output / publish directory with the CUDA 13 builds.
+      The download and extraction are cached, so steady-state rebuilds only pay
+      the cost of the final Copy.
+
+    HOW TO REMOVE WHEN NO LONGER NEEDED
+      Trigger to remove: Microsoft.ML.OnnxRuntime.Gpu (or a sibling NuGet
+      variant) starts shipping CUDA 13 binaries directly.
+      Removal steps:
+        1. Delete this file (OnnxRuntimeCuda13Patch.targets).
+        2. Delete Directory.Build.targets at repo root (it exists only to
+           import this file; remove the <Import> if it ever gains other uses).
+        3. Developers can delete their local cache (default location is
+           "%TEMP%\opensense-onnxruntime-cuda13\") to reclaim ~600 MB of disk.
+
+    HOW TO OVERRIDE (proxied/offline builds, custom mirror, alternate cache)
+      Pass MSBuild properties:
+        -p:OrtCuda13ZipUrl=https://your-mirror/.../...zip
+        -p:OrtCuda13CacheDir=C:\path\to\shared\cache\
+      Or: pre-place the file at $(OrtCuda13CacheDir)download.zip — the
+      download step will be skipped, only the unzip + copy will run.
+      Or: pre-extract to $(OrtCuda13CacheDir)extracted\<zip-name>\lib\ —
+      both download and unzip will be skipped.
+
+    KNOWN LIMITATIONS
+      - SHA256 of the downloaded zip is not verified. If you need integrity
+        checks (e.g. for CI), add a GetFileHash step here. Skipped for
+        simplicity because this is a temporary patch.
+      - The patch only handles win-x64. The repo is Windows-only today, so
+        this is intentional.
+    ============================================================================
+    -->
+
+    <PropertyGroup>
+        <OrtCuda13Version>1.26.0</OrtCuda13Version>
+        <!--
+        The downloaded zip is named onnxruntime-win-x64-gpu_cuda13-<version>.zip,
+        but its top-level folder inside is onnxruntime-win-x64-gpu-<version>
+        (no _cuda13 suffix). Microsoft uses different names for the file and
+        its contents, so the two must be tracked separately. 
+         -->
+        <OrtCuda13ZipBaseName>onnxruntime-win-x64-gpu_cuda13-$(OrtCuda13Version)</OrtCuda13ZipBaseName>
+        <OrtCuda13ZipInnerFolder>onnxruntime-win-x64-gpu-$(OrtCuda13Version)</OrtCuda13ZipInnerFolder>
+        <OrtCuda13ZipUrl Condition="'$(OrtCuda13ZipUrl)' == ''">https://github.com/microsoft/onnxruntime/releases/download/v$(OrtCuda13Version)/$(OrtCuda13ZipBaseName).zip</OrtCuda13ZipUrl>
+        <OrtCuda13CacheDir Condition="'$(OrtCuda13CacheDir)' == ''">$([System.IO.Path]::GetTempPath())opensense-onnxruntime-cuda13\$(OrtCuda13Version)\</OrtCuda13CacheDir>
+        <OrtCuda13ZipPath>$(OrtCuda13CacheDir)$(OrtCuda13ZipBaseName).zip</OrtCuda13ZipPath>
+        <OrtCuda13ExtractDir>$(OrtCuda13CacheDir)extracted\</OrtCuda13ExtractDir>
+        <OrtCuda13NativeDir>$(OrtCuda13ExtractDir)$(OrtCuda13ZipInnerFolder)\lib\</OrtCuda13NativeDir>
+        <OrtCuda13Sentinel>$(OrtCuda13NativeDir)onnxruntime.dll</OrtCuda13Sentinel>
+    </PropertyGroup>
+
+    <Target Name="_OrtCuda13EnsureCache">
+
+        <MakeDir Directories="$(OrtCuda13CacheDir)" Condition="!Exists('$(OrtCuda13CacheDir)')" />
+
+        <DownloadFile SourceUrl="$(OrtCuda13ZipUrl)"
+                      DestinationFolder="$(OrtCuda13CacheDir)"
+                      DestinationFileName="$(OrtCuda13ZipBaseName).zip"
+                      Condition="!Exists('$(OrtCuda13ZipPath)') AND !Exists('$(OrtCuda13Sentinel)')" />
+
+        <Unzip SourceFiles="$(OrtCuda13ZipPath)"
+               DestinationFolder="$(OrtCuda13ExtractDir)"
+               OverwriteReadOnlyFiles="true"
+               Condition="!Exists('$(OrtCuda13Sentinel)')" />
+
+        <Error Condition="!Exists('$(OrtCuda13Sentinel)')"
+               Text="OnnxRuntimeCuda13Patch: expected CUDA 13 DLLs at '$(OrtCuda13NativeDir)' after extraction but they are missing. Inspect '$(OrtCuda13ExtractDir)' — the zip layout may have changed; update OrtCuda13NativeDir in OnnxRuntimeCuda13Patch.targets." />
+    </Target>
+
+    <!--
+    NuGet's Microsoft.ML.OnnxRuntime.Gpu can deploy native DLLs to two
+    different layouts depending on the consuming project:
+      A) Flat at the output root — when <RuntimeIdentifier> is set on the
+         consumer (.NET SDK flattens RID-specific natives).
+      B) Nested at "runtimes\win-x64\native\" — when <RuntimeIdentifier> is
+         NOT set (the standard NuGet runtimes/ layout).
+    The Apply targets below check both, and only the locations that contain
+    a real onnxruntime.dll are patched. Sibling folders like "plugins\..." or
+    "k4abt\" (Azure Kinect's pinned older ORT) are intentionally never
+    touched.
+  -->
+
+    <Target Name="_OrtCuda13ApplyToBuild"
+            AfterTargets="Build"
+            DependsOnTargets="_OrtCuda13EnsureCache"
+            Condition="('$(OutputType)' == 'Exe' OR '$(OutputType)' == 'WinExe') AND (Exists('$(OutputPath)onnxruntime.dll') OR Exists('$(OutputPath)runtimes\win-x64\native\onnxruntime.dll'))">
+
+        <ItemGroup>
+            <_OrtCuda13DllsForBuild Include="$(OrtCuda13NativeDir)*.dll" />
+        </ItemGroup>
+
+        <Copy SourceFiles="@(_OrtCuda13DllsForBuild)"
+              DestinationFolder="$(OutputPath)"
+              OverwriteReadOnlyFiles="true"
+              SkipUnchangedFiles="true"
+              Condition="Exists('$(OutputPath)onnxruntime.dll')" />
+
+        <Message Importance="high"
+                 Text="OnnxRuntimeCuda13Patch: replaced CUDA 12 onnxruntime DLLs in '$(OutputPath)' with CUDA 13 build from '$(OrtCuda13NativeDir)'."
+                 Condition="Exists('$(OutputPath)onnxruntime.dll')" />
+
+        <Copy SourceFiles="@(_OrtCuda13DllsForBuild)"
+              DestinationFolder="$(OutputPath)runtimes\win-x64\native\"
+              OverwriteReadOnlyFiles="true"
+              SkipUnchangedFiles="true"
+              Condition="Exists('$(OutputPath)runtimes\win-x64\native\onnxruntime.dll')" />
+
+        <Message Importance="high"
+                 Text="OnnxRuntimeCuda13Patch: replaced CUDA 12 onnxruntime DLLs in '$(OutputPath)runtimes\win-x64\native\' with CUDA 13 build from '$(OrtCuda13NativeDir)'."
+                 Condition="Exists('$(OutputPath)runtimes\win-x64\native\onnxruntime.dll')" />
+    </Target>
+
+    <Target Name="_OrtCuda13ApplyToPublish"
+            AfterTargets="Publish"
+            DependsOnTargets="_OrtCuda13EnsureCache"
+            Condition="('$(OutputType)' == 'Exe' OR '$(OutputType)' == 'WinExe') AND (Exists('$(PublishDir)onnxruntime.dll') OR Exists('$(PublishDir)runtimes\win-x64\native\onnxruntime.dll'))">
+
+        <ItemGroup>
+            <_OrtCuda13DllsForPublish Include="$(OrtCuda13NativeDir)*.dll" />
+        </ItemGroup>
+
+        <Copy SourceFiles="@(_OrtCuda13DllsForPublish)"
+              DestinationFolder="$(PublishDir)"
+              OverwriteReadOnlyFiles="true"
+              SkipUnchangedFiles="true"
+              Condition="Exists('$(PublishDir)onnxruntime.dll')" />
+
+        <Message Importance="high"
+                 Text="OnnxRuntimeCuda13Patch: replaced CUDA 12 onnxruntime DLLs in '$(PublishDir)' with CUDA 13 build from '$(OrtCuda13NativeDir)'."
+                 Condition="Exists('$(PublishDir)onnxruntime.dll')" />
+
+        <Copy SourceFiles="@(_OrtCuda13DllsForPublish)"
+              DestinationFolder="$(PublishDir)runtimes\win-x64\native\"
+              OverwriteReadOnlyFiles="true"
+              SkipUnchangedFiles="true"
+              Condition="Exists('$(PublishDir)runtimes\win-x64\native\onnxruntime.dll')" />
+
+        <Message Importance="high"
+                 Text="OnnxRuntimeCuda13Patch: replaced CUDA 12 onnxruntime DLLs in '$(PublishDir)runtimes\win-x64\native\' with CUDA 13 build from '$(OrtCuda13NativeDir)'."
+                 Condition="Exists('$(PublishDir)runtimes\win-x64\native\onnxruntime.dll')" />
+    </Target>
+
+</Project>

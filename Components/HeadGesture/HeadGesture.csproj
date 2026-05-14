@@ -13,9 +13,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.20.1" Condition="'$(UseCUDA)' != 'true'" />
-        <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.20.1" Condition="'$(UseCUDA)' == 'true'" />
-        <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="4.0.1" />
+        <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.26.0" Condition="'$(UseCUDA)' != 'true'" />
+        <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.26.0" Condition="'$(UseCUDA)' == 'true'" />
+        <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="5.0.0" />
         <PackageReference Include="System.Composition" Version="8.0.0" />
     </ItemGroup>
 
