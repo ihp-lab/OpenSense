@@ -609,6 +609,7 @@ namespace OpenSense.Components.Whisper.NET {
             GgmlType.LargeV1 => "large__v1",
             GgmlType.LargeV2 => "large__v2",
             GgmlType.LargeV3 => "large__v3",
+            GgmlType.LargeV3Turbo => "large__v3_turbo",
             _ => throw new InvalidOperationException(),
         };
 
