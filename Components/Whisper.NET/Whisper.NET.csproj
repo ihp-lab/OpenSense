@@ -15,7 +15,7 @@
         <PackageReference Include="Microsoft.Psi.Runtime" Version="0.19.100.1-beta" />
         <PackageReference Include="Microsoft.Psi.Speech" Version="0.19.100.1-beta" />
         <PackageReference Include="System.Composition" Version="8.0.0" />
-        <PackageReference Include="Whisper.net.AllRuntimes" Version="1.7.2-preview3" />
+        <PackageReference Include="Whisper.net.AllRuntimes" Version="1.9.0" />
     </ItemGroup>
 
     <ItemGroup>

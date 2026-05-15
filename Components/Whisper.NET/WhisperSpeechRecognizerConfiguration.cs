@@ -72,6 +72,19 @@ namespace OpenSense.Components.Whisper.NET {
             set => SetProperty(ref segmentationRestriction, value);
         }
 
+        private float decoderNoSpeechThreshold = 0.6f;//Matches whisper.cpp's own default.
+
+        /// <summary>
+        /// Passed to Whisper's decoder (<c>WithNoSpeechThreshold</c>). Whisper marks a
+        /// segment silent only when its no-speech probability is above this AND average
+        /// log-probability is below Whisper's internal logprob threshold. Range [0, 1];
+        /// 1.0 effectively disables the gate.
+        /// </summary>
+        public float DecoderNoSpeechThreshold {
+            get => decoderNoSpeechThreshold;
+            set => SetProperty(ref decoderNoSpeechThreshold, value);
+        }
+
         private TimestampMode inputTimestampMode = TimestampMode.AtEnd;//\psi convention
 
         public TimestampMode InputTimestampMode {
@@ -120,6 +133,7 @@ namespace OpenSense.Components.Whisper.NET {
             Language = Language,
             Prompt = Prompt,
             SegmentationRestriction = SegmentationRestriction,
+            DecoderNoSpeechThreshold = DecoderNoSpeechThreshold,
             InputTimestampMode = InputTimestampMode,
             OutputTimestampMode = OutputTimestampMode,
             OutputPartialResults = OutputPartialResults,

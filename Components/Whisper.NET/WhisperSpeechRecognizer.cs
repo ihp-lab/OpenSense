@@ -28,7 +28,7 @@ namespace OpenSense.Components.Whisper.NET {
         /// </remarks>
         private const int GapSampleThreshold = 1;
 
-        private static readonly Regex DescriptionRegex = new(@"\[.*?\]|\(.*?\)", RegexOptions.Compiled);//Observerd so far: [BLANK_AUDIO][ Pause ][INAUDIBLE][SOUND](wind blowing)
+        private static readonly Regex DescriptionRegex = new(@"\[.*?\]|\(.*?\)", RegexOptions.Compiled);//Observed so far: [BLANK_AUDIO][ Pause ][INAUDIBLE][SOUND](wind blowing). Whisper's NoSpeechProbability is unreliable for these (it stays low even when the model emits a [BLANK_AUDIO] text token), so the dedup logic below is still required
 
         private readonly List<Section> _sections = new();
 
@@ -98,6 +98,19 @@ namespace OpenSense.Components.Whisper.NET {
         public SegmentationRestriction SegmentationRestriction {
             get => segmentationRestriction;
             set => SetProperty(ref segmentationRestriction, value);
+        }
+
+        private float decoderNoSpeechThreshold = 0.6f;//Matches whisper.cpp's own default.
+
+        /// <summary>
+        /// Passed to <see cref="WhisperProcessorBuilder.WithNoSpeechThreshold(float)"/>.
+        /// Whisper marks a segment silent only when its no-speech probability is above this
+        /// AND average log-probability is below Whisper's internal logprob threshold.
+        /// Range [0, 1]; 1.0 effectively disables the gate.
+        /// </summary>
+        public float DecoderNoSpeechThreshold {
+            get => decoderNoSpeechThreshold;
+            set => SetProperty(ref decoderNoSpeechThreshold, value);
         }
 
         private TimestampMode inputTimestampMode = TimestampMode.AtEnd;//\psi convention
@@ -178,19 +191,16 @@ namespace OpenSense.Components.Whisper.NET {
         }
 
         private void OnPipelineRun(object sender, PipelineRunEventArgs args) {
-            using var tokenSource = new CancellationTokenSource();
-            var t = Task.Factory.StartNew(DownloadAsync, tokenSource.Token).Result;//Put on a worker thread. Otherwise, the pipeline will be blocked.
-            var timeout = (int)DownloadTimeout.TotalMilliseconds;
-            var succeed = t.Wait(timeout);
-            if (!succeed) {
-                tokenSource.Cancel();
-                t.Wait();//Wait deletion to complete
+            using var tokenSource = new CancellationTokenSource(DownloadTimeout);
+            try {
+                //Off the pipeline thread, otherwise async continuations may stall it.
+                Task.Run(() => DownloadAsync(tokenSource.Token)).GetAwaiter().GetResult();
+            } catch (OperationCanceledException) when (tokenSource.IsCancellationRequested) {
                 throw new TimeoutException("Download Whisper model timeout.");
             }
         }
 
-        private async Task DownloadAsync(object state) {
-            var cancellationToken = (CancellationToken)state;
+        private async Task DownloadAsync(CancellationToken cancellationToken) {
             var modelType = ModelType;
             var quantizationType = QuantizationType;
             var fn = string.Join("__", "ggml", GetTypeModelFileName(modelType), GetQuantizationModelFileName(quantizationType)) + ".bin";
@@ -198,13 +208,16 @@ namespace OpenSense.Components.Whisper.NET {
             if (ForceDownload || !File.Exists(modelFilename)) {
                 try {
                     Logger?.LogInformation("Downloading Whisper model.");
-                    using var modelStream = await WhisperGgmlDownloader.GetGgmlModelAsync(modelType, quantizationType, cancellationToken);
+                    using var modelStream = await WhisperGgmlDownloader.Default.GetGgmlModelAsync(modelType, quantizationType, cancellationToken);
                     using var fileWriter = File.OpenWrite(modelFilename);
                     const int bufferSize = 32 * 1024 * 1024;
-                    await modelStream.CopyToAsync(fileWriter, bufferSize, cancellationToken);//TaskCanceledExpcetion will be thrown at here if canceled
+                    await modelStream.CopyToAsync(fileWriter, bufferSize, cancellationToken);//TaskCanceledException will be thrown here if canceled
                     Logger?.LogInformation("Downloaded Whisper model.");
                 } catch (OperationCanceledException) {
-                    File.Delete(modelFilename);//Delete incomplete file
+                    if (File.Exists(modelFilename)) {
+                        File.Delete(modelFilename);//Delete incomplete file
+                    }
+                    throw;
                 }
             }
             if (!LazyInitialization) {
@@ -229,6 +242,7 @@ namespace OpenSense.Components.Whisper.NET {
                 .WithSegmentEventHandler(OnSegment)
                 .WithProbabilities()
                 .WithTokenTimestamps()
+                .WithNoSpeechThreshold(DecoderNoSpeechThreshold)
                 ;
             var prompt = Prompt;
             if (!string.IsNullOrWhiteSpace(prompt)) {
@@ -358,7 +372,12 @@ namespace OpenSense.Components.Whisper.NET {
 
                 /* Process */
                 var valid = samples.AsSpan(0, size);
-                processor.Process(valid);
+                try {
+                    processor.Process(valid);
+                } catch (WhisperProcessingException ex) {
+                    Logger?.LogError(ex, "Whisper native processing failed.");
+                    throw;
+                }
 
                 /* Output */
                 if (_segments.Count == 0) {
@@ -368,10 +387,14 @@ namespace OpenSense.Components.Whisper.NET {
                 Debug.Assert(Math.Abs(bufferedDuration.TotalMilliseconds - _sections.Aggregate(TimeSpan.Zero, (v, s) => v + s.Buffer.Duration).TotalMilliseconds) < 1);
 
                 /* Merge Segments */
+                //Snapshot originals before the merge mutates _segments — the merged result
+                //still needs per-segment data via Segments.
+                WhisperSegmentInfo[]? mergedSegmentsInfo = null;
                 if (_segments.Count > 1 && SegmentationRestriction == SegmentationRestriction.OnePerUtterence) {
                     Logger?.LogWarning("{count} segments received with the SingleSegment option on. Merging them into one.", _segments.Count);
                     Debug.Assert(_segments.Last().End - _segments.First().Start > TimeSpan.FromSeconds(30));
                     Debug.Assert(_segments.All(s => s.Text[0] == ' ' && s.Text[s.Text.Length - 1] != ' '));//Don't know why this happens, but our code is based on this observation
+                    mergedSegmentsInfo = _segments.Select(s => (WhisperSegmentInfo)s).ToArray();
                     var sb = new StringBuilder(capacity: _segments.Sum(s => s.Text.Length + 1));
 
                     /* Deduplicate Descriptions */
@@ -423,12 +446,13 @@ namespace OpenSense.Components.Whisper.NET {
                         maxProbability *= segment.MaxProbability;
                         probability *= segment.Probability;
                     }
-
                     var language = _segments
                         .GroupBy(s => s.Language)
                         .OrderByDescending(g => g.Count())
                         .First().Key;
-                    var single = new SegmentData(sb.ToString(), _segments.First().Start, _segments.Last().End, (float)minProbability, (float)maxProbability, (float)probability, language);
+                    //NoSpeechProbability and Tokens use defaults — nothing downstream reads
+                    //them; per-segment values live in mergedSegmentsInfo.
+                    var single = new SegmentData(sb.ToString(), _segments.First().Start, _segments.Last().End, (float)minProbability, (float)maxProbability, (float)probability, default, language, Array.Empty<WhisperToken>());
                     _segments.Clear();
                     _segments.Add(single);
                 }
@@ -447,7 +471,8 @@ namespace OpenSense.Components.Whisper.NET {
                         var audioBuffer = SegmentAudioBuffer(segment, format, _sections);
                         audio = new AudioBuffer(audioBuffer, format);
                     }
-                    var result = new StreamingSpeechRecognitionResult(isFinal, text, confidence, Enumerable.Empty<SpeechRecognitionAlternate>(), audio, duration);
+                    var segmentsInfo = mergedSegmentsInfo ?? new[] { (WhisperSegmentInfo)segment };
+                    var result = new WhisperStreamingSpeechRecognitionResult(isFinal, text, confidence, Enumerable.Empty<SpeechRecognitionAlternate>(), audio, duration, segmentsInfo);
                     /* Timestamp */
                     var timestamp = (inputTimeMode switch {
                         TimestampMode.AtStart => firstSection.OriginatingTime,
