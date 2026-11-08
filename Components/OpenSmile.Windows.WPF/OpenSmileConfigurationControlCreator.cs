@@ -1,14 +1,16 @@
-﻿using System.Composition;
+using System.Composition;
 using System.Windows;
 using OpenSense.Components;
 using OpenSense.Components.OpenSmile;
 
-namespace OpenSense.WPF.Components.OpenSmile {
-    [Export(typeof(IConfigurationControlCreator))]
-    public class OpenSmileConfigurationControlCreator : IConfigurationControlCreator {
+namespace OpenSense.WPF.Components.OpenSmile;
 
-        public bool CanCreate(ComponentConfiguration configuration) => configuration is OpenSmileConfiguration;
+[Export(typeof(IConfigurationControlCreator))]
+public sealed class OpenSmileConfigurationControlCreator : IConfigurationControlCreator {
 
-        public UIElement Create(ComponentConfiguration configuration) => new OpenSmileConfigurationControl() { DataContext = configuration };
-    }
+    public bool CanCreate(ComponentConfiguration configuration) => configuration is OpenSmileConfiguration;
+
+    public UIElement Create(ComponentConfiguration configuration) => new OpenSmileConfigurationControl() {
+        DataContext = configuration,
+    };
 }

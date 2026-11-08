@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Shared\lib\opensmile\default\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <!--
+        __WINDOWS:
+        - openSMILE checks its own macro instead of _WIN32. Without it, the headers fall back to pthread.
+
+        __STATIC_LINK:
+        - Defined by CMake for the static library. Without it, the headers enable plugin support,
+          and the classes no longer match the ones compiled into the library.
+
+        NOMINMAX:
+        - openSMILE headers include windows.h, whose min/max macros break std::min/std::max.
+      -->
+      <PreprocessorDefinitions>__WINDOWS;__STATIC_LINK;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Shared\lib\opensmile\default\lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <!-- Ws2_32: openSMILE links Winsock privately in CMake, so the static library leaves it to the consumer. -->
+      <AdditionalDependencies>opensmile.lib;Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>

@@ -36,16 +36,6 @@
 		},
 		{
 			ComponentType: "OpenSense.Components.OpenSmile.OpenSmileConfiguration, OpenSense.Components.OpenSmile.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-			raw: {
-				OverallLogLevel: 0,
-				PrintLogToConsole: false,
-				AppendLogFile: false,
-				LogFilename: "openSMILE.log",
-				PrintLogToFile: false,
-				ConfigurationFilename: "{path_to_this_sample}/openSMILE/sample1/opensmile_energy.conf",
-				UseConfigurationFile: true,
-				InstanceConfigurations: []
-			},
 			Name: "openSMILE",
 			Description: "",
 			Inputs: [
@@ -63,17 +53,12 @@
 					DeliveryPolicy: null
 				}
 			],
-			Raw: {
-				OverallLogLevel: 0,
-				PrintLogToConsole: false,
-				AppendLogFile: false,
-				LogFilename: "openSMILE.log",
-				PrintLogToFile: false,
-				ConfigurationFilename: "{path_to_this_sample}/openSMILE/sample1/opensmile_energy.conf",
-				UseConfigurationFile: true,
-				InstanceConfigurations: []
-			},
-			Mute: false,
+			ConfigurationFilename: "{path_to_this_sample}/openSMILE/sample1/opensmile_energy.conf",
+			Options: [],
+			OpenSmileLogLevel: 2,
+			InputTimestampMode: "AtEnd",
+			OutputTimestampMode: "AtEnd",
+			DiscardRemainingOnStop: false,
 			Id: "4fcfc0cc-acf7-4a38-9d2e-3354a7d490e7"
 		},
 		{
@@ -93,8 +78,22 @@
 						Index: "dataSink"
 					},
 					DeliveryPolicy: null
+				},
+				{
+					RemoteId: "4fcfc0cc-acf7-4a38-9d2e-3354a7d490e7",
+					LocalPort: {
+						Identifier: "FeatureNamesIn",
+						Index: null
+					},
+					Id: "82184507-22a2-4296-a656-bc69c225b771",
+					RemotePort: {
+						Identifier: "FeatureNamesOut",
+						Index: "dataSink"
+					},
+					DeliveryPolicy: null
 				}
 			],
+			WindowInSeconds: 10.0,
 			Id: "aea2e950-2ee8-46eb-8dcb-6566c2de02bc"
 		}
 	]

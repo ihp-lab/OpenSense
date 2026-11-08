@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Composition;
 
-namespace OpenSense.Components.OpenSmile.Visualizer {
-    [Export(typeof(IComponentMetadata))]
-    public class OpenSmileVisualizerMetadata : ConventionalComponentMetadata {
+namespace OpenSense.Components.OpenSmile.Visualizer;
 
-        public override string Description => "Visualizes openSMILE outputs. Requires openSMILE outputs.";
+[Export(typeof(IComponentMetadata))]
+public sealed class OpenSmileVisualizerMetadata : ConventionalComponentMetadata {
 
-        protected override Type ComponentType => typeof(OpenSmileVisualizer);
+    public override string Name => "openSMILE Visualizer";
 
-        public override string Name => "openSMILE Visualizer";
+    public override string Description => "Plots features of one openSMILE sink over time.";
 
-        protected override string GetPortDescription(string portName) {
-            switch (portName) {
-                case nameof(OpenSmileVisualizer.In):
-                    return "[Required] openSMILE outputs.";
-                default:
-                    return null;
-            }
-        }
+    protected override Type ComponentType => typeof(OpenSmileVisualizer);
 
-        public override ComponentConfiguration CreateConfiguration() => new OpenSmileVisualizerConfiguration();
+    protected override string? GetPortDescription(string portName) {
+        return portName switch {
+            nameof(OpenSmileVisualizer.In) => "[Required] Feature frames of one sink of the openSMILE component.",
+            nameof(OpenSmileVisualizer.FeatureNamesIn) => "Feature names of the same sink. Without them, features are listed by index.",
+            _ => null,
+        };
     }
+
+    public override ComponentConfiguration CreateConfiguration() => new OpenSmileVisualizerConfiguration();
 }
