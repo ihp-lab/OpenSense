@@ -1,3 +1,5 @@
+#include "pch.h"
+
 using namespace System;
 using namespace System::Reflection;
 using namespace System::Runtime::CompilerServices;
@@ -9,12 +11,10 @@ using namespace System::Security::Permissions;
 [assembly:AssemblyConfigurationAttribute(L"")];
 [assembly:AssemblyCompanyAttribute(L"")];
 [assembly:AssemblyProductAttribute(L"OpenSmileInterop")];
-[assembly:AssemblyCopyrightAttribute(L"Copyright (c)  2019")];
+[assembly:AssemblyCopyrightAttribute(L"Copyright (c)  2026")];
 [assembly:AssemblyTrademarkAttribute(L"")];
 [assembly:AssemblyCultureAttribute(L"")];
 
-[assembly:AssemblyVersionAttribute("1.0.*")];
+[assembly:AssemblyVersionAttribute(L"1.0.*")];
 
 [assembly:ComVisible(false)];
-
-[assembly:CLSCompliantAttribute(true)];

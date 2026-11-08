@@ -1,13 +1,14 @@
-﻿using System.Composition;
+using System.Composition;
 using System.Windows;
-using OpenSense.WPF.Components;
 
-namespace OpenSense.WPF.Components.OpenSmile {
-    [Export(typeof(IInstanceControlCreator))]
-    public class OpenSmileInstanceControlCreator : IInstanceControlCreator {
+namespace OpenSense.WPF.Components.OpenSmile;
 
-        public bool CanCreate(object instance) => instance is OpenSense.Components.OpenSmile.OpenSmile;
+[Export(typeof(IInstanceControlCreator))]
+public sealed class OpenSmileInstanceControlCreator : IInstanceControlCreator {
 
-        public UIElement Create(object instance) => new OpenSmileInstanceControl() { DataContext = instance };
-    }
+    public bool CanCreate(object instance) => instance is OpenSense.Components.OpenSmile.OpenSmile;
+
+    public UIElement Create(object instance) => new OpenSmileInstanceControl() {
+        DataContext = instance,
+    };
 }

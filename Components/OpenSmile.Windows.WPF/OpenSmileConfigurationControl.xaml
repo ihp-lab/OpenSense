@@ -1,73 +1,218 @@
-﻿<UserControl x:Class="OpenSense.WPF.Components.OpenSmile.OpenSmileConfigurationControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:OpenSense.WPF.Components.OpenSmile"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Grid.IsSharedSizeScope="True">
+﻿<UserControl
+    x:Class="OpenSense.WPF.Components.OpenSmile.OpenSmileConfigurationControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:util="clr-namespace:OpenSense.WPF.Components.Utilities;assembly=OpenSense.WPF.Components.Contracts"
+    xmlns:common="clr-namespace:OpenSense.Components.Audio;assembly=OpenSense.Components.Audio.Common"
+    xmlns:comp="clr-namespace:OpenSense.Components.OpenSmile;assembly=OpenSense.Components.OpenSmile.Windows"
+    mc:Ignorable="d"
+    d:DesignHeight="400"
+    d:DesignWidth="800">
+    <d:UserControl.DataContext>
+        <comp:OpenSmileConfiguration />
+    </d:UserControl.DataContext>
+
+    <UserControl.Resources>
+        <Style
+            x:Key="FieldLabel"
+            TargetType="TextBlock">
+            <Setter
+                Property="Margin"
+                Value="0,2,12,2" />
+            <Setter
+                Property="VerticalAlignment"
+                Value="Center" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition
+                Width="auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <!-- 0: Configuration File -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 1: Options -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 2: openSMILE Log Level -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 3: Input Timestamp Mode -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 4: Output Timestamp Mode -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 5: Discard Remaining On Stop -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 6: Inspect -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 7: Inspection Result -->
+            <RowDefinition
+                Height="*" />
         </Grid.RowDefinitions>
-        
-        <Grid DataContext="{Binding Raw}">
+
+        <!-- Row 0: Configuration File -->
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="0"
+            Style="{StaticResource FieldLabel}">Configuration File</TextBlock>
+        <Grid
+            Grid.Row="0"
+            Grid.Column="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" SharedSizeGroup="label"/>
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition
+                    Width="*" />
+                <ColumnDefinition
+                    Width="auto" />
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-            </Grid.RowDefinitions>
-
-            <Label>Use configuration file</Label>
-            <CheckBox Grid.Column="1" IsEnabled="False" IsChecked="{Binding UseConfigurationFile}"/>
-
-            <Label Grid.Row="1">Configuration file path</Label>
-            <Grid Grid.Row="1" Grid.Column="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBox Name="TextBoxConfigurationFilename" Text="{Binding ConfigurationFilename}"/>
-                <Button Grid.Column="1" Name="ButtonOpenConfigurationFile" Click="ButtonOpenConfigurationFile_Click">Open</Button>
-            </Grid>
-
-            <Label Grid.Row="2">Print log to file</Label>
-            <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding PrintLogToFile}"/>
-
-            <Label Grid.Row="3">Log file path</Label>
-            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding LogFilename}"/>
-
-            <Label Grid.Row="4">Append log file</Label>
-            <CheckBox Grid.Row="4" Grid.Column="1" IsChecked="{Binding AppendLogFile}"/>
-
-            <Label Grid.Row="5">Print log to console</Label>
-            <CheckBox Grid.Row="5" Grid.Column="1" IsChecked="{Binding PrintLogToConsole}"/>
-
-            <Label Grid.Row="6">Overall log level</Label>
-            <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding OverallLogLevel}"/>
-
+            <TextBox
+                Grid.Column="0"
+                Margin="0,2"
+                VerticalContentAlignment="Center"
+                Text="{Binding ConfigurationFilename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                ToolTip="openSMILE configuration file. The path must be representable in the ANSI code page." />
+            <Button
+                Grid.Column="1"
+                Margin="4,2,0,2"
+                Padding="10,1"
+                Click="ButtonOpenFile_Click">Open</Button>
         </Grid>
 
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" SharedSizeGroup="label"/>
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-            </Grid.RowDefinitions>
+        <!-- Row 1: Options -->
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0"
+            Style="{StaticResource FieldLabel}"
+            VerticalAlignment="Top"
+            Margin="0,4,12,2">Options</TextBlock>
+        <DataGrid
+            Grid.Row="1"
+            Grid.Column="1"
+            ItemsSource="{Binding Options}"
+            AutoGenerateColumns="False"
+            CanUserAddRows="True"
+            CanUserDeleteRows="True"
+            CanUserResizeRows="False"
+            HeadersVisibility="Column"
+            GridLinesVisibility="Horizontal"
+            HorizontalGridLinesBrush="#FFE5E5E5"
+            Background="Transparent"
+            BorderBrush="#FFABADB3"
+            Margin="0,2"
+            ToolTip="Values for options declared with \cm[...] in the configuration, like SMILExtract command line options. Names are written without the leading '-'.">
+            <DataGrid.ColumnHeaderStyle>
+                <Style
+                    TargetType="DataGridColumnHeader">
+                    <Setter
+                        Property="Background"
+                        Value="Transparent" />
+                    <Setter
+                        Property="BorderBrush"
+                        Value="#FFE5E5E5" />
+                    <Setter
+                        Property="BorderThickness"
+                        Value="0,0,0,1" />
+                    <Setter
+                        Property="Padding"
+                        Value="4,2" />
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Header="Name"
+                    Width="*"
+                    Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn
+                    Header="Value"
+                    Width="2*"
+                    Binding="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
+            </DataGrid.Columns>
+        </DataGrid>
 
-            <Label Grid.Row="0">Mute</Label>
-            <CheckBox Grid.Row="0" Grid.Column="1" IsChecked="{Binding Mute}"/>
-        </Grid>
+        <!-- Row 2: openSMILE Log Level -->
+        <TextBlock
+            Grid.Row="2"
+            Grid.Column="0"
+            Style="{StaticResource FieldLabel}">openSMILE Log Level</TextBlock>
+        <TextBox
+            Grid.Row="2"
+            Grid.Column="1"
+            Margin="0,2"
+            VerticalContentAlignment="Center"
+            Text="{Binding OpenSmileLogLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="Verbosity of openSMILE messages and warnings. Higher values are more detailed. Errors are always reported." />
+
+        <!-- Row 3: Input Timestamp Mode -->
+        <TextBlock
+            Grid.Row="3"
+            Grid.Column="0"
+            Style="{StaticResource FieldLabel}">Input Timestamp Mode</TextBlock>
+        <ComboBox
+            Grid.Row="3"
+            Grid.Column="1"
+            Margin="0,2"
+            SelectedItem="{Binding InputTimestampMode}"
+            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type common:TimestampMode}}, Mode=OneTime}"
+            ToolTip="Whether input audio buffers are timestamped at their start or at their end. \psi audio components use the end." />
+
+        <!-- Row 4: Output Timestamp Mode -->
+        <TextBlock
+            Grid.Row="4"
+            Grid.Column="0"
+            Style="{StaticResource FieldLabel}">Output Timestamp Mode</TextBlock>
+        <ComboBox
+            Grid.Row="4"
+            Grid.Column="1"
+            Margin="0,2"
+            SelectedItem="{Binding OutputTimestampMode}"
+            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type common:TimestampMode}}, Mode=OneTime}"
+            ToolTip="Whether feature frames are timestamped at the start or at the end of the audio they cover. \psi convention is the end." />
+
+        <!-- Row 5: Discard Remaining On Stop -->
+        <TextBlock
+            Grid.Row="5"
+            Grid.Column="0"
+            Style="{StaticResource FieldLabel}">Discard Remaining On Stop</TextBlock>
+        <CheckBox
+            Grid.Row="5"
+            Grid.Column="1"
+            Margin="0,2"
+            VerticalAlignment="Center"
+            IsChecked="{Binding DiscardRemainingOnStop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ToolTip="When enabled, discard the output that openSMILE produces when the input ends on stop. When disabled, output it before stopping." />
+
+        <!-- Row 6: Inspect -->
+        <Button
+            Grid.Row="6"
+            Grid.Column="0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Margin="0,6,12,2"
+            Padding="10,1"
+            Name="ButtonInspect"
+            Click="ButtonInspect_Click"
+            ToolTip="Load the configuration with openSMILE and list its sources and sinks, which are the port names of this component.">Inspect</Button>
+
+        <!-- Row 7: Inspection Result -->
+        <ScrollViewer
+            Grid.Row="7"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Margin="0,4,0,2"
+            VerticalScrollBarVisibility="Auto"
+            HorizontalScrollBarVisibility="Disabled">
+            <StackPanel
+                Name="PanelInspection" />
+        </ScrollViewer>
     </Grid>
 </UserControl>

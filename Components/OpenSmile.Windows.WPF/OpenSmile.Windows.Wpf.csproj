@@ -9,17 +9,13 @@
         <AssemblyName>OpenSense.WPF.Components.OpenSmile.Windows</AssemblyName>
         <RootNamespace>OpenSense.WPF.Components.OpenSmile</RootNamespace>
         <EmbedAllSources>true</EmbedAllSources>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\OpenSmile.Windows\OpenSmile.Windows.csproj" />
+        <ProjectReference Include="..\..\Interoperations\OpenSmileInterop\OpenSmileInterop.vcxproj" />
         <ProjectReference Include="..\..\WpfComponentContract\WpfComponentContract.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Page Update="OpenSmileConfigurationControl.xaml">
-            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-        </Page>
     </ItemGroup>
 
 </Project>

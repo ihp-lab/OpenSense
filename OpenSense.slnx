@@ -178,7 +178,7 @@
     <Project Path="Interoperations/FFMpegInterop/FFMpegInterop.vcxproj" Id="7c793af4-36c1-4535-a370-4ac6f96f772c" />
     <Project Path="Interoperations/OpenFaceInterop/OpenFaceInterop.vcxproj" Id="78196985-ee54-411f-822b-5a23edf80642" />
     <Project Path="Interoperations/OpenPose.PInvoke/OpenPose.PInvoke.csproj" />
-    <Project Path="Interoperations/OpenSmileInterop/openSmileInterop.vcxproj" Id="f7324168-9704-4996-bf61-546590f86614" />
+    <Project Path="Interoperations/OpenSmileInterop/OpenSmileInterop.vcxproj" Id="f7324168-9704-4996-bf61-546590f86614" />
   </Folder>
   <Folder Name="/Legacy/" />
   <Folder Name="/Solution Items/">
@@ -202,7 +202,6 @@
     <Project Path="Widgets/DisplayPoiEstimatorBuilder.WPF/DisplayPoiEstimatorBuilder.WPF.csproj">
       <Platform Project="x64" />
     </Project>
-    <Project Path="Widgets/OpenSmileConfigurationConverter.WPF/OpenSmileConfigurationConverter.WPF.csproj" />
   </Folder>
   <Project Path="ComponentContract/ComponentContract.csproj" />
   <Project Path="DataWriterContract/DataWriterContract.csproj" />

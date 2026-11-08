@@ -128,7 +128,6 @@
         <ProjectReference Include="..\Components\Whisper.NET.WPF\Whisper.NET.WPF.csproj" />
         <!--Widgets-->
         <ProjectReference Include="..\Widgets\DisplayPoiEstimatorBuilder.WPF\DisplayPoiEstimatorBuilder.WPF.csproj" />
-        <ProjectReference Include="..\Widgets\OpenSmileConfigurationConverter.WPF\OpenSmileConfigurationConverter.WPF.csproj" />
     </ItemGroup>
 
     <!-- Azure Kinect Special Handlings -->
