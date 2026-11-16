@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using FFMpegInterop;
@@ -22,11 +24,12 @@ public sealed class Demuxer : Generator, INotifyPropertyChanged, IDisposable {
     private static readonly Regex TimestampPattern = new Regex(@"_(\d{21})$", RegexOptions.Compiled);
 
     private readonly FFMpegInterop.Demuxer _reader;
+    private readonly Dictionary<CodecParameters, Emitter<Shared<Packet>>> _emitters = new();
 
     #region Ports
-    public Emitter<Shared<Packet>> VideoOut { get; }
+    public ImmutableList<Emitter<Shared<Packet>>> VideoOut { get; }
 
-    public Emitter<Shared<Packet>> AudioOut { get; }
+    public ImmutableList<Emitter<Shared<Packet>>> AudioOut { get; }
     #endregion
 
     #region Options
@@ -64,6 +67,7 @@ public sealed class Demuxer : Generator, INotifyPropertyChanged, IDisposable {
 
     private Packet? next;
     private bool started;
+    private long endOffset;
     private DateTime filenameStartTime;
 
     /// <summary>
@@ -72,9 +76,9 @@ public sealed class Demuxer : Generator, INotifyPropertyChanged, IDisposable {
     private DateTime fileStartTime;
 
     /// <summary>
-    /// Start time of the pipeline, reading is paced by it.
+    /// Reading is paced relative to this time.
     /// </summary>
-    private DateTime pipelineStartTime;
+    private DateTime pacingStartTime;
 
     public Demuxer(Pipeline pipeline, string filename) : base(pipeline) {
         if (!File.Exists(filename)) {
@@ -83,28 +87,33 @@ public sealed class Demuxer : Generator, INotifyPropertyChanged, IDisposable {
         Filename = filename;
         _reader = new FFMpegInterop.Demuxer(filename);
 
-        VideoOut = pipeline.CreateEmitter<Shared<Packet>>(this, nameof(VideoOut));
-        AudioOut = pipeline.CreateEmitter<Shared<Packet>>(this, nameof(AudioOut));
+        VideoOut = CreateEmitters(pipeline, _reader.VideoStreams, nameof(VideoOut));
+        AudioOut = CreateEmitters(pipeline, _reader.AudioStreams, nameof(AudioOut));
 
         pipeline.PipelineRun += OnPipelineRun;
     }
 
+    private ImmutableList<Emitter<Shared<Packet>>> CreateEmitters(Pipeline pipeline, IReadOnlyList<CodecParameters> streams, string name) {
+        var emitters = streams
+            .Select((_, i) => pipeline.CreateEmitter<Shared<Packet>>(this, $"{name}[{i}]"))
+            .ToImmutableList();
+        for (var i = 0; i < streams.Count; i++) {
+            _emitters.Add(streams[i], emitters[i]);
+        }
+        return emitters;
+    }
+
     #region Pipeline Event Handlers
     private void OnPipelineRun(object? sender, PipelineRunEventArgs args) {
-        pipelineStartTime = args.StartOriginatingTime;
         fileStartTime = StartTimeMode switch {
             StartTimeMode.ParseFromFilename => filenameStartTime,
             StartTimeMode.Manual => ManualStartTime,
             _ => args.StartOriginatingTime,
         };
+        // A file from the past is played now; a file from the future must wait, messages ahead of the clock block stopping
+        pacingStartTime = fileStartTime > args.StartOriginatingTime ? fileStartTime : args.StartOriginatingTime;
 
-        _reader.SelectStreams(VideoOut.HasSubscribers, AudioOut.HasSubscribers);
-        if (VideoOut.HasSubscribers && _reader.VideoParameters is null) {
-            Logger?.LogWarning("File {Filename} has no video.", Filename);
-        }
-        if (AudioOut.HasSubscribers && _reader.AudioParameters is null) {
-            Logger?.LogWarning("File {Filename} has no audio.", Filename);
-        }
+        _reader.SelectStreams(_emitters.Where(e => e.Value.HasSubscribers).Select(e => e.Key));
     }
     #endregion
 
@@ -117,17 +126,25 @@ public sealed class Demuxer : Generator, INotifyPropertyChanged, IDisposable {
         if (next is null) {
             return DateTime.MaxValue;
         }
+        var due = pacingStartTime + TimeSpan.FromTicks(next.DecodingTimeOffset);
+        if (due > currentTime) {
+            // Not due yet, the file starts in the future
+            return due;
+        }
 
-        var emitter = next.Parameters.MediaType == MediaType.Video ? VideoOut : AudioOut;
+        var emitter = _emitters[next.Parameters];
+        endOffset = Math.Max(endOffset, Math.Max(next.PresentationTimeOffset, next.DecodingTimeOffset) + next.Duration);
         using (var shared = Shared.Create(next)) {
             emitter.Post(shared, fileStartTime + TimeSpan.FromTicks(next.DecodingTimeOffset));
         }
 
         next = _reader.ReadPacket();
         if (next is null) {
-            return DateTime.MaxValue;
+            // One more call at the end of the file, data ending there must not be after the final time of the pipeline
+            var end = pacingStartTime + TimeSpan.FromTicks(endOffset);
+            return end > currentTime ? end : DateTime.MaxValue;
         }
-        var due = pipelineStartTime + TimeSpan.FromTicks(next.DecodingTimeOffset);
+        due = pacingStartTime + TimeSpan.FromTicks(next.DecodingTimeOffset);
         // Returned times must strictly increase, packets of different streams are not strictly ordered
         return due > currentTime ? due : currentTime.AddTicks(1);
     }

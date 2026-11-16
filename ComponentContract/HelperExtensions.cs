@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -55,12 +56,28 @@ namespace OpenSense.Components {
                 case PortAggregation.Object:
                     return prop;
                 case PortAggregation.List:
-                    return prop[(int)portConfiguration.Index];
+                    return prop[GetListIndex(instance, portMetadata, portConfiguration, (int)prop.Count)];
                 case PortAggregation.Dictionary:
                     return prop[(string)portConfiguration.Index];
                 default:
                     throw new InvalidOperationException();
             }
+        }
+
+        /// <summary>
+        /// The editor stores the index as text, and a number in a JSON file is read as Int64. No index means the first item.
+        /// </summary>
+        private static int GetListIndex(object instance, StaticPortMetadata portMetadata, PortConfiguration portConfiguration, int count) {
+            int index;
+            try {
+                index = Convert.ToInt32(portConfiguration.Index, CultureInfo.InvariantCulture);
+            } catch (Exception ex) when (ex is FormatException || ex is InvalidCastException || ex is OverflowException) {
+                throw new Exception($"Index \"{portConfiguration.Index}\" of \"{portMetadata.Name}\" of an instance of \"{instance.GetType().Name}\" is not a number.", ex);
+            }
+            if (index < 0 || index >= count) {
+                throw new Exception($"Index {index} of \"{portMetadata.Name}\" of an instance of \"{instance.GetType().Name}\" does not exist. The number of items is {count}.");
+            }
+            return index;
         }
 
         public static IProducer<T> GetStaticProducer<T>(this StaticPortMetadata portMetadata, PortConfiguration portConfiguration, object instance) {

@@ -30,6 +30,12 @@
             <!-- 2: Manual Start Time -->
             <RowDefinition
                 Height="auto" />
+            <!-- 3: Inspect -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 4: Inspection Result -->
+            <RowDefinition
+                Height="*" />
         </Grid.RowDefinitions>
 
         <!-- Row 0: Filename -->
@@ -112,5 +118,29 @@
                 </Style>
             </TextBox.Style>
         </TextBox>
+
+        <!-- Row 3: Inspect -->
+        <Button
+            Grid.Row="3"
+            Grid.Column="0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Margin="0,6,12,2"
+            Padding="10,1"
+            Name="ButtonInspect"
+            Click="ButtonInspect_Click"
+            ToolTip="Open the file and list its video and audio streams. Their numbers are the indexes of the VideoOut and AudioOut ports.">Inspect</Button>
+
+        <!-- Row 4: Inspection Result -->
+        <ScrollViewer
+            Grid.Row="4"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Margin="0,4,0,2"
+            VerticalScrollBarVisibility="Auto"
+            HorizontalScrollBarVisibility="Disabled">
+            <StackPanel
+                Name="PanelInspection" />
+        </ScrollViewer>
     </Grid>
 </UserControl>

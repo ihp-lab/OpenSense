@@ -16,19 +16,15 @@ namespace FFMpegInterop {
 
     Demuxer::Demuxer([NotNull] String^ filename)
         : _formatContext(nullptr)
-        , _videoStreamIndex(-1)
-        , _audioStreamIndex(-1)
-        , _videoParameters(nullptr)
-        , _audioParameters(nullptr)
-        , _readVideo(true)
-        , _readAudio(true)
+        , _videoStreams(gcnew List<CodecParameters^>())
+        , _audioStreams(gcnew List<CodecParameters^>())
         , _started(false)
         , _endOfFile(false)
+        , _streams(nullptr)
+        , _selected(nullptr)
         , _presentationReference(AV_NOPTS_VALUE)
-        , _videoFirstDecodingTime(AV_NOPTS_VALUE)
-        , _videoLastDecodingOffset(AV_NOPTS_VALUE)
-        , _audioFirstDecodingTime(AV_NOPTS_VALUE)
-        , _audioLastDecodingOffset(AV_NOPTS_VALUE)
+        , _firstDecodingTimes(nullptr)
+        , _lastDecodingOffsets(nullptr)
         , _disposed(false) {
         if (filename == nullptr) {
             throw gcnew ArgumentNullException("filename");
@@ -54,49 +50,63 @@ namespace FFMpegInterop {
             throw gcnew FFMpegException("Could not find stream information: " + FFMpegException::DescribeError(result));
         }
 
-        auto video = av_find_best_stream(_formatContext, AVMEDIA_TYPE_VIDEO, -1, -1, nullptr, 0);
-        if (video >= 0) {
-            _videoStreamIndex = video;
-            _videoParameters = gcnew CodecParameters(_formatContext->streams[video]->codecpar);
-        }
-        auto audio = av_find_best_stream(_formatContext, AVMEDIA_TYPE_AUDIO, -1, _videoStreamIndex, nullptr, 0);
-        if (audio >= 0) {
-            _audioStreamIndex = audio;
-            _audioParameters = gcnew CodecParameters(_formatContext->streams[audio]->codecpar);
+        auto count = static_cast<int>(_formatContext->nb_streams);
+        _streams = gcnew array<CodecParameters^>(count);
+        _selected = gcnew array<bool>(count);
+        _firstDecodingTimes = gcnew array<long long>(count);
+        _lastDecodingOffsets = gcnew array<long long>(count);
+        for (auto i = 0; i < count; i++) {
+            _firstDecodingTimes[i] = AV_NOPTS_VALUE;
+            _lastDecodingOffsets[i] = AV_NOPTS_VALUE;
+            auto stream = _formatContext->streams[i];
+            // Cover art is not video, a single picture without timestamps
+            if (stream->disposition & AV_DISPOSITION_ATTACHED_PIC) {
+                continue;
+            }
+            auto type = stream->codecpar->codec_type;
+            if (type != AVMEDIA_TYPE_VIDEO && type != AVMEDIA_TYPE_AUDIO) {
+                continue;
+            }
+            _streams[i] = gcnew CodecParameters(stream->codecpar);
+            _selected[i] = true;
+            (type == AVMEDIA_TYPE_VIDEO ? _videoStreams : _audioStreams)->Add(_streams[i]);
         }
 
         ApplySelection();
     }
 
-    CodecParameters^ Demuxer::VideoParameters::get() {
+    IReadOnlyList<CodecParameters^>^ Demuxer::VideoStreams::get() {
         ThrowIfDisposed();
-        return _videoParameters;
+        return _videoStreams;
     }
 
-    CodecParameters^ Demuxer::AudioParameters::get() {
+    IReadOnlyList<CodecParameters^>^ Demuxer::AudioStreams::get() {
         ThrowIfDisposed();
-        return _audioParameters;
+        return _audioStreams;
     }
 
-    void Demuxer::SelectStreams(bool readVideo, bool readAudio) {
+    void Demuxer::SelectStreams([NotNull] IEnumerable<CodecParameters^>^ streams) {
         ThrowIfDisposed();
+        if (streams == nullptr) {
+            throw gcnew ArgumentNullException("streams");
+        }
         if (_started) {
             throw gcnew InvalidOperationException("Streams must be selected before reading the first packet.");
         }
-        _readVideo = readVideo;
-        _readAudio = readAudio;
+        auto selected = gcnew HashSet<CodecParameters^>(streams);
+        for (auto i = 0; i < _streams->Length; i++) {
+            _selected[i] = _streams[i] != nullptr && selected->Contains(_streams[i]);
+        }
         ApplySelection();
     }
 
     void Demuxer::ApplySelection() {
         _presentationReference = AV_NOPTS_VALUE;
-        for (auto i = 0u; i < _formatContext->nb_streams; i++) {
+        for (auto i = 0; i < _streams->Length; i++) {
             auto stream = _formatContext->streams[i];
-            auto index = static_cast<int>(i);
-            auto selected = (_readVideo && index == _videoStreamIndex) || (_readAudio && index == _audioStreamIndex);
             // Skip unused streams
-            stream->discard = selected ? AVDISCARD_DEFAULT : AVDISCARD_ALL;
-            if (!selected) {
+            stream->discard = _selected[i] ? AVDISCARD_DEFAULT : AVDISCARD_ALL;
+            if (!_selected[i]) {
                 continue;
             }
             if (stream->start_time != AV_NOPTS_VALUE) {
@@ -106,19 +116,6 @@ namespace FFMpegInterop {
                 }
             }
         }
-    }
-
-    long long Demuxer::ToDecodingOffset(long long decodingTime, long long% first, long long% last) {
-        if (first == AV_NOPTS_VALUE) {
-            first = decodingTime;
-        }
-        auto offset = decodingTime - first;
-        // Keep strictly increasing, required by Psi
-        if (last != AV_NOPTS_VALUE && offset <= last) {
-            offset = last + 1;
-        }
-        last = offset;
-        return offset;
     }
 
     Packet^ Demuxer::ReadPacket() {
@@ -143,14 +140,13 @@ namespace FFMpegInterop {
                     throw gcnew FFMpegException("Could not read a packet: " + FFMpegException::DescribeError(result));
                 }
 
-                auto isVideo = _readVideo && packet->stream_index == _videoStreamIndex;
-                auto isAudio = _readAudio && packet->stream_index == _audioStreamIndex;
-                if (!isVideo && !isAudio) {
+                auto index = packet->stream_index;
+                if (index < 0 || index >= _streams->Length || !_selected[index]) {
                     av_packet_unref(packet);
                     continue;
                 }
 
-                auto timeBase = _formatContext->streams[packet->stream_index]->time_base;
+                auto timeBase = _formatContext->streams[index]->time_base;
                 auto decodingTime = packet->dts != AV_NOPTS_VALUE ? packet->dts : packet->pts;
                 auto presentationTime = packet->pts != AV_NOPTS_VALUE ? packet->pts : packet->dts;
                 if (decodingTime == AV_NOPTS_VALUE) {
@@ -163,14 +159,22 @@ namespace FFMpegInterop {
                     _presentationReference = presentationTime;
                 }
 
+                if (_firstDecodingTimes[index] == AV_NOPTS_VALUE) {
+                    _firstDecodingTimes[index] = decodingTime;
+                }
+                auto decodingOffset = decodingTime - _firstDecodingTimes[index];
+                // Keep strictly increasing, required by Psi
+                if (_lastDecodingOffsets[index] != AV_NOPTS_VALUE && decodingOffset <= _lastDecodingOffsets[index]) {
+                    decodingOffset = _lastDecodingOffsets[index] + 1;
+                }
+                _lastDecodingOffsets[index] = decodingOffset;
+
                 packet->pts = presentationTime - _presentationReference;
-                packet->dts = isVideo
-                    ? ToDecodingOffset(decodingTime, _videoFirstDecodingTime, _videoLastDecodingOffset)
-                    : ToDecodingOffset(decodingTime, _audioFirstDecodingTime, _audioLastDecodingOffset);
+                packet->dts = decodingOffset;
                 packet->duration = av_rescale_q(packet->duration, timeBase, TicksTimeBase);
                 packet->time_base = TicksTimeBase;
 
-                auto managed = gcnew Packet(packet, isVideo ? _videoParameters : _audioParameters);
+                auto managed = gcnew Packet(packet, _streams[index]);
                 packet = nullptr;
                 return managed;
             }
