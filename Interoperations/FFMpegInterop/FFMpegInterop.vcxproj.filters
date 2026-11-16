@@ -15,6 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AudioDecoder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSamples.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="CodecParameters.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -42,6 +48,9 @@
     <ClInclude Include="PixelFormat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SampleFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="VideoDecoder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -54,6 +63,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioDecoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSamples.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CodecParameters.cpp">

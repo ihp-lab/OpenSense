@@ -14,8 +14,8 @@ public sealed class DemuxerMetadata : ConventionalComponentMetadata {
 
     protected override string? GetPortDescription(string portName) {
         return portName switch {
-            nameof(Demuxer.VideoOut) => "The output video packets.",
-            nameof(Demuxer.AudioOut) => "The output audio packets.",
+            nameof(Demuxer.VideoOut) => "The output video packets. Index is the number of the video stream in the file, starting from 0.",
+            nameof(Demuxer.AudioOut) => "The output audio packets. Index is the number of the audio stream in the file, starting from 0.",
             _ => null,
         };
     }

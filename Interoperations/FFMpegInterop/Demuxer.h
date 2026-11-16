@@ -8,34 +8,31 @@ extern "C" {
 #include "Packet.h"
 
 using namespace System;
+using namespace System::Collections::Generic;
 using namespace System::Diagnostics::CodeAnalysis;
 
 namespace FFMpegInterop {
     /// <summary>
     /// Demuxer provides access to video and audio packets from a file using FFmpeg
-    /// Reads the best video stream and the best audio stream
     /// </summary>
     public ref class Demuxer sealed : IDisposable {
     private:
         AVFormatContext* _formatContext;
-        int _videoStreamIndex;
-        int _audioStreamIndex;
-        CodecParameters^ _videoParameters;
-        CodecParameters^ _audioParameters;
-        bool _readVideo;
-        bool _readAudio;
+        List<CodecParameters^>^ _videoStreams;
+        List<CodecParameters^>^ _audioStreams;
         bool _started;
         bool _endOfFile;
 
+        // Indexed by the stream index of the file. Null for streams that are neither video nor audio.
+        array<CodecParameters^>^ _streams;
+        array<bool>^ _selected;
+
         // All in .NET ticks. AV_NOPTS_VALUE until known.
         long long _presentationReference;
-        long long _videoFirstDecodingTime;
-        long long _videoLastDecodingOffset;
-        long long _audioFirstDecodingTime;
-        long long _audioLastDecodingOffset;
+        array<long long>^ _firstDecodingTimes;
+        array<long long>^ _lastDecodingOffsets;
 
         void ApplySelection();
-        static long long ToDecodingOffset(long long decodingTime, long long% first, long long% last);
 
     public:
         /// <summary>
@@ -45,26 +42,25 @@ namespace FFMpegInterop {
         Demuxer([NotNull] String^ filename);
 
         /// <summary>
-        /// Gets the codec parameters of the video stream, null if the file has no video
+        /// Gets the codec parameters of the video streams, in the order of the file
         /// </summary>
-        property CodecParameters^ VideoParameters {
-            CodecParameters^ get();
+        property IReadOnlyList<CodecParameters^>^ VideoStreams {
+            IReadOnlyList<CodecParameters^>^ get();
         }
 
         /// <summary>
-        /// Gets the codec parameters of the audio stream, null if the file has no audio
+        /// Gets the codec parameters of the audio streams, in the order of the file
         /// </summary>
-        property CodecParameters^ AudioParameters {
-            CodecParameters^ get();
+        property IReadOnlyList<CodecParameters^>^ AudioStreams {
+            IReadOnlyList<CodecParameters^>^ get();
         }
 
         /// <summary>
-        /// Selects which streams to read, both by default
+        /// Selects which streams to read, all by default
         /// Must be called before reading the first packet
         /// </summary>
-        /// <param name="readVideo">Whether to read the video stream</param>
-        /// <param name="readAudio">Whether to read the audio stream</param>
-        void SelectStreams(bool readVideo, bool readAudio);
+        /// <param name="streams">Streams to read, from VideoStreams and AudioStreams</param>
+        void SelectStreams([NotNull] IEnumerable<CodecParameters^>^ streams);
 
         /// <summary>
         /// Reads the next packet

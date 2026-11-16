@@ -72,6 +72,8 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AudioDecoder.h" />
+    <ClInclude Include="AudioSamples.h" />
     <ClInclude Include="CodecParameters.h" />
     <ClInclude Include="Demuxer.h" />
     <ClInclude Include="FFMpegExceptions.h" />
@@ -81,12 +83,15 @@
     <ClInclude Include="MediaType.h" />
     <ClInclude Include="Packet.h" />
     <ClInclude Include="PixelFormat.h" />
+    <ClInclude Include="SampleFormat.h" />
     <ClInclude Include="VideoDecoder.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="AudioDecoder.cpp" />
+    <ClCompile Include="AudioSamples.cpp" />
     <ClCompile Include="CodecParameters.cpp" />
     <ClCompile Include="Demuxer.cpp" />
     <ClCompile Include="FFMpegExceptions.cpp" />
