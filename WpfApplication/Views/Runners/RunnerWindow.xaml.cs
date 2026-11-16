@@ -164,13 +164,12 @@ namespace OpenSense.WPF.Views.Runners {
                     return;
                 }
                 if (!states.IsStarted) {
-                    _ = states.Environment.Pipeline.RunAsync();
+                    await RunPipelineAsync();
                     return;
                 }
             }
             if (await ReinstantiateAndSetupControlsAsync()) {
-                Debug.Assert(states is not null);
-                _ = states.Environment.Pipeline.RunAsync();
+                await RunPipelineAsync();
             }
         }
 
@@ -264,6 +263,25 @@ namespace OpenSense.WPF.Views.Runners {
             });
 
             return true;
+        }
+
+        /// <summary>
+        /// Runs the pipeline. A pipeline that failed to start cannot be run again, so it is disposed.
+        /// </summary>
+        private async Task RunPipelineAsync() {
+            Debug.Assert(states is not null);
+            try {
+                _ = states.Environment.Pipeline.RunAsync();
+            } catch (Exception ex) {
+                states.IsStopped = true;//Do not show the completed message while disposing.
+                InfoPanelControl.TextBlockRunning.Text = "×";
+                ExceptionMessageWindow.Show(this, ex, "Pipeline Start Exception", "There is an exception while starting the pipeline.");
+                VisualizerContainerControl.Clear();
+                await DoLongTimeOperationAsync(() => {
+                    states?.Environment.Dispose();
+                    states = null;
+                }, ui: false);
+            }
         }
         #endregion
 

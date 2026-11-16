@@ -1,77 +1,99 @@
 #pragma once
 
 extern "C" {
-#include <libavformat/avformat.h>
+#include <libavutil/frame.h>
 }
 
+#include "FrameFlags.h"
 #include "PixelFormat.h"
 
 using namespace System;
-using namespace System::Runtime::InteropServices;
+using namespace System::Runtime::CompilerServices;
 
 namespace FFMpegInterop {
     /// <summary>
     /// Comprehensive frame class that contains all frame data and metadata
     /// This class provides a managed wrapper around video frame data
-    /// All frame data is immutable once created
+    /// Frame now owns the native AVFrame and handles its lifecycle
     /// </summary>
-    public ref class Frame {
+    public ref class Frame sealed : IDisposable {
     private:
-        // All frame data is immutable - const semantics in C++/CLI
-        initonly TimeSpan _timestamp;
-        initonly int _width;
-        initonly int _height;
-        initonly bool _keyFrame;
-        initonly PixelFormat _format;
-        initonly array<Byte>^ _data;//TODO: Hold the native frame object.
+        AVFrame* _frame;
+
+    internal:
+        /// <summary>
+        /// Constructor for creating a new frame from native AVFrame
+        /// Takes ownership of the AVFrame pointer, its pts must be in .NET Ticks
+        /// </summary>
+        Frame(AVFrame* frame);
+
+        /// <summary>
+        /// Gets the internal AVFrame pointer for direct FFmpeg operations
+        /// </summary>
+        property AVFrame* InternalFrame {
+            AVFrame* get();
+        }
 
     public:
         /// <summary>
-        /// Constructor for creating a new frame
+        /// Presentation (display) time offset relative to the start of the file, in .NET Ticks.
         /// </summary>
-        Frame(TimeSpan timestamp, int width, int height, bool keyFrame, PixelFormat pixelFormat, array<Byte>^ data);
-
-        /// <summary>
-        /// Gets the timestamp of this frame relative to the start of the video
-        /// </summary>
-        property TimeSpan Timestamp {
-            TimeSpan get() { return _timestamp; }
+        property long long PresentationTimeOffset {
+            long long get();
         }
 
         /// <summary>
         /// Gets the width of the frame in pixels
         /// </summary>
         property int Width {
-            int get() { return _width; }
+            int get();
         }
 
         /// <summary>
         /// Gets the height of the frame in pixels
         /// </summary>
         property int Height {
-            int get() { return _height; }
-        }
-
-        /// <summary>
-        /// Gets whether this frame is a key frame (I-frame)
-        /// </summary>
-        property bool KeyFrame {
-            bool get() { return _keyFrame; }
+            int get();
         }
 
         /// <summary>
         /// Gets the pixel format of this frame
         /// </summary>
         property PixelFormat Format {
-            PixelFormat get() { return _format; }
+            PixelFormat get();
         }
 
         /// <summary>
-        /// Gets the raw pixel data of this frame
-        /// The returned array is a copy to maintain immutability
+        /// Gets the flags of the frame
         /// </summary>
-        property array<Byte>^ Data {
-            array<Byte>^ get() { return _data; }
+        property FrameFlags Flags {
+            FrameFlags get();
         }
+
+        /// <summary>
+        /// Gets the number of data planes in this frame
+        /// </summary>
+        property int PlaneCount {
+            int get();
+        }
+
+        /// <summary>
+        /// Gets buffer information for a specific plane
+        /// </summary>
+        /// <param name="planeIndex">The zero-based index of the plane</param>
+        /// <returns>A tuple containing buffer pointer, stride, and length</returns>
+        [returnvalue: TupleElementNames(gcnew array<String^>{"Data", "Stride", "Length"})]
+        ValueTuple<IntPtr, int, int> GetPlaneBuffer(int planeIndex);
+
+#pragma region IDisposable
+    private:
+        bool _disposed;
+
+        void ThrowIfDisposed();
+
+    public:
+        ~Frame();
+        !Frame();
+#pragma endregion
     };
-} 
+}
