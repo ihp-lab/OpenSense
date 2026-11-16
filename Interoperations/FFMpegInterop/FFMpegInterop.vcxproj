@@ -72,20 +72,28 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CodecParameters.h" />
+    <ClInclude Include="Demuxer.h" />
+    <ClInclude Include="FFMpegExceptions.h" />
     <ClInclude Include="Frame.h" />
+    <ClInclude Include="FrameConverter.h" />
+    <ClInclude Include="FrameFlags.h" />
+    <ClInclude Include="MediaType.h" />
+    <ClInclude Include="Packet.h" />
     <ClInclude Include="PixelFormat.h" />
-    <ClInclude Include="FileReaderExceptions.h" />
-    <ClInclude Include="FFMpegInterop.h" />
-    <ClInclude Include="FileReader.h" />
+    <ClInclude Include="VideoDecoder.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="CodecParameters.cpp" />
+    <ClCompile Include="Demuxer.cpp" />
+    <ClCompile Include="FFMpegExceptions.cpp" />
     <ClCompile Include="Frame.cpp" />
-    <ClCompile Include="FileReaderExceptions.cpp" />
-    <ClCompile Include="FFMpegInterop.cpp" />
-    <ClCompile Include="FileReader.cpp" />
+    <ClCompile Include="FrameConverter.cpp" />
+    <ClCompile Include="Packet.cpp" />
+    <ClCompile Include="VideoDecoder.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
