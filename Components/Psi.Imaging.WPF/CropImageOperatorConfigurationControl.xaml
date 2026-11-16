@@ -1,0 +1,162 @@
+<UserControl
+    x:Class="OpenSense.WPF.Components.Psi.Imaging.CropImageOperatorConfigurationControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:comp="clr-namespace:OpenSense.Components.Psi.Imaging;assembly=OpenSense.Components.Psi.Imaging"
+    xmlns:util="clr-namespace:OpenSense.WPF.Components.Utilities;assembly=OpenSense.WPF.Components.Contracts"
+    mc:Ignorable="d"
+    d:DesignHeight="200"
+    d:DesignWidth="800">
+    <d:UserControl.DataContext>
+        <comp:CropImageOperatorConfiguration />
+    </d:UserControl.DataContext>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition
+                Width="auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <!-- 0: Anchor -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 1: Unit -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 2: X -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 3: Y -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 4: Width -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 5: Height -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 6: Padding -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 7: Intrinsics Matching -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 8: Image Without Intrinsics -->
+            <RowDefinition
+                Height="auto" />
+            <!-- 9: Intrinsics Output -->
+            <RowDefinition
+                Height="auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Row 0: Anchor -->
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="0">Anchor</TextBlock>
+        <ComboBox
+            Grid.Row="0"
+            Grid.Column="1"
+            SelectedItem="{Binding Anchor}"
+            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type comp:RegionAnchor}}, Mode=OneTime}"
+            ToolTip="The point of the region that X and Y give the position of, measured from the top-left corner of the image. TopLeft is the top-left corner of the region. Center is its center." />
+
+        <!-- Row 1: Unit -->
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0">Unit</TextBlock>
+        <ComboBox
+            Grid.Row="1"
+            Grid.Column="1"
+            SelectedItem="{Binding Unit}"
+            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type comp:RegionUnit}}, Mode=OneTime}"
+            ToolTip="The unit of X, Y, Width and Height. Pixel is pixels of the input image. Fraction is a fraction of the width of the image for X and Width, and of its height for Y and Height. The region is rounded to whole pixels." />
+
+        <!-- Row 2: X -->
+        <TextBlock
+            Grid.Row="2"
+            Grid.Column="0">X</TextBlock>
+        <TextBox
+            Grid.Row="2"
+            Grid.Column="1"
+            Text="{Binding X}"
+            ToolTip="Horizontal position of the region, increasing to the right." />
+
+        <!-- Row 3: Y -->
+        <TextBlock
+            Grid.Row="3"
+            Grid.Column="0">Y</TextBlock>
+        <TextBox
+            Grid.Row="3"
+            Grid.Column="1"
+            Text="{Binding Y}"
+            ToolTip="Vertical position of the region, increasing downwards." />
+
+        <!-- Row 4: Width -->
+        <TextBlock
+            Grid.Row="4"
+            Grid.Column="0">Width</TextBlock>
+        <TextBox
+            Grid.Row="4"
+            Grid.Column="1"
+            Text="{Binding Width}"
+            ToolTip="Width of the region." />
+
+        <!-- Row 5: Height -->
+        <TextBlock
+            Grid.Row="5"
+            Grid.Column="0">Height</TextBlock>
+        <TextBox
+            Grid.Row="5"
+            Grid.Column="1"
+            Text="{Binding Height}"
+            ToolTip="Height of the region." />
+
+        <!-- Row 6: Padding -->
+        <TextBlock
+            Grid.Row="6"
+            Grid.Column="0">Padding</TextBlock>
+        <ComboBox
+            Grid.Row="6"
+            Grid.Column="1"
+            SelectedItem="{Binding Padding}"
+            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type comp:RegionPadding}}, Mode=OneTime}"
+            ToolTip="How the part of the region outside the image is filled. Black fills it with black. Error does not fill it, and a region reaching outside the image causes an error." />
+
+        <!-- Row 7: Intrinsics Matching -->
+        <TextBlock
+            Grid.Row="7"
+            Grid.Column="0">Intrinsics Matching</TextBlock>
+        <ComboBox
+            Grid.Row="7"
+            Grid.Column="1"
+            SelectedItem="{Binding IntrinsicsMatching}"
+            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type comp:IntrinsicsMatching}}, Mode=OneTime}"
+            ToolTip="How camera intrinsics are matched to images. Latest uses the most recently received intrinsics. Exact uses only intrinsics with the same timestamp as the image, and images wait until this can be decided." />
+
+        <!-- Row 8: Image Without Intrinsics -->
+        <TextBlock
+            Grid.Row="8"
+            Grid.Column="0">Image Without Intrinsics</TextBlock>
+        <ComboBox
+            Grid.Row="8"
+            Grid.Column="1"
+            SelectedItem="{Binding ImageWithoutIntrinsics}"
+            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type comp:ImageWithoutIntrinsics}}, Mode=OneTime}"
+            ToolTip="What to do with an image that has no matching intrinsics, when intrinsics are connected. Drop discards the image. Error stops with an error." />
+
+        <!-- Row 9: Intrinsics Output -->
+        <TextBlock
+            Grid.Row="9"
+            Grid.Column="0">Intrinsics Output</TextBlock>
+        <ComboBox
+            Grid.Row="9"
+            Grid.Column="1"
+            SelectedItem="{Binding IntrinsicsOutput}"
+            ItemsSource="{Binding Source={util:EnumBindingSource {x:Type comp:IntrinsicsOutput}}, Mode=OneTime}"
+            ToolTip="When intrinsics of the cropped images are produced. EveryImage produces them for every output image. OnChange produces them only when they differ from the previous ones." />
+    </Grid>
+</UserControl>
